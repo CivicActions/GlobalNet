@@ -1,0 +1,24 @@
+Copyright 2014-2017 CivicActions, Inc.
+
+This material is based upon work supported by the Defense Security
+Cooperation Agency (DSCA) under Contract No. HQ0013-14-D-0001. Any opinions, 
+findings and conclusions or recommendations expressed in this material are
+those of the author(s) and do not necessarily reflect the views of the DSCA.
+
+GlobalNET Platform is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+GlobalNET Platform is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GlobalNET Platform.  If not, see <http://www.gnu.org/licenses/>.
+
+GlobalNET Platform make use of and includes software libraries developed and
+licensed by third parties. The third party's licensing terms apply to those
+portions of this work.
+
