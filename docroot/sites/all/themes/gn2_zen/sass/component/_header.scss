@@ -1,0 +1,305 @@
+.page-account {
+  .view-og-user-groups {
+    .views-field.views-field-title {
+      a {
+        display: none;
+      }
+      span a {
+        display: block;
+      }
+    }
+  }
+}
+
+/*
+.logged-in #block-gn2-reg-gn2-reg-header {
+  display: none;
+}
+*/
+
+#header-wrapper {
+  .block {margin-bottom: 0;}
+  @include breakpoint ($small-screen-and-down) {
+    height: auto;
+  }
+}
+
+.header_org_title#org-name {
+  color: $white;
+  display: block;
+  font-size: 2em;
+  @include breakpoint($medium-screen-and-up) {
+    display: none !important;
+  }
+}
+
+.region-header {
+  .block {
+    margin-bottom: 0;
+  }
+  /* Hide the Header logo in smaller screens*/
+  .header_logo,
+  #block-gn2-base-config-site-logo {
+    margin: auto;
+    img {
+      vertical-align: middle;
+      @include breakpoint($small-screen-and-down) {
+        display: none;
+      }
+    }
+    .organization-name {
+      font-size: .9em;
+      margin: 0;
+      padding: 0.5em 0;
+      line-height: 1.175;
+      font-weight: normal;
+      @include breakpoint($medium-screen-and-up) {
+        display: none;
+      }
+    }    
+  }
+}
+
+@mixin header-icon-font-size {
+  font-size: 14px;
+  line-height: 33px;
+}
+
+@mixin header-user-info--reset {
+  @include header-icon-font-size;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin header-user-info--block--wrapper {
+  margin: 0;
+  padding: 0;
+  display: table-cell;
+  vertical-align: top;
+}
+
+@mixin header-user-info--block--text {
+  a {
+    margin: 0;
+    padding: 0;
+    color: $zumthor;
+    white-space: nowrap;
+    span {
+      @include header-icon-font-size;
+      display: inline-block;
+    }
+  }
+}
+
+.header-user-info {
+  * {
+    @include header-user-info--reset;
+  }
+  .region-header-user {
+    padding-bottom: .75em;
+    @include breakpoint($medium-screen-and-up) {
+      border-top: 5px solid $seagull;
+      float: right;
+      display: table-row;
+      padding-bottom: 0;
+    }
+    #block-gn2-privatemsg-privatemsg-menu {
+      @include header-user-info--block--wrapper;
+      padding-top: 8px;
+      padding-right: 0px;
+      li {
+        list-style: none;
+        min-height: 0.62em;
+        display: inline;
+        a {
+          font-weight: bold;
+          color: $red_orange;
+        }
+      }
+      &.no-new-private-message {
+        li a {
+          @include gn-icon(23px, url(../images/gn-icons/icon-mail-utility-nav.png));
+          @include header-icon-font-size;
+          margin-top: 0px;
+          margin-right: 12px;
+          }
+      }
+      &.new-private-message {
+        li a {
+          @include gn-icon(23px, url(../images/gn-icons/icon-mail-utility-nav-alert.png));
+          @include header-icon-font-size;
+          margin-right: 12px;
+          line-height: 16px;
+          margin-right: 12px;
+          color: $red_orange;
+          padding-left: 27px;
+        }
+      }
+    }
+    #block-gn2-notifications-notification-alerts {
+      @include header-user-info--block--wrapper;
+      @include header-user-info--block--text;
+      padding-top: 0px;
+      padding-right: 12px;
+      @include breakpoint($medium-screen-and-up) {
+        padding-right: 10px;
+      }
+      a {
+        img {
+          width: 18px;
+          padding-top: 7px;
+          padding-right: 1px;
+        }
+        span.red_number {
+          color: $red_orange;
+          font-weight: bold;
+          vertical-align: top;
+        }
+      }
+    }
+    #block-gn2-reg-gn2-reg-header {
+      padding-top: 0px;
+      padding-right: 0px;
+    }
+    #block-views-user-information-block {
+      @include header-user-info--block--wrapper;
+      padding-top: 0px;
+      padding-right: 0px;
+      .header__user_links__my_account {
+        @include header-user-info--block--wrapper;
+        @include header-user-info--block--text;
+        padding-top: 0px;
+        padding-right: 5px;
+        @include breakpoint($medium-screen-and-up) {
+          padding-right: 12px;
+        }
+        a span {
+          display: none;
+        }
+        a {
+          padding-right: 0; 
+          padding-bottom: 4px;
+          padding-left: 27px;
+          display: inline-block;
+          @include breakpoint($medium-screen-and-up) {
+            padding-right: 10px;
+            padding-left: 33px;
+            padding-bottom: 9px;
+            border-radius: 0 0 5px 5px;
+            background-color: black;
+            span {
+              display: inline-block;
+            }
+          }
+        }
+      }
+      .header__user_links__dashboard {
+        @include header-user-info--block--wrapper;
+        padding-top: 0px;
+        padding-right: 12px;
+      }
+      .header__user_links__logout {
+        @include header-user-info--block--wrapper;
+        @include header-user-info--block--text;
+        padding-top: 0px;
+        padding-right: 10px;  
+        a{
+          &:after { 
+            content: "";
+            font-size: 13px;
+            border-right: 1px solid;
+          }
+          display: inline-block;
+          span {
+            padding-right: 11px;
+          }
+        } 
+        &.help-link {
+          color: $seagull !important;
+        }    
+      }
+      .header__user_links__help {
+        @include header-user-info--block--wrapper;
+        @include header-user-info--block--text;
+        padding-top: 0px;
+        padding-right: 0px;  
+        a {
+          display: inline-block;
+          span {
+          }
+        }     
+      }
+    }
+  }
+}
+
+#block-gn2-base-config-privatemsg-menu {
+}
+
+.header__user_links__my_account {
+  max-width: 200px;
+  a {
+    @include gn-icon(30px, url(../images/gn-icons/icon-user-utility-nav.png));
+    @include header-icon-font-size;
+    background-position: left 7px;
+    margin-right: 0;
+    span {
+      display: none;
+    }
+    white-space: normal !important;
+  }
+  @include breakpoint($medium-screen-and-up) {
+    a {
+      background-position: 9px 7px;
+      white-space: normal !important;
+      span {
+        display: inherit;
+      }
+    }
+  }
+}
+
+.header__user_links__dashboard {
+  a {
+    background-image: url(../images/icon-user-dash.png);
+    background-repeat: no-repeat;
+    padding-left: 0;
+    width: 18px;
+    height: 21px;
+    overflow: hidden;
+    display: block;
+    text-align: left;
+    text-indent: -1000px;
+    height: 28px;
+    background-position: 0px 6px;
+  }
+}
+
+.header-user-info {
+  @include breakpoint($medium-screen-and-up) {
+   text-align: right;
+  }
+}
+
+@include breakpoint($medium-screen-and-up) {
+  /*==== Zen grids two column layout for header logo & user info blocks====*/
+  /* Zen grid layout for the header*/
+  $zen-gutter-width: 5px;
+  $zen-auto-include-item-base: false;
+  .header__region,
+  .header-user-info,
+  header.header {
+    @include zen-grid-item-base();
+  }
+  $zen-column-count: 18!global;//See org-layout.scss for explanation of !global
+  header.header {
+    @include zen-grid-container();
+  }
+  .header__region {
+    @include zen-grid-item (6, 1);
+  }
+  .header-user-info {
+    @include zen-grid-item (12, 7);
+  }
+}

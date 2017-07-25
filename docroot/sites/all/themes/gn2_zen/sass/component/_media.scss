@@ -1,0 +1,39 @@
+.view-header{
+  margin-bottom: .5em;  
+}
+
+.view-resources {
+  &.folders--list{
+    padding: 0 0.8em;
+    .view-empty {
+      margin-bottom: 2em;
+    }
+  }
+}
+
+.focal_point_examples {
+  display: block;
+  h2 {
+    padding: 0;
+    margin: 0 0 .25em 0;
+    font-weight: normal;
+    font-size: 1.25em;
+    &:after {
+      content: ":"
+    }
+  }
+  h2:first-child {
+    display: none;
+  }
+  div {
+    img {
+      border: 1px solid black;
+    }
+    padding: 0 0 1em 0;
+    margin: 0 0 1em 0;
+    border-bottom: 1px dotted gray;
+  }
+  div:first-of-type {
+    display: none;
+  }
+}

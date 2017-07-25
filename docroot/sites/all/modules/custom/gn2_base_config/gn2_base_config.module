@@ -1,0 +1,2327 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_base_config feature.
+ *
+ * @todo
+ *   Change checks for OG Org Manager to Drupal Org Manager role.
+ */
+
+include_once 'gn2_base_config.features.inc';
+include_once 'gn2_base_config_userpoint_search.inc';
+include_once 'includes/gn2_base_config_user_profile_updates.inc';
+include_once 'includes/gn2_base_config_gallery_notification_group.inc';
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function gn2_base_config_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Implements hook_custom_theme().
+ */
+function gn2_base_config_custom_theme() {
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
+    return 'gn2_zen';
+  }
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function gn2_base_config_page_alter(&$page) {
+  // Change the display name of a fieldset (RD-1516).
+  if (array_key_exists('#form_id', $page['content']['system_main']) && $page['content']['system_main']['#form_id'] == 'media_gallery_node_form') {
+    $page['content']['system_main']['settings_wrapper']['#title'] = t('Folder Settings');
+    $page['help']['system_help']['#markup'] = t('<p>Create a folder for files to be uploaded.  Once your folder is saved, your files can be added.</p>');
+  }
+}
+
+/**
+ * Implements hook_help() to modify the revisions help text.
+ */
+function gn2_base_config_help($path, $arg) {
+  switch ($path) {
+    case 'node/%/revisions':
+      // The translated strings should match node_help('node/%/revisions').
+      return '<p>' . t('Use the radio buttons below to choose two revisions, then click on the "Compare selected revisions" link to view the differences.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Before adding a form alter here, check for an exisintg
+ * gn2_base_config_form_FORM_ID_alter(), or add one where possible.
+ */
+function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  if ($form_id == 'diff_node_revisions') {
+    $form['submit']['#value'] = "Compare selected revisions";
+  }
+
+  // RD-1974: unsetting unnecessary fields in file upload/edit forms.
+  if ($form_id == 'file_entity_add_upload' || $form_id == 'file_entity_edit' ||
+    (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)) {
+
+    if (array_key_exists('focal_point', $form)) {
+      $form['focal_point']['#prefix'] = "<label>Set the focal point of this image</label>";
+    }
+
+    if (array_key_exists('field_file_document_title_text', $form)) {
+      unset($form['field_file_document_title_text']);
+    }
+    if (array_key_exists('field_file_image_title_text', $form)) {
+      unset($form['field_file_image_title_text']);
+    }
+    if (array_key_exists('field_country', $form)) {
+      unset($form['field_country']);
+    }
+    if (array_key_exists('field_region', $form)) {
+      unset($form['field_region']);
+    }
+    if (array_key_exists('field_topic', $form)) {
+      unset($form['field_topic']);
+    }
+    if (array_key_exists('field_tags', $form)) {
+      unset($form['field_tags']);
+    }
+    if (array_key_exists('field_license', $form)) {
+      if (isset($form['field_license'][LANGUAGE_NONE]['#description'])) {
+        $form['field_license'][LANGUAGE_NONE]['#description'] = 
+        t('<strong>Public Domain</strong> – Copyright is expired or author has dedicated material to the public domain.<br>' . 
+        '<strong>Public Domain – Government</strong> US Government Work, Foreign Copyrights may apply. Approved for Public Release.<br>'.
+        '<strong>Copyright - All Rights Reserved</strong> Copyrighted work. Reproduced with permission. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
+        '<strong>Copyright - Fair Use.</strong> Copyrighted work. Reproduced under fair use exception. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
+        '<strong>Copyright - Reproduced by Author</strong> Copyrighted work. All Rights Reserved – Reproduced by author.');
+      }
+      // RD-3875 As a user, when I upload a file I should see clear Default License Settings Options.
+      $new_options = array(
+        'cc_sa_nc' => t('Public Domain'),
+        'cc_nc' => t('Public Domain – Government'),
+        'cc_nd_nc' => t('Copyright - All Rights Reserved'),
+        'cc' => t('Copyright - Fair Use'),
+        'cc_sa' => t('Copyright - Reproduced by Author')
+      );
+      $form['field_license'][LANGUAGE_NONE]['#options'] = $new_options;
+    }
+    // RD-2770 updating Cancel link url.
+    if ($form_id == 'file_entity_edit') {
+      $form['actions']['cancel']['#href'] = str_replace('/edit', '', $form['#action']);
+    }
+  }
+
+  switch ($form_id) {
+    case 'announcement_node_form':
+    case 'news_node_form':
+    case 'post_node_form':
+      drupal_add_js(
+        drupal_get_path('module', 'gn2_base_config') . '/scheduler_toggle.js'
+      );
+      break;
+
+    case '_gn2_base_config_guide_searcher_form':
+      drupal_add_js(
+        drupal_get_path('module', 'gn2_base_config') . '/js/guide_search.js'
+      );
+
+      break;
+
+    case 'about_page_node_form':
+    case 'announcement_node_form':
+    case 'course_group_node_form':
+    case 'program_node_form':
+    case 'event_node_form':
+    case 'media_gallery_node_form':
+    case 'post_node_form':
+    case 'group_node_form':
+    case 'organization_node_form':
+    case 'poll_node_form':
+    case 'page_node_form':
+    case 'publication_node_form':
+      $form['options']['sticky']['#access'] = FALSE;
+
+      break;
+
+    case 'about_page_node_form':
+    case 'announcement_node_form':
+    case 'course_group_node_form':
+    case 'program_node_form':
+    case 'event_node_form':
+    case 'media_gallery_node_form':
+    case 'post_node_form':
+    case 'group_node_form':
+    case 'page_node_form':
+    case 'coi_node_form':
+    case 'poll_node_form':
+    case 'publication_node_form':
+      $form['og_menu']['#access'] = FALSE;
+
+      break;
+
+    case 'about_page_node_form':
+    case 'announcement_node_form':
+    case 'course_group_node_form':
+    case 'program_node_form':
+    case 'event_node_form':
+    case 'media_gallery_node_form':
+    case 'post_node_form':
+    case 'group_node_form':
+    case 'organization_node_form':
+    case 'page_node_form':
+    case 'poll_node_form':
+    case 'publication_node_form':
+    case 'coi_node_form':
+      $form['menu']['#access'] = FALSE;
+
+      break;
+
+    case 'publication_node_form':
+    case 'event_node_form':
+    case 'news_node_form':
+    case 'course_node_form':
+    case 'session_entityform_edit_form':
+    case 'help_node_form':
+      if (isset($form['field_media'])) {
+        $form['field_media'][LANGUAGE_NONE]['#file_upload_title'] = "Attach File";
+      }
+      if (isset($form['field_additional_images'])) {
+        $form['field_additional_images'][LANGUAGE_NONE]['#file_upload_title'] = "Attach File";
+      }
+      if (isset($form['field_course_schedule'])) {
+        $form['field_course_schedule'][LANGUAGE_NONE]['#file_upload_title'] = "Attach File";
+      }
+      if (isset($form['field_course_syllabus'])) {
+        $form['field_course_syllabus'][LANGUAGE_NONE]['#file_upload_title'] = "Attach File";
+      }
+
+      break;
+
+    default:
+      break;
+  }
+
+  // RD-2988 Hide org shortname field from org_managers (disable).
+  if ($user->uid != 1) {
+    if (!in_array('administrator', $user->roles)) {
+      $form['field_org_short_title']['#access'] = FALSE;
+    }
+  }
+
+  // We don't want to allow non admins or non og_managers to choose the org.
+  if (isset($form['field_parent_organization'])) {
+    $org_manager = gn2_base_config_manage_any_org('org_manager');
+    $admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+    if ($admin) {
+      $form['field_parent_organization'][LANGUAGE_NONE]['#access'] = TRUE;
+    }
+    else {
+      $form['field_parent_organization'][LANGUAGE_NONE]['#access'] = FALSE;
+    }
+  }
+
+  // Setting default Groups for Media Gallery node form.
+  $media_types = array(
+    'file_entity_add_upload',
+    'media_internet_add_upload',
+    'file_entity_edit',
+  );
+
+  // Hiding Media Title and Media Description.
+  if (in_array($form_id, $media_types) || strstr($form_id, 'media_edit_')) {
+    unset($form['field_tags']);
+    unset($form['field_country']);
+    unset($form['field_region']);
+    unset($form['field_topic']);
+
+    $form['media_title']['#access'] = FALSE;
+    $form['media_description']['#access'] = FALSE;
+  }
+
+  // Set entityform Group id; @see RD-3343.
+  if (strstr($form_id, '_entityform_edit_form') && array_key_exists('og_entityform_group_ref', $form) && filter_input(INPUT_GET, 'gid')) {
+    $gid = filter_input(INPUT_GET, 'gid');
+    $form = gn2_base_config_set_group('og_entityform_group_ref', $gid, $form);
+  }
+  // TODO: Write QA.
+  if (!empty($form['#groups']['group_basic_information'])) {
+    $form['#group_children']['language'] = 'group_basic_information';
+  }
+  if (!empty($form['#groups']['group_basic_info'])) {
+    $form['#group_children']['language'] = 'group_basic_info';
+  }
+
+  if (!empty($form['#node_edit_form']) && !empty($form['language']) || !empty($form['#node_add_form']) && !empty($form['language'])) {
+    $form['#after_build'][] = 'gn2_base_config_locale_language_selector_alter';
+  }
+  // TODO: Write QA.
+  $simplified_forms = _gn2_base_config_get_forms_with_simplify();
+  if (in_array($form_id, array_keys($simplified_forms))) {
+    $fields = variable_get("gn2_base_config_simplify_{$simplified_forms[$form_id]}_global", array());
+    simplify_hide_fields($fields, $form);
+  }
+  // TODO: Write QA.
+  $forms_id = array(
+    '_og_invite_form',
+    'og_ui_add_users',
+    'og_bulkadd_users_form',
+    'gn2_base_config_move_users_form',
+    'og_massadd_massadd_form',
+  );
+  if ((isset($form['#node']) && $form['#id'] != 'comment-form') || in_array($form_id, $forms_id)) {
+    if (!isset($gid)) {
+      $gid = 11;
+    }
+    if (isset($_GET['gid'])) {
+      $gid = $_GET['gid'];
+    }
+    elseif (isset($form['#node']->title) && $form['#node']->title != '') {
+      $gid = $form['#node']->nid;
+    }
+    elseif (isset($form['gid']['#value'])) {
+      $gid = $form['gid']['#value'];
+    }
+    elseif (isset($form['group_ids']['#value'][0])) {
+      $gid = $form['group_ids']['#value'][0];
+    }
+
+    $form['actions']['cancel'] = array(
+      '#markup' => l(t('Cancel'), 'node/' . $gid, array('attributes' => array('class' => array('button')))),
+      '#weight' => 20,
+    );
+  }
+  
+  // RD-1974: unsetting unnecessary fields in file upload/edit forms.
+  if ($form_id == 'file_entity_add_upload' || $form_id == 'file_entity_edit' ||
+    (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)) {
+    if (array_key_exists('field_file_document_title_text', $form)) {
+      unset($form['field_file_document_title_text']);
+    }
+  }
+
+  if ($form_id == 'media_wysiwyg_format_form') {
+    drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/autosubmit.js');
+  }
+
+  // This field is not used since that the Password tab exists and the
+  // users/%/email path-page is used to change the email address.
+  if ($form_id == 'user_profile_form') {
+    // Opens accordion section via 'opensection' variable.
+    // This bit of code supports the task contained in RD-3158.
+    $form['#fieldgroups']['group_notifications']->format_settings['instance_settings']['id'] = 'notification-settings-fieldset';
+    if (isset($_GET['opensection'])) {
+      $opensection = $_GET['opensection'];
+      drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/openAccordion.js');
+    }
+    if (array_key_exists('field_file_image_title_text', $form)) {
+      unset($form['field_file_image_title_text']);
+    }
+    if (array_key_exists('field_country', $form)) {
+      unset($form['field_country']);
+    }
+    if (array_key_exists('field_region', $form)) {
+      unset($form['field_region']);
+    }
+    if (array_key_exists('field_topic', $form)) {
+      unset($form['field_topic']);
+    }
+    if (array_key_exists('field_tags', $form)) {
+      unset($form['field_tags']);
+    }
+    if (array_key_exists('field_license', $form)) {
+      unset($form['field_license']);
+      $form['field_license'][LANGUAGE_NONE]['#required'] = FALSE;
+      $form['field_license']['#access'] = FALSE;
+    }
+    // RD-2770 updating Cancel link url.
+    if ($form_id == 'file_entity_edit') {
+      $form['actions']['cancel']['#href'] = str_replace('/edit', '', $form['#action']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * RD-2424: rewriting the message that appears on user import preview page.
+ * RD-2873: hiding the image_path field.
+ */
+function gn2_base_config_form_uif_import_form_alter(&$form, &$form_state, $form_id) {
+  if (!empty($form['instructions']['#markup'])) {
+    $new_import_instructions = '<div class="messages status">';
+    $new_import_instructions .= '<b>';
+    $new_import_instructions .= t('USER IMPORT WILL NOT BE COMPLETE UNTIL YOU CLICK THE GRAY "IMPORT USERS" BUTTON ON THIS PAGE.');
+    $new_import_instructions .= '</b><br /><em>';
+    $new_import_instructions .= t('When you have finished previewing the user data below, click the button to complete the import.');
+    $new_import_instructions .= '</em>';
+    $new_import_instructions .= '</div>';
+    $form['instructions']['#markup'] = $new_import_instructions;
+  }
+  $form['image_path']['#type'] = 'hidden';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_user_relationships_ui_pending_requested_alter(&$form, &$form_state, $form_id) {
+  $relationship = db_select('user_relationships', 'ur')
+    ->fields('ur', array('requester_id'))
+    ->condition('rid', $form['rid']['#value'])
+    ->execute()
+    ->fetchAssoc();
+
+  $loaded_user = user_load($relationship['requester_id']);
+  $linked_name = l($loaded_user->name, "user/{$loaded_user->uid}");
+
+  if ($form['action']['#value'] == 'approve') {
+    $new_description = t('Are you sure you want to approve the Contact request from !link?', array('!link' => $linked_name));
+    drupal_set_title('Approve Contact');
+  }
+  else {
+    $new_description = t('Are you sure you want to reject the Contact request from !link?', array('!link' => $linked_name));
+    drupal_set_title('Disapprove Contact');
+  }
+  $form['description']['#markup'] = $new_description;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_user_relationships_ui_request_alter(&$form, &$form_state, $form_id) {
+  $requester_id = $form['requester']['#value'];
+  $requestee_id = $form['requestee']['#value'];
+  $loaded_user = user_load($requestee_id);
+  $username = $loaded_user->name;
+  $display_name = $username;
+  $first = field_get_items('user', $loaded_user, 'field_name_first');
+  $first = $first[0]['value'];
+  $last = field_get_items('user', $loaded_user, 'field_name_last');
+  $last = $last[0]['value'];
+  $full_name_test = $first . $last;
+  if ($full_name_test != '') {
+    $display_name = $first . ' ' . $last;
+  }
+  $linked_name = l($display_name, "user/{$loaded_user->uid}");
+  $new_description = t('Are you sure you want to send a new Contact request to !link?', array('!link' => $linked_name));
+  $form['rtid']['#title'] = '';
+  if ($requester_id != $requestee_id) {
+    $form['description']['#markup'] = $new_description;
+  }
+  drupal_set_title('Request Contact');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_gn2_search_default_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = '_gn2_base_config_save_search_userpoint';
+  $form['search']['#attributes'] = array('placeholder' => array(t('Search all content')));
+  $form['search']['#title'] = 'Search all';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * RD-3132 add an user to multiple groups.
+ */
+function gn2_base_config_form_gn2_manager_access_user_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($_GET['gid'])) {
+    $gids_title = array();
+    $gid = $_GET['gid'];
+    $org = node_load($gid);
+    if (isset($org)) {
+      $gids_title[$gid] = $org->title;
+      $query = db_select("og_membership", "ogm");
+      $query->condition("ogm.gid", $gid, "=");
+      $query->fields("ogm", array("entity_type", "etid"));
+      $results = $query->execute()->fetchAll();
+      foreach ($results as $result) {
+        if ($result->entity_type == 'node') {
+          $queer = db_select("node", "n");
+          $queer->condition("n.nid", $result->etid, "=");
+          $queer->fields("n", array("title", "nid"));
+          $ress = $queer->execute()->fetchAssoc();
+          $gids_title[$result->etid] = $ress['title'];
+        }
+      }
+      $form['og_user_node']['und'][0]['default']['#default_value'] = $gid;
+      $form['og_user_node']['und'][0]['default']['#options'] = $gids_title;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * RD-3312 Change “Modify OG user roles” status to read “Modify user roles”.
+ */
+function gn2_base_config_form_views_form_og_members_admin_override_default_alter(&$form, &$form_state, $form_id) {
+  $ops = $form['select']['operation']['#options'];
+  foreach ($ops as $key => $op) {
+    if ($op == 'Modify OG user roles') {
+      $ops[$key] = 'Modify user roles';
+    }
+  }
+  $form['select']['operation']['#options'] = $ops;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * This field is not used since that the Password tab exists and the
+ * users/%/email path-page is used to change the email address.
+ */
+function gn2_base_config_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // Opens accordion section via 'opensection' variable.
+  // This bit of code supports the task contained in RD-3158.
+  $form['#fieldgroups']['group_notifications']->format_settings['instance_settings']['id'] = 'notification-settings-fieldset';
+  if (isset($_GET['opensection'])) {
+    $opensection = $_GET['opensection'];
+    drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/openAccordion.js');
+  }
+  if (isset($form['account']['current_pass'])) {
+    $form['account']['current_pass']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * TODO: Write QA.
+ */
+function gn2_base_config_form_og_ui_confirm_unsubscribe_alter(&$form, &$form_state, $form_id) {
+  drupal_set_title('Unsubscribe');
+  $node = node_load(arg(2));
+  $form['instruction_field'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Are you sure you want to unsubscribe from the group "!title"?', array('!title' => $node->title)),
+    '#weight' => -1,
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  $form['submit']['#value'] = 'Go';
+  $form['search_api_views_fulltext']['#attributes'] = array('placeholder' => array(t('Search all content')));
+  if ($form['#id'] == 'views-exposed-form-search-member-panel-pane-1') {
+    $form['search_api_views_fulltext']['#attributes'] = array('placeholder' => array(t('Search')));
+  }
+  if ($form['#id'] == 'views-exposed-form-groups-display-panel-pane-4' || $form['#id'] == 'views-exposed-form-groups-display-panel-pane-6') {
+    $form['field_course_dates_value2']['value']['#date_format'] = 'd M Y';
+    $form['field_course_dates_value']['value']['#date_format'] = 'd M Y';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Set Organization and User fields for the Reject Request entityform.
+ * Can nont test as the page has an unrelated error.
+ */
+function gn2_base_config_form_reject_request_entityform_edit_form_alter(&$form, &$form_state, $form_id) {
+  $eid = filter_input(INPUT_GET, 'eid');
+  $org = filter_input(INPUT_GET, 'org');
+  // Load the original entityform submission and get the email address.
+  $submission = $submission = entity_load_single('entityform', $eid);
+  $wrapper = entity_metadata_wrapper('entityform', $submission);
+  if ($submission->uid > 0) {
+    $form_user = user_load($submission->uid);
+    $email = $form_user->mail;
+  }
+  else {
+    $email = $wrapper->field_email->value();
+  }
+  $form['field_email'][LANGUAGE_NONE][0]['email']['#default_value'] = (valid_email_address($email)) ? $email : '';
+  $form['field_email'][LANGUAGE_NONE][0]['email']['#attributes']['disabled'] = 'disabled';
+  $form['field_organization'][LANGUAGE_NONE]['#default_value'] = ($org) ? $org : '';
+  $form['field_organization'][LANGUAGE_NONE]['#attributes']['disabled'] = 'disabled';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * TODO: Write QA.
+ */
+function gn2_base_config_form_og_bulkadd_users_form_alter(&$form, &$form_state, $form_id) {
+  $form['instruction_field'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Type in a few letters of the username and select from highlighted list. Repeat as needed. Click the "x" next to the username to remove from the list.'),
+    '#weight' => -1,
+  );
+  drupal_add_css(drupal_get_path('module', 'gn2_base_config') . '/styles/gn2_base_config_bulk_adding_users.css');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * TODO: Write QA.
+ */
+function gn2_base_config_form_og_ui_confirm_subscribe_alter(&$form, &$form_state, $form_id) {
+  drupal_set_title('Request Membership');
+  $node = node_load($form['#entity']->gid);
+  $form['instruction_field'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Are you sure you want to request membership to the group "!title"?', array('!title' => $node->title)),
+    '#weight' => -1,
+  );
+  $form['#submit'][] = '_gn2_base_config_set_request_message';
+  $form['og_membership_request'][LANGUAGE_NONE][0]['value']['#description'] = 'Add an additional message to the group manager to explain why you are requesting membership.';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // Hide username field.
+  if (isset($form['account']) && is_array($form['account'])) {
+    $form['account']['name']['#type'] = 'hidden';
+    $form['account']['name']['#value'] = 'unset_username';
+  }
+  else {
+    $form['name']['#type'] = 'hidden';
+    $form['name']['#value'] = 'unset_username';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * TODO: Add QA.
+ */
+function gn2_base_config_form_feeds_import_form_alter(&$form, &$form_state, $form_id) {
+  // Adding helper text to Feeds import form.
+  if ($form['#importer_id'] == 'import_users') {
+    $helper = array(
+      'Column <strong>groups</strong> is mandatory and should contain a <strong>|</strong> delimited list of Group IDs, for example, 123|124|125',
+      'Column <strong>name</strong> = <strong>username</strong>',
+      'Column <strong>mail</strong> = <strong>email address</strong>',
+    );
+    array_splice($form['feeds']['FeedsCSVParser']['help']['list']['#items'], 1, 0, $helper);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * RD-1327: rearranging elements in the comment form,
+ * so that the form can be themed properly.
+ */
+function gn2_base_config_form_comment_form_alter(&$form, $form_state, $form_id) {
+  $anonymous_publishing_help = '<div class="description">' . t('Please note: If you post anonymously, you will not be able to edit your comment.') . '</div>';
+  $form['comment_body']['#weight'] = '2';
+  $form['comment_body']['#attributes']['class'][] = 'gn2-comments--body';
+  $form['field_comment_file']['#weight'] = '4';
+  $form['anonymous_publishing']['#weight'] = '3';
+  $form['anonymous_publishing']['#type'] = 'div';
+  $form['anonymous_publishing']['#collapsible'] = FALSE;
+  $form['anonymous_publishing']['#collapsed'] = FALSE;
+  $form['anonymous_publishing']['#title'] = 'Post anonymously?';
+  $form['anonymous_publishing']['options']['#options']['0'] = 'Post this comment as yourself';
+  $form['anonymous_publishing']['options']['#options']['1'] = 'Post this comment anonymously';
+  $form['anonymous_publishing']['#prefix'] = '<div class="gn2-comments--anonymous gn2-3col--col1 col column first">';
+  $form['anonymous_publishing']['#suffix'] = $anonymous_publishing_help . '</div>';
+  $form['field_comment_file']['#attributes']['class'][] = 'gn2-comments--file gn2-3col--col2 col column second middle';
+  $form['actions']['#attributes']['class'][] = 'gn2-comments--actions gn2-3col--col3 col column last';
+  $form['gn2-comments--attributes'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => FALSE,
+    '#weight' => '5',
+    '#attributes' => array(
+      'class' => array(
+        'gn2-comments--attributes gn2-3col',
+      ),
+    ),
+  );
+  $form['gn2-comments--attributes']['anonymous_publishing'] = $form['anonymous_publishing'];
+  $form['gn2-comments--attributes']['field_comment_file'] = $form['field_comment_file'];
+  $form['gn2-comments--attributes']['actions'] = $form['actions'];
+  unset($form['anonymous_publishing']);
+  unset($form['field_comment_file']);
+  unset($form['actions']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_course_node_form_alter(&$form, $form_state, $form_id) {
+  $form['language']['#description'] = "Select the language in which the course page should be displayed.";
+  $form['comment_settings']['#access'] = FALSE;
+
+  $form['field_rec_links']['und']['#description'] = 'Links will appear in the sidebar on the Course Landing Page.';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_user_relationships_ui_remove_alter(&$form, $form_state, $form_id) {
+  drupal_set_title('Remove Contact');
+  $form['description']['#markup'] = t('Are you sure you want to remove the Contact?');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_poll_node_form_alter(&$form, $form_state, $form_id) {
+  $form['settings']['#collapsed'] = FALSE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_program_node_form_alter(&$form, $form_state, $form_id) {
+  $form['title']['#title'] = t('Page Name');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_event_node_form_alter(&$form, $form_state, $form_id) {
+  $form['language']['#description'] = "Select the language in which the event page should be displayed.";
+  $form['comment_settings']['#access'] = FALSE;
+
+  // Alter Event datetime field description.
+  $form['field_event_date'][LANGUAGE_NONE]['#after_build'][] = '_gn2_base_config_alter_datetime_description';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_post_node_form_alter(&$form, $form_state, $form_id) {
+  drupal_add_css(drupal_get_path('module', 'gn2_base_config') . '/gn2_base_config_post_miniform_mods.css');
+  $form['anonymous_publishing']['#description'] = "Please note: If you select \"Post as Anonymous\", you will no longer be able to edit this post.";
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_poll_view_voting_alter(&$form, $form_state, $form_id) {
+  $form['actions'] = array();
+}
+
+/**
+ * RD-3424 fixes duplicated results in taxonomy term listing.
+ *
+ * Could think about enabling "DISTINCT" option in views, but won't work because
+ * there is an issue with votingapi_cache table when make use of "AGGREGATION"
+ * in views.
+ */
+function gn2_base_config_votingapi_results_alter(&$cache, $entity_type, $entity_id) {
+  unset($cache['vote']['points']['average']);
+}
+
+/**
+ * RD-2361 - Helper function to alter the datetime field description.
+ */
+function _gn2_base_config_alter_datetime_description($element, &$form_state) {
+  $date_text = t('Click to use the calendar to<br>select the date or type in the'
+      . '<br>date using DD MMM YYYY<br>format. For example,<br>01 Jan 2016');
+  $time_text = 'Enter !var time of the event<br>in 24 hr format. For example,'
+      . '<br>10:00AM as 10:00 and<br>2:00PM as 14:00.';
+  $element[0]['value']['date']['#description'] = $element[0]['value2']['date']['#description'] = $date_text;
+  $element[0]['value']['time']['#description'] = t($time_text, array('!var' => 'start'));
+  $element[0]['value2']['time']['#description'] = t($time_text, array('!var' => 'end'));
+
+  return $element;
+}
+
+/**
+ * Gets a list of forms ids and the variable names associated with simplify.
+ *
+ * @return mixed[]
+ *   A list of form ids (keys) with the simplify variable names (values).
+ */
+function _gn2_base_config_get_forms_with_simplify() {
+  return array(
+    'privatemsg_new' => 'private_messages',
+    'privatemsg_form_reply' => 'private_messages',
+    'user_profile_form' => 'user_profile',
+  );
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function gn2_base_config_field_widget_form_alter(&$element, &$form_state, $context) {
+
+  if ($context['field']['field_name'] == 'field_gn2_simple_access') {
+    $element['#title'] = '';
+    $element['#prefix'] = t('<label>Who can see this content</label><br>');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_media_gallery_node_form_alter(&$form, &$form_state) {
+  global $user;
+  $is_drupal_admin = in_array('administrator', $user->roles);
+  $form['hide_blocks_settings'] = array('#type' => 'hidden', '#value' => $is_drupal_admin);
+
+  // Loads js.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/folder_blocks.js');
+
+  // TODO: Write QA.
+  $gid = filter_input(INPUT_GET, 'gid');
+  $form = gn2_base_config_set_group('og_group_ref', $gid, $form);
+  $form['media_gallery_lightbox_extras'][LANGUAGE_NONE]['#title'] = t('Show caption');
+  $form['media_gallery_expose_block']['#access'] = FALSE;
+  $form['media_gallery_block_columns']['#access'] = FALSE;
+  $form['media_gallery_block_rows']['#access'] = FALSE;
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function gn2_base_config_user_presave(&$edit, $account, $category) {
+  if (isset($edit['name'])) {
+    if ($edit['name'] == 'unset_username') {
+
+      // Loads path auto clean string rules.
+      module_load_include('inc', 'pathauto');
+
+      // Builds username.
+      $first = $edit['field_name_first'][LANGUAGE_NONE][0]['value'];
+      $firstname = str_replace(' ', '', $first);
+      $firstname = pathauto_cleanstring($firstname);
+      $last = $edit['field_name_last'][LANGUAGE_NONE][0]['value'];
+      $lastname = str_replace(' ', '', $last);
+      $lastname = pathauto_cleanstring($lastname);
+      $username = strtolower(check_plain($firstname)) . '.' . strtolower(check_plain($lastname));
+      if (drupal_strlen($username) > USERNAME_MAX_LENGTH - 3) {
+        $username = drupal_substr($username, 0, USERNAME_MAX_LENGTH - 3);
+      }
+
+      // Check if the username already exists in the database.
+      $result = db_query("SELECT name FROM {users} WHERE name = :username", array(':username' => $username));
+
+      // While the username is taken, append a number
+      // and increment it until our username is unique.
+      $i = 0;
+      while ($result->rowCount()) {
+        $result = db_query("SELECT name FROM {users} WHERE name = :username", array(':username' => $username . ++$i));
+        if (!($result->rowCount())) {
+          $username = $username . $i;
+        }
+      }
+      $edit['name'] = $username;
+    }
+  }
+
+  // Automatically updating Region base on Nationality.
+  if (isset($edit['field_nationality']) && !empty($edit['field_nationality'][LANGUAGE_NONE])) {
+    $nationality = $edit['field_nationality'][LANGUAGE_NONE][0]['value'];
+    // Should US be a default?
+    // if (empty($nationality)) $nationality = 'US';
+    // Include the COCOM regions array keyed by country. Can't be include_once.
+    include drupal_get_path('module', 'gn2_base_config') . '/includes/gn2_base_config.cocom.inc';
+    $edit['field_cocom_region'][LANGUAGE_NONE][0]['value'] = (array_key_exists($nationality, $regions)) ? $regions[$nationality] : NULL;
+  }
+} //
+
+/**
+ * This modifies the i18n Widget.
+ */
+function gn2_base_config_locale_language_selector_alter(&$form, &$form_state) {
+
+  $lang = db_query('SELECT language FROM node WHERE nid = :nid', array(':nid' => $form['nid']['#value']))->fetchField();
+  if (empty($lang) || $lang == 'und') {
+    $form['language']['#value'] = 'en';
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_base_config_module_implements_alter(&$implementations, $hook) {
+  $hooks = array('entity_info_alter', 'user_view');
+  if (in_array($hook, $hooks)) {
+    // Move our hook implementation to the bottom.
+    // We want to expand upon the entity api's access implementation for nodes,
+    // so we need to alter the entity_info after it.
+    $group = $implementations['gn2_base_config'];
+    unset($implementations['gn2_base_config']);
+    $implementations['gn2_base_config'] = $group;
+  }
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function gn2_base_config_entity_info_alter(&$info) {
+  $info['node']['access callback'] = 'gn2_base_config_node_access_callback';
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function gn2_base_config_node_view($node, $view_mode, $langcode) {
+  if ($view_mode == 'full') {
+    $current = current_path();
+    if ($current !== arg(0) . '/' . arg(1) && arg(1) !== 'add' && arg(2) !== 'edit') {
+      return drupal_not_found();
+    }
+  }
+}
+
+/**
+ * Access callback for nodes.
+ */
+function gn2_base_config_node_access_callback($op, $node = NULL, $account = NULL) {
+  // We want to check our special case. If the operation is view, without a
+  // node, and they are trying to access our views (promote-organization or
+  // promote-sitewide-public) give access.
+  $path = current_path();
+  $our_view_paths = substr_count($path, "promote-organization") > 0 ||
+    substr_count($path, "promote-sitewide-public") > 0;
+  if (($op == "view" || $op == "update") && !isset($node) && $our_view_paths) {
+    return TRUE;
+  }
+  return entity_metadata_no_hook_node_access($op, $node, $account);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * This rearranges and sets the default value for image uploads via media
+ * module.
+ *
+ * TODO: Write QA.
+ */
+function gn2_base_config_form_media_wysiwyg_format_form_alter(&$form, &$form_state, $form_id) {
+  $form['options']['format']['#default_value'] = 'original_version';
+  $form['options']['format']['#options'] = array(
+    'original_version' => 'Original',
+    'large_version' => 'Large',
+    'medium_version' => 'Medium',
+    'small_version' => 'Small',
+  );
+
+  if (isset($form_state['file']) && $form_state['file']->type == 'image') {
+    unset($form_state['field']['field_license']);
+    $form['options']['fields']['field_license'][LANGUAGE_NONE]['#required'] = FALSE;
+    $form['options']['fields']['field_license']['#access'] = FALSE;
+  }
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/autosubmit.js');
+}
+
+/**
+ * Implements hook_admin_paths_alter().
+ *
+ * This sets the user edit pages to display with gn2_zen
+ * instead of the admin theme.
+ */
+function gn2_base_config_admin_paths_alter(&$paths) {
+  $paths['user/*/edit'] = FALSE;
+  $paths['admin/manage/users/regforms/*'] = FALSE;
+  $paths['*/group'] = FALSE;
+  $paths['group/*/*/admin/*'] = FALSE;
+  $paths['admin/content/file/edit-multiple/*'] = FALSE;
+  $paths['media-gallery/detail/*/*/edit'] = FALSE;
+  $paths['media-gallery/detail/*/*/remove'] = FALSE;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_base_config_menu() {
+  $items['register-to-event/%/%'] = array(
+    'page callback' => '_gn2_base_config_register_user_to_event',
+    'page arguments' => array(1, 2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['unregister-from-event/%'] = array(
+    'page callback' => '_gn2_base_config_unregister_user_from_event',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['get-organization-name'] = array(
+    'page callback' => '_gn2_base_config_get_organization_name',
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_base_config_theme(&$existing, $type, $theme, $path) {
+  // Poll results.
+  $hook_theme['gn2_user_polls_results'] = array(
+    'path' => "{$path}/tpl",
+    'template' => 'gn2-users-polls-results',
+    'variables' => array('results' => array()),
+  );
+  return $hook_theme;
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function legal_ctools_plugin_api($module, $api) {
+  if ($module == 'field_group' && $api == 'field_group') {
+    return array('version' => 1);
+  }
+
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function gn2_base_config_node_view_alter(&$build) {
+  if ($build['#bundle'] == 'poll') {
+    unset($build['language']);
+  }
+}
+
+/**
+ * Turn LEGAL fieldset in user Profile into configurable fieldset.
+ *
+ * See: https://www.drupal.org/node/2228065#comment-10069902
+ *
+ * Implements hook_field_group_info().
+ */
+function legal_field_group_info() {
+  $export = array();
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_legal|user|user|form';
+  $field_group->group_name = 'group_legal';
+  $field_group->entity_type = 'user';
+  $field_group->bundle = 'user';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Legal',
+    'weight' => '1',
+    'children' => array(),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => '',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_legal|user|user|form'] = $field_group;
+
+  return $export;
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function legal_field_extra_fields() {
+  $extra['user']['user']['form']['legal'] = array(
+    'label' => t('Legal'),
+    'description' => t('Legal'),
+    'weight' => 3,
+  );
+
+  return $extra;
+}
+
+/**
+ * END: Turn LEGAL fieldset in user Profile into configurable fieldset.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_base_config_block_info() {
+  $blocks = array();
+
+  $blocks['site-logo'] = array(
+    'info' => t('Site logo created in gn2_base_config'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['event-registration'] = array(
+    'info' => t('Event registration'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['course-title-acronym'] = array(
+    'info' => t('Course Title Acronym'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  // Short title block; @see RD-3212.
+  $blocks['gn2_short_title'] = array(
+    'info' => t('Short title display'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_base_config_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'site-logo':
+      $block['#prefix'] = '<div class="header__logo">';
+      $block['#suffix'] = '</div>';
+      $block['content'] = gn2_base_config_site_logo();
+      break;
+
+    case 'event-registration':
+      $block = _gn2_base_config_event_registration();
+      break;
+
+    case 'course-title-acronym':
+      $block = _gn2_base_config_get_course_title_acronym();
+      break;
+
+    case 'gn2_short_title':
+      $block['subject'] = NULL;
+      $block['content'] = gn2_base_config_short_title();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Custom function for linking logo back to org.
+ */
+function gn2_base_config_site_logo() {
+  $gid = gn2_context_get_org_id();
+  $org = node_load($gid);
+
+  $img = drupal_get_path('theme', 'gn2_zen') . '/images/org-logos/logo_globalnet.png';
+  $title = str_ireplace('Platform', '', $org->title);
+  $title = t('!site Home', array('!site' => $title));
+
+  // Translation variables.
+  $logo_markup = array(
+    '@img' => $img,
+    '@alt' => $title,
+  );
+  $logo_markup = t('<img src="/@img" alt="@alt" />', $logo_markup);
+
+  // Returns rendereable structure to allow for alterations.
+  return array(
+    '#organization' => $org,
+    'logo' => array(
+      '#markup' => l($logo_markup, "node/{$gid}", array('html' => TRUE)),
+    ),
+  );
+}
+
+/**
+ * Event registration workflow.
+ */
+function _gn2_base_config_event_registration() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    global $user;
+    $nid = arg(1);
+    $node = node_load($nid);
+    // Get count of Event members.
+    $group_members = _gn2_base_config_get_users_in_group($nid);
+    $number_of_registrants = count($group_members);
+    // Check if registration is enabled.
+    $reg = field_get_items('node', $node, 'field_registration');
+    $registration = $reg[0]['value'];
+    // Check if the Registration Limit is enabled.
+    $reg_limit = field_get_items('node', $node, 'field_registration_limit');
+    $registration_limit = ($reg_limit) ? $reg_limit[0]['value'] : NULL;
+    // Get the Registration Limit.
+    $reg_limit_number = field_get_items('node', $node, 'field_registration_limit_number');
+    $registration_limit_number = ($reg_limit_number) ? $reg_limit_number[0]['value']
+        : NULL;
+    $full = ($registration_limit && $registration_limit_number <= $number_of_registrants) ?
+        TRUE : FALSE;
+    // Get the Event start date.
+    $dates = field_get_items('node', $node, 'field_event_date');
+    $start = strtotime($dates[0]['value']);
+    $end = (empty($dates[0]['value2'])) ? NULL : strtotime($dates[0]['value2']);
+    // Get the Event Settings.
+    $registration_handling = gn2_og_get_membership_type($nid);
+    // Check if the user has already enrolled.
+    $is_enrolled = og_is_member('node', $nid, 'user', $user);
+    // Check to see if the user is pending.
+    $is_pending = og_is_member('node', $nid, 'user', $user, array(OG_STATE_PENDING));
+    // Don't show if Registration isn't enabled or if Event Settings is "Closed"
+    // or if the start date has passed, or if the class is full AND user is not
+    // already a member or a pending member.
+    if ((!$registration || $registration_handling == 'closed' || $start <= time()
+        || $full) && (!$is_enrolled && !$is_pending)) {
+      return;
+    }
+
+    $content = NULL;
+    if ($is_enrolled) {
+      $subject = NULL;
+      $link_text = t('leave here');
+      $tense = ($end && $end < time()) ? 'were' : 'are';
+      $path = 'unregister-from-event/' . $nid;
+      $content = t('You !tense a participant in this event. If you no longer wish to see content and notifications from this event, you can !leave.',
+        array('!tense' => $tense, '!leave' => l($link_text, $path)));
+    }
+    elseif ($is_pending) {
+      $subject = t('Registration pending');
+      $link_text = t('Cancel your request');
+      $path = 'unregister-from-event/' . $nid;
+    }
+    elseif ($registration_handling == 'open') {
+      $subject = t('Interested in attending?');
+      $link_text = t('Register for this event');
+      $path = 'register-to-event/open/' . $nid;
+    }
+    elseif ($registration_handling == 'moderated') {
+      $subject = t('Interested in attending?');
+      $link_text = t('Register for this event');
+      $path = 'register-to-event/moderated/' . $nid;
+    }
+
+    // If the event has started, don't let them change their membership.
+    if (!$is_enrolled) {
+      $content = ($start <= time()) ? '<div class="button-go-to-event"></div>' :
+        '<div class="button-go-to-event">' . l($link_text, $path) . '</div>';
+    }
+    $block = array(
+      'subject' => $subject,
+      'content' => $content,
+    );
+
+    return $block;
+  }
+}
+
+/**
+ * Get all users of a group.
+ */
+function _gn2_base_config_get_users_in_group($gid) {
+  $query = db_select('users', 'u');
+  $query
+    ->condition('u.uid', 0, '<>')
+    ->condition('u.status', 1, '=')
+    ->fields('u', array('uid', 'name'))
+    ->join('og_membership', 'ogm', "ogm.gid = :gid AND u.uid = ogm.etid AND ogm.entity_type = 'user'", array(':gid' => $gid));
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * Add an user to an event.
+ */
+function _gn2_base_config_register_user_to_event($event_handling, $nid) {
+  global $user;
+  $account = $user;
+  $node = node_load($nid);
+
+  if ($event_handling == 'open') {
+    // Add the user to the group.
+    og_group('node', $nid, array(
+      "entity type" => "user",
+      "entity" => $account,
+    ));
+    og_role_grant('node', $nid, $account->uid, 2);
+    drupal_set_message(t('You are going to this event.'));
+  }
+  elseif ($event_handling == 'moderated') {
+    og_group('node', $nid, array(
+      "entity type" => "user",
+      "entity" => $account,
+      "state" => OG_STATE_PENDING,
+    ));
+
+    $message = t('!user has requested to join the !title event', array(
+      '!user' => $user->name,
+      '!title' => $node->title,
+    ));
+    gn2_notifications_count_update($nid, $node->uid, 'Event', $message, $nid);
+    drupal_set_message(t('Your registration request has been sent.'));
+  }
+
+  drupal_goto(drupal_get_path_alias('node/' . $nid));
+}
+
+/**
+ * Remove an user from an event.
+ */
+function _gn2_base_config_unregister_user_from_event($nid) {
+  global $user;
+  $account = $user;
+  // Remove the user from the group.
+  og_ungroup('node', $nid);
+
+  drupal_goto(drupal_get_path_alias('node/' . $nid));
+}
+
+/**
+ * Implements hook_field_access().
+ */
+function gn2_base_config_field_access($op, $field, $entity_type, $entity, $account) {
+  if ($account->uid != 1) {
+    switch ($field['field_name']) {
+      case 'field_date_of_death':
+      case 'og_menu':
+      case 'group_register':
+        return FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_user_view().
+ */
+function gn2_base_config_user_view($account) {
+  if (($url = privatemsg_get_link(array($account))) && variable_get('privatemsg_display_profile_links', 1)) {
+    $account->content['privatemsg_send_new_message']['#title'] = t('Contact');
+  }
+  if (arg(0) == 'user' && is_numeric(arg(1)) && arg(2) == 'edit') {
+    $messages = drupal_get_messages('warning');
+    if ($messages) {
+      foreach ($messages['warning'] as $key => $value) {
+        if (strpos($value, 'Your subscriptions are suspended') !== FALSE) {
+          $messages['warning'][$key] = 'The new message';
+          drupal_set_message('Your notifications are suspended. Please go <a class="update-status" href="#edit-state">here</a> to resume delivery of your notifications.', 'warning');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Returns the list of polls taken by the user and the voted value.
+ */
+function gn2_base_config_get_user_poll_results($account = NULL) {
+
+  // If no user is provided, uses current logged in user.
+  if (!$account || isset($account->uid)) {
+    global $user;
+    $account = $user;
+  }
+
+  // Gets poll chosen values by the user.
+  $poll_user_results_query = db_select('node', 'n');
+  $poll_user_results_query->join('poll_choice', 'pc', 'n.nid = pc.nid');
+  $poll_user_results_query->join('poll_vote', 'pv', 'n.nid = pc.nid AND pc.chid = pv.chid');
+  $poll_user_results = $poll_user_results_query
+    ->fields('n', array('nid', 'title', 'created'))
+    ->fields('pc', array('chtext'))
+    ->fields('pv', array('timestamp'))
+    ->condition('n.type', 'poll')
+    ->condition('pv.uid', $account->uid)
+    ->orderBy('pv.timestamp', 'DESC')
+    ->execute()
+    ->fetchAll();
+
+  return $poll_user_results;
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_organization_node_form_alter(&$form, &$form_state) {
+  global $user;
+  // Adds a validation handler.
+  $form['#validate'][] = '_gn2_base_config_form_organization_node_form_alter_validate';
+  // Hiding Group visibilty field from non-admin users.
+  if (!in_array('administrator', $user->roles) && array_key_exists('group_access', $form)) {
+    $form['group_access'][LANGUAGE_NONE]['#access'] = FALSE;
+  }
+  // Hide delete button from non-admin users; see RD-2032.
+  if (!in_array('administrator', $user->roles)) {
+    $form['actions']['delete']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Custom validation function for the organization_node_form.
+ */
+function _gn2_base_config_form_organization_node_form_alter_validate(&$form, &$form_state) {
+
+  // Gets the content and checks it's within 400 characters.
+  $stripped_html = strip_tags($form_state['values']['body'][LANGUAGE_NONE][0]['value']);
+  $stripped_html = strtr($stripped_html, array('&nbsp;' => ' '));
+  if (drupal_strlen($stripped_html) > 400) {
+    form_set_error('body][' . LANGUAGE_NONE . '][0][value', t('About field is over 400 characters.'));
+  }
+
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_base_config_views_pre_render(&$view) {
+  if ($view->name == 'news_announcements_posts') {
+    switch ($view->current_display) {
+      case 'sitewide_teasers':
+        $view->display_handler->set_option('link_url', 'search/type/announcement/type/news/type/publication/access/public/access/sitewide');
+        break;
+
+      case 'panel_pane_13':
+        $view->display_handler->set_option('link_url', 'search/group/!1/type/announcement/type/news/type/post/type/publication/access/public/access/group/access/organization/access/sitewide');
+        break;
+
+      /* "Teasers" display view all link in footer. */
+      case 'panel_pane_1':
+        if ($view->args[0] == 'news') {
+          $link = l(t('View all news items &raquo;'), '/search/group/' . $view->args[1] . '/type/news', array('html' => TRUE));
+          $view->display['panel_pane_1']->handler->handlers['footer']['area']->options['content'] = $link;
+        }
+        break;
+
+    }
+  }
+  // Allow videos, otherwise trim text to 200 chars.
+  elseif ($view->name == 'other_posts_by_this_author') {
+    foreach ($view->result as $key => $result) {
+      $text = $result->_field_data['nid']['entity']->body[LANGUAGE_NONE][0]['value'];
+      if (strpos($text, '[[{"fid":') != TRUE) {
+        $result->field_body[0]['rendered'] = truncate_utf8(strip_tags($result->_field_data['nid']['entity']->body[LANGUAGE_NONE][0]['safe_value']), 200, TRUE, TRUE);
+      }
+    }
+  }
+  elseif ($view->name == 'og_members_admin') {
+    switch ($view->current_display) {
+      case 'default':
+        $view->attachment_after = l(t('Cancel'), 'node/' . $view->args[1], array('attributes' => array('class' => array('button'))));
+        break;
+    }
+  }
+  elseif ($view->name == 'topics') {
+    $view_displays = ['panel_pane_3', 'panel_pane_4', 'panel_pane_5', 'panel_pane_6', 'panel_pane_7', 'panel_pane_8'];
+    if (in_array($view->current_display, $view_displays)) {
+      if (is_array($view->result)) {
+        foreach ($view->result as $key => $result) {
+          if (!empty($result->field_body)) {
+            $new_topic_teaser_text = preg_replace('/\[.*\]/', '', $result->field_body[0]['rendered']);
+            $new_topic_teaser_text = str_replace('&nbsp;', '', $new_topic_teaser_text);
+            $new_topic_teaser_text = trim($new_topic_teaser_text);
+            $view->result[$key]->field_body[0]['rendered'] = $new_topic_teaser_text;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function gn2_base_config_action_info() {
+  return array(
+    'gn2_base_config_write_message' => array(
+      'type' => 'entity',
+      'label' => t('Send a private message'),
+      'behavior' => array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ * Custom form to send bulk messages.
+ */
+function gn2_base_config_write_message_form($settings, &$form_state) {
+  $form = array();
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#required' => TRUE,
+  );
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#required' => TRUE,
+  );
+  return $form;
+}
+
+/**
+ * Submit function for bulk messages form.
+ */
+function gn2_base_config_write_message_submit($form, $form_state) {
+  $return = array();
+  $return['message'] = $form_state['values']['message'];
+  $return['subject'] = $form_state['values']['subject'];
+  return $return;
+}
+
+/**
+ * Custom action for sending bulk messages.
+ */
+function gn2_base_config_write_message(&$entity, $context) {
+  $user  = user_load($entity->etid);
+  $subject = $context['subject'];
+  $message = $context['message'];
+  privatemsg_new_thread(array($user), $subject, $message);
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function gn2_base_config_node_presave($node) {
+  global $user;
+  // RD-2164 Limit all users (except site admins) from changing the page alias.
+  // Avoid to modify the pathalias in old content.
+  // Administrator can edit it by enabling manually the checkbox to generate
+  // automatic pathalias.
+  if (!$node->is_new && !in_array('administrator', $user->roles)) {
+    $node->path['pathauto'] = 0;
+  }
+  if ($node->type == 'event') {
+    if (isset($node->field_event_date[LANGUAGE_NONE][0]['value'])) {
+      $node->field_event_start_date[LANGUAGE_NONE][0]['value'] = $node->field_event_date[LANGUAGE_NONE][0]['value'];
+      $node->field_event_start_date[LANGUAGE_NONE][0]['show_todate'] = TRUE;
+      $node->field_event_start_date[LANGUAGE_NONE][0]['timezone'] = $node->field_event_date[LANGUAGE_NONE][0]['timezone'];
+      $node->field_event_start_date[LANGUAGE_NONE][0]['timezone_db'] = $node->field_event_date[LANGUAGE_NONE][0]['timezone_db'];
+      $node->field_event_start_date[LANGUAGE_NONE][0]['date_type'] = "datetime";
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function gn2_base_config_entity_presave($entity, $type) {
+  drupal_get_messages('error', TRUE);
+  if ($type == 'user' || $type == 'field_collection_item') {
+
+    $etype = '';
+    if ($type == 'field_collection_item' && ($entity->field_name == 'field_education' || $entity->field_name == 'field_telephone' ||
+            $entity->field_name == 'field_employers' || $entity->field_name == 'field_expertise' || $entity->field_name == 'field_training')) {
+      $etype = $entity->field_name;
+    }
+    elseif ($type == 'user') {
+      $etype = 'user';
+    }
+
+    if ($etype !== '') {
+      if ($entity->is_new) {
+        $original = NULL;
+      }
+      else {
+        $original = $entity->original;
+      }
+
+      _gn2_base_config_compare_init($etype, $entity, $original);
+
+    }
+  }
+
+  // For messages...
+  if ($type == 'message') {
+
+    // Finds the group the message should reference.
+    // First by available, parameter. If not available, then by parent group
+    // and if not available, then by destination argument.
+    $gid = NULL;
+    if (isset($_GET['gid'])) {
+      $gid = $_GET['gid'];
+    }
+    else {
+      $node = NULL;
+      if (arg(0) == 'node') {
+        $node = node_load(arg(1));
+      }
+      elseif (isset($_GET['destination'])) {
+        $temp = explode('/', $_GET['destination']);
+        $node = node_load($temp[1]);
+      }
+      if (!empty($node->type) && $node->type !== 'organization') {
+        $go = new GN2PathToOrganization($node);
+        $group = $go->getParent();
+        if ((empty($group->nid) || $gid != $group->nid)) {
+          if (is_object(($go->getOrganization()))) {
+            $gid = $go->getOrganization()->nid;
+          }
+        }
+      }
+    }
+
+    // Only adds reference if one was found.
+    if ($gid) {
+      $entity->field_group_reference[LANGUAGE_NONE][0]['target_id'] = $gid;
+    }
+  }
+
+}
+
+/**
+ * Checks if a user is an Organization Group Manager.
+ *
+ * DEPRECATED FUNCTION - DON'T USE THIS!
+ *
+ * Instead, check a specific OG permission of the organization containing
+ * the specific group the user is currently operating on.
+ *
+ * @param int $gid
+ *   A specific Organization Group ID (optional).
+ * @param array $admin_roles
+ *   An array of OG role names to be considered admin roles.
+ *
+ * @return bool
+ *   Returns TRUE if the user is a Group Manager for the Org, else FALSE
+ */
+function gn2_base_config_check_org_role($gid = NULL, $admin_roles = array('org_manager', 'hr_manager')) {
+  if (!$gid && arg(0) == 'node' && is_numeric(arg(1))) {
+    if (!function_exists('gn2_simple_access_get_organization')) {
+      module_load_include('inc', 'gn2_simple_access', 'gn2_simple_access');
+    }
+    $gid = gn2_simple_access_get_organization(arg(1));
+  }
+
+  if ($gid) {
+    $roles = og_get_user_roles('node', $gid);
+    $has_admin_roles = array_intersect($roles, (array) $admin_roles);
+    if (!empty($has_admin_roles)) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Gets all the organizations a user is associated with (including indirect).
+ *
+ * This includes both direct memberships as well as a fallback for indirect
+ * memberships, where the user is a member of a group within an organization,
+ * but not a member of any organization directly - for example a guest lecturer
+ * on a course. Even in the latter case, organization admins should have
+ * access to this user.
+ *
+ * @param int $uid
+ *   The User ID (optional). If omitted the current user will be used.
+ *
+ * @return array
+ *   Array of organization node IDs.
+ */
+function gn2_base_config_get_user_orgs($uid = NULL) {
+  // We use a static cache, since this function may be called several times.
+  $return = &drupal_static(__FUNCTION__, array());
+  $states = array(OG_STATE_ACTIVE);
+  if (!$uid) {
+    global $user;
+    $uid = $user->uid;
+  }
+  $orgs = array();
+  $groups = array();
+  if (!isset($return[$uid])) {
+    // First, check for direct organization memberships.
+    $query = db_select('og_membership', 'ogm');
+    $query->join('node', 'n', "n.nid = ogm.gid");
+    $query->condition('ogm.entity_type', 'user', '=')
+               ->condition('ogm.etid', $uid, '=')
+               ->condition('ogm.state', $states, 'IN')
+               ->condition('ogm.group_type', 'node', '=')
+               ->condition('n.type', 'organization', '=')
+               ->addField('ogm', 'gid', 'gid');
+    $results = $query->execute();
+    $orgs = $results->fetchCol();
+
+    // Look up the organization associated with groups.
+    $gr_query = db_select('og_membership', 'ogm');
+    $gr_query->distinct();
+    $gr_query->join('field_data_field_parent_organization', 'org', 'org.entity_id = ogm.gid');
+    $gr_query->condition('ogm.entity_type', 'user', '=')
+              ->condition('ogm.etid', $uid, '=')
+              ->condition('ogm.state', $states, 'IN')
+              ->condition('ogm.group_type', 'node', '=')
+              ->addField('org', 'field_parent_organization_target_id', 'gid');
+    $gr_results = $gr_query->execute();
+    $groups = $gr_results->fetchCol();
+    $return[$uid] = $orgs + $groups;
+  }
+
+  return (isset($return[$uid])) ? $return[$uid] : $return;
+}
+
+/**
+ * Checks if current user is an Organization Group Manager of any organization.
+ *
+ * DEPRECIATED FUNCTION - DON'T USE THIS!
+ * Instead, check a specific OG permission of the organization containing the
+ * specific group the user is currently operating on.
+ *
+ * @param array $admin_roles
+ *   An array of OG role names to be considered admin roles.
+ *
+ * @return bool
+ *   Returns TRUE if the user is a Group Manager for any Org, else FALSE
+ */
+function gn2_base_config_manage_any_org($admin_roles = array('org_manager', 'hr_manager')) {
+  $gids = gn2_base_config_get_user_orgs();
+  foreach ($gids as $n => $gid) {
+    if (gn2_base_config_check_org_role($gid, $admin_roles)) {
+      // After the first org managed, we can stop checking.
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Sets the Group association field and sets #access = FALSE.
+ *
+ * @param string $field
+ *   The field name to check.
+ * @param int $gid
+ *   The Group ID.
+ * @param array $form
+ *   The form array.
+ *
+ * @return array
+ *   Returns the altered form array
+ */
+function gn2_base_config_set_group($field, $gid, array $form) {
+  $your_groups = NULL;
+  global $user;
+  // Check to see if the Group ID is in user's Your Groups.
+  foreach ($form[$field][LANGUAGE_NONE][0]['default']['#options'] as $key => $option) {
+    if (is_array($option) && array_key_exists($gid, $option)) {
+      $form[$field][LANGUAGE_NONE][0]['default']['#default_value'] = $gid;
+      $form[$field]['#attributes']['style'] = 'display: none;';
+      $your_groups = TRUE;
+      break;
+    }
+    elseif ($key == $gid) {
+      $form[$field][LANGUAGE_NONE][0]['default']['#default_value'] = $gid;
+      $form[$field]['#attributes']['style'] = 'display: none;';
+      $your_groups = TRUE;
+      break;
+    }
+    elseif (is_numeric($key) && $form['#form_id'] == 'media_gallery_node_form') {
+      global $user;
+      $members = _gn2_base_config_get_members_in_group($key);
+
+      foreach ($members as $member) {
+        if ($member->uid == $user->uid) {
+          $form[$field]['#attributes']['style'] = 'display: none;';
+          $your_groups = TRUE;
+        }
+      }
+
+      if ($your_groups) {
+        break;
+      }
+    }
+    // When the user is the Gallery owner.
+    elseif (isset($form['#node']) && $form['#node']->uid == $user->uid && $form['#form_id'] == 'media_gallery_node_form') {
+      $your_groups = TRUE;
+      break;
+    }
+  }
+
+  // If the group is not in Your Groups and the user is an Admin,
+  // set the Other Groups field.
+  if (!$your_groups && user_has_role(9)) {
+    $entity_node = node_load($gid);
+    if ($entity_node) {
+      $form[$field][LANGUAGE_NONE][0]['admin'][0]['target_id']['#default_value'] = $entity_node->title . ' (' . $entity_node->nid . ')';
+    }
+  }
+  return $form;
+}
+
+/**
+ * Check whether or not a user has been online within the last 15 minutes.
+ *
+ * @param int $uid
+ *   The User Id.
+ *
+ * @return bool
+ *   Returns TRUE or FALSE.
+ */
+function gn2_base_config_user_online($uid) {
+  $user_access = db_query("SELECT timestamp FROM {sessions} WHERE uid = :uid", array(':uid' => $uid))->fetchField();
+  return ((REQUEST_TIME - $user_access) < 900) ? TRUE : FALSE;
+}
+
+/**
+ * Implements hook_uif_pre_create().
+ */
+function gn2_base_config_uif_pre_create($account, $user_data) {
+  $fields = array();
+
+  if (empty($user_data['name']) && module_exists('pathauto')) {
+    // Loads path auto clean string rules.
+    module_load_include('inc', 'pathauto');
+
+    // Builds username.
+    $first = (isset($user_data['field_name_first'])) ? $user_data['field_name_first'] : '';
+    $fname = str_replace(' ', '', $first);
+    $firstname = pathauto_cleanstring($fname);
+    $last = (isset($user_data['field_name_last'])) ? $user_data['field_name_last'] : '';
+    $lname = str_replace(' ', '', $last);
+    $lastname = pathauto_cleanstring($lname);
+    $username = strtolower(check_plain($firstname)) . '.' . strtolower(check_plain($lastname));
+    if (drupal_strlen($username) > USERNAME_MAX_LENGTH - 3) {
+      $username = drupal_substr($username, 0, USERNAME_MAX_LENGTH - 3);
+    }
+
+    // Check if the username already exists in the database.
+    $result = db_query("SELECT name FROM {users} WHERE name = :username", array(':username' => $username));
+
+    // While the username is taken, append a number
+    // and increment it until our username is unique.
+    $i = 0;
+    while ($result->rowCount()) {
+      $result = db_query("SELECT name FROM {users} WHERE name = :username", array(':username' => $username . ++$i));
+      if (!($result->rowCount())) {
+        $username = $username . $i;
+      }
+    }
+    $fields['name'] = $username;
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_uif_validate_user().
+ */
+function gn2_base_config_uif_validate_user($user_data, $uid) {
+  $error = NULL;
+
+  // RD-2423: adding conditional to ensure first and last names are required.
+  // displaying an error message if either field is missing from any row.
+  $required_fields = array('field_name_first', 'field_name_last');
+  foreach ($required_fields as $field) {
+    if (!array_key_exists($field, $user_data) || empty($user_data[$field])) {
+      $error = t('Both "field_name_first" and "field_name_last" are required; one or both is missing.', array('@field' => $field));
+    }
+  }
+
+  if (array_key_exists('field_crm_id', $user_data) && array_key_exists('field_crm_source', $user_data)) {
+    $uid = db_query('SELECT crmid.entity_id, crms.field_crm_source_value AS source FROM {field_data_field_crm_id} crmid '
+            . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
+            . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
+            . 'AND crms.field_crm_source_value = \'rcpams\'',
+            array(':crmid' => $user_data['field_crm_id']))->fetch();
+    if (is_object($uid) && $uid->entity_id && strtolower($user_data['field_crm_source']) == 'rcpams') {
+      $user = user_load($uid->entity_id);
+      $error = t('A user, !user, already exists with RCPAMS ID: %id',
+        array(
+          '!user' => l($user->name, 'user/' . $user->uid),
+          '%id' => $user_data['field_crm_id'],
+        )
+      );
+    }
+  }
+
+  if (isset($user_data['groups'])) {
+    $gids = array();
+    $nids = explode('|', $user_data['groups']);
+    if (!empty($nids)) {
+      foreach ($nids as $nid) {
+        $group = node_load($nid);
+        if (!is_object($group) || !og_is_group('node', $group)) {
+          $gids[] = $nid;
+        }
+      }
+    }
+    if (!empty($gids)) {
+      $id_ids = format_plural(count($gids), 'id', 'ids');
+      $is_are = format_plural(count($gids), 'is', 'are');
+      $nids = implode(', ', $gids);
+      $error = t('The group !ids %nids !is not valid.',
+        array(
+          '!ids' => $id_ids,
+          '%nids' => $nids,
+          '!is' => $is_are,
+        )
+      );
+    }
+  }
+  return $error;
+}
+
+/**
+ * Implements hook_uif_validate_header().
+ */
+function gn2_base_config_uif_validate_header($header) {
+  $errors = array();
+  $count = 1;
+  foreach ($header as $col => $label) {
+    if (!$label) {
+      $col_num = $col + 1;
+      $column = gn2_base_config_ordinality($col_num);
+      $message = t('The header for the %column column is empty. ',
+          array('%column' => $column));
+      $message .= ($count > 1) ? t('This will result in a %error error message. ',
+        array('%error' => 'Repeated columns')) : NULL;
+      $message .= t('Either add a column header or delete the column, and try again.');
+      $errors[] = $message;
+      $count++;
+    }
+  }
+
+  return $errors;
+}
+
+/**
+ * Implements hook_uif_row_alter().
+ */
+function gn2_base_config_uif_row_alter(&$row, $header_row) {
+  $mail = array_search('mail', $header_row);
+  $first_name = array_search('field_name_first', $header_row);
+  $last_name = array_search('field_name_last', $header_row);
+  $name = array_search('name', $header_row);
+
+  // Check for existing user with same email.
+  if ($mail && $user = user_load_by_mail($row[$mail])) {
+    $first = field_get_items('user', $user, 'field_name_first');
+    $last = field_get_items('user', $user, 'field_name_last');
+    $row[$name] = $user->name;
+    $row[$first_name] = $first[0]['value'];
+    $row[$last_name] = $last[0]['value'];
+
+    return $row;
+  }
+  // Check if username is already taken by another email.
+  elseif ($name && $user = user_load_by_name($row[$name])) {
+    // Generate random int and ensure unique username.
+    $i = '';
+    do {
+      $username = $row[$name] . $i++;
+    } while (user_load_by_name($username));
+    
+    $row[$name] = $username;
+
+    return $row;
+  }
+}
+
+/**
+ * Implements hook_uif_post_update().
+ */
+function gn2_base_config_uif_post_update($account, $user_data, $form_state) {
+  $link = l($account->name, 'user/' . $account->uid);
+  drupal_set_message(t('Existing user !user updated.', array('!user' => $link)), 'status', TRUE);
+}
+
+/**
+ * Return number with ordinal string.
+ */
+function gn2_base_config_ordinality($number) {
+  $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+  if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
+    return $number . 'th';
+  }
+  else {
+    return $number . $ends[$number % 10];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Implemented for simplify_global_configuration_form().
+ * This adds a private message section to the Simplify module UI.
+ * Making possible to toggle private message field visibility.
+ * Ticket: RD-1637.
+ */
+function gn2_base_config_form_simplify_global_configuration_form_alter(&$form, &$form_state) {
+
+  // Adds private messages section.
+  if (module_exists('privatemsg')) {
+    $form['private_messages'] = array(
+      '#description' => t("This applies for all private message forms."),
+      '#title' => t('Private Messages'),
+      '#type' => 'fieldset',
+    );
+    $form['private_messages']['gn2_base_config_simplify_private_messages_global'] = array(
+      '#default_value' => variable_get('gn2_base_config_simplify_private_messages_global', array()),
+      '#options' => simplify_get_fields('private_messages'),
+      '#title' => t('Hide'),
+      '#type' => 'checkboxes',
+    );
+  }
+
+}
+
+/**
+ * Implements hook_simplify_get_fields_alter().
+ *
+ * We add extra fields that can be hidden by the Simplify module.
+ * Tickets: RD-1661, RD-1637
+ */
+function gn2_base_config_simplify_get_fields_alter(&$fields, $type) {
+  // Getting the Text Format for private messages description field.
+  if (module_exists('privatemsg') && $type == 'private_messages') {
+    $fields['format'] = t('Text format selection');
+  }
+  // Getting User profile fields.
+  if ($type == 'users') {
+    $fields['field_crm_id'] = t('The CRM ID field');
+    $fields['field_crm_source'] = t('The CRM Source field');
+  }
+}
+
+/**
+ * Implements hook_simplify_hide_field_alter().
+ *
+ * Hiding the fields.
+ */
+function gn2_base_config_simplify_hide_field_alter(&$form, $field) {
+  // Reusing code to check if the user is an admin user or an org_manager.
+  global $user;
+  $admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+  $manager = gn2_base_config_manage_any_org();
+  switch ($field) {
+    // CRM ID field selection.
+    case 'field_crm_id':
+      /* Display the CRM ID field only if the user is an admin user
+       * OR an org_manager.
+       */
+      if ($manager || $admin) {
+        $form['field_crm_id'][LANGUAGE_NONE]['#access'] = TRUE;
+      }
+      else {
+        $form['field_crm_id'][LANGUAGE_NONE]['#access'] = FALSE;
+      }
+      break;
+
+    // CRM Source field selection.
+    case 'field_crm_source':
+      /* Display the CRM Source field only if the user is an admin user
+       * OR an org_manager.
+       */
+      if ($manager || $admin) {
+        $form['field_crm_source'][LANGUAGE_NONE]['#access'] = TRUE;
+      }
+      else {
+        $form['field_crm_source'][LANGUAGE_NONE]['#access'] = FALSE;
+      }
+      break;
+  }
+}
+
+/**
+ * Return the proper name for a user.
+ *
+ * @param int $uid
+ *   The User ID.
+ * @param bool $link
+ *   Return the proper name as a link to the user page.
+ *
+ * @return string
+ *   Returns the user proper name or username if there are no First and Last
+ *   name.
+ */
+function gn2_base_config_get_user_proper_name($uid, $link = FALSE) {
+  $user = user_load($uid);
+  $first = field_get_items('user', $user, 'field_name_first');
+  $middle = field_get_items('user', $user, 'field_name_middle');
+  $last = field_get_items('user', $user, 'field_name_last');
+  if ($first && $last) {
+    $name = ucfirst($first[0]['value']) . ' ';
+    if ($middle) {
+      $name .= ucfirst($middle[0]['value']) . ' ';
+    }
+    $name .= ucfirst($last[0]['value']);
+  }
+  else {
+    $name = $user->name;
+  }
+  return ($link) ? l($name, 'user/' . $uid) : $name;
+}
+
+/**
+ * Implements hook_feeds_after_parse().
+ */
+function gn2_base_config_feeds_after_parse(FeedsSource $source, FeedsParserResult $result) {
+  foreach ($result->items as $key => $user) {
+    $uid = NULL;
+    // Check to see if crm_id matches an existing RCPAMS ID.
+    if (array_key_exists('field_crm_id', $user) && array_key_exists('field_crm_source', $user) && $user['field_crm_source'] == 'rcpams') {
+      $uid = db_query('SELECT crmid.entity_id AS source FROM {field_data_field_crm_id} crmid '
+              . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
+              . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
+              . 'AND crms.field_crm_source_value = \'rcpams\'',
+              array(':crmid' => $user['field_crm_id']))->fetchField();
+    }
+    // Check for existing users.
+    if (!$uid && array_key_exists('mail', $user)) {
+      $existing = user_load_by_mail($user['mail']);
+
+      if ($existing) {
+        $uid = $existing->uid;
+      }
+    }
+    if ($uid) {
+      $existing = user_load($uid);
+      $result->items[$key]['mail'] = $existing->mail;
+      $result->items[$key]['name'] = $existing->name;
+      unset($result->items[$key]['field_name_first']);
+      unset($result->items[$key]['field_name_last']);
+      unset($result->items[$key]['field_user_rank_prefix']);
+      unset($result->items[$key]['field_country_of_residence']);
+      unset($result->items[$key]['field_country_of_representation']);
+      unset($result->items[$key]['pass']);
+      unset($result->items[$key]['field_crm_id']);
+      unset($result->items[$key]['field_crm_source']);
+
+      // Add any existing Groups to new Groups.
+      $og_nodes = field_get_items('user', $existing, 'og_user_node');
+      if (!empty($og_nodes)) {
+        foreach ($og_nodes as $og_group) {
+          if (!in_array($og_group['target_id'], $result->items[$key]['groups'])) {
+            $result->items[$key]['groups'][] = $og_group['target_id'];
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * RD-1699: ensuring accordion and tabs js load after the core jQuery (Richard).
+ */
+function gn2_base_config_js_alter(&$js) {
+  $js['sites/all/modules/contrib/jquery_update/replace/ui/ui/minified/jquery.ui.accordion.min.js']['group'] = JS_THEME;
+  $js['sites/all/modules/contrib/jquery_update/replace/ui/ui/minified/jquery.ui.tabs.min.js']['group'] = JS_THEME;
+}
+
+/**
+ * Creates a custom links for User Contancts Relationships.
+ *
+ * This function is used in User Profile Header view.
+ */
+function _gn2_base_config_user_profile_relationship_links($uid) {
+  global $user;
+  $loaded_user = user_load($uid);
+
+  if ($user->uid == $uid) {
+    return "";
+  }
+  $add_contact_link = l(t('Add Contact'), "/relationship/$uid/request", array(
+    'attributes' => array(
+      'class' => array('admin-button-blue', 'btn-contact'),
+    ),
+    'query' => array(
+      'destination' => drupal_get_path_alias('user/' . $loaded_user->uid),
+    ),
+  ));
+  $response = $add_contact_link;
+
+  $requester = $user->uid;
+  $requestee = $uid;
+  $relationships = user_relationships_load(array(
+    'between' => array($requester, $requestee),
+    'rtid' => 1,
+  ));
+
+  if ($relationships) {
+    foreach ($relationships as $relationship) {
+      if ($relationship->approved) {
+        $response = t('You are connected') . ' | ' . l(t('Remove Contact'), drupal_get_path_alias('user/' . $user->uid) . "/relationships/$relationship->rid/remove", array(
+          'query' => array(
+            'destination' => drupal_get_path_alias('user/' . $loaded_user->uid),
+          ),
+        ));
+      }
+      else {
+        if ($relationship->requester_id == $requester) {
+          $response = t('Pending for approval') . ' | ' . l(t('Review'), drupal_get_path_alias('user/' . $user->uid) . "/relationships/sent");
+        }
+        else {
+          $response = t('Pending request') . ' | ' . l(t('Review'), drupal_get_path_alias('user/' . $user->uid) . "/relationships/received");
+        }
+      }
+    }
+  }
+  return $response;
+}
+
+/**
+ * Verify if exists at least a leadership to display the block title.
+ *
+ * RD-1302 Hide course leadership blocks when no content present.
+ */
+function _gn2_base_config_display_leadership_block_title($contexts) {
+
+  $node = $contexts['panelizer']->data;
+  if (user_is_logged_in() && (isset($node->field_course_director[LANGUAGE_NONE][0]) ||
+    isset($node->field_course_event_coordinator[LANGUAGE_NONE][0]) ||
+    isset($node->field_course_faculty[LANGUAGE_NONE][0]) ||
+    isset($node->field_course_seminar_leader[LANGUAGE_NONE][0]) ||
+    isset($node->field_course_support_staff[LANGUAGE_NONE][0]) ||
+    isset($node->field_deputy_course_director[LANGUAGE_NONE][0]))) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * RD-1789 Helper block to fix the colon char. Used in Course Panelizer.
+ */
+function _gn2_base_config_get_course_title_acronym() {
+  $temp = explode('/', $_GET['q']);
+  $node = node_load($temp[1]);
+
+  if (isset($node->field_group_short_title[LANGUAGE_NONE][0]['value'])) {
+    $content = '<h1>' . $node->field_group_short_title[LANGUAGE_NONE][0]['value'] . ': ' . $node->title . '</h1>';
+  }
+  else {
+    $content = '<h1>' . $node->title . '</h1>';
+  }
+
+  $block = array(
+    'subject' => 'Course title and acronym.',
+    'content' => $content,
+  );
+  return $block;
+}
+
+/**
+ * Helper function, used to get the organization name given the short-name.
+ */
+function _gn2_base_config_get_organization_name() {
+
+  $info = $_POST['data'];
+  $data = new stdClass();
+  $data->names = array();
+
+  foreach ($info as $key => $value) {
+
+    $query = new EntityFieldQuery();
+
+    $result = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'organization')
+      ->propertyCondition('status', NODE_PUBLISHED)
+      ->fieldCondition('field_org_short_title', 'value', $value['short'], '=')
+      ->execute();
+
+    if (isset($result['node'])) {
+      $tmp = each($result['node']);
+      $node = node_load($tmp['value']->nid);
+      $data->names[$key] = $node->title;
+    }
+
+  }
+  drupal_json_output($data);
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function gn2_base_config_user_logout() {
+  $org_id = gn2_context_get_org_id();
+  $path = drupal_get_path_alias('node/' . $org_id);
+  $_GET['destination'] = $path;
+}
+
+/**
+ * Helper function used in custom rule for User Profile panel.
+ */
+function _gn2_base_config_check_logged_user($contexts) {
+  return ($contexts['argument_entity_id:user_1']->argument == $contexts['logged-in-user']->argument) ? TRUE : FALSE;
+}
+
+/**
+ * Implements hook_menu_get_item_alter().
+ *
+ * RD-2456: adding hook to force password change page to use gn2_zen module.
+ */
+function gn2_base_config_menu_get_item_alter(&$router_item, $path, $original_map) {
+  switch ($router_item['path']) {
+    case 'admin/manage/users/add/user':
+    case 'user/%/password':
+      $router_item['theme_callback'] = 'gn2_base_config_menu_theme_callback';
+      break;
+  }
+}
+
+/**
+ * Implements hook_menu_theme_callback().
+ */
+function gn2_base_config_menu_theme_callback() {
+  return 'gn2_zen';
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_base_config_init() {
+  // RD-2651 Hide "view user list" link to list of users after bulk user import.
+  if ((arg(0) == 'users' && arg(1) == 'dashboard') || (arg(0) == 'node' && arg(2) == 'dashboard')) {
+    $message = drupal_get_messages();
+    if (isset($message['status'][0])) {
+      $message = substr($message['status'][0], 0, strpos($message['status'][0], 'View'));
+      drupal_set_message($message);
+    }
+  }
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/responsive_tabs.js');
+}
+
+/**
+ * RD-2892, Helper function used to display default content for ABOUT in footer.
+ */
+function _gn2_base_config_footer_content_rule($contexts) {
+  if (isset($contexts['requiredcontext_entity:node_1']->data->field_footer_description)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Display the short title; @see RD-3212.
+ */
+function gn2_base_config_short_title() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    $short = ($node && isset($node->field_group_short_title)) ?
+      field_get_items('node', $node, 'field_group_short_title') : NULL;
+    $short_title = ($short) ? $short[0]['value'] . ': ' : NULL;
+    $title = ($node) ? $node->title : NULL;
+    return '<h1>' . $short_title . $title . '</h1>';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * RD-3235 Adding help text & a link to the tech support form
+ * to the user forgot password form.
+ */
+function gn2_base_config_form_user_pass_alter(&$form, &$form_state) {
+  $org_id = gn2_context_get_org_id();
+  $current = current_path();
+  $path = url('node/add/support', array(
+    'query' => array(
+      'gid' => $org_id,
+      'destination' => $current,
+    ),
+  )
+  );
+
+  $form['#prefix'] = '<p class = "tech-support__description description">' .
+    t('If you know you have an account, but have forgotten your username and registered email address,
+    please contact us through the <a href = "@technical-support"> Technical Support </a> form.
+    This form can also be found in the right side of the site footer.', array('@technical-support' => $path)) . '</p>';
+}
+
+/**
+ * RD-2714 - helper function to set a message when an user send a membership request.
+ */
+function _gn2_base_config_set_request_message($form, &$form_state) {
+  $node = node_load($form['gid']['#value']);
+  drupal_set_message(t('Your request to join the group "!group" is pending. You will receive a notification if a group manager approves your request.', array('!group' => $node->title)));
+}

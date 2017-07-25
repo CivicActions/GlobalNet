@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'Teko-Light';
+  src:
+    url('../fonts/Teko-Light.woff2') format('woff2'),
+    url('../fonts/Teko-Light.woff') format('woff');
+
+}
+.Teko-Light {
+  font-family: 'Teko-Light';
+}
+
+@font-face {
+  font-family: 'Teko-Regular';
+  src:
+    url('../fonts/Teko-Regular.woff2') format('woff2'),
+    url('../fonts/Teko-Regular.woff') format('woff');
+}
+.Teko-Regular {
+  font-family: 'Teko-Regular';
+}

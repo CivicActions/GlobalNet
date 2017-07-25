@@ -1,0 +1,151 @@
+.page-users-dashboard {
+
+    h1.custom-title{
+        font-weight: 100;
+        border-bottom: 1px solid $lighter-blue-gray;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    .top .pane-custom.pane-3 {
+        background-image: url("../images/bg-diagonal-tile-blue.png");
+        margin-bottom: 30px;
+    }
+    .top {
+      > .panel-pane.pane-custom {
+        margin-bottom: 2em;
+      }
+    }
+    #page-title, #pane-search-results-container{
+        display: none;
+    }
+    .results-container{
+        margin: 15px 0;
+        .search-progress{
+            background-image: url("../images/progress.gif");
+            background-size: contain;
+            background-repeat: repeat-x;
+            display: block;
+            height: 20px;
+            width: 200px;
+        }
+    }
+    #-gn2-base-config-guide-searcher-form{
+        > div{
+            padding: 10px 20px;
+        }
+        .search-button{
+            @include display_font;
+            border-radius: 0.25em 0.25em 0.25em 0.25em;
+            -moz-border-radius: 0.25em 0.25em 0.25em 0.25em;
+            -webkit-border-radius: 0.25em 0.25em 0.25em 0.25em;
+            line-height: 0.6em;
+            padding: 0.3em 0.5em 0.2em;
+            display: inline-block;
+            font-size: 1.4em;
+            text-align: center;
+            background: $blue-gray;
+            border: 2px solid $calypso;
+            color: $gray-fe;
+            cursor: pointer;
+        }
+        .right-text{
+            width: 190px;
+            display: inline-block;
+            color: $light-gray;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.4;
+            margin-left: 15px;
+            position: absolute;
+        }
+        .form-item-keyword, .form-item-keyword label, fieldset{
+            border: none;
+            display: inline-block;
+        }
+        .form-item-keyword label{
+            color: $light-gray;
+            font-size: 18px;
+            margin-right: 10px;
+
+        }
+        fieldset{
+            margin: 0;
+            padding: 0;
+        }
+
+    }
+    .view-guide-terms-for-admin {
+      &.view-display-id-panel_pane_1 .views-row > .views-field-name{
+            background-color: $gray-e8;
+            @include display_font;
+            line-height: 1;
+            padding: 6px 10px;
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 3px;
+            width: 80%;
+
+            a{
+                width: 100%;
+                display: block;
+                &:after{
+                    content: " ";
+                    background-image: url("../images/gn-icons/icon-arrow-right-grey.png");
+                    background-size: contain;
+                    height: 15px;
+                    width: 15px;
+                    float: right;
+                    background-repeat: no-repeat;
+                }
+            }
+        }
+        &.view-display-id-panel_pane_2{
+          .views-field-description{
+              margin: 15px 0;
+          }
+        }
+    }
+    h3, h2 {
+      @include display_font;
+      margin: 0px;
+      border-bottom: 3px solid $lighter-blue-gray;
+      padding-bottom: 5px;
+      color: $gray-80;
+      line-height: 0.7;
+    }
+    .view-guide-content-for-admin{
+        &.view-display-id-panel_pane_2 .field-type-text-with-summary, &.view-display-id-panel_pane_3 .view-content{
+          margin: 15px 0;
+        }
+    }
+
+    .dashboard-links {
+      padding:10px 10px 10px 10px;
+
+      ul.dashboard-link-list {
+        position: relative;
+        top: 15px;
+        margin-bottom: 20px;
+
+        li {
+          padding-bottom: 5px;
+          font-size: 1.1em;
+        }
+
+      }
+
+      h3 {
+        font-size: 1.3em;
+
+        a {
+          color:$blue-gray;
+          background: $gray-e8;
+          padding: 5px;
+        }
+
+        a:hover, a:focus {
+          color: $dashboard-links-hover;
+        }
+      }
+    }
+}

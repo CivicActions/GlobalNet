@@ -1,0 +1,66 @@
+/*
+ * Styles for the Organization main menus
+ */
+
+.navigation-wrapper {
+  ul.menu, .views-row {
+    position: relative;
+    list-style: none;
+    li, .field-content {
+      display: inline-block;
+      float: left;
+      padding: 0.8em 0;
+      a {
+        display: block;
+        padding: 0 1em;
+      }
+      ul {
+        border: 1px solid $light-gray;
+        border-top: 2px solid $blue-gray;
+        display: none;
+        position: absolute;
+        background: white;
+        padding: 0;
+        margin-top: 12px;
+        z-index: 10;
+        > li {
+          a {
+            font-size: 0.8em;
+          }
+          position: relative;
+          background: transparent;
+          display: block;
+          float: none;
+        }
+      }
+      &:hover {
+        ul {
+          display: inherit;
+        }
+      }
+    }
+  }
+}
+
+
+// Specific styles for the main org menu (RD-3912).
+#block-gn2-themeparts-swap-organization-nav {
+  ul.menu {
+    margin-top: -3px;
+    li.menu__item {
+      padding: 0;
+      a.menu__link {
+        padding: .8em 1em;
+        border-top: 3px solid $white;
+        &.active {
+          border-color: $blue-gray;
+          color: $blue-gray;
+        }
+        &:hover {
+          background: $white;
+          color: $blue-gray;
+        }
+      }
+    }
+  }
+}

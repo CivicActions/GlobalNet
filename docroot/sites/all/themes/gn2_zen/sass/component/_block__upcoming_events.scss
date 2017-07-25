@@ -1,0 +1,33 @@
+.inner-shadow {
+  padding: 0;
+  margin: 0;
+  .panel-pane {
+    margin: 0 !important;
+  }
+  .view-content {
+    padding: 0 !important;
+  }
+  .pane-content {
+    background-color: $gray-fe;
+    box-shadow: 0px 0px 90px $gray-e inset;
+    border: 1px solid $solitude;
+    padding: 22px 26px;
+  }
+}
+.event-toggler {
+  margin-botton: 10px;
+  a {
+    &.active {
+      font-weight: 700;
+    }
+  }
+}
+.custom-upcoming-events-block .view-content {
+  max-height: 200px;
+  overflow-y: auto;
+  &.open {
+    .closed, .full-seats {
+      display: none; 
+    }
+  }
+}

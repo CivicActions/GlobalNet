@@ -1,0 +1,292 @@
+$form-element-font-size: 16px;
+$form-element-padding-top: 8px;
+$form-element-height:  $form-element-font-size + (2 * $form-element-padding-top);
+
+.page-search,
+.page-members,
+.page_search--content {
+  .top {
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .panels-layout--column-inner {
+      border-top: 1px solid $lighter-blue-gray;
+      border-bottom: 1px solid $lighter-blue-gray;
+      margin-bottom: 24px;
+      padding: 24px 0;
+      .search-link {
+        margin-bottom: 0;
+      }
+    }
+    form {
+      label {
+        display: none;
+      }
+      .views-exposed-widget {
+        display: block;
+        height: $form-element-height;
+        overflow: hidden;
+        float: left;
+        border-color: $light-gray;
+        margin-left: 0;
+        .form-submit {
+          margin-top: 0 !important;
+        }
+        input.form-text,
+        input.form-submit {
+          line-height: 1;
+          height: $form-element-height;
+          overflow: hidden;
+          padding: $form-element-padding-top 4px;
+        }
+        input.form-submit {
+          @include button(
+            $bgcolor: $blue-gray,
+            $border-color: $white,
+            $font-size: 1.35em
+          );
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
+
+.page-search,
+.page-members,
+.page_search--content {
+  h2.pane-title {
+    margin: 0;
+    font-weight: bold;
+    font-size: .9em;
+    line-height: 1.2;
+    margin-bottom: .5em;
+    @include breakpoint($large-screen-and-up) {
+      line-height: 1.4;
+      margin-bottom: .75em;
+    }
+  }
+
+  $item-list-indicator-size: 14px;
+  $item-list-indicator-margin: 6px;
+  $item-list-indicator-position: 2px;
+
+  .item-list {
+
+    margin-bottom: 1.0em;
+
+    @include breakpoint($large-screen-and-up) {
+      margin-bottom: 1.75em;
+    }
+
+    ul {
+
+      padding: 0;
+      margin-bottom: 0;
+
+      li {
+        list-style-type: none;
+        font-size: $item-list-indicator-size;
+        margin-bottom: 5px;
+
+        @include breakpoint($large-screen-and-up) {
+          margin-bottom: 11px;
+          line-height: 1.4;
+        }
+
+        a {
+          display: inline-block;
+          color: rgba(44, 44, 44, 0.9);
+          /* TODO - Discuss this.
+            RD-3015 Temporarily commenting this out to because it causes a bug with long
+            org titles */
+          height: auto; //$item-list-indicator-size + $item-list-indicator-position;
+          background-repeat: no-repeat;
+          background-position: 0px $item-list-indicator-position;
+          padding-left: $item-list-indicator-size + $item-list-indicator-margin;
+
+          &.facetapi-inactive {
+            background-image: url(../images/sidebar-checkbox-off.png);
+          }
+          &.facetapi-active {
+            margin-right: $item-list-indicator-margin;
+            width: $item-list-indicator-size;
+            background-image: url(../images/sidebar-checkbox-on.png);
+            text-indent: -9999px;
+          }
+        }
+      }
+    }
+  }
+
+  .facetapi-limit-link {
+    font-size: 14px;
+  }
+
+  .views-row {
+    margin-bottom: 1.75em;
+  }
+
+  .gn-two-col {
+    $zen-column-count: 20;
+    $zen-gutter-width: 0px;
+    $zen-auto-include-item-base: true;
+
+    // background: pink;
+    .sidebar {
+      @include zen-grid-item-base();
+      @include zen-grid-item(0, 0, left, $zen-column-count);
+      display: none;
+    }
+    .main-content {
+      @include zen-grid-item-base();
+      @include zen-grid-item(20, 1, left, $zen-column-count);
+    }
+
+    @include breakpoint($large-screen-and-up) {
+      // background: orange;
+      .sidebar {
+        display: block;
+        @include zen-grid-item-base();
+        @include zen-grid-item(3, 1, left, $zen-column-count);
+        .inner {
+          padding-right: 1.5em;
+        }
+      }
+      .main-content {
+        @include zen-grid-item-base();
+        @include zen-grid-item(17, 4, left, $zen-column-count);
+      }
+    }
+
+  }
+
+  .search-result--image {
+    width: 100%;
+    img {
+      width: 100%;
+      height: auto;
+    }
+    .no-image {
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      background-color: $gray-e;
+      text-indent: -9999px;
+    }
+  }
+
+  .search-result--title {
+    margin: 0 0 0 0;
+    font-size: 1.15em;
+    line-height: 1.4;
+  }
+
+  .search-result--info {
+    margin: 0 0 0 0;
+    font-size: .95em;
+    color: $gray-8c;
+  }
+
+  .search-result--group-status {
+    margin: .2em 0 0 0;
+    font-size: .85em;
+    font-style: italic;
+    color: $medium-gray;
+  }
+
+  .search-result--excerpt {
+    margin: .6em 0 0 0;
+  }
+
+  .refineby {
+    margin-bottom: 1.5em;
+  }
+  @include breakpoint($medium-screen-and-down) {
+    .refineby {
+      margin-bottom: .01em;
+    }
+    h3.pane-title {
+      margin-bottom: .5em;
+      font-size: 1.3em;
+      border-bottom-width: 2px;
+      padding: 0;
+      line-height: 1;
+    }
+  }
+
+
+  @include breakpoint($small-screen-and-down) {
+    .main {
+      padding-top: 1em;
+    }
+  }
+
+  // special styles just for mobile (767 and below)
+
+    $searchAccordionBorderColor: $lighter-blue-gray;
+
+    .top .panels-layout--column-inner {
+      border: none;
+      margin: 0 0 13px 0;
+      padding: 0;
+      .panel-pane {
+        margin-bottom: 0;
+        &.search-form {
+          margin-bottom: .6em;
+        }
+      }
+    }
+
+    .sidebar {
+
+      h2.pane-title {
+        background-color: $lightest-blue-gray;
+        background-image: url(../images/gn-icons/icon-arrow-right-grey.png);
+        border: 1px solid $searchAccordionBorderColor;
+        display: block;
+        padding: 8px 8px 8px 37px;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: 14px 6px;
+        &.clicked {
+          background-color: $very-light-gray;
+          background-image: url(../images/gn-icons/icon-arrow-down-grey.png);
+          background-position: 11px 8px;
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+      }
+      h3.pane-title {
+        margin-top: 12px;
+      }
+      .panel-pane {
+        margin-bottom: 0;
+      }
+      .item-list {
+        display: block;
+        border: 1px solid $searchAccordionBorderColor;
+        border-top: none;
+        background-color: white;
+        padding: 14px;
+        margin-bottom: 1.0em;
+        .facetapi-limit-link {
+          padding-top: 7px;
+          display: block;
+        }
+        ul li {
+          a {
+            background-position: 0 5px;
+            padding-top: 3px;
+            padding-left: 4px;
+            &.facetapi-inactive {
+              display: block;
+              padding-left: 24px;
+            }
+          }
+        }
+      }
+    }
+
+}

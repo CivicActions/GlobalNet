@@ -1,0 +1,115 @@
+/**
+ * @file
+ * Positioning for a 2 col 40:60 custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/**
+ * Partial for adding standard breakpoint variables
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 16, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.gn-two-col-stacked-page,
+.top,
+.sidebar,
+.main-top,
+.main-bottom,
+.footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 25, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.sidebar,
+.main-bottom,
+.footer {
+  clear: both;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stacked-page:before, .gn-two-col-stacked-page:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stacked-page:after {
+  clear: both;
+}
+
+/* line 37, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.gn-two-col-stacked-page .top,
+.gn-two-col-stacked-page .footer {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+}
+/* line 41, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.gn-two-col-stacked-page .sidebar {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+/* line 45, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.gn-two-col-stacked-page .main {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  padding-left: 0;
+  padding-right: 0;
+  clear: both;
+}
+/* line 50, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+.gn-two-col-stacked-page .main-top,
+.gn-two-col-stacked-page .main-bottom {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+}
+
+@media (min-width: 48em) {
+  /* line 59, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+  .gn-two-col-stacked-page .top,
+  .gn-two-col-stacked-page .footer {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+  /* line 63, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+  .gn-two-col-stacked-page .sidebar {
+    float: left;
+    width: 31.25%;
+    margin-left: 0%;
+    margin-right: -31.25%;
+  }
+  /* line 66, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+  .gn-two-col-stacked-page .main {
+    float: left;
+    width: 68.75%;
+    margin-left: 31.25%;
+    margin-right: -100%;
+    padding-left: 0;
+    padding-right: 0;
+    clear: none;
+  }
+  /* line 71, ../../../sass/layout/panels-layouts/gn2_2colstacked_page.scss */
+  .gn-two-col-stacked-page .main-top,
+  .gn-two-col-stacked-page .main-bottom {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+}
+
+/*# sourceMappingURL=gn2_2colstacked_page.css.map */

@@ -1,0 +1,2234 @@
+<?php
+
+/**
+ * @file
+ * Code for the gn2_og feature.
+ */
+
+include_once 'gn2_og.features.inc';
+module_load_include('module', 'gn2_simple_access', 'gn2_simple_access');
+
+/**
+ * Implements hook_og_default_roles_alter().
+ */
+function gn2_og_og_default_roles_alter(&$roles) {
+  $key = array_search('administrator member', $roles);
+  if ($key !== FALSE) {
+    $roles[$key] = "group_manager";
+  }
+}
+
+/**
+ * Displays message if user is blocked.
+ */
+function gn2_og_add_users_submit($form, &$form_state) {
+  $user = user_load_by_name($form_state['values']['name']);
+  if ($user->status == 0) {
+    drupal_set_message(t(':user is not an active account, and will not appear in your users list until activated.', array(':user' => $user->name)));
+  }
+}
+
+/**
+ * Displays message if user is blocked.
+ */
+function gn2_og_bulk_add_users_submit($form, &$form_state) {
+  $users = $form_state['values']['users'];
+  foreach ($users as $user) {
+    $user = user_load($user);
+    if ($user->status == 0) {
+      drupal_set_message(t(':user is not an active account, and will not appear in your users list until activated.', array(':user' => $user->name)));
+    }
+  }
+}
+
+/**
+ * Duplicates courses and sessions.
+ */
+function gn2_og_duplication_create() {
+
+  // Duplicate the entity and save the replica.
+  $entity = array_shift(entity_load('node', array(arg(1))));
+  $entity->nid = NULL;
+  $entity->title = $entity->title . '-copy-time-' . time();
+  $new_node = replicate_entity('node', $entity);
+  $new_node_loaded = node_load($new_node);
+
+  // Find our folders.
+  $folders = db_select('og_membership', 'etid');
+  $folders->fields('etid');
+  $folders->condition('gid', arg(1), '=');
+  $folders->condition('entity_type', 'node', '=');
+  $folders_all = $folders->execute()->fetchAll();
+
+  // Copy our Entity reference stuff.
+  foreach ($folders_all as $folder) {
+    $folder_entity = array_shift(entity_load('node', array($folder->etid)));
+    $folder_entity->clone = TRUE;
+    $folder_entity->nid = NULL;
+    $folder_entity->created = time();
+    $folder_entity->changed = time();
+    $folder_entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $new_node_loaded->nid;
+    $folder_entity->title = $folder_entity->title;
+    replicate_entity('node', $folder_entity);
+  }
+
+  // Find our week groups.
+  $efs = db_select('field_data_field_node_association', 'f');
+  $efs->join('field_data_field_shared_entity_ref', 'e', 'f.entity_id = e.entity_id');
+  $efs->groupBy('e.field_shared_entity_ref_value');
+  $efs->fields('f', array('entity_id'));
+  $efs->condition('f.field_node_association_value', arg(1), '=');
+  $weeks = $efs->execute()->fetchAll();
+
+  // Load our ef's per week.
+  foreach ($weeks as $week) {
+    $efs = db_select('field_data_field_shared_entity_ref', 'entity_id')
+      ->fields('entity_id')
+      ->condition('field_shared_entity_ref_value', $week->entity_id, '=')
+      ->execute()
+      ->fetchAll();
+
+    $ef_obj = array();
+    foreach ($efs as $ef) {
+      $ef_obj[] = $ef->entity_id;
+    }
+
+    // Necessary for assigning the right id's to our duped ef's.
+    $highest = db_query('SELECT MAX(entityform_id) as max_id FROM entityform')->fetchField() + 1;
+    $i = db_query('SELECT MAX(entityform_id) as max_id FROM entityform')->fetchField() + 1;
+    $ent_objs = entity_load('entityform', $ef_obj);
+
+    // Uses the replicate api to create new ef's.
+    foreach ($ent_objs as $ent_obj) {
+      $ent_obj->entityform_id = $i;
+      $ent_obj->clone = TRUE;
+      $ent_obj->created = time();
+      $ent_obj->changed = time();
+      $ent_obj->field_shared_entity_ref[LANGUAGE_NONE][0]['value'] = $highest;
+      $ent_obj->field_shared_entity_ref[LANGUAGE_NONE][0]['safe_value'] = $highest;
+      $ent_obj->field_node_association[LANGUAGE_NONE][0]['value'] = $new_node_loaded->nid;
+      $ent_obj->field_node_association[LANGUAGE_NONE][0]['safe_value'] = $new_node_loaded->nid;
+      replicate_entity('entityform', $ent_obj);
+      $i++;
+    }
+  }
+  drupal_set_message('Course Duplicated');
+  // Send the user to our new course.
+  drupal_goto('node/' . $new_node_loaded->nid);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_og_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  // Find the parent if editing.
+  if (!empty($form['#node']->og_group_ref)) {
+    $parent = $form['#node']->og_group_ref['und'][0]['target_id'];
+  }
+  // Find the parent if a new node.
+  if (empty($form['#node']->og_group_ref)) {
+    if (!empty($_GET['gid'])) {
+      $parent = $_GET['gid'];
+    }
+  }
+  // If there is a parent, get an array of it's topics, and set the
+  // default value for the topics field with it if it's already empty.
+  if (isset($parent)) {
+    $topics_query = db_select('field_data_field_topic', 't')
+      ->fields('t', array('field_topic_tid'))
+      ->condition('entity_id', $parent, '=');
+    $results = $topics_query->execute();
+    $parent_topics = array();
+
+    foreach ($results as $result) {
+      $parent_topics[$result->field_topic_tid] = $result->field_topic_tid;
+    }
+    if (empty($form['field_topic']['und']['#default_value'])) {
+      $form['field_topic']['und']['#default_value'] = $parent_topics;
+    }
+  }
+
+  if ($form_id == 'og_ui_add_users') {
+    $form['#submit'][] = 'gn2_og_add_users_submit';
+  }
+  if ($form_id == 'og_bulkadd_users_form') {
+    $form['#submit'][] = 'gn2_og_bulk_add_users_submit';
+  }
+  if (isset($form['group_group'])) {
+    $state = db_query('SELECT grouptype FROM gn2_og_membership_permission WHERE nid = :nid', array(':nid' => $form['nid']['#value']))->fetchField();
+    $options = array(
+      '' => t('-- Select One --'),
+      'open' => 'Open',
+      'moderated' => 'Moderated',
+      'closed' => 'Closed',
+    );
+    if ($form_id == 'event_node_form') {
+      drupal_add_js(drupal_get_path('module', 'gn2_og') . '/includes/gn2_og.js');
+    }
+
+    $group_settings_title = ($form_id == 'program_node_form') ? 'Page' : ($form_id == 'course_node_form') ? 'Course' : 'Group';
+
+    $field_title = t('Membership Settings');
+
+    $form['gn2_og_form_options'] = array(
+      '#prefix' => t('<label class="gn2_og_form_options__label">!field_title <span class="form-required" title="This field is required.">*</span></label>
+<ul class="tips gn2_og_form_options__tips"><li><strong>OPEN</strong> - Membership requests are accepted immediately.</li>
+<li><strong>MODERATED</strong> - Membership requests must be approved by Group admin.</li>
+<li><strong>CLOSED</strong> - Membership is exclusively managed by a Group Admin. Only the Group Admin can add or remove a member.</li>
+</ul>', array(
+        '!title' => $group_settings_title,
+        '!field_title' => $field_title,
+      )),
+      '#description' => t('Is Membership Open, Moderated, or Closed?'),
+      '#weight' => 1,
+      '#type' => 'select',
+      '#default_value' => $state,
+      '#options' => $options,
+    );
+    if (!empty($form['#groups']['group_basic_information'])) {
+      $form['#group_children']['gn2_og_form_options'] = 'group_basic_information';
+      $form['gn2_og_form_options']['#weight'] = 100;
+    }
+    if (!empty($form['#groups']['group_basic'])) {
+      $form['#group_children']['gn2_og_form_options'] = 'group_basic';
+      $form['gn2_og_form_options']['#weight'] = 100;
+    }
+    $form['actions']['submit']['#submit'][] = 'gn2_og_form_submit';
+    $form['#validate'][] = 'gn2_og_form_options_validate';
+  }
+
+  // Override core Poll Settings access with og_user_access call
+  if ($form_id == 'poll_node_form' && isset($parent)) {
+    $admin =
+      og_user_access('node', $parent, 'bypass node access')
+      || og_user_access('node', $parent, 'edit any poll content')
+      || (og_user_access('node', $parent, 'edit own poll content') && $user->uid == $node->uid);
+    $form['settings']['#access'] = $admin;
+    $form['settings']['active']['#access'] = $admin;
+  }
+
+}
+
+/**
+ * Validation function.
+ */
+function gn2_og_form_options_validate($form, &$form_state) {
+  if (empty($form_state['values']['gn2_og_form_options'])) {
+    $group_settings_title = ($form['#form_id'] == 'program_node_form') ? 'Page' : 'Group';
+    form_set_error('gn2_og_form_options', t('"!title Settings" is a required field.', array('!title' => $group_settings_title)));
+  }
+}
+
+/**
+ * Submit function.
+ */
+function gn2_og_form_submit(&$form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $group_type = $form_state['values']['gn2_og_form_options'];
+  gn2_og_write_membership_permission($nid, $group_type);
+}
+
+/**
+ * Writing the og membership permissions to the database.
+ */
+function gn2_og_write_membership_permission($nid, $group_type) {
+  // Store values in db relating to Open, Moderated or Closed Status.
+  $db_nid = db_query('SELECT nid FROM gn2_og_membership_permission WHERE nid = :nid',
+    array(':nid' => $nid))->fetchField();
+
+  $record = array(
+    'nid' => $nid,
+    'grouptype' => $group_type,
+  );
+
+  $table = 'gn2_og_membership_permission';
+  if (empty($db_nid)) {
+    drupal_write_record($table, $record);
+  }
+  else {
+    drupal_write_record($table, $record, 'nid');
+  }
+}
+
+/**
+ * Implements hook_og_user_access_alter().
+ */
+function gn2_og_og_user_access_alter(&$perm, $context) {
+
+  $node = $context['group']->nid;
+
+  $status = db_query('SELECT grouptype FROM gn2_og_membership_permission WHERE nid = :nid', array(':nid' => $node))->fetchObject();
+
+  if (!empty($status->grouptype) && $status->grouptype == 'closed') {
+    $perm['subscribe'] = FALSE;
+    $perm['subscribe without approval'] = FALSE;
+  }
+
+  if (!empty($status->grouptype) && $status->grouptype == 'moderated') {
+    $perm['subscribe without approval'] = FALSE;
+    $perm['subscribe'] = TRUE;
+  }
+
+  if (!empty($status->grouptype) && $status->grouptype == 'open' || empty($status->grouptype)) {
+    $perm['subscribe without approval'] = TRUE;
+  }
+
+}
+
+/**
+ * Helper function, returns the node Membership Setting value.
+ */
+function _gn2_og_get_node_membership_setting($nid) {
+
+  $status = db_query('SELECT grouptype FROM gn2_og_membership_permission WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+
+  if (!empty($status->grouptype)) {
+    return $status->grouptype;
+  }
+
+  return '';
+}
+
+/**
+ * A Custom block for overriding the Private messages links block.
+ *
+ * This changes the output of the private message links in the header region.
+ *
+ * Implements hook_block_info().
+ */
+function gn2_og_block_info() {
+  $blocks = array();
+
+  $blocks['gn2-og-latest-activity'] = array(
+    'info' => t('GN2 Shows Latest Activity in group'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2-og-active-communities'] = array(
+    'info' => t('GN2 Shows Active OG communities'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_og_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'gn2-og-latest-activity':
+      $block['subject'] = t('Latest Activity');
+      $block['content'] = gn2_og_latest_efq();
+      break;
+
+    case 'gn2-og-active-communities':
+      $block['subject'] = t('GN2 Active OG communities');
+      $block['content'] = gn2_og_active_efq();
+      break;
+
+  }
+
+  return $block;
+}
+
+/**
+ * Active communities block callback.
+ */
+function gn2_og_active_efq() {
+  $output = '';
+  module_load_include('inc', 'gn2_og', 'gn2_og_active_communities');
+
+  $query1 = gn2_og_active_communities_query_nodes();
+  $results1 = $query1->execute()->fetchAll();
+
+  $query2 = gn2_og_active_communities_query_comments();
+  $results2 = $query2->execute()->fetchAll();
+
+  $results = gn2_og_active_communities_merge_results($results1, $results2);
+
+  if (!empty($results)) {
+
+    // Only display 5 items tops.
+    $results = array_chunk($results, 5, TRUE);
+    $results = $results[0];
+
+    // Builds block content.
+    $output .= '<div id="gn2_og_latest" class="sidebar-subheading active-communities">';
+    $output .= '<h3 class="pane-title">Active Communities</h3>';
+
+    foreach ($results as $nid => $changed) {
+      $node = node_load($nid);
+      $output .= gn2_og_active_communities_node_output($node);
+    }
+
+    $output .= '</div>';
+  }
+
+  return $output;
+}
+
+/**
+ * Latest activity block callback.
+ */
+function gn2_og_latest_efq() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    $nid = $node->nid;
+
+    $ids = db_select('og_membership', 'om');
+    $ids->join('comment', 'ct', 'om.etid = ct.nid');
+    $cids = $ids->fields('ct', array('cid'))
+                ->distinct()
+                ->condition('om.entity_type', 'node', '=')
+                ->condition('om.gid', $nid, '=')
+                ->range(0, 5)
+                ->execute()
+                ->fetchAll();
+    $output = '';
+    if (!empty($cids)) {
+      $output .= '<div id="gn2_og_latest" class="sidebar-subheading">';
+      foreach ($cids as $cid) {
+        $comment = comment_load($cid->cid);
+        $user = user_load($comment->uid);
+        // Creates a new variable for username.
+        $username = $user->name;
+        // Creates empty variable for real name.
+        $realname = '';
+        // Sets display variable to username for starters.
+        $display_name = $username;
+        if (!empty($user->field_name_first[LANGUAGE_NONE][0]['value'])) {
+          $realname = $user->field_name_first[LANGUAGE_NONE][0]['value'] . ' ';
+        }
+        if (!empty($user->field_name_last[LANGUAGE_NONE][0]['value'])) {
+          $realname .= $user->field_name_last[LANGUAGE_NONE][0]['value'];
+        }
+        // If real name is set, use this for the display name.
+        if (!empty($realname)) {
+          $display_name = $realname;
+        }
+        $comment_on = node_load($comment->nid);
+        $comment_timeago = gn2_og_timeago($comment->created);
+        date_default_timezone_set('America/New_York');
+        $date = date('l, n/d/Y', $comment->created);
+        $time = date('H:i', $comment->created);
+        $output .= '<div class="latest-activity--item">' .
+                   l($display_name, 'user/' . $user->uid) . ' commented on ' .
+                   l($comment_on->title, 'node/' . $comment_on->nid) . ' <span class="date-posted">' . $comment_timeago . '</span></div>';
+      }
+      $output .= '</div>';
+    }
+
+    return $output;
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Time ago formatter.
+ */
+function gn2_og_timeago($time) {
+  $periods = array(
+    "second",
+    "minute",
+    "hour",
+    "day",
+    "week",
+    "month",
+    "year",
+    "decade",
+  );
+  $lengths = array("60", "60", "24", "7", "4.35", "12", "10");
+  $now = time();
+  $difference = $now - $time;
+  $tense = "ago";
+  for ($j = 0; $difference >= $lengths[$j] && $j < count($lengths) - 1; $j++) {
+    $difference /= $lengths[$j];
+  }
+  $difference = round($difference);
+  if ($difference != 1) {
+    $periods[$j] .= "s";
+  }
+
+  return "$difference $periods[$j] ago";
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_og_views_pre_render(&$view) {
+
+  // Replaces the organization title with the short title value.
+  if ($view->name == 'og_user_groups' && $view->current_display == 'block_1') {
+    foreach ($view->result as &$row) {
+      $row->node_og_membership_title = $row->field_field_org_short_title[0]['rendered']['#markup'];
+    }
+  }
+
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function gn2_og_views_pre_view(&$view, &$display_id, &$args) {
+
+  global $user;
+
+  // For the organization list block (this wasn't done as a feature export
+  // because no feature exports this block. It seems to be inside the db dump).
+  // However, this is a two step process, as the value has to be changed later
+  // (pre_render) to replace the organization title with the short title.
+  if ($view->name == 'og_user_groups' && $display_id == 'block_1') {
+    $fields = $view->display_handler->get_option('fields');
+    $fields['field_org_short_title'] = array(
+      'id' => 'field_org_short_title',
+      'table' => 'field_data_field_org_short_title',
+      'field' => 'field_org_short_title',
+      'relationship' => 'og_membership_related_node_group',
+      'group_type' => 'group',
+      'label' => FALSE,
+      'exclude' => TRUE,
+    );
+    $view->display_handler->set_option('fields', $fields);
+  }
+
+  if ($view->name == 'resources' && $display_id == 'default') {
+    global $user;
+    if (!user_is_anonymous()) {
+      unset($gid);
+      $gid = is_numeric(arg(2)) ? arg(2) : NULL;
+      $har = l(t('Add Folder'), 'node/add/media-gallery', array(
+        'query' => array('gid' => $gid),
+        'attributes' => array('class' => array('teaser-header-add-new-link')),
+      ));
+      if (isset($gid)) {
+        $view->display_handler->options['header']['area'] = array(
+          'id' => 'area',
+          'table' => 'views',
+          'field' => 'area',
+          'label' => '',
+          'content' => $har,
+          'format' => 'full_html',
+          'tokenize' => TRUE,
+          'empty' => 1,
+        );
+        $view->display_handler->options['defaults']['header'] = FALSE;
+      }
+    }
+  }
+
+  if ($view->name == 'resources' && $display_id == 'panel_pane_1') {
+    unset($gid);
+    $gid = (arg(0) == 'node' && is_numeric(arg(1))) ? arg(1) : NULL;
+    $hur = _gn2_og_get_add_folder_button($gid);
+    if (isset($gid)) {
+      $view->display_handler->options['header']['area_1'] = array(
+        'id' => 'area_1',
+        'table' => 'views',
+        'field' => 'area',
+        'label' => '',
+        'content' => $hur,
+        'format' => 'full_html',
+        'tokenize' => TRUE,
+        'empty' => 1,
+      );
+    }
+  }
+
+  // Addresses RD-2533.
+  if ($view->name == 'subgroups' && ($display_id == 'panel_pane_2' || $display_id == 'panel_pane_3')) {
+    // Only load og user info if higher up check pass. It's tiered
+    // to prevent doing unnecessary lifts.
+    if (!in_array('administrator', $user->roles)) {
+      $og_perm_1 = og_user_access_entity('create group content', 'node', arg(1));
+      $og_perm_2 = og_user_access_entity('create course group content', 'node', arg(1));
+      if (!$og_perm_1 && !$og_perm_2) {
+        $path = new GN2PathToOrganization(node_load(arg(1)));
+        $org = $path->getOrganization();
+        $org_roles = og_get_user_roles('node', $org->nid);
+      }
+    }
+  }
+
+  // Addresses RD-3216.
+  if ($view->name == 'subgroups') {
+    unset($gid);
+    if (!user_is_anonymous()) {
+      $gid = (arg(0) == 'node' && is_numeric(arg(1))) ? arg(1) : NULL;
+      $her = l(t('Add Subgroup'), 'node/add/course-group', array(
+        'query' => array('gid' => $gid),
+        'attributes' => array('class' => array('teaser-header-add-new-link')),
+      ));
+      if (isset($gid)) {
+        $view->display_handler->options['header']['area'] = array(
+          'id' => 'area',
+          'table' => 'views',
+          'field' => 'area',
+          'label' => '',
+          'content' => $her,
+          'format' => 'full_html',
+          'tokenize' => TRUE,
+          'empty' => 1,
+        );
+      }
+    }
+  }
+
+  if ($view->name == 'group_statistics' && $display_id == 'page_report_hierarchy') {
+
+    $nodes = array();
+    $groups_query = NULL;
+
+    // Admins can see all groups.
+    if (in_array('administrator', $user->roles) || $user->uid == 1) {
+
+      $groups_query = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('n.type', 'organization');
+
+    }
+    else {
+
+      // And other types of user have to be part of the group.
+      $groups_query = db_select('og_membership', 'ogm');
+      $groups_query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+      $groups_query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $groups_query->join('node', 'n', 'ogm.gid = n.nid');
+      $groups_query
+        ->fields('n', array('nid'))
+        ->condition('ogm.etid', $user->uid)
+        ->condition('ogm.entity_type', 'user')
+        ->condition('ogm.group_type', 'node')
+        ->condition('ogm.state', OG_STATE_ACTIVE)
+        ->condition('ogr.name', array('group_manager', 'org_manager'), 'IN')
+        ->condition('n.type', 'organization');
+
+    }
+
+    // Sets list of items.
+    foreach ($groups_query->execute() as $org) {
+      $org = node_load($org->nid);
+      $nodes[] = l($org->title, "admin/manage/reports/organization-hierarchy/{$org->nid}");
+    }
+
+    // Adds list.
+    $view->attachment_before .= theme('item_list', array(
+      'items' => $nodes,
+      'title' => t('Organizations'),
+    ));
+    $view->attachment_before .= '<hr />';
+
+    // Temporarely allows recurssion on view fields.
+    global $conf;
+    if (isset($conf['views_field_view_evil'])) {
+      $_SESSION['old_views_field_view_evil'] = $conf['views_field_view_evil'];
+    }
+    $conf['views_field_view_evil'] = TRUE;
+
+  }
+
+  if ($view->name == 'manage_organization_content' && $display_id == 'page_manage_full') {
+
+    $nodes = array();
+    $groups_query = NULL;
+
+    // Admins can see all groups.
+    if (in_array('administrator', $user->roles) || $user->uid == 1) {
+
+      $groups_query = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('n.type', 'organization');
+
+    }
+    else {
+
+      // And other types of user have to be part of the group.
+      $groups_query = db_select('og_membership', 'ogm');
+      $groups_query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+      $groups_query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $groups_query->join('node', 'n', 'ogm.gid = n.nid');
+      $groups_query
+        ->fields('n', array('nid'))
+        ->condition('ogm.etid', $user->uid)
+        ->condition('ogm.entity_type', 'user')
+        ->condition('ogm.group_type', 'node')
+        ->condition('ogm.state', OG_STATE_ACTIVE)
+        ->condition('ogr.name', array('group_manager', 'org_manager'), 'IN')
+        ->condition('n.type', 'organization');
+
+    }
+
+    // Sets list of items.
+    foreach ($groups_query->execute() as $org) {
+      $org = node_load($org->nid);
+      $nodes[] = l($org->title, "manage/organization-content/{$org->nid}");
+    }
+
+    // Adds list.
+    $view->attachment_before .= theme('item_list', array(
+      'items' => $nodes,
+      'title' => t('Organizations'),
+    ));
+    $view->attachment_before .= '<hr />';
+
+  }
+
+  if ($view->name == 'inbox' && $display_id == 'block_5') {
+    $thread_id = arg(2);
+    if (is_numeric($thread_id)) {
+      $ur = db_select('pm_message', 'm')
+        ->fields('m', array('author'))
+        ->condition('m.mid', $thread_id)
+        ->execute()->fetchField();
+      $subject = db_select('pm_message', 'l')
+        ->fields('l', array('subject'))
+        ->condition('l.mid', $thread_id)
+        ->execute()->fetchField();
+      $first = db_select('field_data_field_name_first', 'n')
+        ->fields('n', array('field_name_first_value'))
+        ->condition('n.entity_id', $ur)
+        ->execute()->fetchField();
+      $last = db_select('field_data_field_name_last', 'o')
+        ->fields('o', array('field_name_last_value'))
+        ->condition('o.entity_id', $ur)
+        ->execute()->fetchField();
+
+      $hr = '<div class = "messages--thread--title-wrapper"> <h2 class = "messages--thread--title">' . $subject . '</h2> <p "messages--thread--details">Sent by ' . $first . ' ' . $last . ' </p> </div>';
+
+      if (arg(1) !== 'view') {
+        $fr = '<div class="message-actions footer" > <a class="message-reply" href = "/messages/view/' . $thread_id . '" > Reply</a > <a class="message-delete" href = "/messages/delete/' . $thread_id . '" > Delete</a > </div >';
+        $hr .= '<div class="message-actions footer" > <a class="message-reply" href = "/messages/view/' . $thread_id . '" > Reply</a > <a class="message-delete" href = "/messages/delete/' . $thread_id . '" > Delete</a > </div >';
+      }
+
+      if (isset($hr)) {
+        $view->display_handler->options['header']['area_1'] = array(
+          'id' => 'area_1',
+          'table' => 'views',
+          'field' => 'area',
+          'label' => 'Title & meta',
+          'content' => $hr,
+          'format' => 'full_html',
+          'tokenize' => TRUE,
+        );
+      }
+      if (isset($fr)) {
+        $view->display_handler->options['footer']['area'] = array(
+          'id' => 'area',
+          'table' => 'views',
+          'field' => 'area',
+          'label' => '',
+          'content' => $fr,
+          'format' => 'full_html',
+          'tokenize' => TRUE,
+        );
+      }
+    }
+  }
+  if ($view->name == 'user' && $display_id == 'panel_pane_1') {
+    $fr = l('<button class="general-content-button centered">Find New Contacts</button>', 'members', array('html' => TRUE));
+    $view->display_handler->options['defaults']['footer'] = FALSE;
+    $view->display_handler->options['footer']['area'] = array(
+      'id' => 'area',
+      'table' => 'views',
+      'field' => 'area',
+      'label' => '',
+      'content' => $fr,
+      'format' => 'full_html',
+      'tokenize' => TRUE,
+      'empty' => 1,
+    );
+  }
+  if ($view->name == 'users_contact_history_info' && $display_id == 'panel_pane_4') {
+    $uid = arg(1);
+    $fr = _gn2_base_config_user_profile_relationship_links($uid);
+    if (isset($fr)) {
+      $view->display_handler->options['defaults']['footer'] = FALSE;
+      $view->display_handler->options['footer']['area'] = array(
+        'id' => 'area',
+        'table' => 'views',
+        'field' => 'area',
+        'label' => '',
+        'content' => $fr,
+        'format' => 'full_html',
+        'tokenize' => TRUE,
+        'empty' => 1,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hooks_post_render().
+ */
+function gn2_og_views_post_render(&$view, &$output, &$cache) {
+
+  // Disables view field recurssion.
+  $pages = array('page_report_hierarchy', 'page_1');
+  if ($view->name == 'group_statistics' && in_array($view->current_display, $pages)) {
+    global $conf;
+    if (isset($conf['views_field_view_evil'])) {
+      if (isset($_SESSION['old_views_field_view_evil'])) {
+        $conf['views_field_view_evil'] = $_SESSION['old_views_field_view_evil'];
+      }
+    }
+  }
+
+}
+
+/**
+ * Checks if user has access to group management functionality.
+ */
+function gn2_og_any_group_manager_access($account = NULL) {
+
+  // Checks permission.
+  if (user_access('access all views')) {
+    return TRUE;
+  }
+
+  // If account not set, uses current user.
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  // Checks if the users has any membership as manager.
+  $groups_query = db_select('og_membership', 'ogm');
+  $groups_query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+  $groups_query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+  $groups_query->join('node', 'n', 'ogm.gid = n.nid');
+  $groups_query
+    ->fields('n', array('nid'))
+    ->condition('ogm.etid', $account->uid)
+    ->condition('ogm.entity_type', 'user')
+    ->condition('ogm.group_type', 'node')
+    ->condition('ogm.state', OG_STATE_ACTIVE)
+    ->condition('ogr.name', array('group_manager', 'org_manager'), 'IN')
+    ->condition('n.type', 'organization');
+
+  // If accessing the view page of organization hierarchy.
+  if (strpos(current_path(), 'admin/manage/reports/organization-hierarchy/') !== FALSE) {
+    $nid = explode('/', current_path());
+    $nid = array_pop($nid);
+    $groups_query->condition('n.nid', $nid);
+  }
+  elseif (strpos(current_path(), 'manage/organization-content/') !== FALSE) {
+    $nid = explode('/', current_path());
+    $nid = array_pop($nid);
+    $groups_query->condition('n.nid', $nid);
+  }
+
+  // It is a group manager if at least a result is found.
+  $groups_query = $groups_query->countQuery();
+
+  return $groups_query->execute()->fetchField() > 0;
+
+}
+
+/**
+ * Searches for content that does not have a parent organization and sets it.
+ *
+ * @return DatabaseStatementInterface
+ *   A prepared statement object, already executed.
+ */
+function gn2_og_get_content_without_parent_organization() {
+
+  // Parameters to be used with the query.
+  $params = array(
+    ':content_types' => array(
+      'help',
+      'organization',
+      'page',
+      'panel',
+      'user_profile_updates',
+    ),
+  );
+
+  // Query to get items without parent organization.
+  $query_items_without_parent = <<<SQL
+    SELECT
+      N.nid, N.title, T.name AS 'type'
+    FROM
+      node N INNER JOIN node_type T ON N.type = T.type
+    WHERE
+      N.type NOT IN (:content_types)
+      AND N.nid NOT IN (
+        SELECT
+          entity_id
+        FROM
+          field_data_field_parent_organization
+        WHERE
+          entity_type = 'node'
+      )
+   ORDER BY
+      T.name ASC, N.title ASC
+SQL;
+
+  return db_query($query_items_without_parent, $params);
+
+}
+
+/**
+ * Sends a friend request to all users in group.
+ *
+ * @param string $nid
+ *   The group id.
+ */
+function gn2_og_manager_friend_all($nid) {
+  global $user;
+  $roles = og_get_user_roles('node', $nid, $user->uid, $include = TRUE);
+  if (in_array('org_manager', $roles) || in_array('group_manager', $roles)) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'user')
+          ->fieldCondition('og_user_node', 'target_id', $nid, '=');
+    $results = $query->execute();
+
+    foreach ($results['user'] as $uid => $placeholder) {
+      $org_user = user_load($uid);
+      if ($user->uid !== $org_user->uid) {
+        user_relationships_request_relationship($user->uid, $org_user->uid, 1, $approved = FALSE);
+        gn2_notifications_count_update($user->uid, $org_user->uid, GN2_NOTIFICATIONS_CONTACT_BULK_REQUEST, 'Approved: ' . 'True', $org_user->uid);
+      }
+    }
+    drupal_set_message('Friendship requests sent!');
+  }
+  else {
+    drupal_set_message('Something went wrong.', 'error');
+  }
+  drupal_goto('node/' . $nid);
+
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_og_menu() {
+
+  $items = array();
+  $items['node/%/manager-friend-all'] = array(
+    'title' => 'Friend All',
+    'page callback' => 'gn2_og_manager_friend_all',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/reports/content-without-parent-organization'] = array(
+    'access arguments' => array('access site reports'),
+    'description' => 'Displays a list of content that has no parent organization set.',
+    'page callback' => 'gn2_og_page_report_content_without_parent_organization',
+    'title' => 'Content without parent organization',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  // Add bulk members.
+  $items['group/%/%/admin/people/addbulkmembers'] = array(
+    'title' => 'Add bulk members',
+    'description' => 'Add bulk members',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_gn2_og_add_bulk_members', 2),
+    'access callback' => 'og_ui_user_access_group',
+    'access arguments' => array('manage members', 1, 2),
+    'file' => 'gn2_og.addbulkmembers.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+  // Add multiple users to multiple groups.
+  $items['admin/people/groups'] = array(
+    'title' => 'Add multiple users to multiple groups',
+    'description' => 'Add multiple users to multiple groups',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_og_multi_user_multi_group_form'),
+    'access arguments' => array('administer users'),
+    'file' => 'gn2_og.groupadd.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  // Autocomplete function to list users.
+  $items['users/autocomplete'] = array(
+    'title' => 'Autocomplete for users',
+    'page callback' => '_users_autocomplete',
+    'access arguments' => array('administer users'),
+    'file' => 'gn2_og.groupadd.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_CALLBACK,
+  );
+  // Autocomplete function to list groups.
+  $items['groups/autocomplete'] = array(
+    'title' => 'Autocomplete for groups',
+    'page callback' => '_groups_autocomplete',
+    'access arguments' => array('administer users'),
+    'file' => 'gn2_og.groupadd.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_CALLBACK,
+  );
+  // Move multiple users to a different group.
+  $items['group/%/%/admin/people/move'] = array(
+    'title' => 'Move members',
+    'description' => 'Add group members to a different group',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_og_move_users_form', 2),
+    'access callback' => '_gn2_og_move_members_access',
+    'access arguments' => array('manage members', 1, 2),
+    'file' => 'gn2_og.groupmove.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+  // Autocomplete function to list groups in Move members tab.
+  $items['move/groups/autocomplete'] = array(
+    'title' => 'Autocomplete for groups',
+    'page callback' => '_groups_autocomplete',
+    'access arguments' => array('administer users'),
+    'file' => 'gn2_og.groupadd.inc',
+    'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
+    'type' => MENU_CALLBACK,
+  );
+
+  // Manage members tab.
+  $items['group/%/%/admin/people/manage'] = array(
+    'title' => 'Manage members',
+    'description' => 'Find and manage group members.',
+    'page callback' => 'og_ui_admin_account',
+    'page arguments' => array(1, 2),
+    'access callback' => 'og_ui_user_access_group',
+    'access arguments' => array('manage members', 1, 2),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'og_ui.admin.inc',
+    'file path' => drupal_get_path('module', 'og_ui'),
+  );
+  $items['group/node/%node/join'] = array(
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_og_page_join',
+    'page arguments' => array(2),
+    'access callback' => 'user_is_logged_in',
+    'title' => 'Join group',
+  );
+
+  $items['gn2-duplicate-node/%node'] = array(
+    'title' => 'Duplicate Node',
+    'description' => 'Duplicate Node by Nid',
+    'page callback' => 'gn2_og_duplication_create',
+    'page arguments' => array(1),
+    'access arguments' => array('view own unpublished content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+
+}
+
+/**
+ * RD-2143 Disable "Move Members" action at Org level.
+ *
+ * Helper function to check access permission to Move Members tab.
+ */
+function _gn2_og_move_members_access($perm, $group_type, $gid) {
+  $node = node_load($gid);
+
+  return ($node->type == "organization") ? FALSE : og_ui_user_access_group($perm, $group_type, $gid);
+}
+
+/**
+ * Page content for the content without parent organization report.
+ */
+function gn2_og_page_report_content_without_parent_organization() {
+
+  // Page content.
+  $content = array();
+
+  // Might contain a form.
+  $content['form'] = array();
+
+  // Data table.
+  $content['table'] = array(
+    'description' => array(
+      '#markup' => '',
+    ),
+    'content' => array(
+      '#theme' => 'table',
+      '#header' => array(
+        array('data' => 'Id'),
+        array('data' => 'Type'),
+        array('data' => 'Title'),
+        array('data' => 'Edit'),
+      ),
+      '#rows' => array(),
+    ),
+  );
+
+  // Data table content.
+  $result = gn2_og_get_content_without_parent_organization();
+  if ($result->rowCount() > 0) {
+    $content['table']['description']['#prefix'] = '<p>';
+    $content['table']['description']['#suffix'] = '</p>';
+    $t_params = array('!items' => $result->rowCount());
+    if ($result->rowCount() == 1) {
+      $content['table']['description']['#markup'] = t("There is 1 item without parent organization.");
+    }
+    else {
+      $content['table']['description']['#markup'] = t("There are !items items without parent organization.", $t_params);
+    }
+    foreach ($result as $item) {
+      $content['table']['content']['#rows'][] = array(
+        array('data' => $item->nid),
+        array('data' => $item->type),
+        array('data' => l($item->title, "node/{$item->nid}")),
+        array('data' => l(t('Edit'), "node/{$item->nid}/edit")),
+      );
+    }
+  }
+  else {
+    $content['table']['content']['#rows'][] = array(
+      array(
+        'data' => t('There is no content without parent organization.'),
+        'colspan' => 4,
+      ),
+    );
+  }
+
+  // Sets fix form.
+  if ($result->rowCount() > 0) {
+    $form = drupal_get_form('gn2_og_fix_content_without_parent_organization_form');
+    $content['form'] = array(
+      '#markup' => drupal_render($form),
+    );
+  }
+
+  return $content;
+
+}
+
+/**
+ * Content fix form.
+ */
+function gn2_og_fix_content_without_parent_organization_form($form, &$form_state) {
+
+  $form['fieldset'] = array(
+    '#title' => t('Set parent organization'),
+    '#type' => 'fieldset',
+  );
+
+  $form['fieldset']['message'] = array(
+    '#markup' => t('Do you want to automatically setup parent organizations for each item?'),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+
+  $form['fieldset']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Setup parent organizations'),
+  );
+
+  return $form;
+
+}
+
+/**
+ * Submission handler for gn2_og_fix_content_without_parent_organization_form().
+ */
+function gn2_og_fix_content_without_parent_organization_form_submit() {
+
+  // If there are items without parent organization, fixes them.
+  $result = gn2_og_get_content_without_parent_organization();
+  if ($result->rowCount() > 0) {
+
+    $batch = array(
+      'operations' => array(),
+      'finished' => 'gn2_og_fix_content_without_parent_organization_fix_finished',
+      'title' => t('Processing update to fix content without parent organization'),
+      'init_message' => t('Process is starting...'),
+      'error_message' => t('Process has encountered an error.'),
+      'progress_message' => t('Processed @current out of @total.'),
+    );
+    foreach ($result as $item) {
+      $batch['operations'][] = array(
+        'gn2_og_fix_content_without_parent_organization_process_item',
+        array($item),
+      );
+    }
+    batch_set($batch);
+
+  }
+
+}
+
+/**
+ * Batch processing of sinle items to set their parent organization.
+ */
+function gn2_og_fix_content_without_parent_organization_process_item($item, &$context) {
+
+  // Control variables.
+  if (!isset($context['results']['processed_items'])) {
+    $context['results']['processed_items'] = 0;
+    $context['results']['faied_items'] = 0;
+    $context['results']['messages'] = array(
+      'error' => array(),
+      'success' => array(),
+    );
+  }
+
+  // Loads the node.
+  $node = node_load($item->nid);
+  $p = new GN2PathToOrganization($node);
+  $org = $p->getOrganization();
+
+  // Sets message.
+  $context['message'] = t('Updating <em>@title</em>.', array('@title' => $node->title));
+
+  // Sets parent organization.
+  $t_vars = array(
+    '@organization' => $org->title,
+    '@content' => $node->title,
+  );
+  try {
+    $node->field_parent_organization = array(
+      LANGUAGE_NONE => array(
+        array('target_id' => $org->nid),
+      ),
+    );
+    node_save($node);
+
+    // Messages.
+    $context['results']['messages']['success'][] = t('Setting parent organization <strong>@organization</strong> to <strong>@content</strong>', $t_vars);
+
+  } catch (Exception $ex) {
+    $t_vars['@error'] = $ex->getTraceAsString();
+    $context['results']['messages']['error'][] = t('Failed for <strong>@content</strong>.<pre>@error</pre>', $t_vars);
+  }
+}
+
+/**
+ * Batch complete handler.
+ */
+function gn2_og_fix_content_without_parent_organization_fix_finished($success, $results, $operations) {
+
+  if ($success) {
+    if (!empty($results['messages']['success'])) {
+      $t_vars = array(
+        '!items' => count($results['messages']['success']),
+      );
+      array_unshift($results['messages']['success'], t('Items processed: !items', $t_vars));
+    }
+    foreach ($results['messages'] as $type => $messages) {
+      foreach ($messages as $message) {
+        drupal_set_message($message, $type);
+      }
+    }
+  }
+  else {
+    // Display error information.
+    $error_operation = reset($operations);
+    $t_vars = array(
+      '%error_operation' => $error_operation[0],
+      '@arguments' => print_r($error_operation[1], TRUE),
+    );
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', $t_vars);
+    drupal_set_message($message, 'error');
+  }
+
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function gn2_og_node_presave($node) {
+
+  // List of types where value will not be set.
+  $exclude_types = array(
+    'help',
+    'organization',
+    'page',
+    'panel',
+    'user_profile_updates',
+  );
+
+  // Sets the parent organization if it is a valid type.
+  if (!in_array($node->type, $exclude_types) && (isset($node->og_group_ref) || isset($_GET['gid']))) {
+    $p = new GN2PathToOrganization($node);
+    $org = $p->getOrganization();
+    if (!$org) {
+      if (isset($_GET['gid'])) {
+        $p = node_load($_GET['gid']);
+        $p = new GN2PathToOrganization($p);
+        $org = $p->getOrganization();
+      }
+    }
+    if ($org) {
+      $node->field_parent_organization = array(
+        LANGUAGE_NONE => array(
+          array(
+            'target_id' => $org->nid,
+          ),
+        ),
+      );
+    }
+  }
+
+}
+
+/**
+ * Checks if user has access to user managemnt functionality.
+ */
+function gn2_og_manager_user_access($account = NULL) {
+
+  // Checks permission.
+  if (user_access('administer users')) {
+    return TRUE;
+  }
+
+  // If account not set, uses current user.
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  // Checks if the users has any membership as manager.
+  $query = db_select('og_membership', 'ogm');
+  $query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+  $query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+  $query->join('node', 'n', 'ogm.gid = n.nid');
+  $query
+    ->fields('n', array('nid'))
+    ->condition('ogm.etid', $account->uid)
+    ->condition('ogm.entity_type', 'user')
+    ->condition('ogm.group_type', 'node')
+    ->condition('ogm.state', OG_STATE_ACTIVE)
+    ->condition('ogr.name', array('hr_manager', 'org_manager'), 'IN')
+    ->condition('n.type', 'organization');
+
+  $query->countQuery();
+
+  // It is a group manager if at least a result is found.
+  return $query->execute()->fetchField() > 0;
+}
+
+/**
+ * Checks if user has access to user managemnt functionality.
+ */
+function gn2_og_org_manager_user_access($account = NULL) {
+  // Checks permission.
+  if (user_access('access all views')) {
+    return TRUE;
+  }
+
+  // If account not set, uses current user.
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  // Checks if the users has any membership as manager.
+  $query = db_select('og_membership', 'ogm');
+  $query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+  $query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+  $query->join('node', 'n', 'ogm.gid = n.nid');
+  $query
+    ->fields('n', array('nid'))
+    ->condition('ogm.etid', $account->uid)
+    ->condition('ogm.entity_type', 'user')
+    ->condition('ogm.group_type', 'node')
+    ->condition('ogm.state', OG_STATE_ACTIVE)
+    ->condition('ogr.name', 'org_manager')
+    ->condition('n.type', 'organization');
+
+  $query->countQuery();
+
+  // It is a group manager if at least a result is found.
+  return $query->execute()->fetchField() > 0;
+}
+
+/**
+ * Gets the membership type for a particular group.
+ */
+function gn2_og_get_membership_type($nid) {
+  $query = <<<SQL
+SELECT
+  grouptype
+FROM
+  gn2_og_membership_permission
+WHERE
+  nid = :nid
+SQL;
+
+  return db_query($query, array(':nid' => $nid))->fetchField();
+}
+
+/**
+ * Implements hook_file_download().
+ *
+ * Ensures images on orgs and public nodes are accessible to anonymous users.
+ */
+function gn2_og_file_download($uri) {
+  global $user;
+  // Look for cache to avoid expensive db ops.
+  if (cache_get($uri, 'cache')) {
+    $info = image_get_info($uri);
+
+    return array('Content-Type' => $info['mime_type']);
+  }
+
+  $raw_file = file_uri_to_object($uri);
+  if (!empty($raw_file->fid)) {
+    $fid = $raw_file->fid;
+    $access = FALSE;
+    // If image is in group, look to simple access to determine visibility.
+    $query = db_select('file_usage', 'fu');
+    $query->join('node', 'n', 'n.nid = fu.id');
+    $query->join('node_revision', 'nr', 'nr.vid = n.vid');
+    $query->leftJoin('field_data_field_gn2_simple_access', 'fd', 'n.vid = fd.revision_id');
+    $query->join('og_membership', 'om', 'om.etid = n.nid');
+    $query->fields('fu', array('fid', 'id'));
+    $query->addField('n', 'type');
+    $query->addField('fd', 'field_gn2_simple_access_value', 'privacy');
+    $query->addField('om', 'gid');
+    $query->condition('fu.type', 'node');
+    $query->condition('fu.module', 'media');
+    $query->condition('fu.fid', $fid, '=');
+    $query->condition('fd.entity_type', 'node');
+
+    $results = $query->execute()->fetchAll();
+
+    // Get the user's groups.
+    $groups = db_query('SELECT gid FROM {og_membership} WHERE etid = :uid AND entity_type = :type',
+      array(':uid' => $user->uid, ':type' => 'user'))->fetchCol();
+
+    // If we have a record in the File Usage table, we need to check access.
+    if ($results) {
+      foreach ($results as $file_node) {
+        $is_group = og_is_group_type('node', $file_node->type);
+        $gid = ($is_group) ? $file_node->id : $file_node->gid;
+        switch ($file_node->privacy) {
+          // Allow access for any user.
+          case 'public':
+            $access = TRUE;
+            break;
+
+          // Check for authenticated users.
+          case 'sitewide':
+            $access = ($user->uid > 0) ? TRUE : FALSE;
+            break;
+
+          // Check group access.
+          case 'group':
+            $access = (in_array($gid, $groups)) ? TRUE : FALSE;
+            break;
+
+          // Check Organization access.
+          case 'organization':
+
+            // @todo This process is expensive. We should look for a better way
+            // to do this.
+            // If the file node is an Org, set the Org ID to the file ID.
+            if ($file_node->type == 'organization') {
+              $parent_org = $file_node->id;
+            }
+            // Otherwise, get the org ID from the Parent Org field.
+            else {
+              $parent_org = db_query('SELECT field_parent_organization_target_id AS org'
+                                     . ' FROM {field_data_field_parent_organization} po'
+                                     . ' JOIN {node_revision} nr ON nr.vid = po.revision_id'
+                                     . ' WHERE po.entity_id = :gid', array(':gid' => $file_node->id))->fetchField();
+            }
+            // Check if the user is an Org group member.
+            if (in_array($parent_org, $groups)) {
+              $access = TRUE;
+            }
+            // Look for the parent org for each group until we find a match.
+            if (!empty($groups) && $parent_org && !$access) {
+              foreach ($groups as $group) {
+                $org = db_query('SELECT field_parent_organization_target_id AS org'
+                                . ' FROM {field_data_field_parent_organization} po'
+                                . ' JOIN {node_revision} nr ON nr.vid = po.revision_id'
+                                . ' WHERE po.entity_id = :gid', array(':gid' => $group))->fetchField();
+                if ($parent_org == $org) {
+                  $access = TRUE;
+                  break;
+                }
+              }
+            }
+        }
+        // If we have access, stop looking.
+        if ($access) {
+          break;
+        }
+      }
+    }
+    // If we are allowing access, return Content-Type header and cache it.
+    if ($access) {
+      $header = array('Content-Type' => $raw_file->filemime);
+      // Set cache to avoid expensive db ops.
+      cache_set($uri, $header, 'cache', CACHE_TEMPORARY);
+
+      return $header;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function gn2_og_node_view($node, $view_mode, $langcode) {
+  // If node (for some unknown reason) has the field available during display,
+  // hides it.
+  if (isset($node->content['field_parent_organization'])) {
+    $node->content['field_parent_organization']['#access'] = FALSE;
+  }
+
+  if ($node->type == 'media_gallery') {
+    global $user;
+    $is_admin = (in_array('administrator', $user->roles));
+    $path = new GN2PathToOrganization($node);
+    $group = $path->getParent();
+
+    if ($group && og_is_member('node', $group->nid, 'user', $user) || $is_admin) {
+
+      $node->content['add_media_link'] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => array(
+          'title' => t('Add media'),
+          'href' => 'media/browser',
+          'localized_options' => array(
+            'query' => array('render' => 'media-popup'),
+            'attributes' => array(
+              'class' => array(
+                'media-gallery-add',
+                'launcher',
+              ),
+            ),
+          ),
+        ),
+        // @todo Drupal could really use a theme_menu_local_actions() function...
+        '#prefix' => '<ul class="field action-links">',
+        '#suffix' => '</ul>',
+      );
+
+      // Prevent the overlay module to open an additional dialog.
+      if (module_exists('overlay')) {
+        $node->content['add_media_link']['#link']['localized_options']['attributes']['class'][] = 'overlay-exclude';
+      }
+
+      // Enable the "Add media" link to launch the media browser.
+      module_load_include('inc', 'media', 'includes/media.browser');
+      $node->content['add_media_link']['#attached']['library'][] = array(
+        'media',
+        'media_browser',
+      );
+      $node->content['add_media_link']['#attached']['library'][] = array(
+        'media',
+        'media_browser_settings',
+      );
+      $node->content['add_media_link']['#attached']['js'][] = drupal_get_path('module', 'media_gallery') . '/media_gallery.addimage.js';
+
+      // These JS settings are used by the "add media" link but some are also
+      // shared by the drag-and-drop code below.
+      $instance = field_info_instance('node', 'media_gallery_file', $node->type);
+      $token = drupal_get_token('media_gallery');
+      $gallery_js_settings = array(
+        'mediaGalleryAddImagesUrl' => url('media-gallery/add-images/' . $node->nid . '/' . $token),
+        'mediaGallerySortGalleryUrl' => url('media-gallery/sort/gallery/' . $node->nid . '/' . $token),
+        'mediaGalleryAllowedMediaTypes' => array_filter($instance['widget']['settings']['allowed_types']),
+      );
+
+      // When viewing the full node, add front-end resources for drag-and-drop
+      // sorting.
+      if ($view_mode == 'full') {
+        drupal_add_css(drupal_get_path('module', 'media_gallery') . '/media_gallery.dragdrop.css');
+        drupal_add_library('system', 'ui.sortable');
+        drupal_add_library('system', 'jquery.bbq');
+        drupal_add_js(drupal_get_path('module', 'media_gallery') . '/media_gallery.dragdrop.js');
+        drupal_add_js($gallery_js_settings, array('type' => 'setting'));
+      }
+      else {
+        // Otherwise, attach the setting to the "add media" link, as per above.
+        $node->content['add_media_link']['#attached']['js'][] = array(
+          'type' => 'setting',
+          'data' => $gallery_js_settings,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_token_info_alter().
+ */
+function gn2_og_token_info_alter(&$data) {
+
+  // Adds full path token for groups.
+  $data['tokens']['node']['gn2_og_path'] = array(
+    'name' => t('Full path'),
+    'description' => t('The full path of the node by using the parent groups.'),
+  );
+
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function gn2_og_tokens($type, $tokens, array $data = array(), array $options = array()) {
+
+  $replacements = array();
+
+  // For nodes...
+  if ($type == 'node' && !empty($data['node'])) {
+
+    // For our custom path token...
+    if (isset($tokens['gn2_og_path'])) {
+
+      // Gets the node. From it the parent group's path.
+      $node = $data['node'];
+      if (isset($node->og_group_ref) && !empty($node->og_group_ref) && !empty($node->og_group_ref[LANGUAGE_NONE])) {
+
+        // On some instances, the index is the nid (node save), however on
+        // others (node edit) it's a standard index (0, 1, ..., n).  Because of
+        // this, we use reset to get the first item without removing it and the
+        // referenced node nid.
+        $parent = reset($node->og_group_ref[LANGUAGE_NONE])['target_id'];
+        $parent = node_load($parent);
+
+        // Gets the path alias of the parent node.
+        $alias = drupal_get_path_alias("node/{$parent->nid}", $parent->language);
+
+        // Alias has to have a different path than the inner drupal path. If so,
+        // returns the token replacement. Otherwise updates the parent node
+        // first and then gets the alias again.
+        if ($alias == "node/{$parent->nid}") {
+
+          // Gets the parent node and saves it in order to update the alias.
+          pathauto_node_update_alias($parent, 'bulkupdate');
+          drupal_set_message(t('Updated path for node !nid.', array('!nid' => $parent->nid)));
+
+          // Gets the path alias of the parent node.
+          $alias = drupal_get_path_alias("node/{$parent->nid}", $parent->language);
+
+        }
+
+        // Empty value if at the end no parent path could be obtained.
+        if ($alias == "node/{$parent->nid}") {
+          $alias = '';
+        }
+
+        // Adds replacement.
+        $replacements[$tokens['gn2_og_path']] = $alias;
+
+      }
+
+    }
+
+  }
+
+  return $replacements;
+
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function gn2_og_menu_alter(&$items) {
+  // Alter the title for "Manage members" page.
+  // RD-1308 In page title, the Group Name should be linked to Group page.
+  $items['group/%/%/admin/people']['title callback'] = '_gn2_og_page_title';
+  $items['media-gallery/add-images/%node/%']['access callback'] = '_gn2_og_member_add_files_access';
+
+  // RD-2938 removes "Invite users" tab.
+  $items['group/%/%/admin/people/invite-users']['access callback'] = '_gn2_og_invite_users_tab_access';
+}
+
+/**
+ * Helper function to disable "Invite users" tab for Group, Course and Event.
+ */
+function _gn2_og_invite_users_tab_access($type, $item, $token = NULL) {
+  $node = node_load($item);
+  $content_types = array('group', 'course', 'event');
+
+  if (in_array($node->type, $content_types)) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Alter file uploader permissions to allow members to add files to a folder.
+ */
+function _gn2_og_member_add_files_access($type, $item, $token) {
+  if ($type == 'gallery' && $item->type == 'media_gallery') {
+    global $user;
+    $is_admin = (in_array('administrator', $user->roles));
+    $path = new GN2PathToOrganization($item);
+    $group = $path->getParent();
+
+    if (og_is_member('node', $group->nid, 'user', $user) || $is_admin) {
+      return TRUE;
+    }
+  }
+
+  return media_gallery_edit_access_ajax($type, $item, $token);
+}
+
+/**
+ * Gets the list of organizations the current user is an hr manager of.
+ */
+function gn2_og_get_orgs_user_is_hr_manager($account = NULL) {
+  // Fallbacks to current user if not set.
+  if ($account == NULL) {
+    global $user;
+    $account = $user;
+  }
+
+  // Query that will fetch group ids.
+  $query = NULL;
+
+  // Admins can see all organizations.
+  if (user_access('bypass node access') && user_access('administer users')) {
+    // Gets all organization nodes.
+    $query = db_select('node', 'n');
+    $query
+      ->fields('n', array('nid'))
+      ->condition('type', 'organization');
+  }
+  else {
+    // Checks if the users has any membership as manager for organizations.
+    $query = db_select('og_membership', 'ogm');
+    $query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+    $query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+    $query->join('node', 'n', 'ogm.gid = n.nid');
+    $query
+      ->fields('n', array('nid'))
+      ->condition('ogm.etid', $account->uid)
+      ->condition('ogm.entity_type', 'user')
+      ->condition('ogm.group_type', 'node')
+      ->condition('ogm.state', OG_STATE_ACTIVE)
+      ->condition('ogr.name', array('org_manager', 'hr_manager'), 'IN')
+      ->condition('n.type', 'organization');
+  }
+
+  return array_keys($query->execute()->fetchAllAssoc('nid', PDO::FETCH_ASSOC));
+}
+
+/**
+ * Checks if user is hr manager of account.
+ *
+ * TODO: Can probably be merged with gn2_manager_access_account().
+ */
+function gn2_og_user_is_hr_manager_of_account($account) {
+  // Gets the orgs the user is an hr manager of.
+  $managed_orgs = gn2_og_get_orgs_user_is_hr_manager();
+
+  // Gets the orgs the account is part of.
+  $account_orgs = gn2_base_config_get_user_orgs();
+
+  // If the manager manages any group that the user is part of, it has access.
+  return count(array_intersect($managed_orgs, $account_orgs)) > 0;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Implementation for the user_profile_form.
+ */
+function gn2_og_form_user_profile_form_alter(&$form, &$form_state) {
+  global $user;
+  // If the user is hr manager of the account page being edited...
+  if (gn2_og_user_is_hr_manager_of_account($user)) {
+
+    // Enables the status field for editing.
+    $form['account']['status']['#access'] = TRUE;
+
+  }
+
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_og_init() {
+  // If accessing the user admin page for hr managers...
+  $hr_user_manage_path = 'admin/manage/organization-users';
+  if (strpos(current_path(), $hr_user_manage_path) === 0) {
+
+    // If user provides an argument, forces not found.
+    if ($org_id = arg(3)) {
+      if (!in_array($org_id, gn2_og_get_orgs_user_is_hr_manager())) {
+        drupal_not_found();
+        exit();
+      }
+    }
+
+    // Gives permissions.
+    _gn2_og_give_temporary_administer_users_permission();
+
+  }
+
+  // If currently batch is being executed and a value was set.
+  if (current_path() == 'batch') {
+    $params = drupal_get_query_parameters();
+    if (session_id() && isset($_SESSION['gn2_og_set_hr_manager_permissions']) && $_SESSION['gn2_og_set_hr_manager_permissions']) {
+      if ($params['op'] == 'start' || $params['op'] == 'do') {
+        _gn2_og_give_temporary_administer_users_permission();
+      }
+      elseif ($params['op'] == 'finished') {
+        unset($_SESSION['gn2_og_set_hr_manager_permissions']);
+      }
+    }
+  }
+
+  // RD-2297 alter Send Message menu link.
+  drupal_add_js(drupal_get_path('module', 'gn2_og') . '/js/message.js');
+
+}
+
+/**
+ * Temporarely grants 'administer users' for current page request.
+ */
+function _gn2_og_give_temporary_administer_users_permission() {
+
+  // In order to have accessed this page, user have been validated agains view
+  // permission. So should be safe to assume it is an hr manager.
+  $perms = &drupal_static('user_access');
+  if (is_array($perms)) {
+    $rid = array_keys($perms);
+    $rid = reset($rid);
+    $perms[$rid]['administer users'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Implementation for views_form_organization_users_page form.
+ */
+function gn2_og_form_views_form_organization_users_page_alter(&$form, &$form_state) {
+
+  global $user;
+
+  // For hr managers on the organization user form, adds a submit handler.
+  // This is not done for admins as they already have the permission we need.
+  if ($form_state['step'] == 'views_bulk_operations_confirm_form') {
+    if (gn2_og_manager_user_access() && !in_array('administrator', $user->roles)) {
+      array_unshift($form['actions']['submit']['#submit'], '_gn2_og_views_form_organization_users_page_alter_submit');
+    }
+  }
+
+}
+
+/**
+ * Submission handler for views_form_organization_users_page form.
+ */
+function _gn2_og_views_form_organization_users_page_alter_submit(&$form, &$form_state) {
+
+  // Sets a temporary session value in order to allow request to be able to edit
+  // some user values.
+  $_SESSION['gn2_og_set_hr_manager_permissions'] = TRUE;
+
+}
+
+/**
+ * Implements hook_panels_pane_content_alter().
+ *
+ * Determines what to show non course members.
+ */
+function gn2_og_panels_pane_content_alter($content, $pane, $args, $contexts) {
+  global $user;
+  // Bypass check for site admins.
+  if (!in_array('administrator', $user->roles)) {
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $gid = is_numeric(arg(1)) ? arg(1) : NULL;
+      $node = ($gid) ? node_load($gid) : NULL;
+      // This is only to occur on course nodes.
+      if (is_object($node) && $node->type == 'course') {
+        // Bypass check for groups members.
+        if (!og_is_member('node', $gid)) {
+          if ($pane->panel == 'group_maintabs' || isset($contexts['panelizer']->data)) {
+            // Unset if value set to No.
+            if (isset($node->field_display_all_fields[LANGUAGE_NONE][0]['value'])) {
+              if ($node->field_display_all_fields[LANGUAGE_NONE][0]['value'] == 'No') {
+                unset($contexts['panelizer']->data->field_rec_links);
+                $pane->panel = '';
+              }
+            }
+            // If no value set, do default (hide).
+            elseif (isset($contexts['panelizer']->data->field_rec_links)) {
+              unset($contexts['panelizer']->data->field_rec_links);
+              $pane->panel = '';
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function gn2_og_action_info() {
+
+  // Returns custom unblock account action.
+  return array(
+    'gn2_og_unblock_user_action' => array(
+      'type' => 'user',
+      'label' => t('Unblock current user'),
+      'configurable' => FALSE,
+      'triggers' => array('user_update'),
+      'behavior' => array('changes_property'),
+    ),
+  );
+
+}
+
+/**
+ * Unblocks a specific user or the current user, if one is not specified.
+ *
+ * @param object $entity
+ *   (optional) An entity object; if it is provided and it has a uid property,
+ *   the user with that ID is blocked.
+ * @param mixed[] $context
+ *   (optional) An associative array; if no user ID is found in $entity, the
+ *   'uid' element of this array determines the user to block.
+ *
+ * @ingroup actions
+ */
+function gn2_og_unblock_user_action(&$entity, $context = array()) {
+  // First priority: If there is a $entity->uid, unblock that user.
+  // This is most likely a user object or the author if a node or comment.
+  if (isset($entity->uid)) {
+    $uid = $entity->uid;
+  }
+  elseif (isset($context['uid'])) {
+    $uid = $context['uid'];
+  }
+  // If neither of those are valid, then block the current user.
+  else {
+    $uid = $GLOBALS['user']->uid;
+  }
+  $account = user_load($uid);
+  $account = user_save($account, array('status' => 1));
+  watchdog('action', 'Unblocked user %name.', array('%name' => $account->name));
+}
+
+/**
+ * Helper function, Get "Add folder" button.
+ *
+ * Visible only for users with group_manager role.
+ * RD-2265 a group member (non-manager) I shouldnt be able to create folders.
+ */
+function _gn2_og_get_add_folder_button($gid = 0) {
+  $response = '';
+
+  if (!user_is_anonymous() && $gid != 0) {
+    global $user;
+
+    $is_admin = (in_array('administrator', $user->roles));
+    $group_roles = og_get_user_roles('node', $gid);
+    if (in_array('group_manager', $group_roles) || in_array('org_manager', $group_roles) || $is_admin) {
+      $response = l(t('Add Folder'), 'node/add/media-gallery', array(
+        'query' => array('gid' => $gid),
+        'attributes' => array('class' => array('teaser-header-add-new-link')),
+      ));
+    }
+  }
+
+  return $response;
+}
+
+/**
+ * Helper function, Get "Add files" button.
+ *
+ * Visible only for group members.
+ * RD-2275 member should be able to add files to a folder.
+ */
+function _gn2_og_get_add_files_button($nid) {
+  global $user;
+  $response = '';
+
+  $is_admin = (in_array('administrator', $user->roles));
+  $node = node_load($nid);
+  $path = new GN2PathToOrganization($node);
+  $group = $path->getParent();
+
+  if (og_is_member('node', $group->nid, 'user', $user) || $is_admin) {
+    $response = l(t('Add files'), 'media/browser', array(
+      'query' => array('render' => 'media-popup'),
+      'attributes' => array('class' => array('media-gallery-add', 'launcher')),
+    ));
+  }
+
+  return $response;
+}
+
+/**
+ * Helper function, Get "Add New Post" button.
+ *
+ * Visible only for group members.
+ * RD-2493 Add New Posts button should not appear for non-group members.
+ */
+function _gn2_og_get_add_new_post_button($nid) {
+  global $user;
+  $response = '';
+
+  $is_admin = (in_array('administrator', $user->roles));
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $group = node_load(arg(1));
+  }
+  else {
+    $group = node_load($nid);
+  }
+
+  if (og_is_member('node', $group->nid, 'user', $user) || $is_admin) {
+    $response = l(t('Add New Post'), 'node/add/post', array(
+      'query' => array('gid' => $group->nid),
+      'attributes' => array('class' => array('teaser-header-add-new-link', '')),
+    ));
+  }
+
+  return $response;
+}
+
+/**
+ * Helper function to alter the Members page title.
+ */
+function _gn2_og_page_title() {
+  if (is_numeric(arg(2))) {
+    $result = db_select('node', 'n')
+      ->fields('n', array('title'))
+      ->condition('nid', arg(2), '=')
+      ->execute()
+      ->fetchAssoc();
+    $title = l($result['title'], 'node/' . arg(2));
+    drupal_set_title(t('People in group !link', array('!link' => $title)), TRUE);
+  }
+}
+
+/**
+ * RD-2304 non group members should not see members list.
+ *
+ * Helper function to check if the current logged user is a group member.
+ */
+function _gn2_og_is_group_member($contexts) {
+  global $user;
+  $account = user_load($user->uid);
+
+  return og_is_member('node', arg(1), 'user', $account);
+}
+
+/**
+ * Join page callback.
+ */
+function gn2_og_page_join($node) {
+
+  global $user;
+
+  // Access only for open groups.
+  if (!og_is_group_type('node', $node->type) || gn2_og_get_membership_type($node->nid) != 'open') {
+    drupal_access_denied();
+    drupal_exit(0);
+  }
+
+  // Builds content.
+  $content = array();
+  if (og_is_member('node', $node->nid, 'user', $user)) {
+    $content['content'] = array(
+      'message' => array(
+        '#markup' => t('You are already a member of this group.'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      ),
+    );
+  }
+  else {
+    $content['content'] = array(
+      'form' => drupal_get_form('gn2_og_join_group_form', $node),
+    );
+  }
+
+  return $content;
+
+}
+
+/**
+ * Join group form.
+ */
+function gn2_og_join_group_form($form, &$form_state, $node) {
+
+  // Node reference.
+  $form['#node'] = $node;
+
+  // Notification.
+  $form['title'] = array(
+    '#markup' => t('Do you want to join group !group_name?', array('!group_name' => $node->title)),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+
+  // Actions.
+  $form['actions'] = array(
+    '#type' => 'actions',
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Join'),
+    ),
+  );
+
+  return $form;
+
+}
+
+/**
+ * Submission handler for gn2_og_join_group_form().
+ */
+function gn2_og_join_group_form_submit(&$form, &$form_state) {
+
+  // Add the user to the group.
+  global $user;
+  og_group('node', $form['#node']->nid, array(
+    'entity' => $user,
+    'entity type' => 'user',
+    'membership type' => OG_MEMBERSHIP_TYPE_DEFAULT,
+  ));
+
+  // Status message.
+  $t_vars = array('!group' => l($form['#node']->title, "node/{$form['#node']->nid}"));
+  drupal_set_message(t("You've joined group !group.", $t_vars));
+  $form_state['redirect'] = "node/{$form['#node']->nid}";
+
+}
+
+/**
+ * Check access for event registrant list block based on the Event's settings.
+ */
+function gn2_og_event_registrant_list_access() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $gid = arg(1);
+    $event = node_load($gid);
+  }
+
+  // Assume no.
+  $access = FALSE;
+  if (is_object($event) && $event->type == 'event') {
+    global $user;
+
+    $show_list = field_get_items('node', $event, 'field_registration_list_visibili');
+    switch ($show_list[0]['value']) {
+      // Anyone that can view the Event should see the block.
+      case 'anyone':
+        $access = TRUE;
+        break;
+
+      // Anyone that is registered for the Event should see the block.
+      case 'registrants':
+        // Check that the user is a member of the Event group.
+        $access = (og_is_member('node', $gid, 'user', $user)) ? TRUE : FALSE;
+        break;
+
+      // Any admin or a Group Admin or Event Contact can see the block.
+      case 'admin':
+        // Check if the user is a site adminstrator.
+        $is_admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+        // Check to see if the user is the Event group manager.
+        $is_manager = og_user_access('node', $gid, 'administer group');
+        // Check to see if the user is one of the Event contacts.
+        $contacts = field_get_items('node', $event, 'field_event_contact_person');
+        $is_contact = FALSE;
+        // Only check if the other checks have not already passed and the Event
+        // Contact Person field is populated.
+        if (is_array($contacts) && !$is_manager && !$is_admin) {
+          foreach ($contacts as $uid) {
+            $is_contact = ($user->uid == $uid['target_id']) ? TRUE : $is_contact;
+          }
+        }
+        $access = ($is_admin || $is_manager || $is_contact) ? TRUE : FALSE;
+        break;
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function gn2_og_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  global $user;
+  $is_group = FALSE;
+  $og_roles = NULL;
+  // Check that we are on a node and that the node is an OG Group.
+  if ($root_path === 'node/%' && !empty($router_item['page_arguments']) && is_object($router_item['page_arguments'][0])) {
+    $node = $router_item['page_arguments'][0];
+    $is_group = (!empty($node->type)) ? og_is_group('node', $node) : FALSE;
+    // Get the user's roles for this Group.
+    $og_roles = ($is_group) ? og_get_user_roles('node', $node->nid) : NULL;
+  }
+  if ($is_group && $node->type !== 'organization' && !in_array('org_manager', $og_roles)) {
+    foreach ($data['tabs'][0]['output'] as $key => $value) {
+      if ($value['#link']['title'] == 'Group' && !in_array('administrator', $user->roles)) {
+        unset($data['tabs'][0]['output'][$key]);
+      }
+    }
+  }
+
+  // Hide the Panelizer tab for non-administrators.
+  if (!empty($data['tabs'][0]['output'])) {
+    foreach ($data['tabs'][0]['output'] as $key => $value) {
+      if ($value['#link']['title'] == 'Customize display') {
+        if (!in_array('administrator', $user->roles)) {
+          unset($data['tabs'][0]['output'][$key]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to check if the user is group, course or org manager.
+ *
+ * RD-2818.
+ *
+ * @param string $nid
+ *   Placeholder comment.
+ *
+ * @return bool
+ *   Placeholder comment.
+ */
+function _gn2_og_check_groupmanager($nid) {
+  global $user;
+  $roles = array(
+    'org_manager',
+    'group_manager',
+    'course_presenter',
+  );
+  $node = node_load($nid);
+  if (isset($node->field_group_manager_display[LANGUAGE_NONE])) {
+    if ($node->field_group_manager_display[LANGUAGE_NONE][0]['value'] == '1') {
+      $vals = db_query('SELECT name FROM og_role INNER JOIN og_users_roles ON og_users_roles.rid = og_role.rid WHERE og_users_roles.uid = :uid',
+        array(':uid' => $user->uid))->fetchAll();
+      $val = array();
+
+      foreach ($vals as $tmp) {
+        $val[] = $tmp->name;
+      }
+      $result = array_intersect($roles, $val);
+      if (in_array('administrator', $user->roles) || $user->uid == 1 || !empty($result)) {
+        return TRUE;
+      }
+
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function gn2_og_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools') {
+    return 'plugins/' . $plugin_type;
+  }
+}

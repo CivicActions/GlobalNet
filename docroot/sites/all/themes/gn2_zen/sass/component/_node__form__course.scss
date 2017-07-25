@@ -1,0 +1,17 @@
+.group-course-managers {
+  .form-field-type-entityreference {
+    width: 60%;
+    @include breakpoint($medium-screen-and-up) {
+      float: left;
+      margin: 0 1%;
+      width: 45%;
+    }
+  }
+}
+
+.course-date-section {
+  .date-float {
+    display: block;
+    margin-top: 1em;
+  }
+}

@@ -1,0 +1,65 @@
+<?php
+/**
+ * @file
+ * This module provides CAC authentication for pki_authentication module.
+ */
+
+/**
+ * Implements hook_pki_authentication_validate().
+ */
+function pki_authentication_cac_pki_authentication_validate($data) {
+  $output = array();
+  if (trim($data) == '') {
+    return array();
+  }
+  $gs = explode('.', $data);
+  $edipi = array_pop($gs);
+
+  $ldaphost = "ldaps://dod411.gds.disa.mil";
+  $ldapport = 636;
+  $ldapuser = '';
+  $ldappass = '';
+  $dn = 'ou=PKI,ou=DoD,o=U.S. Government,c=US';
+  if (!$ldapconn = @ldap_connect($ldaphost, $ldapport)) {
+    $msg = "Could not connect to host $ldaphost";
+    watchdog('pki_authentication', "pki_authentication_form_alter", $msg, WATCHDOG_ERROR);
+    drupal_set_message(check_plain($msg), 'error');
+    return array();
+  }
+
+  if ($ldapconn) {
+    ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+    // Binding to ldap server.
+    $count = 0;
+    while (!$ldapbind = @ldap_bind($ldapconn, $ldapuser, $ldappass)) {
+      $count++;
+      sleep($count);
+      if ($count > 7) {
+        $msg = "Unable to connect to DISA Global Directory Service to validate CAC. Please try again.";
+        watchdog('pki_authentication', 'cac_pki_authentication_validate', $msg, WATCHDOG_ERROR);
+        drupal_set_message(check_plain($msg), 'error');
+        return array();
+      }
+    }
+  }
+  $gs = explode('.', $data);
+  $edipi = array_pop($gs);
+
+  $filter = "(cn=*" . $edipi . ")";
+  $sr = ldap_search($ldapconn, $dn, $filter);
+  $info = ldap_get_entries($ldapconn, $sr);
+  @ldap_unbind($ldapconn);
+  $email = '';
+  $count = $info['count'];
+  if ($count > 0) {
+    for ($i = 0; $i < $count; $i++) {
+      $email = $info[$i]['mail'][0];
+    }
+  }
+  if ($email <> '') {
+    $output['name'] = $name;
+    $output['email'] = $email;
+    $output['init'] = $data;
+  }
+  return $output;
+}

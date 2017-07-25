@@ -1,0 +1,703 @@
+<?php
+/**
+ * @file
+ * Allow limited user administration by center HR admins.
+ */
+
+/**
+ * Implements hook_mail_alter().
+ */
+function gn2_user_admin_mail_alter(&$message) {
+  if ($message['id'] == 'user_password_reset') {
+    $user_name          = $message['params']['account']->name;
+    $node               = node_load($message['params']['account']->og_user_node[LANGUAGE_NONE][0]['target_id']);
+    $org                = $node->field_org_short_title[LANGUAGE_NONE][0]['value'];
+    $pass               = user_pass_reset_url($message['params']['account']);
+    $message['subject'] = t('Replacement login information for !user at !org', array(
+      '!user' => $user_name,
+      '!org'  => $org,
+    ));
+    $message['body'][0] = t("!user,
+
+A request to reset the password for your account has been made at !org.
+
+You may now log in by clicking this link or copying and pasting it to your browser:
+
+!pass
+
+This link can only be used once to log in and will lead you to a page where you can set your password. It expires after one day and nothing will happen if it's not used.
+
+--  !org team",
+      array(
+        '!user' => $user_name,
+        '!org'  => $org,
+        '!pass' => $pass,
+      ));
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_user_admin_menu() {
+  // This is the path for defining fields for field privacy.
+  $items['admin/config/profile-privacy-fields'] = array(
+    'title'            => 'User Profile Privacy',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('gn2_user_admin_fields_form'),
+    'access arguments' => array('administer users'),
+    'type'             => MENU_NORMAL_ITEM,
+  );
+
+  $items['user/%user/email'] = array(
+    'title'            => 'Email Address',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('gn2_user_admin_email_form', 1),
+    'access callback'  => 'gn2_user_admin_user_edit_access',
+    'access arguments' => array(1),
+    'type'             => MENU_NORMAL_ITEM,
+    'file'             => 'gn2_user_admin.email.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback for changing a user's email address.
+ */
+function gn2_user_admin_user_edit_access($account) {
+  if (function_exists('gn2_manager_access_user_edit_access')) {
+    return gn2_manager_access_user_edit_access($account);
+  }
+  else {
+    return user_edit_access($account);
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_user_admin_block_info() {
+  $blocks['gn2_user_admin_block_priv']   = array(
+    'info' => t('GN2 User Profile privacy field settings'),
+  );
+  $blocks['gn2_user_admin_unblock_user'] = array(
+    'info' => t('GN2 User - unblock/unlock'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_user_admin_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'gn2_user_admin_block_priv':
+      $block['content'] = drupal_get_form('gn2_user_admin_form');
+      break;
+    case 'gn2_user_admin_unblock_user':
+      $block['content'] = drupal_get_form('gn2_user_unblock_form');
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * gn2_user_unblock_form callback function form.
+ * See RD-2630;
+ */
+function gn2_user_unblock_form($form, &$form_state) {
+  global $user;
+  $gid           = gn2_context_get_org_id();
+  $manager_roles = array('org_manager', 'hr_manager');
+  $og_roles      = og_get_user_roles('node', $gid, $user->uid);
+  $is_manager    = array_intersect($manager_roles, $og_roles);
+
+  // Check if user is admin.
+  if (in_array('administrator', $user->roles) || $is_manager) {
+    $loaded_user = user_load(arg(1));
+    $count       = db_query('SELECT COUNT(id) FROM {gn2_unblock_track} WHERE name = :name', array(':name' => $loaded_user->name))->fetchField();
+
+    // Check the attemps counter.
+    if ($count && $count > 2) {
+      $form['actions']['unlock'] = array(
+        '#type'  => 'submit',
+        '#value' => t('Unlock'),
+      );
+    }
+    // Check if user is blocked.
+    if (user_is_blocked($loaded_user->name)) {
+      $form['actions']['unblock'] = array(
+        '#type'  => 'submit',
+        '#value' => t('Unblock'),
+      );
+    }
+
+    return $form;
+  }
+
+  return NULL;
+}
+
+/**
+ * gn2_user_unblock_form_submit callback function form.
+ */
+function gn2_user_unblock_form_submit($form, &$form_state) {
+  $loaded_user = user_load(arg(1));
+  // Unblock user.
+  if ($form_state['values']['op'] == "Unblock") {
+    $loaded_user->status = 1;
+    user_save($loaded_user);
+  }
+  // Unlock user.
+  else {
+    db_query('DELETE FROM {flood} WHERE identifier LIKE :uid', array(':uid' => $loaded_user->uid . '-%'));
+    db_query('DELETE FROM {gn2_unblock_track} WHERE name = :name', array(':name' => $loaded_user->name));
+  }
+  $action = $form_state['values']['op'] . 'ed';
+  drupal_set_message(t('The user %name has been %action successfully.', array(
+    '%name'   => $loaded_user->name,
+    '%action' => $action,
+  )));
+}
+
+/**
+ * Gn2_user_admin_menu callback function form.
+ */
+function gn2_user_admin_form($form, $form_state) {
+  $options         = array(
+    'everyone' => 'Everyone',
+    'contacts' => 'Only Contacts',
+    'me'       => 'Only Me',
+  );
+  $form['#prefix'] = t('<div id="gn2_user-priv-wrap" class="field__privacy-settings"><h4>Who can see this field</h4>
+                       <p class = "description">Set who can see the various fields that display when they view your Profile page.
+                       Choosing "Everyone" allows all GlobalNET members to see that field on your profile page.
+                       "Contacts" allows only your connections to view that profile field.
+                       Selecting "Only me" means the field can only be viewed by you when reviewing your own profile page.
+                       Click "Save privacy settings" to save your changes.</p>');
+  $form['#suffix'] = '</div>';
+  $uid             = arg(1);
+
+  // These fields for access control.
+  $fields_raw = variable_get('gn2_user_admin_fields_form_fields');
+  $fields     = preg_split('/[\s]+/', $fields_raw);
+  foreach ($fields as $field) {
+    $entity_type = 'user';
+    $bundle_name = 'user';
+
+    $info = field_info_instance('user', $field, 'user');
+
+    // Make sure we have a value to prevent warnings.
+    if (isset($info)) {
+      if ($field == 'mail') {
+        $title = 'Email';
+      }
+      else {
+        $title = $info['label'];
+      }
+
+      $form[$field] = array(
+        '#type'          => 'select',
+        '#title'         => $title,
+        '#options'       => $options,
+        '#default_value' => array(gn2_user_admin_priv_fetch($uid, $field)),
+      );
+    }
+  }
+
+  $form['user_uid'] = array(
+    '#type'  => 'hidden',
+    '#value' => arg(1),
+  );
+
+  $form['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => 'Save Privacy Settings',
+    '#ajax'  => array(
+      'callback' => 'gn2_user_admin_form_submit',
+      'wrapper'  => 'gn2_user-priv-wrap',
+      'effect'   => 'fade',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Gn2_user_admin_menu callback function form.
+ */
+function gn2_user_admin_fields_form($form, &$form_state) {
+
+  $form['#prefix']                           = t('<h4>Fields Available for User profile privacy settings</h4>');
+  $form['gn2_user_admin_fields_form_fields'] = array(
+    '#type'          => 'textarea',
+    '#title'         => 'One item per line',
+    '#default_value' => variable_get('gn2_user_admin_fields_form_fields'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_user_admin_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_profile_form') {
+    // Add our privacy settings form to user form.
+    // In order to prevent submission weirdness, we attach to suffix,
+    // then bump inline with js file in this module.
+    $admin_form      = drupal_get_form('gn2_user_admin_form');
+    $form['#suffix'] = '<fieldset class="collapsible group-privacy-settings field-group-fieldset form-wrapper collapsed"><legend><span class="fieldset-legend">Privacy</span></legend><div class="fieldset-wrapper form-privacy-settings-wrapper">' . drupal_render($admin_form) . '</div></fieldset>';
+
+    // If Password Tab is enabled, add password link.
+    if (module_exists('password_policy_password_tab')) {
+      $form['account']['pass_link'] = array(
+        '#markup' => l(t('Change password &#187;'), 'user/' . $form['#user']->uid . '/password',
+          array(
+            'html'       => TRUE,
+            'query'      => array(
+              'destination' => current_path(),
+            ),
+            'attributes' => array(
+              'class' => array('password-link'),
+            ),
+          )),
+        '#weight' => - 10,
+      );
+    }
+
+    $form['account']['mail']['#access'] = FALSE;
+    $form['account']['mail_link']       = array(
+      '#markup' => l(t('Change email address &#187'), 'user/' . $form['#user']->uid . '/email',
+        array(
+          'html'       => TRUE,
+          'query'      => array(
+            'destination' => current_path(),
+          ),
+          'attributes' => array(
+            'class' => array('password-link'),
+          ),
+        )),
+      '#weight' => - 9,
+    );
+    // Hide COCOM field from users.
+    $form['field_cocom_region'][LANGUAGE_NONE]['#access'] = FALSE;
+    if (!isset($form['locale'])) {
+      locale_language_selector_form($form, $form_state, $form['#user']);
+    }
+
+    global $user;
+    if (!in_array('administrator', $user->roles) && $user->uid != 1) {
+      $form['field_org_role']['#access'] = FALSE;
+      unset($form['#fieldgroups']['group_admin_settings']);
+    }
+
+    // Check if the user is an Admin, HR Manager or Org Manager.
+    $admin       = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+    $hr_manager  = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 35', array(':uid' => $user->uid))->fetchField();
+    $org_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 17', array(':uid' => $user->uid))->fetchField();
+
+    if ($org_manager || $hr_manager || $admin) {
+      $form['field_expertise'][LANGUAGE_NONE][0]['field_validated_by']['#access'] = TRUE;
+      $form['field_org_role'][LANGUAGE_NONE]['#access']                           = TRUE;
+    }
+    else {
+      $form['field_expertise'][LANGUAGE_NONE][0]['field_validated_by']['#access'] = FALSE;
+      $form['field_org_role'][LANGUAGE_NONE]['#access']                           = FALSE;
+    }
+
+    if ($hr_manager) {
+      if (isset($form['account']) && is_array($form['account'])) {
+        $form['account']['name']['#access'] = TRUE;
+      }
+      else {
+        $form['name']['#access'] = TRUE;
+      }
+    }
+
+    // Hide Force Password change from non-Manager, non-Admin users.
+    // @see RD-3289.
+    if (!$hr_manager && !$admin) {
+      $form['password_policy']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_user_admin_form_user_cancel_confirm_form_alter(&$form, &$form_state, $form_id) {
+  $del = $form['uid']['#value'];
+  $user_loaded = user_load($del);
+  $groups = og_get_groups_by_user($user_loaded, 'node');
+  $result = NULL;
+  if (!empty($groups)) {
+    $orgs = array();
+    foreach ($groups as $gid) {
+      $type = db_query('SELECT type FROM {node} WHERE nid = :nid', array(':nid' => $gid))->fetchField();
+      if ($type === 'organization') {
+        $orgs[] = $gid;
+      }
+      else {
+        $query  = db_select('node', 'n');
+        $query->join('field_data_field_parent_organization', 'po', 'po.revision_id = n.vid');
+        $query->fields('po', array('field_parent_organization_target_id'));
+        $query->condition('n.nid', $gid);
+        $oid = $query->execute()->fetchField();
+        if ($oid) {
+          $orgs[] = $oid;
+        }
+      }
+    }
+    // Query for all Org Managers.
+    if (!empty($orgs)) {
+      $query = db_select('users', 'u');
+      $query->join('og_users_roles', 'ur', 'u.uid = ur.uid');
+      $query->fields('u', array('uid', 'name'));
+      $query->condition('ur.rid', 17);
+      $query->condition('ur.gid', $orgs, 'IN');
+      $query->condition('u.status', 1);
+      $query->distinct();
+
+      $result = $query->execute();
+    }
+  }
+  else {
+    $query = db_select('users', 'u');
+    $query->fields('u', array('name', 'uid'));
+    $query->join('users_roles', 'ur', 'ur.uid = u.uid');
+    $query->join('role', 'r', 'r.rid = ur.rid');
+    $query->condition('r.name', 'administrator');
+
+    $result = $query->execute();
+  }
+
+  if ($result) {
+    $managers = array();
+    while ($record = $result->fetchAssoc()) {
+      $managers[$record['uid']] = $record['name'];
+      if (!isset($_SESSION['om']) || $_SESSION['om'] == "") {
+        $_SESSION['om'] = $record['uid'];
+      }
+    }
+
+    if (isset($_SESSION['om']) || $_SESSION['om'] == "") {
+      global $user;
+      $_SESSION['om'] = $user->uid;
+    }
+    // Add form element for Org Managers.
+    $form['org_man'] = array(
+      '#type' => 'select',
+      '#title' => t('Select an org manager with which you would like the content currently associated with the user 
+      being deleted reassociated.'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="user_cancel_method"]' => array('value' => 'user_cancel_delete_reassign_user'),
+        ),
+      ),
+      '#options' => $managers,
+      '#description' => t('Only shows org managers in orgs which the user
+    being deleted is a member.'),
+    );
+    if (!empty($form_state['input']['org_man'])) {
+      $selection = $form_state['input']['org_man'];
+      $user_obj = user_load_by_name($form['org_man']['#options'][$selection]);
+      $user_id = $user_obj->uid;
+      $_SESSION['om'] = $user_id;
+    }
+  }
+}
+
+/**
+ * Submit function for form.
+ */
+function gn2_user_admin_form_submit($form, &$form_state) {
+  global $user;
+  $baddies = array(
+    'submit',
+    'form_build_id',
+    'form_token',
+    'form_id',
+    'op',
+    'user_uid',
+  );
+
+  $uid = $form_state['values']['user_uid'];
+  // Insert our field privacy values in db.
+  foreach ($form_state['values'] as $key => $value) {
+    if (!in_array($key, $baddies)) {
+      $query = db_merge('gn2_user_admin_access');
+      $query->key(array(
+        'uid'        => $uid,
+        'field_name' => $key,
+      ));
+      $query->fields(array(
+        'level' => $value,
+      ))->execute();
+    }
+  }
+}
+
+/**
+ * Submit function for second form.
+ */
+function gn2_user_admin_fields_form_submit($form, $form_state) {
+  variable_set('gn2_user_admin_fields_form_fields', $form_state['values']['gn2_user_admin_fields_form_fields']);
+}
+
+/**
+ * Implements hook_field_access().
+ */
+function gn2_user_admin_field_access($op, $field, $entity_type, $entity, $account) {
+  if (arg(0 == 'user') && is_numeric(arg(1))) {
+    // Always show the fields on the edit form.
+    if (arg(2) == 'edit') {
+      return TRUE;
+    }
+
+    global $user;
+
+    // Look for user_relationship status.
+    $friend = db_query('SELECT approved FROM user_relationships WHERE requester_id = :requester_id AND requestee_id = :requestee_id', array(
+      ':requester_id' => $user->uid,
+      ':requestee_id' => arg(1),
+    ))->fetchField();
+
+    $priv = gn2_user_admin_priv_fetch(arg(1), $field['field_name']);
+
+    $is_hr = db_query('SELECT * FROM og_users_roles WHERE uid = :uid AND rid = :rid', array(
+      ':uid' => $user->uid,
+      ':rid' => 35,
+    ))->fetchAll();
+    // Hide if no relationship when set to contacts, or level is 'me',
+    // or user has elevated perms.
+    if (!in_array('administrator', $user->roles)) {
+      if (empty($is_hr)) {
+        if (($priv == 'me' && $user->uid != arg(1)) || ($priv == 'contacts' && $friend != 1 && $user->uid != arg(1))) {
+          return FALSE;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Reusable privacy value function.
+ */
+function gn2_user_admin_priv_fetch($uid, $field_name) {
+  /*
+   * @TODO make this query more performant.
+   * Attempted to use &drupal_static, but form results became unpredicatable.
+   */
+
+  return db_query('SELECT level FROM gn2_user_admin_access WHERE uid = :uid AND field_name = :field_name', array(
+    ':uid'        => $uid,
+    ':field_name' => $field_name,
+  ))->fetchField();
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_user_admin_init() {
+  drupal_add_js(drupal_get_path('module', 'gn2_user_admin') . '/js/privacy.js');
+}
+
+/**
+ * Sets our org name in the welcome email.
+ */
+function _gn2_user_admin_welcome_email() {
+  global $user;
+  $langcode = LANGUAGE_NONE;
+  $query    = db_select('og_users_roles', 'o');
+  $query->join('node', 'n', 'n.nid = o.gid');
+  $query->condition('n.type', 'organization');
+  $query->condition('o.rid', 17);
+  $query->condition('o.uid', $user->uid);
+  $query->fields('o');
+  $result = $query->execute()->fetchAssoc();
+  $name   = 'GlobalNET';
+  if (!empty($result['gid'])) {
+    $node = node_load($result['gid']);
+    $name = $node->field_org_short_title[LANGUAGE_NONE][0]['value'];
+  }
+
+  $subject = t('An administrator created an account for you at @name', array('@name' => $name), array('langcode' => $langcode));
+
+  $message = t("[user:name],
+
+A site administrator at @name has created an account for you. You may now log in by clicking this link or copying and pasting it to your browser:
+
+[user:one-time-login-url]
+
+This link can only be used once to log in and will lead you to a page where you can set your password.
+
+After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+username: [user:name]
+
+--  [site:name] team", array('@name' => $name), array('langcode' => $langcode));
+
+  variable_set('user_mail_register_admin_created_subject', $subject);
+  variable_set('user_mail_register_admin_created_body', $message);
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function gn2_user_admin_user_insert(&$edit, $account, $category) {
+  if ($account->is_new) {
+    _gn2_user_admin_welcome_email();
+    $fields_raw = variable_get('gn2_user_admin_fields_form_fields');
+    $fields     = ($fields_raw) ? preg_split('/[\s]+/', $fields_raw) : FALSE;
+    if ($fields) {
+      foreach ($fields as $field) {
+        $query = db_merge('gn2_user_admin_access');
+        $query->key(array(
+          'uid'        => $account->uid,
+          'field_name' => $field,
+        ));
+        $query->fields(array(
+          'level' => 'me',
+        ))->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function gn2_user_admin_user_update(&$edit, $account, $category) {
+  // Check if the user's privacy settings have been set.
+  $existing = db_query('SELECT 1 FROM {gn2_user_admin_access} WHERE uid = :uid',
+    array(':uid' => $account->uid))->fetchObject();
+  // If the privacy settings have not be set, set the to "me".
+  if (!$existing) {
+    $fields_raw = variable_get('gn2_user_admin_fields_form_fields');
+    $fields     = ($fields_raw) ? preg_split('/[\s]+/', $fields_raw) : FALSE;
+    if ($fields) {
+      foreach ($fields as $field) {
+        $query = db_merge('gn2_user_admin_access');
+        $query->key(array(
+          'uid'        => $account->uid,
+          'field_name' => $field,
+        ));
+        $query->fields(array(
+          'level' => 'me',
+        ))->execute();
+      }
+      drupal_set_message(t('Field privacy settings set to %me',
+        array('%me' => 'Only Me')));
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_user_admin_module_implements_alter(&$implementations, $hook) {
+  $hooks = array('form_alter');
+  if (in_array($hook, $hooks)) {
+    // Move our hook implementation to the bottom.
+    // We want to expand upon the entity api's access implementation for nodes,
+    // so we need to alter the entity_info after it.
+    $group = $implementations['gn2_user_admin'];
+    unset($implementations['gn2_user_admin']);
+    $implementations['gn2_user_admin'] = $group;
+  }
+}
+
+/**
+ * Implements hook_user_cancel_methods_alter().
+ */
+function gn2_user_admin_user_cancel_methods_alter(&$methods) {
+  $methods['user_cancel_delete_reassign_user'] = array(
+    'title'  => 'Delete the account and make its content belong to another user.',
+    'description' => t('Your account will be removed and all account information deleted. All of your content will be 
+    assigned to the user of your choosing.'),
+  );
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function gn2_user_admin_user_cancel($edit, $account, $method) {
+
+  switch ($method) {
+    case 'user_cancel_delete_reassign_user':
+      // Get the user's content.
+      module_load_include('inc', 'node', 'node.admin');
+      $nodes = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('uid', $account->uid)
+        ->execute()
+        ->fetchCol();
+
+      // Reassigns to new user.
+      if ($nodes) {
+        global $user;
+        $owner_id = (isset($edit['org_man'])) ? $edit['org_man'] : filter_input(INPUT_SESSION, 'om');
+        $uid = ($owner_id) ? $owner_id : $user->uid;
+        node_mass_update($nodes, array('uid' => $uid));
+
+        // Anonymize old revisions.
+        db_update('node_revision')
+          ->fields(array('uid' => 0))
+          ->condition('uid', $account->uid)
+          ->execute();
+        // Clean history.
+        db_delete('history')
+          ->condition('uid', $account->uid)
+          ->execute();
+
+        // Log the changes
+        $owner_name = db_query('SELECT name FROM {users} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
+        $user_link = l($owner_name, 'user/' . $uid);
+        foreach ($nodes as $nid) {
+          $title = db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
+          $node_link = l($title, 'node/' . $nid);
+          watchdog('GN2 User Admin', ':node assigned to :user.', array(':node' => $node_link, ':user' => $user_link), WATCHDOG_NOTICE);
+        }
+      }
+
+      // Delete the user.
+      _gn2_user_admin_user_delete($account);
+      $oid = gn2_context_get_org_id();
+      drupal_goto('node/' . $oid);
+      break;
+  }
+}
+
+/**
+ * Helper function to delete users avoiding user_save process.
+ */
+function _gn2_user_admin_user_delete($account) {
+
+  $transaction = db_transaction();
+  try {
+    module_invoke_all('user_delete', $account);
+    module_invoke_all('entity_delete', $account, 'user');
+    field_attach_delete('user', $account);
+    drupal_session_destroy_uid($account->uid);
+
+    db_delete('users')
+      ->condition('uid', $account->uid)
+      ->execute();
+    db_delete('users_roles')
+      ->condition('uid', $account->uid)
+      ->execute();
+    db_delete('authmap')
+      ->condition('uid', $account->uid)
+      ->execute();
+  } catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('user', $e);
+    throw $e;
+  }
+  entity_get_controller('user')->resetCache();
+}

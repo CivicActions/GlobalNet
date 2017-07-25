@@ -1,0 +1,13 @@
+name = "Views Smart Date"
+description = "Adds a custom date format to Views, to allow an smart daily custom format for dates."
+core = 7.x
+package = Views
+dependencies[] = views
+
+files[] = handlers/views_smartdate_handler_field_date.inc
+
+; Information added by drupal.org packaging script on 2015-06-16
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "views_smartdate"
+datestamp = "1434467685"

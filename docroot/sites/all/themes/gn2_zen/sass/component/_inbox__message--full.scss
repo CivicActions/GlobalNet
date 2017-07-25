@@ -1,0 +1,172 @@
+/*
+ * Styling the Full Messages Page
+ */
+
+// 1. The Full page with Reply Text area
+
+.page-messages-view{
+  section.privatemsg-message{
+    border-bottom: 1px solid $gray-dc;
+    margin: 0;
+    width: auto;
+    max-width: 1200px;
+    background: $very-light-gray;
+    padding: 1em;
+    padding-left: 5em;
+  }
+
+}
+
+.page-messages-new,
+.page-messages-view {
+  &.sidebar-first #main {
+    max-width: 1200px;
+    margin: auto;
+  }
+}
+
+.page-messages.sidebar-first #content {
+  section:first-of-type {
+  background: $white;
+  padding: 1em;
+  border: 1px solid $gray-c;
+  width: auto;
+  }
+}
+
+.privatemsg-author-avatar {
+    display: inline-block;
+    padding-top: 2px;
+    text-align: center;
+    width: auto;
+    margin-right: 2em;
+    img{
+      border: 4px solid $light-blue-gray;
+    }
+}
+.privatemsg-message-column {
+    display: inline-block;
+    float: none;
+    width: 80%;
+}
+div.privatemsg-message-information {
+    border-bottom: none;
+    margin-bottom: 5px;
+}
+
+// The Details Page with the Reply and Delete Buttons
+.view-inbox.message--single{
+  .views-field-nothing-3 {
+    border-bottom: 1px solid $light-gray;
+    margin: 0 0 1.5em;
+    padding: 0.8em 0 1em;
+  }
+  .message-subject{
+    font-weight: normal;
+    font-size: 1.3em; 
+  }
+  .message-actions{
+    margin-top: 1em;
+  }
+  .message-reply {
+    @include admin-button($bgcolor: $blue-gray);
+  }
+  .message-delete{
+    @include admin-button($bgcolor: $red);
+  }
+}
+
+/*********************
+ *    #Layout
+ *********************/
+
+.page-inbox{
+  .gn-two-col-stacked-page{
+    .top,
+    .footer,
+    .sidebar,
+    .main, .main-top, .main-bottom{
+      float: none;
+      display: block;
+      margin: 0;
+      width: auto;
+    }
+
+  // Medium Screen
+  @include breakpoint($medium-screen){
+    $zen-column-count: 12 !global;
+    .top,
+    .footer{
+      @include zen-grid-item (12, 1);
+    }
+    .sidebar{
+      @include zen-grid-item (4, 1);
+    }
+    .main,{
+      @include zen-grid-item (8, 5);
+    }
+    .main-top, .main-bottom{
+      @include zen-grid-item(12, 1);
+    }
+  }
+
+  // Large Screen
+  @include breakpoint($large-screen-and-up) {
+    $zen-column-count: 12 !global;
+    .top,
+    .footer{
+      @include zen-grid-item (12, 1);
+    }
+    .sidebar{
+      @include zen-grid-item (3, 1);
+    }
+    .main{
+      @include zen-grid-item (9, 4);
+    }
+    .main-top, .main-bottom{
+      @include zen-grid-item(12, 1);
+    }
+    }
+  }
+}
+
+.page-messages.sidebar-first {
+  .region-sidebar-first {
+    float: none;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+  @include breakpoint($small-screen-and-down){
+    .sidebars,
+    #content{
+      float: none;
+      display: block;
+      margin: 0;
+      width: auto;
+    }
+    .sidebars{
+      clear: both;
+      padding-top: 1.5em;
+    }
+  }
+  // Medium Screen
+  @include breakpoint($medium-screen){
+    $zen-column-count: 12 !global;
+    .sidebars{
+      @include zen-grid-item (4, 1);
+    }
+    #content{
+      @include zen-grid-item (8, 5);
+    }
+  }
+  //Large Screen
+  @include breakpoint($large-screen-and-up){
+    .sidebars{
+      @include zen-grid-item (3, 1);
+    }
+    #content{
+      @include zen-grid-item (9, 4);
+    }
+  }
+}

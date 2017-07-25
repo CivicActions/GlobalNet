@@ -1,0 +1,518 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_sessions.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_sessions_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+  // Check for value, use for default.
+  $query = db_query('SELECT field_will_this_course_have_sess_value FROM field_data_field_will_this_course_have_sess WHERE entity_id = :id',
+    array(':id' => $form['nid']['#value']))->fetchColumn();
+  if (!empty($query)) {
+    $form['field_will_this_course_have_sess'][LANGUAGE_NONE]['#default_value'] = $query;
+  }
+  else {
+    // No value, then set to yes.
+    $form['field_will_this_course_have_sess'][LANGUAGE_NONE]['#default_value'] = 'no';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_sessions_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == 'entityform_delete_form') {
+
+    drupal_add_js(drupal_get_path('module', 'gn2_sessions') . '/gn2_session_edit.js');
+
+    $entity = entity_load('entityform', array(arg(1)));
+    $en_obj = reset($entity);
+    $session_type = field_get_items('entityform', $en_obj, 'field_type');
+    // Check to see if there are Days associated with the Week.
+    if (!empty($session_type) && $session_type[0]['value'] == 'Week') {
+      $query = db_query('SELECT * FROM field_data_field_shared_entity_ref WHERE field_shared_entity_ref_value = :val',
+        array(':val' => arg(1)))->fetchAll();
+      if (count($query) >= 2) {
+        $form['#validate'][] = 'gn2_sessions_form_alter_delete_validate';
+        unset($form['actions']['submit']);
+        $form['description']['#markup'] = '<p>' . t('Please delete any Day sessions associated with this Week.') . '</p>';
+        drupal_set_message(t('Weeks that have Days or Units associated with them cannot be deleted!'), 'error', FALSE);
+      }
+    }
+    // Check to see if Day sessions have Units associated with them.
+    elseif (!empty($session_type) && $session_type[0]['value'] == 'Day') {
+      $query = db_query('SELECT * FROM field_data_field_day_association WHERE field_day_association_target_id = :val',
+        array(':val' => arg(1)))->fetchAll();
+      if ($query) {
+        $form['#validate'][] = 'gn2_sessions_form_alter_delete_validate';
+        unset($form['actions']['submit']);
+        $form['description']['#markup'] = '<p>' . t('Please delete any Units associated with this Day.') . '</p>';
+        drupal_set_message(t('Days that have Units associated with them cannot be deleted!'), 'error', FALSE);
+      }
+    }
+
+  }
+}
+
+/**
+ * Our form validation.
+ */
+function gn2_sessions_form_alter_delete_validate() {
+  form_set_error('#submit', t('Sessions that have Days or Units associated with them cannot be deleted!'));
+}
+
+/**
+ * Cancel button callback.
+ */
+function gn2_sessions_form_session_entityform_cancel($form, &$form_state) {
+  drupal_goto('node/' . $form['field_node_association'][LANGUAGE_NONE][0]['value']['#default_value']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_sessions_form_session_entityform_edit_form_alter(&$form, &$form_state, $form_id) {
+
+  drupal_add_js(drupal_get_path('module', 'gn2_sessions') . '/gn2_session_edit.js');
+
+  $form['#validate'][] = 'gn2_sessions_form_submit_validate';
+  $form['actions']['submit']['#submit'][] = 'gn2_sessions_form_submit';
+  $form['actions']['save']['#submit'][] = 'gn2_sessions_form_submit';
+  $form['#group_children']['actions'] = 'group_add_a_session';
+
+  if (!empty($form['#entity']->field_node_association[LANGUAGE_NONE][0]['value'])) {
+    $form['field_node_association'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['#entity']->field_node_association[LANGUAGE_NONE][0]['value'];
+  }
+
+  if (arg(0) == 'entityform') {
+    $form['actions']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#access' => TRUE,
+      '#weight' => 20,
+      '#submit' => array('gn2_sessions_form_session_entityform_cancel'),
+    );
+
+    // If we are on the EF edit path, we need to unset for autocomplete.
+    $form['#entity']->field_session_presenter[LANGUAGE_NONE][0]['target_id'] = '';
+    $form['field_session_presenter'][LANGUAGE_NONE][0]['target_id']['#autocomplete_path'] = 'entityreference/autocomplete/single/field_session_presenter/entityform/session/NULL';
+    // Open the fieldset.
+    $form['#groups']['group_add_a_session']->format_settings['formatter'] = 'open';
+
+    $form['#groups']['group_add_a_session']->label = '';
+    // We don't need to show these.
+    $form['field_shared_entity_ref']['#access'] = FALSE;
+    $form['field_node_association']['#access'] = FALSE;
+
+    // Disable this - we don't want sessions associated with different courses.
+    $form['field_shared_entity_ref'][LANGUAGE_NONE][0]['value']['#attributes']['disabled'] = TRUE;
+
+  }
+
+  else {
+
+    // Create an association between form and node for results view.
+    $node = node_load(arg(1));
+
+    if (!empty($node->nid)) {
+      $form['field_node_association'][LANGUAGE_NONE][0]['value']['#default_value'] = $node->nid;
+
+      if (!empty($form['field_session_association'][LANGUAGE_NONE][0]['value']['#value'])) {
+        $form['field_shared_entity_ref'][LANGUAGE_NONE][0]['value']['#value'] = $form['field_session_association'][LANGUAGE_NONE][0]['value']['#value'];
+      }
+    }
+    else {
+      $saved_nid = $form['#entity']->field_node_association[LANGUAGE_NONE][0]['safe_value'];
+      if (!empty($saved_nid)) {
+        $form['field_node_association'][LANGUAGE_NONE][0]['value']['#default_value'] = $saved_nid;
+      }
+      else {
+        if (is_numeric(arg(1))) {
+          $form['field_node_association'][LANGUAGE_NONE][0]['value']['#default_value'] = arg(1);
+        }
+      }
+    }
+
+    $image = !empty($user->picture->uri) ? '<img src="' . image_style_url('media_thumbnail', $user->picture->uri) . '"/>' : '<img src ="/sites/all/themes/gn2_zen/images/generic-head.jpg">';
+  }
+
+}
+
+/**
+ * Form alter ajax callback.
+ */
+function gn2_sessions_form_submit_validate($form, &$form_state) {
+  // Not needed any longer.
+}
+
+/**
+ * Form alter submit callback.
+ */
+function gn2_sessions_form_submit(&$form, $form_state) {
+
+  $type = $form_state['values']['field_type'][LANGUAGE_NONE][0]['value'];
+
+  if (!empty($form_state['values']['field_node_association'][LANGUAGE_NONE][0]['value'])) {
+    $nid = $form_state['values']['field_node_association'][LANGUAGE_NONE][0]['value'];
+  }
+  elseif (!empty($form_state['build_info']['args'][0]->field_node_association[LANGUAGE_NONE][0]['value'])) {
+    $nid = $form_state['build_info']['args'][0]->field_node_association[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    $nid = $form_state['input']['field_node_association'][LANGUAGE_NONE][0]['value'];
+  }
+
+  if ($type == 'Week') {
+    drupal_goto('node/' . $nid);
+  }
+
+  if ($type == 'Day') {
+    $time = $form_state['values']['field_day_number'][LANGUAGE_NONE][0]['value'];
+    drupal_goto('node/' . $nid, array(
+        'query' => array(
+          'n' => $form_state['values']['field_session_association'][LANGUAGE_NONE][0]['target_id'],
+          'time' => $time,
+        ),
+      )
+    );
+  }
+
+  if ($type == 'Unit') {
+    $parent = entity_load('entityform', array($form_state['values']['field_day_association'][LANGUAGE_NONE][0]['target_id']));
+    $pid = array_shift(array_values($parent));
+
+    $n = $pid->field_session_association[LANGUAGE_NONE][0]['target_id'];
+    $time = $pid->field_day_number[LANGUAGE_NONE][0]['value'];
+    drupal_goto('node/' . $nid, array(
+        'query' => array(
+          'n' => $n,
+          'time' => $time,
+        ),
+      )
+    );
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function gn2_sessions_entity_presave($entity, $type) {
+
+  if (!empty($entity->type)) {
+    if ($entity->type == 'session' && empty($entity->clone)) {
+      if (!empty($entity->field_date2[LANGUAGE_NONE][0]['value'])) {
+        $timestring = strtotime($entity->field_date2[LANGUAGE_NONE][0]['value']);
+      }
+      else {
+        $timestring = strtotime('now');
+      }
+
+      if (!empty($entity->field_type[LANGUAGE_NONE][0]['value'])) {
+        $time = $entity->field_type[LANGUAGE_NONE][0]['value'];
+      }
+      else {
+        $time = '';
+      }
+      switch ($time) {
+
+        // Assign id to week and to day simultaneously for sorting in views.
+        case 'Day':
+          if (!empty($entity->field_session_association[LANGUAGE_NONE][0]['target_id'])) {
+            $parent = entity_load('entityform', array($entity->field_session_association[LANGUAGE_NONE][0]['target_id']));
+            if (empty($parent->field_shared_entity_ref[LANGUAGE_NONE][0]['value'])) {
+              foreach ($parent as $pid) {
+                $pid->field_shared_entity_ref[LANGUAGE_NONE][0]['value'] = $entity->field_session_association[LANGUAGE_NONE][0]['target_id'];
+                $pid->save();
+              }
+            }
+          }
+          $entity->field_shared_entity_ref[LANGUAGE_NONE][0]['value'] = !empty($entity->field_session_association[LANGUAGE_NONE][0]['target_id']) ?
+            $entity->field_session_association[LANGUAGE_NONE][0]['target_id'] : '';
+
+          break;
+
+        // Assign id to day and to unit simultaneously for sorting in views.
+        case 'Unit':
+
+          if (!empty($entity->field_day_association[LANGUAGE_NONE][0]['target_id'])) {
+            $parent = entity_load('entityform', array($entity->field_day_association[LANGUAGE_NONE][0]['target_id']));
+
+            $pid = array_shift(array_values($parent));
+            $day_time = $pid->field_day_number[LANGUAGE_NONE][0]['value'];
+            $entity->field_day_number[LANGUAGE_NONE][0]['value'] = $day_time;
+
+            if (empty($pid->field_shared_entity_ref[LANGUAGE_NONE][0]['value'])) {
+              $pid->field_shared_entity_ref[LANGUAGE_NONE][0]['value'] = $entity->field_day_association[LANGUAGE_NONE][0]['target_id'];
+              $pid->save();
+            }
+            else {
+              $entity->field_shared_entity_ref[LANGUAGE_NONE][0]['value'] = $pid->field_shared_entity_ref[LANGUAGE_NONE][0]['value'];
+              $pid->save();
+            }
+          }
+
+          break;
+
+        default:
+          '';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function gn2_sessions_entity_view_alter(&$build, $type) {
+  if (!empty($build['info']['user']['#markup']) && $build['#bundle'] == 'session' && $type == 'entityform' && arg(0) == 'node' && !arg(2)) {
+    global $user;
+    $build['info']['user']['#markup'] = '';
+    $owner = $build['#entity']->uid;
+    $nid = arg(1);
+    $admins = db_select('og_users_roles', 'uid')
+      ->fields('uid')
+      ->condition('gid', $nid, '=')
+      ->condition('rid', '20', '=')
+      ->execute()
+      ->fetchAll();
+
+    $managers = array();
+    foreach ($admins as $admin) {
+      $managers[] = $admin->uid;
+    }
+
+    $course_roles = og_get_user_roles('node', $nid);
+    $org_manager = (in_array('org_manager', $course_roles)) ? TRUE : FALSE;
+    $admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+
+    drupal_add_js(array(
+      'course_nid' => $nid,
+      'managers' => $managers,
+      'current_user' => $user->uid,
+      'gn2_session' => array(
+        'uid' => array($build['#entity']->uid),
+        'form_id' => array(
+          $build['#entity']->entityform_id,
+        ),
+      ),
+      'gn_admin' => ($admin || $org_manager) ? TRUE : FALSE,
+    ), 'setting');
+
+    $source = '';
+
+    if (!empty($build['field_description']['#object']->field_date2[LANGUAGE_NONE][0]['value'])) {
+      $source = $build['field_description']['#object']->field_date2[LANGUAGE_NONE][0]['value'];
+    }
+
+    $date = new DateTime($source);
+    drupal_add_js(drupal_get_path('module', 'gn2_sessions') . '/gn2_sessions.js');
+
+    $full_entity = reset(entity_load('entityform', array($build['#entity_view_mode']['id'])));
+    $full_entity_type = $full_entity->field_type[LANGUAGE_NONE][0]['value'];
+    if (!empty($full_entity->field_session_association[LANGUAGE_NONE][0]['target_id'])) {
+      $parent = reset(entity_load('entityform', array($full_entity->field_session_association[LANGUAGE_NONE][0]['target_id'])));
+    }
+    else {
+      $parent = '';
+    }
+    if (!empty($parent->field_date2[LANGUAGE_NONE][0]['value'])) {
+      $p_time = $parent->field_date2[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      $p_time = '';
+    }
+    $interval = !empty($full_entity->field_day_number[LANGUAGE_NONE][0]['value']) ? $full_entity->field_day_number[LANGUAGE_NONE][0]['value'] - 1 : '';
+    if (!empty($interval)) {
+      $date->add(new DateInterval('P' . $interval . 'D'));
+      $date2 = new DateTime($p_time);
+      $date2->add(new DateInterval('P' . $interval . 'D'));
+      if ($build['#view_mode'] == 'week') {
+        if (!empty($build['field_date2']['#object']->field_shared_entity_ref[LANGUAGE_NONE][0]['value'])) {
+
+          $id = $build['field_date2']['#object']->field_shared_entity_ref[LANGUAGE_NONE][0]['value'];
+        }
+        else {
+          $id = $build['#entity_view_mode']['id'];
+        }
+        $time_val = strtotime($build['field_date2']['#items'][0]['value']);
+        $time_def = !empty($build['field_description']['#object']->field_type[LANGUAGE_NONE][0]['value']) ? $build['field_description']['#object']->field_type[LANGUAGE_NONE][0]['value'] : '';
+        $timestring = date('mdY', $time_val);
+        if (!empty($build['field_description']['#object']->field_type[LANGUAGE_NONE][0]['value']) && $build['field_description']['#object']->field_type[LANGUAGE_NONE][0]['value'] == 'Week') {
+          $title_class = 'week-title';
+        }
+        else {
+          $title_class = 'not-week-title';
+        }
+
+        if ($full_entity_type == 'Week') {
+          $build['field_title'][0]['#markup'] = l(decode_entities($build['field_title'][0]['#markup']), current_path(), array(
+            'query' => array(
+              'n' => $id,
+              'time' => $timestring,
+            ),
+            'attributes' => array(
+              'data-date' => array($time_val),
+              'class' => array($title_class),
+            ),
+          ));
+        }
+        else {
+
+          $build['field_title'][0]['#markup'] = l($date2->format('d M Y') . ': ' . decode_entities($build['field_title'][0]['#markup']), current_path(), array(
+            'query' => array(
+              'n' => $parent->entityform_id,
+              'time' => $build['field_day_number']['#items'][0]['value'],
+            ),
+            'attributes' => array(
+              'data-date' => array($time_val),
+              'class' => array($title_class),
+            ),
+          ));
+        }
+
+      }
+    }
+    if ($build['#view_mode'] == 'full' && $build['#bundle'] == 'session' && $build['field_type'][0]['#markup'] == 'Day') {
+
+      $build['field_title'][0]['#markup'] = '<div class = "session-header-wrapper"><div class = "session-header-top"><h4 class="session-title">' . $date2->format('d M Y') . ': ' . $build['field_title'][0]['#markup'] . '</h4></div><div class = "session-header-bottom"><div class="session-return-to-weekly">' . l(t('back to weekly view >>'), current_path()) . '</div></div>';
+    }
+    $build['field_day_number']['#access'] = FALSE;
+    if ($build['#view_mode'] == 'week' && $build['#bundle'] == 'session' && $build['field_type'][0]['#markup'] == 'Week') {
+      $build['field_date2']['#access'] = FALSE;
+    }
+
+    $build['info']['#access'] = FALSE;
+    $id = $build['#entity_view_mode']['id'];
+    $form = drupal_get_form('gn2_sessions_file_form', $id);
+
+    if (!empty($form['gn2_sessions_file_form']['options']) && $build['#view_mode'] == 'full') {
+      $output = drupal_render($form);
+      $build['#suffix'] = $output;
+      if ($build['field_type'][0]['#markup'] !== 'Week') {
+        $build['#suffix'] .= '<br />' . drupal_render($build['field_session_presenter']);
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_entityform_access_alter().
+ */
+function gn2_sessions_entityform_access_alter(&$access, $op, $context) {
+  if (arg(0) !== 'system' && is_numeric(arg(1))) {
+    if (!empty($context['entityform']->type) && $context['entityform']->type == 'session' || arg(0) == 'system') {
+      $ef = arg(1);
+      $entity = entity_load('entityform', array($ef));
+      $assoc_id = !empty($entity[$ef]->field_node_association[LANGUAGE_NONE][0]['value']) ?
+        $entity[$ef]->field_node_association[LANGUAGE_NONE][0]['value'] : $_GET['entityform_id'];
+      $roles = og_get_user_roles('node', $assoc_id);
+
+      if (in_array('group_manager', $roles) || in_array('org_manager', $roles)) {
+        $access = TRUE;
+      }
+    }
+  }
+}
+
+/**
+ * Builds our attachments form.
+ */
+function gn2_sessions_file_form($form, &$form_state, $id) {
+  $build_id = entity_load('entityform', array($id));
+
+  $form = array();
+  foreach ($build_id as $item) {
+    if (!empty($item->field_media[LANGUAGE_NONE])) {
+      $files = $item->field_media[LANGUAGE_NONE];
+
+      foreach ($files as $file) {
+        $type_header = explode('/', $file['filemime']);
+        $type = $type_header[1];
+
+        if ($type == 'plain') {
+          $type = str_replace($type, 'plain', 'txt');
+        }
+
+        $size_info = ' (' . round($file['filesize'] / 1000000, 3) . ' MB)';
+
+        if (!empty($file['field_file_document_title_text'][LANGUAGE_NONE][0])) {
+          $filename = decode_entities($file['field_file_document_title_text'][LANGUAGE_NONE][0]['safe_value']);
+        }
+        else {
+          $filename = decode_entities($file['filename']);
+        }
+
+        $form['#prefix'] = '<div class="file-download">';
+        $form['#suffix'] = '</div>';
+        $form['gn2_sessions_file_form']['options'][$file['fid']] = array(
+          '#prefix' => '<div class="gn2_file_download_link-wrap">',
+          '#type' => 'checkbox',
+          '#title' => l($filename, file_create_url($file['uri']),
+            array(
+              'attributes' =>
+                array(
+                  'target' => '_blank',
+                ),
+            )),
+          '#suffix' => '<div class="gn2_file_download_link file">' . l(t('View'), file_create_url($file['uri']),
+              array(
+                'attributes' =>
+                  array(
+                    'target' => '_blank',
+                  ),
+              )) . $size_info . '</div></div>',
+        );
+      }
+    }
+  }
+  $form['gn2_sessions_file_form']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Download selected'),
+  );
+  $form['#submit'][] = 'gn2_sessions_file_submit';
+
+  return $form;
+}
+
+/**
+ * Callback for gn2_file_download submit.
+ */
+function gn2_sessions_file_submit($form, &$form_state) {
+  $options = $form_state['input'];
+  $archive_uri = 'temporary://gn_download_temp_' . REQUEST_TIME . '.zip';
+  $zip = new ZipArchive();
+  if ($zip->open(drupal_realpath($archive_uri), ZipArchive::CREATE) === TRUE) {
+    foreach ($options as $key => $value) {
+      if (is_int($key) && $value['#value'] == 1) {
+        $file = file_load($key);
+        $zip->addFile(drupal_realpath($file->uri), $file->filename);
+      }
+    }
+    $zip->close();
+    drupal_add_http_header('Content-disposition', 'attachment; filename=' . $archive_uri);
+    readfile($archive_uri);
+    exit();
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function gn2_sessions_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if (arg(0) == 'entityform') {
+    $i = 0;
+    $tabs = count($data['tabs'][0]['output']) - 1;
+    global $user;
+    while ($i <= $tabs) {
+      if ($data['tabs'][0]['output'][$i]['#link']['path'] == 'entityform/%/view' || $data['tabs'][0]['output'][$i]['#link']['path'] == 'entityform/%/repeats') {
+        unset($data['tabs'][0]['output'][$i]);
+      }
+      $i++;
+    }
+  }
+}

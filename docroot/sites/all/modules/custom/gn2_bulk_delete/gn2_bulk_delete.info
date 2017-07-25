@@ -1,0 +1,4 @@
+name = gn2_bulk_delete
+description = An interface for bulk deleting Folder files.
+core = 7.x
+package = GlobalNET

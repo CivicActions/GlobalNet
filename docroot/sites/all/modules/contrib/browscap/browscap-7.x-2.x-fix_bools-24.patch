@@ -1,0 +1,21 @@
+diff --git a/import.inc b/import.inc
+index 184a37c..08b55ac 100644
+--- a/import.inc
++++ b/import.inc
+@@ -104,12 +104,12 @@ function _browscap_import($cron = TRUE) {
+     // Replace 'true' and 'false' with '1' and '0'
+     $browscap_data = preg_replace(
+       array(
+-        "/=\s*true\s*\n/",
+-        "/=\s*false\s*\n/",
++        '/=\s*"?true"?\s*$/m',
++        '/=\s*"?false"?\s*$/m',
+       ),
+       array(
+-        "=1\n",
+-        "=0\n",
++        '=1',
++        '=0',
+       ),
+       $browscap_data
+     );

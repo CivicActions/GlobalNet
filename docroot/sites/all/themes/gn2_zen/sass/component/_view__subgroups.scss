@@ -1,0 +1,60 @@
+/*
+ * Styles for the subgroups tab in Groups
+ */
+.-view--subgroups--list {
+  //View wrapper
+  ul.pager {
+    margin-top: 1em;
+  }
+}
+
+.subgroups--row {
+  margin: 0;
+  background: $white;
+  padding: 0.5em !important;
+  &:nth-child(even) {
+    background-image: url(../images/table_row_background_even.png);
+  }
+}
+
+.subgroups--member-count{
+  color: $medium-gray;
+  font-size: 0.9em;
+  > li {
+    list-style: none;
+  }
+}
+
+
+/*==== Layout Styles ======== */
+.subgroups--left-col,
+.subgroups--right-col {
+  @include breakpoint($xs-screen-only) {
+    //padding: 0.4em;
+  }
+  display: block;
+}
+
+$zen-gutter-width: 0px;
+$zen-column-count: 4 !global;
+
+@include breakpoint($medium-screen-and-up) {
+  .subgroups--row,
+  .subgroups--left-col,
+  .subgroups--right-col {
+    @include zen-grid-item-base;
+  }
+
+  .subgroups--row {
+    @include zen-grid-container();
+  }
+
+  .subgroups--left-col {
+    @include zen-grid-item(3, 1);
+  }
+
+  .subgroups--right-col{
+    @include zen-grid-item(1, 4);
+  }
+}
+

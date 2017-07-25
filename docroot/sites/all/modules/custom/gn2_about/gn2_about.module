@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Code for the About feature.
+ */
+
+include_once 'gn2_about.features.inc';
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function gn2_about_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}

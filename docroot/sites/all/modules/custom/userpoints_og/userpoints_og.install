@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Install time hooks for userpoints_og module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function userpoints_og_schema() {
+  $schema['userpoints_og'] = array(
+    'description' => 'Related term tid and og nid.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this og.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tid' => array(
+        'description' => 'The term ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('nid', 'tid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function userpoints_og_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $group_types = og_get_all_group_bundle();
+    if (!empty($group_types['node'])) {
+      $node_count = db_query('SELECT n.nid FROM {node} n WHERE n.type in (:type) AND !(n.nid IN (SELECT nid FROM {userpoints_og}));',
+        array(':type' => array_keys($group_types['node'])))->fetchField();
+
+      if ($node_count > 0) {
+        $requirements['userpoints_og'] = array(
+          'title' => $t('Userpoints og module'),
+          'description' => $t('Old group is not create term in userpoints category, need to relate. Please batch from the <a href="@url">Userpoints og batch the old group page</a>.', array('@url' => url('admin/config/workflow/userpoints_og/batch'))),
+          'severity' => REQUIREMENT_WARNING,
+          'value' => $t('Not configured'),
+        );
+      }
+    }
+  }
+
+  return $requirements;
+}

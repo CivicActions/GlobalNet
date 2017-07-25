@@ -1,0 +1,14 @@
+diff --git uif_plus/uif_plus.module uif_plus/uif_plus.module
+index 9f2c2d8..2248691 100755
+--- uif_plus/uif_plus.module
++++ uif_plus/uif_plus.module
+@@ -486,9 +486,6 @@ function uif_plus_get_field_info($header) {
+       );
+     }
+ 
+-    if (!$supported) {
+-      drupal_set_message(t('Unknown column @field in the import file. Data in this column will be ignored.', array('@field' => $label)), 'warning');
+-    }
+   }
+ 
+   return $field_info;

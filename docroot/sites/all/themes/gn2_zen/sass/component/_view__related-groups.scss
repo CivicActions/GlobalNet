@@ -1,0 +1,66 @@
+/**
+ * Theming the Related Groups block found on group pages.
+ */
+
+$zen-column-count: 20 !global;
+// ======= Related groups block =======
+.related-groups--row {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+  .icon-group{
+    background-size: contain;
+    padding-bottom: 85%;
+    width: auto;
+    height: 0px;
+    margin: 0;
+  }
+  .views-field {
+    &:first-child{
+      margin-bottom: 0.5em;
+    }
+    &.views-field-title {
+      margin-bottom: 0.25em;
+      line-height: 1.2;
+    }
+  }
+
+//Layout
+  .col {
+    &.first {
+      @include zen-grid-item(4, 1);
+      .inner {
+        padding-right: 0%;
+      }
+    }
+    &.last {
+      @include zen-grid-item(16, 5);
+    }
+  }
+  
+}
+
+.view-related-stories{
+  .more-link{
+    display: block;
+  }
+}
+
+//======= Related Groups Page ========
+.page-node-all-related-groups {
+  .related-stories-block {
+    width: 95%;
+    margin: auto;
+    .views-row {
+      margin: 0 !important;
+      background: $white;
+      > .group-teaser--item {
+        padding: 0.8em;
+        margin-bottom: 0;
+        border-bottom: none;
+        }
+    }
+    .views-row-even {
+      background-image: url(../images/table_row_background_even.png);
+  }
+ }
+}

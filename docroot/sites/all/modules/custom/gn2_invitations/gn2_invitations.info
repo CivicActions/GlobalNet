@@ -1,0 +1,4 @@
+name = GN2 Invitations
+description = Allow custom invitations for GN2 groups
+core = 7.x
+package = GlobalNET

@@ -1,0 +1,91 @@
+/* A collection of architecturally high-level styles for basic elements. */
+
+@import "headings";
+@import "form-elements";
+@import "views";
+
+/*Default body styles*/
+
+$default-line-height: 1.4;
+$tighter-line-height: (1 + $default-line-height) / 2;
+
+body {
+  font-family: Arial, sans-serif;
+  color: $body-color;
+  font-size: 16px;
+  line-height: $default-line-height;
+}
+
+p, ul, ol {
+  margin: 0 0 1em 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.nobottommargin {
+  @include nobottommargin;
+}
+
+a {
+  text-decoration: none;
+  color: $link-color;
+  &:link, &:visited {
+    color: $link-color;
+  }
+  &:hover, &:focus {
+    color: $link-color-hover;
+    outline: 0 none;
+  }
+  &:active {}
+}
+
+.fancy-bullets {
+  ul {
+    @include bulleted_list;
+  }
+  li {
+    @include bulleted_list_item;
+  }
+}
+
+.sidebar-subheading,
+.subheading,
+.view-header {
+  h3, 
+  h4 {
+    @include subheading_full;
+  }
+}
+
+.customSelect {
+  background:lighten($grey-h3, 45%) image-url('menu-expanded.png') no-repeat 90%;
+  width:120px !important;
+  &.ctools-jump-menu-select {
+    background:lighten($grey-h3, 45%) image-url('menu-expanded.png') no-repeat 95%;
+    width: 200px !important;
+  }
+}
+
+.customSelectInner {
+  font-size: 14px !important;
+  padding: 5px;
+  width: 80px !important;
+  border-right: solid white 1px;
+  .ctools-jump-menu-select &{
+    width: 163px !important;
+  }
+}
+
+#ctools-jump-menu label {
+  @include display_font;
+  color: $falu-red;
+  font-size: 160%;
+  top: 3px;
+  position: relative;
+}
+
+.feed-icon {
+  clear: both;
+  padding-top: 20px;
+}

@@ -1,0 +1,458 @@
+<?php
+/**
+ * @file
+ * GN2 Report user changes.
+ */
+
+require 'vendor/autoload.php';
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_report_user_changes_menu() {
+  $items['node/%node/dashboard/user-profile-updates/%/%'] = array(
+    'title callback' => 'gn2_report_user_set_title',
+    'title arguments' => array(4, 5),
+    'page callback' => "gn2_report_user_changes_page",
+    'page arguments' => array(1, 4, 5),
+    'access callback' => 'gn2_report_user_check_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['node/%node/dashboard/user-profile-updates-dowload/%/%/%'] = array(
+    'title callback' => 'gn2_report_user_set_title',
+    'title arguments' => array(4, 5),
+    'page callback' => "gn2_report_user_dowload_csv",
+    'page arguments' => array(1, 4, 5),
+    'access callback' => 'gn2_report_user_check_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['node/%node/dashboard/user-profile-updates'] = array(
+    'title' => 'User Profile Changes',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_report_user_changes_form'),
+    'access callback' => 'gn2_report_user_check_access',
+    'access arguments' => array(1),
+  );
+
+  return $items;
+}
+
+/**
+ * Menu access callback.
+ *
+ * @param object $node
+ *   The node object to check.
+ *
+ * @return bool
+ *   Returns TRUE or FALSE.
+ */
+function gn2_report_user_check_access($node) {
+  global $user;
+  $og_roles = og_get_user_roles('node', $node->nid);
+
+  return (in_array('administrator', $user->roles) || in_array('hr_manager', $og_roles)) ?
+    TRUE : FALSE;
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function gn2_report_user_changes_user_update(&$edit, $account, $category) {
+  // For some reason revisions are being saved with the wrong uid.
+  $num_updated = db_update('user_revision')
+    ->fields(array(
+      'uid' => $account->uid,
+    ))
+    ->condition('name', $account->name)
+    ->condition('vid', $account->vid)
+    ->execute();
+}
+
+/**
+ * Form constructor for the user changes form.
+ *
+ * @see gn2_report_user_changes_form_validation().
+ * @see gn2_report_user_changes_form_submit().
+ */
+function gn2_report_user_changes_form($form, &$form_state) {
+  $form['report_month'] = array(
+    '#type' => 'date_select',
+    '#title' => t('Select month'),
+    '#default_value' => date('Y-m-d H:i:s'),
+    '#date_format' => 'm Y',
+    '#date_label_position' => 'within',
+    '#date_year_range' => '-15:+0',
+    '#required' => TRUE,
+  );
+
+  $form['submit_button'] = array(
+    '#type' => 'submit',
+    '#value' => t('Generate Report'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form validation handler for the user changes form.
+ *
+ * @see gn2_report_user_changes_form_submit().
+ */
+function gn2_report_user_changes_form_validate($form, &$form_state) {
+  
+}
+
+/**
+ * Form submission handler for the user changes form.
+ *
+ * @see gn2_report_user_changes_form_validate().
+ */
+function gn2_report_user_changes_form_submit($form, &$form_state) {
+  $report_month = $form_state['values']['report_month'];
+  $start_date = date('Y-m-01', strtotime($report_month));
+  $end_date = date('Y-m-t', strtotime($report_month));
+  $tz = drupal_get_user_timezone();
+  date_default_timezone_set($tz);
+  
+  // Convert the start and end dates to timestamps.
+  $initial_timestamp = strtotime($start_date . ' 00:00:01 ' . $tz);
+  $ending_timestamp = strtotime($end_date . ' 23:59:59 ' . $tz);
+  
+  $path = current_path();
+  // Redirect the user to the report.
+  $form_state['redirect'] = $path . '/' . $initial_timestamp . '/' . $ending_timestamp;
+}
+
+/**
+ * Callback for the page that display the user diff.
+ */
+function gn2_report_user_changes_page($node, $initial_timestamp, $ending_timestamp) {
+  // if there is file download available, load it.
+  if (isset($_SESSION['gn2_report_file'])) {
+    $file = $_SESSION['gn2_report_file'];
+    $file_url = file_create_url($file->uri);
+    $link = l($file->filename, $file_url);
+    drupal_set_message(t('Your file is ready to download. Download file: !download', array('!download' => $link)), 'status');
+    unset($_SESSION['gn2_report_file']);
+  }
+
+  $pager = TRUE;
+
+  $query = db_select('user_revision', 'u')->extend('PagerDefault');
+  $query->fields('u', array('uid', 'vid'));
+  $query->join('og_membership', 'om', 'om.etid = u.uid');
+  $query->leftJoin('field_data_field_parent_organization', 'po', 'po.entity_id = om.gid');
+  $query->leftJoin('node', 'n', 'n.nid = om.gid');
+  $query->condition(db_or()
+    ->condition('n.nid', $node->nid)
+    ->condition('po.field_parent_organization_target_id', $node->nid));
+  $query->condition('om.group_type', 'node');
+  $query->condition('om.entity_type', 'user');
+  $query->condition('u.timestamp', $initial_timestamp, '>=');
+  $query->condition('u.timestamp', $ending_timestamp, '<=');
+  $query->distinct();
+
+  $results = $query->limit(10)->execute();
+
+  $output = '';
+  if (!empty($results)) {
+    foreach ($results as $row) {
+      $outputter = new \GN2ReportUserChanges\UserOutput($row->uid, $initial_timestamp, $ending_timestamp, $row->vid);
+      $output .= $outputter->getHtmlOutput();
+    }
+  }
+
+  $show_download = TRUE;
+  // If we don't have results, set message and download flag.
+  if (!$output) {
+    $pager = FALSE;
+    drupal_set_message(t('There were no records for the dates !start through !end', array(
+      '!start' => date("j F Y", $initial_timestamp),
+      '!end' => date("j F Y", $ending_timestamp))), 'error');
+    $show_download = FALSE;
+  }
+
+  // If we have results, add the pager.
+  $output .= ($pager) ? theme('pager') : NULL;
+
+  $content = '<header><em>' . t('This on-screen report displays all user profile activity, which includes actions such as the user changing their password. If you ONLY want to see users that have updated profile fields, then download the CSV file.') . '</em></header><br />';
+
+  $short = field_get_items('node', $node, 'field_org_short_title');
+  $short_title = ($short) ? $short[0]['value'] : $node->title;
+  $file = 'UserReport-' . $short_title . '.' . date('Ymd', time()) . '.csv';
+  if ($show_download) {
+    $content .= '<div class="file-download"><div class="gn2_file_download_link file">';
+    $content .= l(t('Generate CSV'), 'node/' . $node->nid . '/dashboard/user-profile-updates-dowload/' . $initial_timestamp . '/' .
+        $ending_timestamp . '/' . $file, array('absolute' => TRUE));
+    $content .= '</div></div>';
+  }
+  else {
+    $content .= l('&laquo; Choose different date range', 'node/' . $node->nid . '/dashboard/user-profile-updates', array('html' => TRUE));
+  }
+  $content .= $output;
+
+  return $content;
+}
+
+/**
+ * Set the page title.
+ */
+function gn2_report_user_set_title($start, $end) {
+  return t('Search Date Range: !init - !end', array(
+    '!init' => date('F j, Y', $start),
+    '!end' => date('F j, Y', $end),
+  ));
+}
+
+/**
+ * Create csv file for dowload.
+ * 
+ * @param object $node
+ *  The Organziation node object.
+ * @param int $start
+ *  The start date.
+ * @param int $end
+ *  The end date.
+ */
+function gn2_report_user_dowload_csv($node, $start, $end) {
+  // Set some parameters for our batch process
+  $limit = 10;
+  $total = gn2_report_user_changes_get_results_for_csv($node->nid, $start, $end, 0, $limit, TRUE);
+  $max = count($total);
+  
+  $batch = array(
+    'operations' => array(
+      array('gn2_report_user_changes_csv_batch',
+        array($node->nid, $start, $end, $limit, $max),
+      ),
+    ),
+    'finished' => 'gn2_report_user_download_csv_completed',
+    'title' => t('Creating file to download'),
+    'init_message' => t('Collecting data.'),
+    'progress_message' => t('Creating file.'),
+    'error_message' => t('There was an error collating the data.'),
+  );
+
+  batch_set($batch);
+  $path = 'node/' . $node->nid . '/dashboard/user-profile-updates/' . $start . '/' . $end;
+  batch_process($path);
+}
+
+/**
+ * To prevent server timeouts, we are going to batch process the csv 10 records at a time.
+ *
+ * @param int $nid
+ *   The Organization node ID.
+ * @param int $start
+ *   The report start date as unix timestamp.
+ * @param int $end
+ *   The report end date as unix timestamp.
+ *
+ */
+function gn2_report_user_changes_csv_batch($nid, $start, $end, $limit, $max, &$context) {
+  // If the file to download doesn't exist, create it.
+  if (!isset($context['sandbox']['file'])) {
+    $node = node_load($nid);
+    $org_short_title = field_get_items('node', $node, 'field_org_short_title');
+    $start_date = format_date($start, 'custom', 'dmy');
+    $end_date = format_date($end, 'custom', 'dmy');
+    $filename = $org_short_title[0]['value'] . '-' . $start_date . '-' . $end_date . '.csv';
+    $file = file_directory_temp() . '/' . $filename;
+    $status = gn2_report_user_create_csv($file);
+    if ($status) {
+      $context['sandbox']['file'] = $file;
+      $context['results']['file'] = $file;
+      $context['results']['filename'] = $filename;
+      $context['results']['redirect'] = 'node/' . $nid . '/dashboard/user-profile-updates/' . $start . '/' . $end;
+    }
+  }
+
+  if (isset($context['sandbox']['file'])) {
+    // Set the starting progress and starting revision id.
+    if (!isset($context['sandbox']['progress'])) {
+      $context['sandbox']['progress'] = 0;
+      $context['sandbox']['current_revision'] = 0;
+      $context['sandbox']['max'] = $max;
+    }
+
+    // Create Iteration variable
+    if (empty($context['sandbox']['iteration'])) {
+      $context['sandbox']['iteration'] = 0;
+    }
+
+    if ($context['sandbox']['iteration'] < $context['sandbox']['max']) {
+      // Count completed operations in a batch.
+      $counter = 0;
+      if ($context['sandbox']['progress'] != 0) {
+        $context['sandbox']['iteration'] = $context['sandbox']['iteration'] + $limit;
+      }
+
+      $results = gn2_report_user_changes_get_results_for_csv($nid, $start, $end, $context['sandbox']['progress'], $limit);
+
+      $rows = array();
+      if (!empty($results)) {
+        foreach ($results as $revision) {
+          $outputter = new \GN2ReportUserChanges\UserOutput($revision->uid, $start, $end, $revision->vid);
+          $user_data = $outputter->getCsvData();
+          array_push($rows, $user_data);
+        }
+      }
+
+      $file_row = array();
+      if (!empty($rows)) {
+        $fp = fopen($context['sandbox']['file'], 'a');
+        global $base_url;
+        foreach ($rows as $row) {
+          $uid = current(array_keys($row));
+          
+          $country_rep = db_select('field_data_field_country_of_representation', 'c')
+            ->condition('entity_id', $uid, '=')
+            ->fields('c', array('field_country_of_representation_value'))
+            ->execute()->fetchField();
+          $country = ($country_rep != '') ? $country_rep : 'Unknown country';
+          $name = (isset($row[$uid]['name'])) ? $row[$uid]['name'] : 'Unknown';
+          $alias = drupal_get_path_alias('user/' . $uid);
+          $link = $base_url . '/' . $alias;
+
+          // Check general fields.
+          if (isset($row[$uid]['general'])) {
+            foreach ($row[$uid]['general'] as $general) {
+              // Sanitise general Text for CSV
+              foreach ($general as $key => $item) {
+                $general[$key] = str_replace(array(',', ':', ';', '(', ')', '&'), ' ', $item);
+              }
+              $file_row = array(
+                'name' => $name,
+                'country' => $country,
+                'link' => $link,
+                'date' => (!empty($general[0])) ? $general[0] : 'Unknown date',
+                'field' => (!empty($general[1])) ? $general[1] : 'Unknown field',
+                'value' => (!empty($general[2])) ? $general[2] : 'Unknown value',
+              );
+              fputcsv($fp, $file_row);
+            }
+          }
+
+          // Check field_collections.
+          if (isset($row[$uid]['field_collection'])) {
+            foreach ($row[$uid]['field_collection'] as $field_collection) {
+              // Sanitise general Text for CSV
+              foreach ($field_collection as $key => $item) {
+                $field_collection[$key] = str_replace(array(',', ':', ';', '(', ')', '&'), ' ', $item);
+              }
+              $file_row = array(
+                'name' => $name,
+                'country' => $country,
+                'link' => $link,
+                'date' => (isset($field_collection[0])) ? $field_collection[0] : 'Unknown date',
+                'field' => (isset($field_collection[1])) ? $field_collection[1] : 'Unknown field',
+                'value' => (isset($field_collection[2])) ? $field_collection[2] : 'Unknown value',
+              );
+            }
+            fputcsv($fp, $file_row);
+          }
+          $counter++;
+          $context['sandbox']['progress']++;
+          $context['sandbox']['current_revision'] = $uid;
+          $context['message'] = t('Processing %progress of %count records.',
+            array('%progress' => $context['sandbox']['progress'], '%count' => $max));
+          $context['results']['processed'] = $context['sandbox']['progress'];
+        }
+      }
+    }
+
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+    else {
+      $context['finished'] = 1;
+    }
+  }
+}
+
+/**
+ * Finish the batch process.
+ */
+function gn2_report_user_download_csv_completed($success, $results, $operations) {
+  if ($success) {
+    $file = file_get_contents($results['file']);
+    $saved_file = file_save_data($file, 'temporary://' . $results['filename'], FILE_EXISTS_REPLACE);
+    $_SESSION['gn2_report_file'] = $saved_file;
+  }
+  else {
+    $error_operation = reset($operations);
+    drupal_set_message(t('An error occurred while processing @operation with arguments : @args', array('@operation' => $error_operation[0], '@args' => print_r($error_operation[0], TRUE))));
+
+  }
+}
+
+/**
+ * Get results for the csv export.
+ *
+ * @param int $nid
+ *   The Organization node ID to query.
+ * @param int $start
+ *   The report start date as unix timestamp.
+ * @param int $end
+ *   The report end date as unix timestamp.
+ * @param int $range_start
+ *   The start of the range.
+ * @param int $limit
+ *   The number of results.
+ * @param bool $all
+ *   Whether or not to return all results. If TRUE, $start and $limit will be ignored.
+ */
+function gn2_report_user_changes_get_results_for_csv($nid, $start, $end, $range_start, $limit, $all = FALSE) {
+  $query = db_select('user_revision', 'u');
+  $query->fields('u', array('uid', 'vid'));
+  $query->join('og_membership', 'om', 'om.etid = u.uid');
+  $query->leftJoin('field_data_field_parent_organization', 'po', 'po.entity_id = om.gid');
+  $query->leftJoin('node', 'n', 'n.nid = om.gid');
+  $query->condition(db_or()
+    ->condition('n.nid', $nid)
+    ->condition('po.field_parent_organization_target_id', $nid));
+  $query->condition('om.group_type', 'node');
+  $query->condition('om.entity_type', 'user');
+  $query->condition('u.timestamp', $start, '>=');
+  $query->condition('u.timestamp', $end, '<=');
+  $query->orderBy('u.vid', 'ASC');
+  if ($all) {
+    $query->countQuery();
+  }
+  else {
+    $query->range($range_start, $limit);
+  }
+  $query->distinct();
+
+  $results = $query->execute()->fetchAll();
+
+  return $results;
+}
+
+/**
+ * Create the csv file.
+ *
+ * @param string $file
+ *   The path and file name of which to create.
+ */
+function gn2_report_user_create_csv($file) {
+  // Create the temp file.
+  $fp = fopen($file, 'w');
+  if ($fp) {
+    fputcsv($fp, array(
+      'Name',
+      'Country of representation',
+      'Link',
+      'Date',
+      'Field',
+      'New Value',
+    ));
+    $status = fclose($fp);
+    return $status;
+  }
+  return FALSE;
+}

@@ -1,0 +1,76 @@
+/**
+ * @file
+ * Positioning for a 2 col 40:60 custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+
+// Add the Zen Grids responsive layout mixins.
+@import "../_breakpoint-styles";
+@import "zen";
+
+$zen-gutter-width: 0px;
+$zen-auto-include-item-base: false;
+
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+.gn-two-col-stacked-page,
+.top,
+.sidebar,
+.main-top,
+.main-bottom,
+.footer {
+  @include zen-grid-item-base();
+}
+
+.sidebar,
+.main-bottom,
+.footer {
+  @include zen-clear(both);
+}
+
+.gn-two-col-stacked-page {
+  @include zen-grid-container();
+}
+
+$zen-column-count: 16 !global;
+.gn-two-col-stacked-page {
+  .top,
+  .footer {
+    @include zen-grid-item ($zen-column-count, 1);
+  }
+  .sidebar {
+    @include zen-grid-item ($zen-column-count, 1);
+    clear: both;
+  }
+  .main {
+    @include zen-grid-item ($zen-column-count, 1);
+    @include zen-nested-container();
+    clear: both;
+  }
+  .main-top,
+  .main-bottom {
+    @include zen-grid-item($zen-column-count, 1);
+  }
+}
+
+@include breakpoint($medium-screen-and-up) {
+  $zen-column-count: 16 !global;
+  .gn-two-col-stacked-page {
+    .top,
+    .footer {
+      @include zen-grid-item ($zen-column-count, 1);
+    }
+    .sidebar {
+      @include zen-grid-item (5, 1);
+    }
+    .main {
+      @include zen-grid-item (11, 6);
+      @include zen-nested-container();
+      clear: none;
+    }
+    .main-top,
+    .main-bottom {
+      @include zen-grid-item($zen-column-count, 1);
+    }
+  }
+}

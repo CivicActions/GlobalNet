@@ -1,0 +1,15 @@
+/*
+ * Styling the post teasers tab. General styles are in teasers.scss, Specific styles are put here
+ * to update post teasers with the new changes in the design comp.
+ */
+
+.view-other-posts-by-this-author {
+  
+  .views-row {
+    margin-bottom: .8em;
+    &.views-row-last {
+      margin-bottom: 0;
+    }
+  }
+
+}

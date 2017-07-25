@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Main module file for the User Changed module.
+ */
+
+/**
+ * Implements hook_user_update().
+ */
+function user_changed_user_update(&$edit, &$account, $category = NULL) {
+  db_update('users')
+    ->fields(array(
+      'changed' => REQUEST_TIME
+    ))
+    ->condition('uid', $account->uid, '=')
+    ->execute();
+}
+
+module_load_include('inc', 'user_changed', 'user_changed.views');

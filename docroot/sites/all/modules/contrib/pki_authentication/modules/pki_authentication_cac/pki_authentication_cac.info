@@ -1,0 +1,6 @@
+name = PKI Authentication CAC
+description = DOD Common Access Card (CAC) validator for PKI Authentication module
+package = PKI Authentication
+core = 7.x
+
+dependencies[] = pki_authentication

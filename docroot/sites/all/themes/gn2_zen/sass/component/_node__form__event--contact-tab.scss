@@ -1,0 +1,77 @@
+/*
+* Styling the Event Contact Person tab in the Event Create Form
+*/
+.group-event-contact-person, .group-event-attach-files{
+  .form-field-name-field-addl-contact-info{
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid $light-gray;
+  }
+
+
+/*=====Overridding default table styles=====*/
+  thead label{display: none;}
+  th,
+  tbody{border: none;}
+  tr{
+    //background: $white;
+    border-bottom:1px solid $very-light-gray;
+    }
+  //tr.odd{background: url(../images/bg-diagonal-tile-grey.png);}
+  td{padding:0 0.5em;}
+  .tabledrag-toggle-weight-wrapper{text-align: left;}
+
+/*======= Styling the Input ========== */
+input[type="text"] {
+  display: block;
+  margin: 0;
+  width: 100%;
+  font-size: 18px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+/*  -webkit-border-radius: none;
+  -moz-border-radius: none;
+  -ms-border-radius: none;
+  -o-border-radius: none;
+  border-radius: none;*/
+}
+input[type="text"]:focus {
+  outline: none;
+}
+
+input[type="text"] {
+  padding: 0.3em 0.5em;
+  border: solid 1px $white;
+  -webkit-box-shadow: inset 1px 1px 2px 0 $gray-70;
+  -moz-box-shadow: inset 1px 1px 2px 0 $gray-70;
+  box-shadow: inset 1px 1px 2px 0 $gray-70;
+  -webkit-transition: box-shadow 0.3s;
+  -moz-transition: box-shadow 0.3s;
+  -o-transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s;
+}
+input[type="text"]:focus, .style-5 input[type="text"].focus {
+  -webkit-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+  -moz-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+  box-shadow: inset 1px 1px 2px 0 $gray-c9;
+}
+
+}
+
+.group-event-attach-files{
+.form-field-name-field-media legend{
+    display: none;
+  }
+  fieldset{
+    padding-top: 0;
+  }
+  label{font-size: 1em;}
+  .form-media{
+    a.edit{
+    display: inline-block;
+    margin: 0.2em 1.5em;
+    }
+  }
+  a.button{display: inline-block;}
+}

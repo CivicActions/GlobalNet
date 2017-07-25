@@ -1,0 +1,665 @@
+$session_item_bottom_margin: 1.5em;
+$session_item_label_bottom_margin: $session_item_bottom_margin / 2;
+$session_border_radius: 6px;
+
+$session--base-padding: 6px;
+$session--level-indent: ($session--base-padding * 2);
+$session--accordion-indent: ($session--base-padding * 4);
+$session--fieldset-indent: ($session--level-indent * 3);
+
+// Session edit/delete/move buttons.
+$session--button--size: $session--base-padding * 5;
+$session--button--padding: $session--base-padding;
+$session--button--spacing: $session--base-padding / 2;
+$session--button--border-width: 1px;
+$session--button--width: $session--button--size - (2 * ($session--button--padding + $session--button--border-width));
+$session--button--height: $session--button--width;
+$session--buttons-wrapper--width: (($session--button--size + (2 * $session--button--spacing)) * 3);
+$session--buttons-wrapper--height: $session--button--size + (2 * $session--button--spacing);
+
+$session--font-size: 14px;
+$session--legend--font-size: ceil($session--font-size * 1.2);
+$session--legend--line-height: ceil($session--legend--font-size * 1.2);
+
+$session--legend--padding-vertical: ceil(($session--buttons-wrapper--height - $session--legend--line-height) / 2);
+
+@mixin session--legend--font {
+  font-size: $session--legend--font-size;
+  line-height: $session--legend--line-height;
+  font-weight: bold;
+}
+
+@mixin session--legend {
+  @include session--legend--font;
+  display: block;
+  padding-left: $session--level-indent;
+  padding-top: $session--legend--padding-vertical;
+  padding-bottom: $session--legend--padding-vertical;
+  padding-right: ceil($session--buttons-wrapper--width * 1.1);
+  margin-top: $session--base-padding;
+  margin-bottom: $session--base-padding;
+  * {
+    line-height: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: inherit;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    margin: 0;
+  }
+  .fieldset-title {
+    padding-left: $session--accordion-indent;
+  }
+}
+
+@mixin session_item__group {
+  padding: 0;
+  margin: 0;
+}
+
+@mixin session_item {
+  padding: 0px;
+  margin: 0 0 $session_item_bottom_margin 0;
+}
+
+@mixin session--label--font {
+  font-size: $session--font-size;
+}
+
+// The loader.
+.loader {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 3em 0;
+  margin: 0 auto;
+  display: block;
+  vertical-align: top;
+  z-index: 1000;
+  &.loader-hidden {
+    display: none;
+  }
+  /*
+    Set the color of the icon
+  */
+  svg path,
+  svg rect {
+    fill: #FF6700;
+  }
+}
+
+.loader-ajax {
+  .loader {
+    background: none;
+    position: absolute;
+    &.loader-hidden {
+      display: block;
+    }
+  }
+}
+
+.special-ajax-link {
+  display: block;
+  position: relative;
+  .handle-group-level1 {
+    position: absolute;
+    right: 0;
+    top: 0
+  }
+}
+
+// Session edit/delete/move buttons.
+.sessions-buttons-wrap {
+
+  width: $session--buttons-wrapper--width;
+  height: $session--buttons-wrapper--height;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  margin-top: $session--base-padding;
+  margin-right: $session--base-padding;
+  margin-bottom: $session--base-padding;
+  z-index: 999;
+
+  span {
+    background-color: $lightest-blue-gray;
+    display: block;
+    overflow: hidden;
+    width: $session--button--height;
+    height: $session--button--width;
+    overflow: hidden;
+    padding: $session--button--padding;
+    border-radius: ($session--base-padding / 2);
+    border: $session--button--border-width solid $lighter-blue-gray;
+    margin-top: $session--button--spacing;
+    margin-right: $session--button--spacing;
+    margin-bottom: $session--button--spacing;
+    margin-left: $session--button--spacing;
+    float: right;
+    text-indent: -9999px;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    background-origin: content-box;
+    &.handle-group-level1,
+    &.handle-group-ind-items-level2,
+    &.handle-group-ind-items-level3 {
+      background-image: url('../images/gn-icons/move.png');
+      float: right;
+      cursor: move;
+    }
+    &.editatron {
+      background-image: url('../images/gn-icons/icon-edit.png');
+    }
+    &.deleteatron {
+      background-image: url('../images/gn-icons/icon-delete.png');
+      cursor: pointer;
+    }
+  }
+}
+
+.pane-gn2-sessions-fc fieldset.group-level1,
+#block-gn2-sessions-fc-session-form fieldset.group-level1,
+.group-ind-items-level2,
+.group-ind-items-level3 {
+  @include session_item__group;
+}
+
+// Hiding some element that I am not sure even exists anymore.
+.ui-dialog.ui-widget-content.media-wrapper {
+  z-index: 99999;
+  .ui-dialog-buttonpane {
+    display: none;
+  }
+}
+
+// Error message to appear at top of page when it occurs
+#erroratron-holder {
+  background: rgba(0, 0, 0, 0.6);
+  display: block;
+  padding: 15px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  height: 7.6em;
+  z-index: 9999;
+  color: red;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+// Alert to appear at top of page when it occurs
+#gn2-session-alert {
+  display: block;
+  color: white;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  font-weight: normal;
+  font-size: 1.5em;
+  width: 100%;
+  padding: 1em 0;
+  background: rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+// If logged in as admin, this should drop by 35px
+.logged-in #gn2-session-alert {
+  top: 35px;
+}
+
+// If not, should be right at the top
+.not-logged-in .pane-gn2-sessions .updateatron,
+.not-logged-in #block-gn2-sessions-fc-session-form .updateatron {
+  top: 0;
+}
+
+// RJG MUST BREAK THIS APART!
+.field-name-field-description,
+.field-name-field-session-presenter,
+.pane-gn2-sessions-fc .fieldset-wrapper form,
+#block-gn2-sessions-fc-session-form form,
+.ajaxatron-wrapper {
+  @include session_item;
+  .form-item {
+    position: relative;
+    .tabledrag-toggle-weight-wrapper {
+      text-align: right;
+      width: 135px;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
+html.js .pane-gn2-sessions-fc,
+html.js .page-course-session-form #content,
+#mini-panel-session_entityform_results {
+
+  .fieldset-wrapper {
+    margin-top: -($session--base-padding * 4) !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: ($session--base-padding * 2);
+    padding-right: ($session--base-padding * 2);
+    .group-level1 & {
+      padding-top: 0;
+      padding-right: ($session--base-padding * 2);
+      padding-bottom: 0;
+      padding-left: ($session--base-padding * 2);
+      margin-top: -($session--base-padding * 4);
+    }
+    .group-ind-items-level2 & {
+      padding-top: ($session--base-padding * 4);
+      padding-left: $session--fieldset-indent;
+    }
+  }
+
+  legend {
+    @include session--legend;
+  }
+
+  h3.field-label {
+    text-transform: none;
+    font-family: $arial;
+    margin: 0 0 $session_item_label_bottom_margin 0;
+    padding: 0 0 .2em 0;
+    color: $blue-gray;
+    border-bottom: 2px solid $lighter-blue-gray;
+    font-size: $session--font-size;
+    font-weight: bold;
+  }
+
+  input[type=number] {
+    width: 50px;
+  }
+  #gn2-sessions-fc-toggle {
+    cursor: pointer;
+    padding-bottom: 1em;
+  }
+  .weight-input-toggle-item {
+    position: relative;
+    margin-bottom: .75em;
+    margin-left: .5em;
+    display: none;
+    &.clicked {
+      display: inline-block;
+    }
+  }
+
+  .field-name-field-description {
+    // padding: .5em 0; (RJG)
+  }
+
+  .field-presenter-wrap {
+    padding-bottom: .5em;
+  }
+
+  .field-name-field-media {
+    display: table;
+    .file {
+      display: table-row;
+      img.file-icon,
+      a,
+      span.file-size {
+        display: table-cell;
+        vertical-align: middle;
+      }
+      img.file-icon {
+        width: 50px;
+      }
+      a,
+      span.file-size {
+        padding-left: .5em;
+      }
+    }
+    fieldset#edit-field-media-und {
+      padding: 0;
+      legend {
+        padding: 0;
+      }
+      .fieldset-legend {
+        background: none;
+        padding: 0;
+        font-weight: bold;
+      }
+      .fieldset-wrapper {
+        padding: 0;
+      }
+    }
+  }
+
+  fieldset,
+  fieldset.collapsible,
+  fieldset.collapsed {
+    position: relative;
+    border: none;
+    // border-bottom: none !important;
+    padding-bottom: 0;
+    min-height: ($session--base-padding * 8);
+    legend {
+      display: inline-block !important;
+    }
+    > legend > span.fieldset-legend a {
+    }
+    &.group-level1 {
+
+    }
+    &.group-level2,
+    &.group-level3 {
+      legend {
+        display: inline-block;
+      }
+      .sessions-buttons-wrap {
+        position: relative !important;
+        top: 0 !important;
+      }
+    }
+    > .fieldset-wrapper {
+      position: relative;
+      > .field-name-field-title {
+        display: none;
+      }
+    }
+  }
+
+  .collapse-processed {
+    &.group-level1 {
+      padding-top: $session--base-padding;
+      .field-name-field-description {
+        margin-top: ($session--base-padding * 2);
+      }
+      legend {
+        margin-bottom: ($session--base-padding * 4) !important;
+        padding-left: ($session--base-padding * 2);
+      }
+      @supports (-moz-appearance:none) and (display:contents) {
+        .sessions-buttons-wrap.level1Buttons {
+          top: -70px;
+        }
+      }
+    }
+    &.collapsed {
+      &.group-level1 {
+        margin-top: 0;
+        padding-top: $session--base-padding;
+        padding-bottom: 0;
+        .sessions-buttons-wrap.level1Buttons {
+          top: 0;
+        }
+      }
+      legend {
+        margin-bottom: 0 !important;
+        position: absolute;
+      }
+    }
+  }
+
+  form#gn2-sessions-update-form {
+    display: inline-block;
+  }
+
+  $ajx-basecolor: darken($blue-gray, 15%);
+
+  $ajx-bg0: $ajx-basecolor;
+  $ajx-bg0--hover: darken($ajx-basecolor, 25%);
+  $ajx-bg0--border: darken($ajx-basecolor, 20%);
+  $ajx-bg0--border--hover: darken($ajx-basecolor, 20%);
+
+  $ajx-bg1: lighten($ajx-bg0, 0%);
+  $ajx-bg1--hover: darken($ajx-bg1, 12%);
+  $ajx-bg1--border: lighten($ajx-bg0--border, 0%);
+
+  $ajx-bg2: lighten($ajx-bg1, 14%);
+  $ajx-bg2--hover: darken($ajx-bg2, 12%);
+  $ajx-bg2--border: lighten($ajx-bg1--border, 13%);
+
+  $ajx-bg3: lighten($ajx-bg2, 14%);
+  $ajx-bg3--hover: darken($ajx-bg3, 12%);
+  $ajx-bg3--border: lighten($ajx-bg2--border, 13%);
+
+  a.ajaxatron {
+    @include large-callout-button($font-size: 1em);
+    color: white;
+    margin-top: 0;
+    margin-right: .5em;
+    margin-bottom: 0;
+    background: $ajx-bg0;
+    border-color: $ajx-bg0--border;
+    &.level1 {
+      clear: both;
+      display: table;
+      margin-bottom: 1em;
+      background-color: $ajx-bg1;
+      border-color: $ajx-bg1--border;
+      &:hover {
+        background-color: $ajx-bg1--hover;
+        border-color: $ajx-bg1--border;
+      }
+    }
+    &.level2 {
+      background-color: $ajx-bg2;
+      border-color: $ajx-bg2--border;
+      &:hover {
+        background-color: $ajx-bg2--hover;
+        border-color: $ajx-bg2--border;
+      }
+    }
+    &.level3 {
+      background-color: $ajx-bg3;
+      border-color: $ajx-bg3--border;
+      &:hover {
+        background-color: $ajx-bg3--hover;
+        border-color: $ajx-bg3--border;
+      }
+    }
+  }
+
+  #updateatron-holder {
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 7.6em;
+    z-index: 1001;
+    &.show-updateatron {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  #cancelatron-holder {
+    display: none;
+    z-index: 99999;
+    a {
+      background: rgba(255, 0, 0, 0.8);
+    }
+    &.show-updateatron {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  input.updateatron.form-submit {
+    display: none;
+    background: $blue-gray;
+    display: block;
+    @include large-callout-button($font-size: 1.4em);
+    z-index: 9999;
+    &.show-updateatron {
+      display: inline-block;
+      position: relative;
+      margin: auto;
+      margin-top: 1.8em;
+    }
+  }
+
+  .group-level1 {
+    background: $level1;
+    border-radius: $session_border_radius;
+    margin-bottom: .5em !important;
+    & > legend {
+      position: relative;
+      .fieldset-legend {
+        position: relative;
+      }
+    }
+  }
+
+  .field-name-field-session-day {
+    background: $level2;
+    position: relative;
+    margin-top: 0;
+    margin-bottom: ($session--base-padding * 2);
+    border-radius: $session_border_radius;
+  }
+
+  .field-name-field-unit {
+    background: $level3;
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: ($session--base-padding * 2);
+    border-radius: $session_border_radius;
+  }
+
+  .sessions-ajax-form {
+    display: none;
+    position: absolute;
+    z-index: 1001;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+  }
+
+  $sess-container-basecolor: desaturate($blue-gray, 40%);
+  $sess-container-level0: lighten($sess-container-basecolor, 95%);
+  $sess-container-level1: darken($sess-container-level0, 6%);
+  $sess-container-level2: darken($sess-container-level1, 6%);
+  $sess-container-level3: darken($sess-container-level2, 6%);
+
+  .session-container {
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-bottom-width: 1px !important;
+    border-bottom-style: solid !important;
+    &.level1 {
+      background-color: $sess-container-level1;
+      border-color: $sess-container-level1;
+      &.ajaxatron-hover {
+        background-color: darken($sess-container-level1, 3%);
+        border-color: $sess-container-basecolor;
+      }
+    }
+    &.level2 {
+      background-color: $sess-container-level2;
+      border-color: $sess-container-level2;
+      &.ajaxatron-hover {
+        background-color: darken($sess-container-level2, 3%);
+        border-color: $sess-container-basecolor;
+      }
+    }
+    &.level3 {
+      background-color: $sess-container-level3;
+      border-color: $sess-container-level3;
+      &.ajaxatron-hover {
+        background-color: darken($sess-container-level3, 3%);
+        border-color: $sess-container-basecolor;
+      }
+    }
+  }
+
+}
+
+// (end of .pane-gn2-sessions-fc, .page-course-session-form #content)
+
+.gu-transit {
+  background-color: $blue-gray !important;
+  border: 3px solid $dark-blue-gray !important;
+  height: 2.9em !important;
+  overflow: hidden !important;
+  .weight-input-toggle-item {
+    display: none !important;
+  }
+}
+
+.special-ajax-link {
+  a {
+    display: block;
+    padding: .3em .6em;
+    background: $level1;
+    margin-top: 0;
+    margin-bottom: .75em;
+    border-radius: $session_border_radius;
+    &:hover {
+      background: darken($level1, 5%);
+    }
+  }
+  fieldset {
+    a,
+    a:hover {
+      background: none;
+    }
+  }
+}
+
+/*
+ * Styling the session add/edit form.  Some inelegant overrides in here.
+ */
+
+.session-edit-container,
+.ajaxatron-ajax {
+  padding: 0;
+
+  .fieldset-wrapper {
+    display: block !important;
+  }
+  #page {
+    position: fixed;
+    z-index: 1001;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    #content {
+      position: relative;
+      top: 50px;
+      height: 90%;
+      overflow-y: auto;
+      background-color: $lightest-blue-gray;
+      border-radius: $session_border_radius;
+    }
+  }
+}
+
+form#gn2-sessions-fc-add-form {
+  padding: ($session--base-padding * 4);
+  margin: 0;
+  .form-wrapper {
+    margin: 0;
+    padding: 0;
+    &#edit-field-media-und {
+      margin-bottom: 0;
+    }
+  }
+  .ctools-modal-media-file-edit.button.edit {
+    margin-left: 28px;
+  }
+  .fieldset-wrapper {
+    margin-top: 0 !important;
+    padding: 0;
+  }
+}

@@ -1,0 +1,94 @@
+/**
+ * @file
+ * Positioning for a groups custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 15, ../../sass/layout/home_layout.scss */
+.panels-layout.group,
+.main,
+.group__main--top-left,
+.group__main--top-right,
+.group__main--banner,
+.group__main--tabs,
+.group__sidebar {
+  padding-left: 5px;
+  padding-right: 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.group:before, .panels-layout.group:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.group:after {
+  clear: both;
+}
+
+/* line 29, ../../sass/layout/home_layout.scss */
+.group__main--banner,
+.group__main--tabs {
+  clear: left;
+}
+
+@media all and (min-width: 40em) {
+  /*!global is a fix for an issue where zen-grid-item doesn't generate the right CSS when using Compass 1.x
+   * See https://www.drupal.org/node/2346291#comment-9475791
+   */
+  /* line 40, ../../sass/layout/home_layout.scss */
+  .main {
+    float: left;
+    width: 66.66667%;
+    margin-left: 0%;
+    margin-right: -66.66667%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* line 44, ../../sass/layout/home_layout.scss */
+  .group__main--top-left {
+    float: left;
+    width: 58.33333%;
+    margin-left: 0%;
+    margin-right: -58.33333%;
+  }
+
+  /* line 47, ../../sass/layout/home_layout.scss */
+  .group__main--top-right {
+    float: left;
+    width: 41.66667%;
+    margin-left: 58.33333%;
+    margin-right: -100%;
+  }
+
+  /* line 50, ../../sass/layout/home_layout.scss */
+  .group__main--banner {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+
+  /* line 53, ../../sass/layout/home_layout.scss */
+  .group__main--tabs {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+
+  /* line 56, ../../sass/layout/home_layout.scss */
+  .group__sidebar {
+    float: left;
+    width: 33.33333%;
+    margin-left: 66.66667%;
+    margin-right: -100%;
+  }
+}

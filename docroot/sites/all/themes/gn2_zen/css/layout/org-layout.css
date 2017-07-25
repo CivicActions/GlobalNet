@@ -1,0 +1,101 @@
+/**
+ * @file
+ * Positioning for a organization custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/*Apply the shared properties of grid items in a single, efficient ruleset*/
+/* line 12, ../../sass/layout/org-layout.scss */
+.panels-layout.org,
+.main,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar,
+.sidebar__top,
+.sidebar__logo,
+.sidebar__title,
+.sidebar__bottom {
+  padding-left: 5px;
+  padding-right: 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.org:before, .panels-layout.org:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.org:after {
+  clear: both;
+}
+
+/* line 30, ../../sass/layout/org-layout.scss */
+.sidebar__logo,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar__top,
+.sidebar__bottom {
+  clear: left;
+}
+
+/**
+ * Use 3 grid columns for larger screens and tablets.
+ */
+@media all and (min-width: 40em) {
+  /*!global is a fix for an issue where zen-grid-item doesn't generate the right CSS when using Compass 1.x
+   * See https://www.drupal.org/node/2346291#comment-9475791
+   */
+  /* line 49, ../../sass/layout/org-layout.scss */
+  .panels-layout.org .main {
+    float: left;
+    width: 66.66667%;
+    margin-left: 0%;
+    margin-right: -66.66667%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* line 53, ../../sass/layout/org-layout.scss */
+  .panels-layout.org .main__top,
+  .panels-layout.org .main__upper-tabs,
+  .panels-layout.org .main__active-communities,
+  .panels-layout.org .main__lower-tabs,
+  .panels-layout.org .sidebar__top,
+  .panels-layout.org .sidebar__bottom {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+  /* line 61, ../../sass/layout/org-layout.scss */
+  .panels-layout.org .sidebar {
+    float: left;
+    width: 33.33333%;
+    margin-left: 66.66667%;
+    margin-right: -100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* line 65, ../../sass/layout/org-layout.scss */
+  .panels-layout.org .sidebar__logo {
+    float: left;
+    width: 16.66667%;
+    margin-left: 0%;
+    margin-right: -16.66667%;
+  }
+  /* line 68, ../../sass/layout/org-layout.scss */
+  .panels-layout.org .sidebar__title {
+    float: left;
+    width: 83.33333%;
+    margin-left: 16.66667%;
+    margin-right: -100%;
+  }
+}

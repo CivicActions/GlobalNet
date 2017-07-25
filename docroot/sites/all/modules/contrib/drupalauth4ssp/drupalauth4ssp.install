@@ -1,0 +1,21 @@
+<?php
+/**
+ * @file
+ * Install/Uninstall functions file for the drupalauth4ssp module.
+ */
+
+/**
+ * Implements of hook_uninstall().
+ */
+function drupalauth4ssp_uninstall() {
+  // Remove the created system variables.
+  variable_del('drupalauth4ssp_installdir');
+  variable_del('drupalauth4ssp_authsource');
+}
+
+/**
+ * Add new setting for redirect restriction.
+ */
+function drupalauth4ssp_update_7000() {
+  variable_get('drupalauth4ssp_returnto_list', '*');
+}

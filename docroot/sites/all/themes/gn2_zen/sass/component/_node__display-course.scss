@@ -1,0 +1,182 @@
+/*
+ * Styling the Course Content type
+ */
+.page-node.node-type-course {
+  
+  fieldset.collapsible > .fieldset-wrapper {
+    margin-top: 0;
+  }
+  
+  /* Hide the page node title */
+  .page__title {display: none;}
+
+  /* Style course manager role block*/
+  .pane-entity-field {
+    span.field-label {
+      @include display_font;
+      color: $medium-gray;
+      font-size: 1.3em;
+      margin-bottom: 0.4em;
+    }
+  }
+  label[for="edit-sort-order"] {display: none;}
+  h1 {padding: 0.3em 0;}
+  
+}//End node-type-course
+
+/*=========== The Posts Tab ==========*/
+.posts__teasers--pane-new,
+.pane-group-members-panel-pane-2,
+.pane-group-members-panel-pane-3 {
+  .view-filters {
+    margin: 0 0 1.5em;
+    padding-top: 1em;
+    border-top: 1px solid $lighter-blue-gray;
+  }
+}
+
+.posts__teasers--pane-new {
+    .views-exposed-widget {
+      float: right;
+      text-align: right;
+      width: auto;
+      font-size: 0.9em;
+      .form-radios {
+        display: inline;
+        float: left;
+      }
+    }
+  .view-content {
+    font-size: 95%;
+    .views-row {
+      margin-bottom: 1em;
+      border-bottom: 1px solid $light-blue-gray;
+      padding-bottom: 1em;
+    }
+    span p {
+      display: inline;
+    }
+  }
+  .main-bottom {
+    padding: 2% 0;
+    span.views-field {
+      border-right: 1px solid $black;
+      font-size: 90%;
+      padding: 0 0.3em;
+
+    &:last-child {border-right: none;}
+    }
+  }
+  .form-item.selected {
+    font-weight: bold;
+  }
+  .views-field-picture {
+    img {
+      border: 4px solid $bali_hai;
+      height: auto;
+      margin-top: 1.1em;
+      width: 70%;
+    }
+  + span {
+    display: block;
+    font-size: 0.9em;
+    text-align: center;
+    width: 70%;
+    }
+  }
+}
+
+/* Floating sort links to right and styling*/
+.form-type-bef-link {
+  display: inline-block;
+  padding: 0 0.5em;
+  border-right: 1px solid $blue-gray;
+}
+#edit-sort-bef-combine-name-asc {border-right: none;}
+
+label[for="edit-sort-bef-combine"] {
+  display: inline-block;
+  font-weight: normal;
+}
+.form-item.form-type-radios.form-item-sort-bef-combine > a {
+  float: left;
+}
+
+/*======== Styling the Participants and Presenters tab=======*/
+//Overriding font family set by jQuery ui widgets
+.ui-widget button {
+  @include display_font;
+  font-size: 1.4em;
+  margin: 0 auto;
+}
+.views-exposed-widget {
+  .views-widget {display: inline-block;}
+  label[for="edit-sort-by"],
+  label[for="edit-combine"] {
+  display: inline-block;
+  @include display_font;
+  vertical-align: top;
+  font-size: 1.4em;
+  font-weight: normal;
+  color: $dark-gray;
+  padding: 0.15em 0.3em 0 0;
+  }
+}
+em.placeholder {
+  color:$medium-gray;
+}
+
+.group__main--top-left {
+  #panels-ipe-paneid-109, .acronym-field,
+  #panels-ipe-paneid-97, .title-field {
+    display: inline-flex;
+  }
+  .acronym-field {
+    font-size: 25px;
+    &:after {
+      content: ':';
+      margin-right: 10px;
+    }
+  }
+}
+
+.pane-gn2-sessions-fc-gn2-sessions-fc-syllabus {
+  .panel-pane {
+    margin: 0;
+  }
+
+  // $zen-column-count: 18 !global;
+
+  .field-type-file {
+    margin-bottom: 1em;
+    float: none;
+    clear: both;
+    @include zen-grid-container();
+
+    .file {
+      display: block;
+      padding: 0;
+      margin: 0;
+      @include zen-grid-item-base;
+      margin-bottom: .25em;
+
+      img.file-icon {
+        @include zen-grid-item-base;
+        @include zen-grid-item(1, 1, left, 18);
+        height: 2em;
+        display: block;
+        margin: 0;
+      }
+
+      a {
+        @include zen-grid-item-base;
+        @include zen-grid-item(17, 2, left, 18);
+        display: block;
+        padding: 0 0 0 .125em;
+        margin: 0;
+        line-height: 2em;
+      }
+
+    }
+  }
+}

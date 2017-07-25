@@ -1,0 +1,852 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_privatemsg feature.
+ */
+
+include_once 'gn2_privatemsg.features.inc';
+
+/**
+ * Implements hook_view_alter().
+ */
+function gn2_privatemsg_views_pre_render(&$view) {
+  if (arg(0) == 'messages' && arg(1) == 'view' && is_numeric(arg(2)) && $view->name == 'inbox') {
+    $view->header = array();
+  }
+}
+
+/**
+ * Implements a Privatemsg actions.
+ */
+function gn2_privatemsg_action_info() {
+  return array(
+    // Action for Privatemsg Delete item.
+    'vbo_privatemsg_delete_item' => array(
+      'type' => 'entity',
+      'label' => t('Privatemsg Delete item'),
+      'configurable' => FALSE,
+      'behavior' => array('deletes_property'),
+    ),
+    // Action for Privatemsg Mark as Deleted item.
+    'vbo_privatemsg_mark_as_deleted_item' => array(
+      'type' => 'entity',
+      'label' => t('Privatemsg Mark as Deleted item'),
+      'configurable' => FALSE,
+      'behavior' => array('deletes_property'),
+    ),
+    // Action for Privatemsg UnMark as Deleted item.
+    'vbo_privatemsg_unmark_as_deleted_item' => array(
+      'type' => 'entity',
+      'label' => t('Privatemsg UnMark as Deleted item'),
+      'configurable' => FALSE,
+      'behavior' => array('deletes_property'),
+    ),
+  );
+}
+
+/**
+ * Action function for vbo_privatemsg_delete_item. Privatemsg Delete item.
+ */
+function vbo_privatemsg_delete_item($entity, $context) {
+  if (isset($entity->mid)) {
+    $mid = $entity->mid;
+
+    $message = $entity;
+
+    // Is called when a message is flushed.
+    // The message will be deleted from the database,
+    // remove any related data here.
+    module_invoke_all('privatemsg_message_flush', $message);
+
+    // Delete recipients of the message.
+    db_delete('pm_index')
+        ->condition('mid', $mid)
+        ->execute();
+    // Delete message itself.
+    db_delete('pm_message')
+        ->condition('mid', $mid)
+        ->execute();
+  }
+}
+
+/**
+ * Action function for vbo_privatemsg_mark_as_deleted_item.
+ *
+ * Privatemsg Mark as Deleted item.
+ */
+function vbo_privatemsg_mark_as_deleted_item($entity, $context) {
+  if (isset($entity->mid)) {
+    $mid = $entity->mid;
+    // Delete or restore a message.
+    // Either deletes or restores the thread (1 => delete, 0 => restore).
+    privatemsg_message_change_delete($mid, 1);
+    drupal_set_message(t('Message has been marked as deleted for all users.'));
+  }
+}
+
+/**
+ * Action function for vbo_privatemsg_unmark_as_deleted_item.
+ *
+ * Privatemsg UnMark as Deleted item.
+ */
+function vbo_privatemsg_unmark_as_deleted_item($entity, $context) {
+  if (isset($entity->mid)) {
+    $mid = $entity->mid;
+    // Delete or restore a message.
+    // Either deletes or restores the thread (1 => delete, 0 => restore).
+    privatemsg_message_change_delete($mid, 0);
+    drupal_set_message(t('Message has been unmarked as deleted for all users.'));
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_privatemsg_menu_alter(&$items) {
+  $items['messages/delete/%'] = array(
+    'title'            => 'Delete message',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('gn2_privatemsg_delete', 2),
+    'access callback'  => 'privatemsg_user_access',
+    'access arguments' => array('delete privatemsg'),
+    'type'             => MENU_CALLBACK,
+  );
+}
+
+/**
+ * Form alter callback function.
+ */
+function gn2_privatemsg_delete() {
+  global $user;
+  $date = new DateTime();
+  $time = $date->getTimestamp();
+  db_update('pm_index')
+    ->fields(array(
+    'deleted' => $time,
+  ))
+    ->condition('recipient', $user->uid, '=')
+    ->condition('thread_id', arg(2), '=')
+    ->execute();
+
+  drupal_set_message(t('Message Deleted'));
+  drupal_goto('inbox/messages');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_privatemsg_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  /*
+   * If we are in a group, add values to settings to determine
+   * if group administrator, and help with href link in group menu.
+   */
+  if ((arg(0) == 'node' && is_numeric(arg(1))) && (og_is_group('node', arg(1)))) {
+    $perm_raw = og_get_user_roles('node', arg(1), $uid = NULL, $include = TRUE);
+    drupal_add_js(array('gn2_privatemsg' => array('current_og' => arg(1))), 'setting');
+    if (in_array('group_manager', $perm_raw) || in_array('org_manager', $perm_raw) || in_array('administrator', $user->roles)) {
+      $node = node_load(arg(1));
+      $perm = 'admin';
+      drupal_add_js(array('gn2_privatemsg' => array('admin' => 'admin')), 'setting');
+      drupal_add_js(array('gn2_privatemsg' => array('group_name' => $node->title)), 'setting');
+    }
+  }
+
+  if ($form_id == 'privatemsg_new') {
+    array_unshift($form['actions']['submit']['#validate'], 'gn2_privatemsg_form_validate');
+
+    $form['field_notification']['und']['#default_value'] = 0;
+    hide($form['field_notification']);
+    hide($form['token']);
+
+    if (!in_array('administrator', $user->roles)) {
+      $form['actions']['submit']['#validate'][] = '_gn2_privatemsg_recipient_validate';
+    }
+    $form['recipient']['#description'] = '<ul>
+      <li>Start typing a username to write a message to another GlobalNET member.</li>
+      <li>Type the word "contacts" to send a message to all of your GlobalNET contacts.</li>
+      <li>If you manage a group on GlobalNET and want to send a message to all members of your group, enter the name of the group.</li>
+      <li>Separate multiple recipients with commas.</li></ul>';
+  }
+
+  if ($form_id == 'privatemsg_delete') {
+    $form['#submit'][] = '_gn2_privatemsg_delete_message_redirect';
+  }
+
+  if ($form_id == 'privatemsg_form_reply') {
+    $form['actions']['submit']['#submit'][] = 'gn2_privatemsg_submit_redirect';
+    $form['field_notification']['und']['#default_value'] = 0;
+    hide($form['field_notification']);
+    hide($form['token']);
+
+    // RD-3440 adding a markup with user picture.
+    $loaded_user = user_load($user->uid);
+    $image = !empty($loaded_user->picture->uri) ? '<img src="' . image_style_url('tiny50x50', $loaded_user->picture->uri) . '"/>' : '<img src ="/sites/all/themes/gn2_zen/images/generic-head.jpg">';
+    $image = '<span class="message-author-image">' . $image . '</span>';
+    $form['user_image'] = array(
+        '#type' => 'markup',
+        '#markup' => $image,
+        '#weight' => -100
+    );
+    $form['message_delete'] = array(
+        '#type' => 'markup',
+        '#markup' =>l(t('Delete'), '/messages/delete/' . $form['thread_id']['#value'], array('attributes' => array('class' => array('message-delete-link'))))
+    );
+  }
+}
+
+/**
+ * PM form validation.
+ */
+function gn2_privatemsg_form_validate(&$form, &$form_state) {
+  /*
+   * This is where we load our group recipients.
+   */
+  if (isset($_GET['admin'])) {
+    $node = node_load($_GET['to']);
+    $members = og_get_group_members_properties($node, array(), 'members', 'node');
+    $form_state['values']['recipient'] = '';
+    foreach ($members as $member) {
+      $mem_raw = user_load($member);
+      if ($mem_raw) {
+        $form_state['values']['recipient'] .= $mem_raw->name . ',';
+      }
+    }
+  }
+  else {
+    $recipients = explode(',', $form_state['values']['recipient']);
+    $form_state['values']['recipient'] = '';
+    foreach ($recipients as $recipient) {
+      if (strlen(trim($recipient)) == 0) {
+        continue;
+      }
+      if (strpos($recipient, '[nid:')) {
+        preg_match('~:(.*?)]~', $recipient, $output);
+        $node = node_load($output[1]);
+        $members = og_get_group_members_properties($node, array(), 'members', 'node');
+        foreach ($members as $member) {
+          $mem_raw = user_load($member);
+          $form_state['values']['recipient'] .= $mem_raw->name . ',';
+        }
+      }
+      else {
+        $form_state['values']['recipient'] .= $recipient . ',';
+      }
+    }
+  }
+}
+
+/**
+ * Submit function to redirect on message submit.
+ */
+function gn2_privatemsg_submit_redirect($form, &$form_state) {
+  $form_state['redirect'] = 'messages/view/' . arg(2);
+}
+
+/**
+ * RD-1820 Bug: redirect user back to inbox after deleting a private message.
+ */
+function _gn2_privatemsg_delete_message_redirect($form, &$form_state) {
+  $form_state['redirect'] = 'inbox/messages/unread';
+}
+
+/**
+ * Implements hook_privatemsg_message_insert().
+ */
+function gn2_privatemsg_privatemsg_message_insert($message) {
+  if (!empty($message->tags)) {
+    privatemsg_filter_add_tags($message->thread_id, array(1, 3));
+  }
+  else {
+    privatemsg_filter_add_tags($message->thread_id, array(1, 2));
+
+  }
+}
+
+/**
+ * A Custom block for overriding the Private messages links block.
+ *
+ * This changes the output of the private message links in the header region.
+ *
+ * Implements hook_block_info().
+ */
+function gn2_privatemsg_block_info() {
+  $blocks = array();
+  $blocks['privatemsg-menu'] = array(
+    'info' => t('Privatemsg links Custom'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['privatemsg-new'] = array(
+    'info' => t('New message indication'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['inbox-menu'] = array(
+    'info' => t('Inbox menu links'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_privatemsg_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'privatemsg-menu':
+      $block = _gn2_privatemsg_block_menu();
+      break;
+
+    case 'privatemsg-new':
+      $block = _gn2_privatemsg_block_new();
+      break;
+
+    case 'inbox-menu':
+      $block = _gn2_privatemsg_block_inbox_menu();
+      break;
+
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function gn2_privatemsg_block_save($delta = '', $edit = array()) {
+  if ($delta == 'privatemsg-new') {
+    variable_set('privatemsg_no_messages_notification', $edit['notification']);
+  }
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function gn2_privatemsg_block_configure($delta = '') {
+  if ($delta == 'privatemsg-new') {
+    $form['notification'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display block when there are no unread messages'),
+      '#default_value' => variable_get('privatemsg_no_messages_notification', 0),
+      '#description' => t('Enable this to have this block always displayed, even if there are no unread messages'),
+    );
+    return $form;
+  }
+}
+
+/**
+ * Callback function.
+ */
+function _gn2_privatemsg_title_callback($title = NULL) {
+  $count = privatemsg_unread_count();
+
+  if ($count > 0) {
+    return format_plural($count, '1', '@count');
+  }
+  return '';
+}
+
+/**
+ * Callback function.
+ */
+function _gn2_privatemsg_block_menu() {
+  $block = array();
+  $links = array();
+  if (privatemsg_user_access('read privatemsg') || privatemsg_user_access('read all private messages')) {
+    $links[] = l(_gn2_privatemsg_title_callback(), '/inbox/messages');
+  }
+  if (count($links)) {
+    $block = array(
+      'content' => theme('item_list', array('items' => $links)),
+    );
+  }
+  return $block;
+}
+
+/**
+ * Callback function.
+ */
+function _gn2_privatemsg_block_new() {
+  $block = array();
+
+  if (!privatemsg_user_access()) {
+    return $block;
+  }
+
+  $count = privatemsg_unread_count();
+  if ($count || variable_get('privatemsg_no_messages_notification', 0)) {
+    $block = array(
+      'subject' => $count ? format_plural($count, 'Unread message', 'Unread messages') : t('No unread messages'),
+      'content' => theme('privatemsg_new_block', array('count' => $count)),
+    );
+    return $block;
+  }
+  return array();
+}
+
+/**
+ * Callback function.
+ */
+function _gn2_privatemsg_block_inbox_menu() {
+  $block = array();
+
+  if (!privatemsg_user_access()) {
+    return $block;
+  }
+
+  $links = _gn2_privatemsg_block_inbox_menu_links();
+
+  $block = array(
+    'subject' => t('Inbox Menu'),
+    'content' => theme('item_list', array('items' => $links)),
+    'title'   => '<none>',
+  );
+
+  return $block;
+}
+
+/**
+ * Callback function.
+ */
+function _gn2_privatemsg_block_inbox_menu_links() {
+  global $user;
+  $messages = db_query('SELECT pi.is_new FROM pm_index pi JOIN pm_message pm ON pm.mid = pi.mid WHERE pi.recipient = :uid AND pi.is_new = :one AND pi.recipient != pm.author', array(':uid' => $user->uid, ':one' => 1))->rowCount();
+
+  $notifications = db_query('SELECT count FROM subscriptions_notifications_count WHERE uid = :uid', array(
+    ':uid' => $user->uid,
+  ))
+    ->fetchField();
+
+  if (empty($notifications)) {
+    $notifications = 0;
+  }
+
+  $messages_text = t('Messages') . ' (' . $messages . ')';
+  $notifications_text = t('Notifications') . ' (' . $notifications . ')';
+
+  $links = array(
+    l(
+      t('New message'), '/messages/new',
+      array('attributes' => array('class' => 'inbox-new-message'))
+    ),
+    l(
+      $messages_text, '/inbox/messages',
+      array('attributes' => array('class' => 'inbox-messages-link inbox-menu-item'))
+    ),
+    l(
+      $notifications_text,
+      '/inbox/notifications',
+      array('attributes' => array('class' => 'inbox-notifications-link inbox-menu-item'))
+    ),
+    l(
+      t('Sent'),
+      '/inbox/sent',
+      array('attributes' => array('class' => 'inbox-sent-link inbox-menu-item'))
+    ),
+    l(
+      t('Trash'),
+      '/inbox/trash',
+      array('attributes' => array('class' => 'inbox-trash-link inbox-menu-item'))
+    ),
+  );
+
+  return $links;
+}
+
+/**
+ * Implements hook_privatemsg_recipient_type_info_alter().
+ */
+function gn2_privatemsg_privatemsg_recipient_type_info_alter(&$types) {
+  global $user;
+
+  // Alter the autocomplete callback for User and Groups.
+  $types['og:node']['autocomplete'] = "_gn2_privatemsg_groups_autocomplete";
+  $types['user']['autocomplete'] = "_gn2_privatemsg_user_autocomplete";
+
+  // Administrator cannot send messages to groups.
+  if (in_array('administrator', $user->roles) && isset($types['user'])) {
+    unset($types['og:node']);
+  }
+}
+
+/**
+ * RD-3586, Helper function, based on original function privatemsg_user_autocomplete.
+ * Improved to avoid loading users that don't have Contact relationship.
+ * Implements callback_recipient_autocomplete().
+ */
+function _gn2_privatemsg_user_autocomplete($fragment, $names, $limit) {
+  global $user;
+  // First, load all possible uids.
+  $uids = _privatemsg_assemble_query('autocomplete', $fragment, $names)
+    ->execute()
+    ->fetchCol();
+  $query = _privatemsg_assemble_query('autocomplete', $fragment, $names);
+  $query->preExecute();
+  $query->getArguments();
+
+  // Custom code to improve the performance. Avoid to load all found accounts by
+  // filtering only the current user Contacts.
+  $uids = array_unique($uids);
+  if (!in_array('administrator', $user->roles)) {
+    if ($user->uid != 1) {
+      foreach ($uids as $key => $uid) {
+        $params = array(
+          'between' => array($user->uid, $uid),
+          'approved' => TRUE,
+        );
+        $relationship = user_relationships_load($params);
+        if (!$relationship) {
+          unset($uids[$key]);
+        }
+      }
+    }
+  }
+
+  // Load the corresponding users, make sure to not load any duplicates.
+  $accounts = user_load_multiple($uids);
+
+  // Return them in an array with the correct recipient key.
+  $suggestions = array();
+  foreach ($accounts as $account) {
+    $account->type = 'user';
+    $account->recipient = $account->uid;
+    $suggestions[privatemsg_recipient_key($account)] = $account;
+    if (count($suggestions) >= $limit) {
+      return $suggestions;
+    }
+  }
+  return $suggestions;
+}
+
+/**
+ * RD-3586, Helper function, based on original function privatemsg_groups_autocomplete.
+ * Improved to avoid loading all existent Groups, and limit to load the related
+ * groups only.
+ * Provides autocomplete suggestions for group.
+ */
+function _gn2_privatemsg_groups_autocomplete($fragment, $names, $limit, $type) {
+  global $user;
+
+  // Loads only related groups to the current user.
+  $gids = og_get_groups_by_user($user, 'node');
+
+  // Custom query to search nodes (title) that match with the fragment.
+  $results = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('title', '%' . $fragment . '%', 'LIKE')
+    ->condition('nid', $gids, 'IN')
+    ->condition('status', NODE_PUBLISHED)
+    ->range(0, $limit)
+    ->execute()
+    ->fetchAll();
+
+  $gids = array();
+  foreach ($results as $key => $val) {
+    $gids[$val->nid] = intval($val->nid);
+  }
+
+  $groups = node_load_multiple(array_keys($gids));
+
+  $suggestions = array();
+  foreach ($groups as $gid => $group) {
+    $recipient = clone $group;
+    $recipient->type = $type;
+    $recipient->recipient = $gid;
+    if (privatemsg_groups_write_access($recipient)) {
+      $suggestions[privatemsg_recipient_key($recipient)] = $recipient;
+    }
+  }
+  return $suggestions;
+}
+
+/**
+ * Helper function to validate message recipients.
+ *
+ * RD-2354 Disallow users from sending messages to non-contacts.
+ */
+function _gn2_privatemsg_recipient_validate($form, &$form_state) {
+  global $user;
+
+  if (!in_array('administrator', $user->roles)) {
+    $message = (object) $form_state['values'];
+    list($message->recipients, $invalid, $duplicates, $denieds) = _privatemsg_parse_userstring($message->recipient);
+
+    $non_contacts = '';
+    $non_contact_found = FALSE;
+
+    foreach ($message->recipients as $recipient) {
+      if ($recipient->type == 'user') {
+        $relationship = FALSE;
+        // If the recipient is a group admin, automatically approve.
+        $query = db_select('og_users_roles', 'u');
+        $query->join('og_role', 'r', 'u.rid = r.rid');
+        $query
+          ->condition('u.uid', $recipient->uid, '=')
+          ->fields('r', array('name'));
+        $roles = $query->execute();
+        $admin_roles = array('org_manager', 'group_manager', 'course_presenter');
+        foreach ($roles as $role) {
+          if (in_array($role->name, $admin_roles)) {
+            $relationship = TRUE;
+          }
+        }
+        if ($user->uid != $recipient->uid && !$relationship) {
+          $params = array(
+            'between' => array($user->uid, $recipient->uid),
+            'approved' => TRUE,
+          );
+          $relationship = user_relationships_load($params);
+        }
+        if (!$relationship) {
+          $non_contacts .= l($recipient->name, drupal_get_path_alias('user/' . $recipient->uid)) . ', ';
+          $non_contact_found = TRUE;
+        }
+      }
+    }
+    if ($non_contact_found && $_GET['admin'] != 'admin') {
+      form_set_error('recipient', '<span class="privatemsg-alternative-description">' . t('Cannot send a private message to non-contacts: !no_contacts', array('!no_contacts' => $non_contacts)) . '</span>');
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function gn2_privatemsg_views_data_alter(&$data) {
+
+  // Message table.
+  $data['pm_message']['table']['group'] = t('Privatemsg');
+
+  $data['pm_message']['table']['base'] = array(
+    'field' => 'mid',
+    'title' => t('Private messages'),
+    'help' => t('Private messages sent between users.'),
+    'defaults' => array(
+      'field' => 'body',
+    ),
+  );
+
+  $data['pm_message']['table']['entity type'] = 'privatemsg_message';
+
+  $data['pm_message']['table']['join'] = array(
+    'pm_index' => array(
+      'left_table' => 'pm_index',
+      'left_field' => 'mid',
+      'field' => 'mid',
+    ),
+  );
+
+  $data['pm_message']['mid'] = array(
+    'title' => t('Message ID'),
+    'help' => t('The private message ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'relationship' => array(
+      'base' => 'pm_index',
+      'field' => 'mid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Message index'),
+      'title' => t('Message index'),
+      'help' => t('Relate the message to threading info.'),
+    ),
+  );
+
+  $data['pm_message']['author'] = array(
+    'title' => t('Author'),
+    'help' => t('The private message author.'),
+    'field' => array(
+      'help' => t('The UID of the private message author.'),
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'relationship' => array(
+      'base' => 'users',
+      'field' => 'author',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Author'),
+      'help' => t('Relate to the user who sent the private message.'),
+    ),
+  );
+
+  $data['pm_message']['subject'] = array(
+    'title' => t('Subject'),
+    'help' => t('The subject of the private message.'),
+    'field' => array(
+      'handler' => 'views_handler_field_pm_subject',
+      'format' => array('field' => 'format'),
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  $data['pm_message']['body'] = array(
+    'title' => t('Message'),
+    'help' => t('The text of the private message.'),
+    'field' => array(
+      'handler' => 'views_handler_field_pm_body',
+      'format' => array('field' => 'format'),
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  $data['pm_message']['timestamp'] = array(
+    'title' => t('Send date'),
+    'help' => t('The date and time when the message was sent.'),
+    'field' => array(
+      'handler' => 'views_handler_field_date',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_date',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort_date',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_date',
+    ),
+  );
+
+  // Message index table.
+  $data['pm_index']['table']['group'] = t('Privatemsg');
+
+  $data['pm_index']['table']['base'] = array(
+    'field' => 'mid',
+    'title' => t('Privatemsg threading index'),
+    'defaults' => array(
+      'field' => 'thread_id',
+    ),
+  );
+
+  $data['pm_index']['table']['join'] = array(
+    'pm_message' => array(
+      'left_table' => 'pm_message',
+      'left_field' => 'mid',
+      'field' => 'mid',
+    ),
+  );
+
+  $data['pm_index']['table']['entity type'] = 'privatemsg_message';
+
+  $data['pm_index']['thread_id'] = array(
+    'title' => t('Thread ID'),
+    'help' => t('The ID of the private message thread.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'help' => t('Filter according to the thread privatemsgs belong to.'),
+      'handler' => 'views_handler_argument_many_to_one',
+    ),
+  );
+  $data['pm_index']['thread_link'] = array(
+    'real field' => 'thread_id',
+    'title' => t('Link to thread'),
+    'help' => t('A link to the private message thread.'),
+    'field' => array(
+      'handler' => 'views_handler_field_pm_thread_link',
+    ),
+  );
+  $data['pm_index']['recipient'] = array(
+    'title' => t('Recipient'),
+    'field' => array(
+      'help' => t('The UID of the private message recipient.'),
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'help' => t("Filter according to the recipient's uid."),
+      'handler' => 'views_handler_argument_user_uid',
+    ),
+    'relationship' => array(
+      'base' => 'users',
+      'field' => 'recipient',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Recipient'),
+      'help' => t('Relate to the user receiving the private message.'),
+    ),
+  );
+  $data['pm_index']['is_new'] = array(
+    'title' => t('Is new'),
+    'help' => t('Whether the private message is unread.'),
+    'field' => array(
+      'handler' => 'views_handler_field_boolean',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'help' => t('Filter to private messages that have/have not been read.'),
+      'handler' => 'views_handler_filter_boolean_operator',
+      'label' => t('Show new'),
+      'type' => 'yes-no',
+    ),
+  );
+  $data['pm_index']['deleted'] = array(
+    'title' => t('Is deleted'),
+    'help' => t('Whether the private message has been deleted.'),
+    'field' => array(
+      'handler' => 'views_handler_field_boolean',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'help' => t('Filter to private messages that have/have not been deleted.'),
+      'handler' => 'views_handler_filter_boolean_operator',
+      'label' => t('Show deleted'),
+      'type' => 'yes-no',
+    ),
+  );
+
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function gn2_privatemsg_views_query_alter(&$view, &$query) {
+  // Filter read and unread messages.
+  if ($view->name == 'inbox') {
+    $filter = arg(2);
+    switch ($filter) {
+      case 'unread':
+        $query->where[1]['conditions'][2]['value'] = 0;
+        break;
+
+      case 'read':
+        $query->where[1]['conditions'][2]['value'] = 1;
+        break;
+
+      default:
+        unset($query->where[1]['conditions'][2]);
+        break;
+    }
+  }
+  elseif ($view->name == 'course_leadership' && $view->current_display == 'block_1') {
+    $query->where[0]['type'] = 'OR';
+  }
+}

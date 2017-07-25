@@ -1,0 +1,17 @@
+name = GN2 Notifications
+description = Controls Notification alert messages
+core = 7.x
+package = GlobalNET
+dependencies[] = elysia_cron
+dependencies[] = fe_block
+dependencies[] = gn2_sms_gateway
+dependencies[] = sms_sendtophone
+dependencies[] = views
+dependencies[] = views_content
+features[ctools][] = views:views_default:3.0
+features[fe_block_settings][] = views-gn2_notifications-block
+features[features_api][] = api:2
+features[views_view][] = gn2_notifications
+features_exclude[dependencies][ctools] = ctools
+files[] = gn2_notifications_handler_notification_message.inc
+project path = sites/all/modules/custom

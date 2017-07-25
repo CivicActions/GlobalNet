@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * @file
+ * Module providing EZproxy authentication for drupal.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function gn2_ezproxy_help($path) {
+  switch ($path) {
+    case 'admin/modules#name':
+      return t('ezproxy');
+
+    case 'admin/modules#description':
+      return t('Provides ezproxy authentication for Drupal');
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function gn2_ezproxy_permission() {
+  return array(
+    'administer ezproxy' => array(
+      'title' => t('administer ezproxy'),
+      'description' => t('Administer the ezproxy module'),
+    ),
+    'ezproxy access' => array(
+      'title' => t('ezproxy access'),
+      'description' => t('Authentication for ezproxy'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_ezproxy_menu() {
+  $items = array();
+
+  $items['admin/config/ezproxy'] = array(
+    'title' => 'EZProxy for GlobalNET',
+    'description' => 'Administer the ezproxy module',
+    'access arguments' => array('administer ezproxy'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_ezproxy_admin_settings'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'ezproxy',
+  );
+  $items['ezproxy'] = array(
+    'title' => 'EZProxy Authentication',
+    'description' => 'Authenticating for ezproxy',
+    'access callback' => 'gn2_ezproxy_access',
+    'page callback' => 'gn2_ezproxy_authentication',
+    'type' => MENU_CALLBACK,
+    'menu_name' => 'ezproxy',
+  );
+
+  return $items;
+}
+
+/**
+ * Administration screen for the ezproxy module.
+ */
+function gn2_ezproxy_admin_settings($form, &$form_state) {
+  $form = array();
+
+  $form['ezproxy'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('EZProxy Settings'),
+    '#collapsible' => TRUE,
+  );
+
+  $form['ezproxy']['ezproxy_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Ezproxy User Name'),
+    '#size' => 100,
+    '#maxlength' => 200,
+    '#default_value' => variable_get('ezproxy_username', 'marshalltestuser'),
+    '#description' => t('User Name we will utilize to access the ezproxy and log the user in automatically'),
+  );
+
+  $form['ezproxy']['ezproxy_password'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Ezproxy Password'),
+    '#size' => 100,
+    '#maxlength' => 200,
+    '#default_value' => variable_get('ezproxy_password', 'testing123'),
+    '#description' => t('Password we will utilize to access the ezproxy and log the user in automatically'),
+  );
+
+  $form['ezproxy']['ezproxy_host'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Ezproxy Host'),
+    '#size' => 100,
+    '#maxlength' => 200,
+    '#default_value' => variable_get('ezproxy_host', 'https://ezproxy.members.marshallcenter.org/login'),
+    '#description' => t('Host that we will authenticate against for the ezproxy login'),
+  );
+
+  $form['ezproxy']['ezproxy_valid_orgs'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Organizations that can access EZproxy'),
+    '#size' => 100,
+    '#maxlength' => 200,
+    '#default_value' => variable_get('ezproxy_valid_orgs', 'gcmc'),
+    '#description' => t('Comma separated list of shortnames for organizations that users must be a member of to access EZproxy without administrator permissions'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Access callback for EZproxy authentication path.
+ */
+function gn2_ezproxy_access() {
+  if (user_access('ezproxy access')) {
+    if (user_access('administer ezproxy')) {
+      return TRUE;
+    }
+    $valid_orgs = variable_get('ezproxy_valid_orgs', 'gcmc');
+    $orgs = explode(',', $valid_orgs);
+    foreach ($orgs as $org) {
+      $org_id = _gn2_context_org_from_prefix(trim($org));
+      if (!empty($org_id) && og_is_member('node', $org_id)) {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Ezproxy authentication function.
+ */
+function gn2_ezproxy_authentication() {
+  $ezpuser = '';
+  $ezppass = '';
+  $ezphost = '';
+  $query = "?user=" . urlencode($ezpuser) . "&pass=" . urlencode($ezppass);
+
+  foreach ($_GET as $param => $value) {
+    if ($param == 'user' || $param == 'pass') {
+      continue;
+    }
+
+    $query .= "&" . $param . "=" . $value;
+  }
+
+  $ezphost .= $query;
+  // echo "<pre>" . print_r("Callback: $ezphost", true) . "</pre>";
+  // die();
+
+  // Need the 0 or Drupal will follow the redirects and
+  // apparently exproxy does not want you to follow the redirects,
+  // so we just make the first request only.
+  $result = drupal_http_request($ezphost, array('headers' => array(), 'max_redirects' => 0));
+
+  if ($result->code == 302) {
+    if ($result->redirect_url && strlen($result->redirect_url)) {
+      drupal_add_http_header('Status', '302 Found');
+      drupal_add_http_header("Location: {$result->redirect_url}");
+      die();
+    }
+  }
+
+  drupal_access_denied();
+}

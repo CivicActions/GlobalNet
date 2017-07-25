@@ -1,0 +1,14 @@
+name = GN2 Adobe Connect
+description = Allows GNet users to create Adobe Connect meetings
+core = 7.x
+package = GlobalNET
+dependencies[] = ctools
+dependencies[] = fe_block
+dependencies[] = views
+dependencies[] = views_content
+features[ctools][] = views:views_default:3.0
+features[fe_block_settings][] = gn2_adobe_connect-gn2_adobe_connect_block
+features[fe_block_settings][] = views-adobe_connect_meetings-block
+features[features_api][] = api:2
+features[views_view][] = adobe_connect_meetings
+files[] = gn2_adobe_connect_handler_filter_datetime.inc

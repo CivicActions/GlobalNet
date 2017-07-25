@@ -1,0 +1,28 @@
+#uif-import-form {
+  h3 {
+    @include body_font;
+    line-height: 1;
+    padding: 0;
+    margin: 0 0 .75em 0;
+    font-size: 1.25em; 
+  }
+  table {
+    border: 1px solid $gray-9;
+    border-right-width: 0;
+    margin:  0 0 1.5em 1em;
+    tr {
+      padding: 0;
+      td {
+        padding: .25em .5em;
+        border-right: 1px solid $gray-9;
+      }
+    }
+  }
+  input.form-submit {
+    @include general-content-button;
+    &#edit-back {
+      @include admin-button($bgcolor: $blue-gray);
+      margin-right: .25em;
+    }
+  }
+}

@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Install functions for GN2 Base Strongarm.
+ */
+
+use HookUpdateDeployTools\Features;
+use HookUpdateDeployTools\Modules;
+
+/**
+ * Enables/Reverts the gn2_taxonomy feature.
+ */
+function gn2_base_strongarm_update_7001() {
+  $modules = array('gn2_taxonomy');
+  $message = Modules::enable($modules);
+  $features = array('gn2_taxonomy');
+  $message .= Features::revert($features);
+  return $message;
+}
+
+/**
+ * Delete unused average content in votingapi_cache table; RD-3424.
+ */
+function gn2_base_strongarm_update_7002() {
+  $result = db_delete('votingapi_cache')
+    ->condition('function', 'average')
+    ->execute();
+}
+
+/**
+ * Enables/Reverts the gn2_support_desk feature.
+ */
+function gn2_base_strongarm_update_7003() {
+  $modules = array('gn2_support_desk');
+  $message = Modules::enable($modules);
+  $features = array('gn2_support_desk');
+  $message .= Features::revert($features);
+  return $message;
+}
+
+/**
+ * Enables login_tracker module.
+ */
+function gn2_base_strongarm_update_7004() {
+  $modules = array('login_tracker');
+  $message = Modules::enable($modules);
+  return $message;
+}
+
+/**
+ * Stores views_distinct configurations for messages inbox.
+ */
+function gn2_base_strongarm_update_7005() {
+  $settings = array(
+    'post_render' => 0,
+    'action' => "filter_repeats",
+    'aggregate_separator' => ", ",
+  );
+  _views_distinct_field_settings_set("inbox", "block", "thread_id", $settings);
+  return "Inbox view configurations were stored successfully.";
+}
+
+/**.
+ * Enables transliteration module.
+ */
+function gn2_base_strongarm_update_7006() {
+  $modules = array('transliteration');
+  $message = HookUpdateDeployTools\Modules::enable($modules);
+  return $message;
+}
+
+/**.
+ * Enables gn2_guide feature.
+ */
+function gn2_base_strongarm_update_7007() {
+  $modules = array('gn2_guide');
+  $message = Modules::enable($modules);
+  $features = array('gn2_guide');
+  $message .= Features::revert($features);
+  return $message;
+}
+
+/**.
+ * Disable Google Analytics Summary View to use the override View.
+ * See: RD-3148.
+ */
+function gn2_base_strongarm_update_7008() {
+  $views_status['google_analytics_reports_summary'] = TRUE;
+  // reset the variable with the view to be disabled.
+  variable_set('views_defaults', $views_status);
+
+  // Empty cache now.
+  if (function_exists('views_invalidate_cache')) {
+    views_invalidate_cache();
+  }
+  return 'View: Google Analytics Summary was disabled.';
+}
+
+/**.
+ * Enables gn2_content_event feature.
+ */
+function gn2_base_strongarm_update_7009() {
+  $modules = array('gn2_content_event');
+  $message = Modules::enable($modules);
+  $features = array('gn2_content_event');
+  $message .= Features::revert($features);
+  return $message;
+}

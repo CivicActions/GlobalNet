@@ -1,0 +1,55 @@
+
+/*====== Theming the Activity Tab =========*/
+.user__tab--activity{
+  
+  h3 {
+    font-family: Arial,sans-serif;
+    font-size: 15px;
+  }
+
+  .view-header {
+    background-image: url(/sites/all/themes/gn2_zen/images/gn-icons/icon-arrow-down-grey.png);
+    background-position: 0px 3px;
+    background-repeat: no-repeat;
+    margin-bottom: 20px;
+    padding-left: 25px;
+  }
+
+  .view-content {
+    background: white;
+    padding: 20px 30px;
+
+    .views-row {
+      border-bottom: 1px solid $light-gray;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+
+      .activity-date {
+        display: none;
+      }
+    }
+  }
+
+  .pager {
+    width: 100%;
+    padding-bottom: 15px;
+  }
+
+  .item-list {
+      background-color: white;
+
+      .pager-next {
+        a {
+            background-color: $light-gray;
+            color: $medium-gray;
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            width: 95%;
+            margin: 0 auto;
+            line-height: 55px;
+        }
+      }
+  }
+}

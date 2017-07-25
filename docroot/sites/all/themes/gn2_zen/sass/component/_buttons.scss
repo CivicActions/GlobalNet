@@ -1,0 +1,213 @@
+//=====Mixins for site buttons=============
+/*Base Styles for a large button with display font. You can use this mixin as a base for large buttons
+ * and then add the following to your button class to specify its color and border-radius:
+ * @include button-border-radius(radius(px), #color);
+ * background: #your-button-color;
+ */
+ 
+$default-button-font-size: 1.2em;
+
+// A mixin for adding a radius and border color to site buttons
+@mixin button-border-radius($radius) {
+  border-radius: $radius $radius $radius $radius;
+  -moz-border-radius: $radius $radius $radius $radius;
+  -webkit-border-radius: $radius $radius $radius $radius;
+}
+
+@mixin button-shadow {
+  //Use this to add a subtle dark shadow to a box.
+  -webkit-box-shadow: 1px -1px 2px 0px rgba(130,130,130,1);
+  -moz-box-shadow: 1px -1px 2px 0px rgba(130,130,130,1);
+  box-shadow: 1px -1px 2px 0px rgba(130,130,130,1);
+}
+
+/**
+ *Default styles for site-wide buttons. Can be overridden with partials like "_buttons--search"
+ */
+
+/* Basic styles common to all buttons. Include this mixin first so it can be
+overridden by more specific styles
+*/
+
+@mixin button(
+    $border-radius: .25em,
+    $border-width: 0,
+    $border-style: solid,
+    $border-color: white,
+    $bgcolor: $dark-gray,
+    $color: $light-gray,
+    $color-hover: white,
+    $font-face: $display-font-regular,
+    $font-size: $default-button-font-size,    
+    // $padding-top-factor: .2, (best for Abadi) 
+    // $padding-top-factor: .25, // a little more for Teko
+    $padding-top-factor: .3, // the best for Teko
+    $padding-right-factor: .4,
+    // $padding-bottom-factor: .14, (best for Abadi)
+    // $padding-bottom-factor: .05, (best for Teko)
+    $padding-bottom-factor: .095, // average of the two
+    $padding-bottom-factor: .125, // a little more for the sake of Abadi
+    $padding-left-factor: .4,    
+    $margin: 0 .1em 1em
+  ) {
+  @include display_font($font-face: $font-face);
+  @include button-border-radius($border-radius);
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  background-color: $bgcolor;
+  padding-top: $font-size * $padding-top-factor;
+  padding-right: $font-size * $padding-right-factor;
+  padding-bottom: $font-size * $padding-bottom-factor;
+  padding-left: $font-size * $padding-left-factor;  
+  margin: $margin;
+  font-size: $font-size;
+  border-width: $border-width;
+  border-style: $border-style;
+  border-color: $border-color;
+  color: $color !important;
+  box-shadow: none;
+  &:hover {
+    color: $color-hover !important;
+  }
+  a {
+    color: $color;
+    &:hover {
+      color: $color-hover;
+    }
+  }
+}
+
+@mixin button--dark(
+  $font-size: $default-button-font-size
+  ) {
+  @include button(
+    $font-size: $font-size,
+    $border-radius: 4px,
+    $bgcolor: $dark-gray,
+    $color: $gray-fe
+  );
+}
+
+/*Override web-kit default button appearance
+*a.button {-webkit-appearance: inherit;}
+* ============== BUTTON VARIATIONS============
+*
+1. Header - Small
+*/
+@mixin small-header-button(
+  $font-size: $default-button-font-size
+  ) {
+  @include button(
+    $font-size: $font-size,
+    $border-width: 2px,
+    $border-color: $calypso,
+    $bgcolor: $blue-gray,
+    $color: $gray-fe
+  );
+}
+
+/*
+2. Admin Related - Medium
+Variable options:
+1. blue background: #3882a3;-- $blue-gray
+2. red background: #712626;-- $red
+*/
+@mixin admin-button(
+  $bgcolor: $blue-gray,
+  $font-size: $default-button-font-size
+  ) {
+  @include button(
+    $font-size: $font-size,
+    $bgcolor: $bgcolor,
+    $color: $white
+  );
+}
+
+/*
+3. General Content - Medium
+*/
+@mixin general-content-button(
+  $font-size: $default-button-font-size,
+  $bgcolor: $very-dark-gray,
+  $border-color: $titanium
+  ) {
+  @include button(
+    $font-size: $font-size,
+    $border-width: 2px,
+    $border-color: $border-color,
+    $bgcolor: $bgcolor,
+    $color: $light-gray
+  );
+}
+
+/*
+4. Callouts - Large
+*/
+@mixin large-callout-button(
+  $font-size: $default-button-font-size
+  ) {
+  @include button(
+    $font-size: $font-size,
+    $border-width: 2px,
+    $border-color: $calypso,
+    $bgcolor: $blue-gray,
+    $color: $gray-fe
+  );
+}
+
+@mixin button-as-link {
+  @include body_font;
+  padding: 0;
+  background-color: transparent;
+  margin: 0;
+  color: $link-color;
+  display: inline;
+  text-align: left;
+  text-decoration: none;
+  font-size: 1em;
+  &:hover {
+    color: $link-color-hover;
+  }
+}
+
+.ajaxatron,
+.updateatron,
+.editatron,
+.cancelatron,
+a.button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+  @include button;
+}
+
+.large-callout-button,
+a.large-callout-button {
+  @include large-callout-button;
+}
+
+.general-content-button, 
+a.general-content-button {
+  @include general-content-button;
+}
+
+.admin-button,
+a.admin-button {
+  @include admin-button($red);
+}
+
+.admin-button-blue,
+a.admin-button-blue {
+  @include admin-button($blue-gray);
+  color: $white;
+  a {
+    color: $white;
+  }
+}
+
+.small-header-button,
+a.small-header-button {
+  @include small-header-button;
+}

@@ -1,0 +1,22 @@
+diff --git a/modules/media_wysiwyg/js/media_wysiwyg.filter.js b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+index 5ac10ec..b9079a1 100644
+--- a/modules/media_wysiwyg/js/media_wysiwyg.filter.js
++++ b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+@@ -103,11 +103,16 @@
+      *    A object containing the media file information (fid, view_mode, etc).
+      */
+     create_element: function (html, info) {
+-      if ($('<div>').append(html).text().length === html.length) {
++      // Let's have a fallback if no image is passed to ensure operation completes.
++      if (html == undefined) {
++        html = '<span class="file"><img class="file-icon" alt="" title="application/octet-stream" src="/sites/all/themes/gn2_zen/images/gn2_file_icons/video-x-generic.svg" /></span>';
++      }
++      else if ($('<div>').append(html).text().length === html.length) {
+         // Element is not an html tag. Surround it in a span element so we can
+         // pass the file attributes.
+         html = '<span>' + html + '</span>';
+       }
++
+       var element = $(html);
+
+       // Parse out link wrappers. They will be re-applied when the image is

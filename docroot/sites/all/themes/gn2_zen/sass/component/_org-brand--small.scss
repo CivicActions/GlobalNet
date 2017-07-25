@@ -1,0 +1,47 @@
+/**
+ *Partial for org brand (logo + title)component. This styles the smaller iteration of the logo and title
+ *displayed in the sidebar.
+ */
+
+.org-brand {
+  .pane-node-title {
+    display: table;
+    margin: 0;
+  }
+  h2 {
+    display: table-cell;
+    margin: 0;
+    display: table-cell;
+    font-weight: normal;
+    font-size: 1.2em;
+    line-height: 1.2;
+    text-transform: none;
+    padding-top: .25em;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.node-type-organization {
+  .sidebar__logo,
+  .sidebar__title {
+    margin: 0 0 1em;
+    .panels-ipe-portlet-wrapper {
+      margin: 0;
+    }
+    .panels-layout--region-inner {
+      > div {
+        margin: 0;
+      }
+    }
+  }
+  .sidebar__logo {
+    padding-right: 0;
+  }
+  .sidebar__title {
+    padding-left: .75em;
+  }
+}

@@ -1,0 +1,725 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_sessions_fc.
+ */
+
+include 'gn2_sessions_fc.helpers.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_sessions_fc_block_info() {
+  $blocks = array();
+  $blocks['session_form'] = array(
+    'info' => t('Returns Sessions form'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_sessions_fc_syllabus'] = array(
+    'info' => t('Sessions minipanel Ajax'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_sessions_fc_participants'] = array(
+    'info' => t('Sessions member search Ajax'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_sessions_fc_presenters'] = array(
+    'info' => t('Sessions presenters search Ajax'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_sessions_fc_posts'] = array(
+    'info' => t('Sessions posts Ajax'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_sessions_fc_resources'] = array(
+    'info' => t('Sessions resources Ajax'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function gn2_sessions_fc_js_alter(&$javascript) {
+  // Colorbox.js breaks the ajax stuff in this module,
+  // and isn't needed on course pages.
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if ($node->type == 'course') {
+      unset($javascript[drupal_get_path('module', 'colorbox') . '/js/colorbox.js']);
+    }
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_sessions_fc_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'gn2_sessions_fc_syllabus':
+      $block['subject'] = t('Syllabus');
+      $block['content'] = '<a class="minipanelatron" data-nid="' . arg(1) . '"></a>';
+      $block['content'] .= '<div class="minipanelatron-ajax loader-ajax">' . gn2_sessions_fc_spinner() . '</div>';
+      break;
+
+    case 'gn2_sessions_fc_participants':
+      $block['subject'] = t('Participants');
+      $block['content'] = '<a class="memberatron" data-nid="' . arg(1) . '"></a>';
+      $block['content'] .= '<div class="memberatron-ajax loader-ajax">' . gn2_sessions_fc_spinner() . '</div>';
+      break;
+
+    case 'gn2_sessions_fc_presenters':
+      $block['subject'] = t('Presenters');
+      $block['content'] = '<a class="presenteratron" data-nid="' . arg(1) . '"></a>';
+      $block['content'] .= '<div class="presenteratron-ajax loader-ajax">' . gn2_sessions_fc_spinner() . '</div>';
+      break;
+
+    case 'gn2_sessions_fc_posts':
+      $block['subject'] = t('Posts');
+      $block['content'] = '<a class="teaseratron" data-nid="' . arg(1) . '"></a>';
+      $block['content'] .= '<div class="teaseratron-ajax loader-ajax">' . gn2_sessions_fc_spinner() . '</div>';
+      break;
+
+    case 'gn2_sessions_fc_resources':
+      $block['subject'] = t('Resources');
+      $block['content'] = '<a class="resourceatron" data-nid="' . arg(1) . '"></a>';
+      $block['content'] .= '<div class="resourceatron-ajax loader-ajax">' . gn2_sessions_fc_spinner() . '</div>';
+      break;
+
+    case 'session_form':
+      drupal_add_js(array(
+        'gn2_sessions_fc' => array(
+          'subject_node' => arg(1),
+        ),
+      ), 'setting');
+      $node = node_load(arg(1));
+      drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/includes/dragula.min.js', array('scope' => 'footer'));
+      drupal_add_css(drupal_get_path('module', 'gn2_sessions_fc') . '/includes/dragula.min.css');
+      if (arg(0) != 'admin') {
+        $block['content'] = gn2_sessions_fc_load();
+      }
+      if (!empty($node->field_session)) {
+        $row_count = db_select('field_data_field_session_day', 'entity_id')
+          ->fields('entity_id')
+          ->condition('entity_id', $node->field_session[LANGUAGE_NONE][0]['value'], '=')
+          ->execute()->rowCount();
+
+        $block['content']['#prefix'] = '';
+        $block['content']['#suffix'] = '';
+
+        if (count($node->field_session[LANGUAGE_NONE]) > 1 || $row_count > 0) {
+          global $user;
+          $gid = gn2_context_get_org_id();
+          $manager_roles = array('org_manager', 'hr_manager');
+          $og_roles = og_get_user_roles('node', $gid, $user->uid);
+          $is_og_manager = array_intersect($manager_roles, $og_roles);
+          $group_role = og_get_user_roles('node', arg(1), $user->uid);
+          $is_gr_manager = array_intersect(array('group_manager'), $group_role);
+
+          if ($is_og_manager || $is_gr_manager) {
+            $block['content']['#prefix'] .= '<div id="gn2-sessions-fc-toggle">';
+            $block['content']['#prefix'] .= '<a id="gn2-sessions-fc-toggle--show" style="display: block;">' . t('Show row weights') . '</a>';
+            $block['content']['#prefix'] .= '<a id="gn2-sessions-fc-toggle--hide" style="display: none;">' . t('Hide row weights') . '</a>';
+            $block['content']['#prefix'] .= '</div>';
+          }
+        }
+        $block['content']['#suffix'] .= l(t('Return to course'), 'node/' . arg(1));
+      }
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Outputs our sessions.
+ */
+function gn2_sessions_fc_load() {
+
+  $node = node_load(arg(1));
+  // Load a token to verify drag and drop is safe when checked in menu_hook.
+  $token = drupal_get_token($value = '');
+  drupal_add_js(array('gn2_sessions_fc' => array('gn2_sessions_fc_token' => $token)), 'setting');
+  $fcs = array();
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  foreach ($node_wrapper->field_session as $session) {
+    $item = $session->view();
+    $id = key($item['field_collection_item']);
+    if (arg(0) == 'node' || arg(0) == 'gn2_sessions_fc-minipanel') {
+      $fcs[$id] = $item;
+    }
+    if (arg(0) == 'course-session-form') {
+      $eid = arg(2);
+      if ($id == $eid) {
+        $fcs[$id] = $item;
+      }
+    }
+  }
+  gn2_sessions_fc_sorter($fcs, 'field_collection_item');
+  $fcs['#suffix'] = '';
+  if (og_user_access('node', arg(1), 'administer_group')) {
+    $fcs['#suffix'] .= '<a class="ajaxatron level1" data-parent="send-to-nid" data-type="add" data-nid="' . arg(1) . '" data-level="level1" id="ajaxatron-' . arg(1) . '">' . t('New Session') . '</a>';
+    $fcs['#suffix'] .= drupal_render(drupal_get_form('gn2_sessions_fc_update_form'));
+    $fcs['#suffix'] .= '<div class="ajaxatron-ajax ajaxatron-' . arg(1) . '"><div class="sessions-ajax-form"></div><div style="display:block;clear:both"></div></div>';
+  }
+
+  return $fcs;
+}
+
+/**
+ * Outputs a block of all sessions.
+ */
+function gn2_sessions_fc_block_output() {
+  $block = block_load('gn2_sessions_fc', 'session_form');
+  $render_array = _block_get_renderable_array(_block_render_blocks(array($block)));
+  $output = render($render_array);
+
+  return $output;
+}
+
+/**
+ * Determine whether or not user should see session.
+ */
+function gn2_sessions_fc_session_access($gid) {
+  if (og_is_member('node', $gid)) {
+    return TRUE;
+  }
+
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_sessions_fc_menu() {
+  $items['course-session-form/%/%'] = array(
+    'page callback' => 'gn2_sessions_fc_block_output',
+    'page arguments' => array(1, 2),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'gn2_sessions_fc_session_access',
+    'access arguments' => array(1),
+  );
+
+  $items['admin/non-modal/add/%/%/%'] = array(
+    'page callback' => 'gn2_sessions_fc_reg_form_loader',
+    'page arguments' => array(3, 4, 5),
+    'type' => MENU_CALLBACK,
+    // Note that although this is adding a field value it is effectively an update to the node.
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 5),
+  );
+
+  $items['admin/non-modal/edit/%/%/%'] = array(
+    'page callback' => 'gn2_sessions_fc_reg_form_loader',
+    'page arguments' => array(3, 4, 5),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 5),
+  );
+
+  $items['gn2_sessions_fc/delete/%/%/%'] = array(
+    'page callback' => 'gn2_sessions_fc_delete',
+    'page arguments' => array(2, 3, 4),
+    // Note that although this is deleting a field value it is effectively an update to the node.
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 3),
+  );
+
+  $items['gn2_sessions_fc/order/%'] = array(
+    'page callback' => 'gn2_sessions_fc_order_save',
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 2),
+  );
+
+  $items['gn2_sessions_fc/members/%'] = array(
+    'page callback' => 'gn2_sessions_fc_ajax_tabs',
+    'page arguments' => array(2),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+  $items['gn2_sessions_fc/presenters/%'] = array(
+    'page callback' => 'gn2_sessions_fc_ajax_tabs',
+    'page arguments' => array(2),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['gn2_sessions_fc/teasers/%'] = array(
+    'page callback' => 'gn2_sessions_fc_ajax_tabs',
+    'page arguments' => array(2),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['gn2_sessions_fc/resources/%'] = array(
+    'page callback' => 'gn2_sessions_fc_ajax_tabs',
+    'page arguments' => array(2),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['gn2_sessions_fc/subgroups/%'] = array(
+    'page callback' => 'gn2_sessions_fc_ajax_tabs',
+    'page arguments' => array(2),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['gn2_sessions_fc-minipanel/%'] = array(
+    'page callback' => 'gn2_sessions_fc_get_minipanel',
+    'page arguments' => array(1),
+    'delivery callback' => 'gn2_sessions_fc_reg_form_loader_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Loads our sessions minipanel via ajax.
+ */
+function gn2_sessions_fc_get_minipanel() {
+  $delta = 'session_entityform_results';
+  $panel_mini = panels_mini_load($delta);
+  $node = node_load(arg(1));
+  ctools_include('context');
+  $context = ctools_context_create('entity:node', $node);
+  $contexts = ctools_context_match_required_contexts($panel_mini->requiredcontexts, array($context));
+  $panel_mini->context = $panel_mini->display->context = ctools_context_load_contexts($panel_mini, FALSE, $contexts);
+  $panel_mini->display->css_id = panels_mini_get_id($panel_mini->name);
+  $renderable_markup = panels_render_display($panel_mini->display);
+  print $renderable_markup;
+
+}
+
+/**
+ * Outputs our member search.
+ */
+function gn2_sessions_fc_ajax_tabs() {
+  switch (arg(1)) {
+    case 'members':
+      $view_name = 'group_members';
+      $view_display = 'panel_pane_2';
+      break;
+
+    case 'presenters':
+      $view_name = 'group_members';
+      $view_display = 'panel_pane_3';
+      break;
+
+    case 'teasers':
+      $view_name = 'news_announcements_posts';
+      $view_display = 'panel_pane_23';
+      break;
+
+    case 'resources':
+      $view_name = 'resources';
+      $view_display = 'default';
+      break;
+
+    case 'subgroups':
+      $view_name = 'subgroups';
+      $view_display = 'panel_pane_3';
+      break;
+
+  }
+  $arg = arg(2);
+  $view = views_get_view($view_name);
+  $view->set_display($view_display);
+  $view->set_arguments(array($arg));
+  $view->pre_execute();
+  $view->execute();
+  print $view->render();
+
+}
+
+/**
+ * Removes admin css from ajax page form.
+ */
+function gn2_sessions_fc_css_alter(&$css) {
+  if (arg(0) == 'admin' && arg(1) == 'non-modal') {
+    foreach ($css as $key => $value) {
+      $exclude[$key] = FALSE;
+    }
+    $css = array_diff_key($css, $exclude);
+  }
+}
+
+/**
+ * Implements hook_custom_theme().
+ */
+function gn2_sessions_fc_custom_theme() {
+  if (arg(0) == 'admin' && arg(1) == 'non-modal') {
+    return 'blossom';
+  }
+}
+
+/**
+ * Creates update form.
+ */
+function gn2_sessions_fc_update_form($form, $eid) {
+  $form['gn2_sessions_fc_update_submit'] = array(
+    '#prefix' => '<span id="updateatron-holder">',
+    '#suffix' => '<span id="cancelatron-holder">' . l(t('Cancel'), 'node/' . arg(1), array('attributes' => array('class' => array('admin-button')))) . '</span></span>',
+    '#type' => 'submit',
+    '#submit' => array('gn2_sessions_fc_update_form_submit'),
+    '#weight' => 10,
+    '#attributes' => array('class' => array('updateatron')),
+    '#value' => t('Update Session Order'),
+  );
+
+  return $form;
+}
+
+/**
+ * Simple page reload function.
+ */
+function gn2_sessions_fc_reload() {
+  if (arg(0) == 'course-session-form') {
+    drupal_goto('course-session-form/' . arg(1) . '/' . arg(2));
+  }
+  else {
+    drupal_goto('node/' . arg(1));
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_sessions_fc_init() {
+  if (arg(0) == 'node' && is_numeric(arg(1)) || arg(0) == 'course-session-form' || arg(0) == 'gn2_sessions_fc-minipanel') {
+    drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc.js');
+    drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc_theming.js');
+    drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc_refresh.js', array('scope' => 'footer'));
+    drupal_add_js('misc/collapse.js');
+    $node = node_load(arg(1));
+    if ($node->type == 'course') {
+      drupal_add_js(array('gn2_sessions_fc' => array('gn2_sessions_fc_tabs' => 'tabs')), 'setting');
+      if (og_user_access('node', arg(1), 'administer group')) {
+        drupal_add_js(array('gn2_sessions_fc' => array('gn2_sessions_fc_og_admin' => 'Yes')), 'setting');
+      }
+    }
+    global $user;
+    $gid = arg(1);
+    $role = user_role_load_by_name('file admin');
+
+    // Allow group admin to edit files.
+    if (og_user_access('node', $gid, 'administer group') && !user_has_role($role->rid)) {
+      $query = db_insert('users_roles')
+        ->fields(array(
+          'uid' => $user->uid,
+          'rid' => $role->rid,
+        ));
+      $query->execute();
+    }
+    else {
+      $query = db_delete('users_roles')
+        ->condition('uid', $user->uid)
+        ->condition('rid', $role->rid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Handles our add form load.
+ */
+function gn2_sessions_fc_reg_form_loader() {
+  return drupal_get_form('gn2_sessions_fc_add_form');
+}
+
+/**
+ * The update form submit function.
+ */
+function gn2_sessions_fc_update_form_submit($form, &$form_state) {
+  drupal_set_message(t('Sessions updated'));
+}
+
+/**
+ * Creates sessions form.
+ */
+function gn2_sessions_fc_add_form($form, &$form_state) {
+  // Let drupal build up the shell for our form.
+  // Ajax performance is dicey when existing fields are added outside of alter,
+  // so we implement gn2_sessions_fc_form_gn2_sessions_fc_add_form_alter for
+  // this reason.
+  $form = array();
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+    '#weight' => 10,
+    '#suffix' => '<span class="cancelatron">Cancel</span>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function gn2_sessions_fc_form_gn2_sessions_fc_add_form_alter(&$form, &$form_state, $form_id) {
+  // Here we take the shell Drupal built, and add default fields.
+  $subjects = array(
+    'field_title',
+    'field_session_presenter',
+    'field_description',
+    'field_media',
+  );
+
+  if (arg(4) == 'level1') {
+    $subjects = array('field_title', 'field_description');
+  }
+  $fields = array();
+  foreach ($subjects as $subject) {
+    switch (arg(4)) {
+      case 'level1':
+        $level = 'field_session';
+        break;
+
+      case 'level2':
+        $level = 'field_session_day';
+        break;
+
+      case 'level3':
+        $level = 'field_unit';
+        break;
+
+      default:
+        $level = 'field_session_day';
+    }
+
+    $field = field_info_field($subject);
+    $instance = field_info_instance('field_collection_item', $subject, $level);
+    $entity = reset(entity_load('field_collection_item', array(arg(3))));
+    if ($subject == 'field_media') {
+      $items = arg(2) == 'edit' ? $entity->field_media[LANGUAGE_NONE] : array();
+    }
+    elseif ($subject == 'field_title') {
+      $items = arg(2) == 'edit' ? $entity->field_title[LANGUAGE_NONE] : array();
+    }
+    elseif ($subject == 'field_description') {
+      $items = array();
+      if (arg(2) == 'edit') {
+        $entity->field_description[LANGUAGE_NONE][0]['format'] = 'sessions_wysiwyg';
+        $items = $entity->field_description[LANGUAGE_NONE];
+      }
+    }
+    else {
+      $items = arg(2) == 'edit' ? $entity->field_session_presenter[LANGUAGE_NONE] : array();
+    }
+    $fields[] = field_default_form('field_collection_item', $entity, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+  }
+
+  $form += (array) $fields;
+
+}
+
+/**
+ * The fc form submit function.
+ */
+function gn2_sessions_fc_add_form_submit($form, &$form_state) {
+  switch (arg(4)) {
+    case 'level1':
+      $type = 'node';
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_session'));
+      if (arg(2) == 'edit') {
+        $field_collection_item = reset(entity_load('field_collection_item', array(arg(3))));
+      }
+      break;
+
+    case 'level2':
+      $type = 'field_collection_item';
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_session_day'));
+      if (arg(2) == 'edit') {
+        $field_collection_item = reset(entity_load('field_collection_item', array(arg(3))));
+      }
+      unset($field_collection_item->field_media[LANGUAGE_NONE]);
+      unset($field_collection_item->field_session_presenter[LANGUAGE_NONE]);
+      $presenters = array();
+      foreach ($form_state['input']['field_session_presenter'][LANGUAGE_NONE] as $uniques) {
+        $val = gn2_sessions_fc_string_between($uniques['target_id'], '(', ')');
+        if (!empty($val)) {
+          $presenters[] = $val;
+        }
+      }
+      $h = 0;
+      foreach ($presenters as $key => $presenter) {
+        $field_collection_item->field_session_presenter[LANGUAGE_NONE][$h]['target_id'] = $presenter;
+        $h++;
+      }
+      if ($form_state['values']['field_media'][LANGUAGE_NONE][0]['fid'] != 0) {
+        $i = 0;
+        foreach ($form_state['values']['field_media'][LANGUAGE_NONE] as $media) {
+          if ($media['fid'] > 0) {
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['fid'] = $media['fid'];
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['display'] = $media['display'];
+            $i++;
+          }
+        }
+      }
+
+      break;
+
+    case 'level3':
+      $type = 'field_collection_item';
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_unit'));
+      if (arg(2) == 'edit') {
+        $field_collection_item = reset(entity_load('field_collection_item', array(arg(3))));
+      }
+
+      unset($field_collection_item->field_session_presenter[LANGUAGE_NONE]);
+      unset($field_collection_item->field_media[LANGUAGE_NONE]);
+      $presenters = array();
+      foreach ($form_state['input']['field_session_presenter'][LANGUAGE_NONE] as $uniques) {
+        $val = gn2_sessions_fc_string_between($uniques['target_id'], '(', ')');
+        if (!empty($val)) {
+          $presenters[] = $val;
+        }
+      }
+      $h = 0;
+      foreach ($presenters as $key => $presenter) {
+        $field_collection_item->field_session_presenter[LANGUAGE_NONE][$h]['target_id'] = $presenter;
+        $h++;
+      }
+
+      if ($form_state['values']['field_media'][LANGUAGE_NONE][0]['fid'] != 0) {
+        $i = 0;
+        foreach ($form_state['values']['field_media'][LANGUAGE_NONE] as $media) {
+          if ($media['fid'] > 0) {
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['fid'] = $media['fid'];
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['display'] = $media['display'];
+            $i++;
+          }
+        }
+      }
+
+      break;
+
+    default:
+      $type = 'field_collection_item';
+      $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_session_day'));
+      if (arg(2) == 'edit') {
+        $field_collection_item = reset(entity_load('field_collection_item', array(arg(3))));
+      }
+  }
+  if (!empty($form_state['values']['field_title'][LANGUAGE_NONE][0]['value'])) {
+    $field_collection_item->field_title[LANGUAGE_NONE][0]['value'] = $form_state['values']['field_title'][LANGUAGE_NONE][0]['value'];
+  }
+  if (isset($form_state['values']['field_description'][LANGUAGE_NONE][0]['value'])) {
+    $field_collection_item->field_description[LANGUAGE_NONE][0]['value'] = $form_state['values']['field_description'][LANGUAGE_NONE][0]['value'];
+  }
+  if (arg(2) != 'edit') {
+    $entity = reset(entity_load($type, array(arg(3))));
+    $field_collection_item->setHostEntity($type, $entity);
+  }
+
+  $field_collection_item->save(TRUE);
+
+  if (arg(2) != 'edit') {
+
+    entity_save($type, $entity);
+  }
+  $url_args = explode('/', $form['#action']);
+  $arg_three = '';
+  $fragment = $field_collection_item->item_id;
+  switch ($url_args[5]) {
+    case 'level1':
+      if ($url_args[3] == 'add') {
+        $arg_three = $field_collection_item->item_id;
+        $fragment = $field_collection_item->item_id;
+      }
+      else {
+        $arg_three = $url_args[4];
+      }
+      break;
+
+    case 'level2':
+      if ($url_args[3] == 'add') {
+        $arg_three = $url_args[4];
+      }
+      else {
+        $arg_three_raw = db_select('field_data_field_session_day', 'entity_id')
+          ->fields('entity_id')
+          ->condition('field_session_day_value', $url_args[4], '=')
+          ->execute()
+          ->fetchAll();
+        $arg_three = $arg_three_raw[0]->entity_id;
+
+      }
+      break;
+
+    case 'level3':
+      if ($url_args[3] == 'add') {
+
+        $result = db_query('SELECT fd.entity_id FROM field_data_field_session_day fd
+JOIN field_data_field_unit fu ON fu.entity_id = fd.field_session_day_value
+WHERE fu.entity_id = :arg', array(':arg' => $url_args[4]))->fetchField();
+
+        $arg_three = $result;
+      }
+      else {
+        $arg_three_raw = db_select('field_data_field_session_day', 'fd');
+        $arg_three_raw->join('field_data_field_unit', 'fu', "fu.entity_id = fd.field_session_day_value");
+        $arg_three_raw->addField('fd', 'entity_id', 'targetField');
+        $arg_three_raw->condition('fu.field_unit_value', $url_args[4], '=');
+
+        $result = $arg_three_raw->execute()->fetchAll();
+        $arg_three = $result[0]->targetField;
+      }
+      break;
+  }
+
+  $form_state['redirect'] = array(
+    'node/' . $url_args[6],
+    array(
+      'query' => array(
+        'parent' => $arg_three,
+      ),
+      'fragment' => 'session-edit-container-' . $fragment,
+    ),
+  );
+
+  drupal_set_message(t('Form Submitted'));
+
+}
+
+/**
+ * Implements hook_panels_pane_content_alter().
+ */
+function gn2_sessions_fc_panels_pane_content_alter($content, $pane, $args, $contexts) {
+  if (arg(0) == 'node' && is_numeric(arg(1)) || arg(0) == 'gn2_sessions_fc-minipanel') {
+    $node = node_load(arg(1));
+    $start = '';
+    $end = '';
+    if (!empty($node->field_course_dates[LANGUAGE_NONE][0]['value']) && !empty($node->field_course_dates[LANGUAGE_NONE][0]['value2'])) {
+      $start = strtotime($node->field_course_dates[LANGUAGE_NONE][0]['value']);
+      $end = strtotime($node->field_course_dates[LANGUAGE_NONE][0]['value2']);
+    }
+    // Show legacy sessions before defined date, fc style after.
+    if ($node->type == 'course') {
+      $baddies = array(
+        'sessions_created-panel_pane_1',
+        'sessions_created-panel_pane_2',
+      );
+      $baddies[] = 'gn2_sessions_fc-session_form';
+      if ((in_array($pane->subtype, $baddies))) {
+        unset($content->content);
+      }
+    }
+    elseif ($node->type == 'course' && $node->created <= variable_get('gn2_sessions_fc_switch', 1471294800)) {
+      if ($pane->subtype == 'gn2_sessions_fc-session_form') {
+        unset($content->content);
+      }
+    }
+  }
+
+}

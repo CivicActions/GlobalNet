@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_sms_gateway feature.
+ */
+
+include_once 'gn2_sms_gateway.features.inc';

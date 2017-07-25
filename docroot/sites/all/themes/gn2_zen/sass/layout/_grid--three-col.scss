@@ -1,0 +1,23 @@
+/*
+ * For making blocks layout in 3 cols at 760px and up,
+ * 2 cols for medium and 1 col for small screens
+ */
+
+.three-col-responsive-grid {
+  margin: 1em 0;
+  vertical-align: top;
+  width: auto;
+  min-width: 200px;
+  display: block;
+  /*Media Queries*/
+  @include breakpoint($medium-screen-and-up){
+    display: inline-block;
+    width: 32%;
+    // display: block;
+    // width: 33.33%;
+    // float: left;
+  }
+  .panels-ipe-portlet-wrapper {
+    margin: 0 !important;
+  }
+}

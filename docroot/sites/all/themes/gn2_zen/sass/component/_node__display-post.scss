@@ -1,0 +1,10 @@
+.node-type-post,
+.page-node.node-type-post {
+  .node-header-links {
+    .print,
+    .share,
+    .download_pdf {
+      display: none !important;
+    }
+  }
+}

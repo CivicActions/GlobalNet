@@ -1,0 +1,6 @@
+name = GlobalNET Manager Access
+description = Organization HR and Org Manager user access functions
+dependencies[] = og
+dependencies[] = gn2_simple_access
+files[] = gn2_manager_access_plugin_access.inc
+core = 7.x

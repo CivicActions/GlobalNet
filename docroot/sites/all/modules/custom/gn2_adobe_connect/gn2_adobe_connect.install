@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Gn2_adobe_connect module installation.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_adobe_connect_schema() {
+
+  $schema['gn2_adobe_connect_meetings'] = array(
+    'fields' => array(
+      'delta' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Message delta',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id / host',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'timestamp',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'nid',
+        'default' => 1,
+        'description' => 'Node id where created',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'title' => 'name',
+        'description' => 'Meeting name',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'title' => 'type',
+        'description' => 'Private or Public',
+      ),
+      'start' => array(
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'length' => 128,
+        'not null' => TRUE,
+        'title' => 'start',
+        'description' => 'Start time',
+      ),
+      'end' => array(
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'length' => 128,
+        'not null' => TRUE,
+        'title' => 'end',
+        'description' => 'End time',
+      ),
+      'link' => array(
+        'type' => 'varchar',
+        'length' => 256,
+        'default' => '',
+        'title' => 'link',
+        'description' => 'Link to meeting',
+      ),
+    ),
+    'primary key' => array('delta'),
+  );
+
+  return $schema;
+}

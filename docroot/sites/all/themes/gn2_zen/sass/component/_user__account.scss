@@ -1,0 +1,46 @@
+.page-user {
+  .pane-user-user-relationships-ui {
+    h3 {
+      border-bottom: 3px solid $light-blue-gray;
+      padding-bottom: 5px;
+    }
+    dt {display: none;}
+    ul {margin: 0; padding: 0;}
+    li {list-style-type: none;}
+  }
+}
+
+/*
+ * Overriding the panels layout using zen grids
+ */
+.page-account,
+.page-user {
+  .gn-two-col-stackedflipped {
+    @include breakpoint($medium-screen-and-up) {
+      > .top,
+      > .footer {
+        @include zen-grid-item($zen-column-count, 1);
+      }
+      > .main {
+        @include zen-grid-item(12, 5);
+        @include zen-nested-container();
+      }
+      .main-top,
+      .main-bottom {
+        @include zen-grid-item($zen-column-count, 1);
+      }
+      > .sidebar {
+        @include zen-grid-item(4, 1);
+        clear: none;
+      }
+    }
+  }
+  .panels-layout--column-inner {
+    @include breakpoint($medium-screen-and-up) {
+      padding-right: 2em;
+    }
+    @include breakpoint($large-screen-and-up) {
+      padding-right: 2em;
+    }
+  }
+}

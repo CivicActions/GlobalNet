@@ -1,0 +1,149 @@
+/**
+ * @file
+ * Positioning for a organization custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/**
+ * Partial for adding standard breakpoint variables
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 16, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org,
+.main,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar,
+.sidebar__top,
+.sidebar__logo,
+.sidebar__title,
+.sidebar__bottom {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.org:before, .panels-layout.org:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.org:after {
+  clear: both;
+}
+
+/* line 34, ../../../sass/layout/panels-layouts/org_layout.scss */
+.sidebar__logo,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar__top,
+.sidebar__bottom {
+  clear: left;
+}
+
+/* line 47, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org .main {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  padding-left: 0;
+  padding-right: 0;
+  clear: both;
+}
+/* line 52, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org .main__top,
+.panels-layout.org .main__upper-tabs,
+.panels-layout.org .main__active-communities,
+.panels-layout.org .main__lower-tabs,
+.panels-layout.org .sidebar__top,
+.panels-layout.org .sidebar__bottom {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+/* line 61, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org .sidebar {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  padding-left: 0;
+  padding-right: 0;
+  clear: both;
+}
+/* line 66, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org .sidebar__logo {
+  float: left;
+  width: 16.66667%;
+  margin-left: 0%;
+  margin-right: -16.66667%;
+}
+/* line 69, ../../../sass/layout/panels-layouts/org_layout.scss */
+.panels-layout.org .sidebar__title {
+  float: left;
+  width: 83.33333%;
+  margin-left: 16.66667%;
+  margin-right: -100%;
+}
+
+@media (min-width: 48em) {
+  /* line 76, ../../../sass/layout/panels-layouts/org_layout.scss */
+  .panels-layout.org .main {
+    float: left;
+    width: 66.66667%;
+    margin-left: 0%;
+    margin-right: -66.66667%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* line 80, ../../../sass/layout/panels-layouts/org_layout.scss */
+  .panels-layout.org .main__top,
+  .panels-layout.org .main__upper-tabs,
+  .panels-layout.org .main__active-communities,
+  .panels-layout.org .main__lower-tabs,
+  .panels-layout.org .sidebar__top,
+  .panels-layout.org .sidebar__bottom {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+  /* line 88, ../../../sass/layout/panels-layouts/org_layout.scss */
+  .panels-layout.org .sidebar {
+    float: left;
+    width: 33.33333%;
+    margin-left: 66.66667%;
+    margin-right: -100%;
+    padding-left: 0;
+    padding-right: 0;
+    clear: none;
+  }
+  /* line 93, ../../../sass/layout/panels-layouts/org_layout.scss */
+  .panels-layout.org .sidebar__logo {
+    float: left;
+    width: 16.66667%;
+    margin-left: 0%;
+    margin-right: -16.66667%;
+  }
+  /* line 96, ../../../sass/layout/panels-layouts/org_layout.scss */
+  .panels-layout.org .sidebar__title {
+    float: left;
+    width: 83.33333%;
+    margin-left: 16.66667%;
+    margin-right: -100%;
+  }
+}
+
+/*# sourceMappingURL=org_layout.css.map */

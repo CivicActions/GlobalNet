@@ -1,0 +1,5 @@
+name = "GN2 Theme Parts Swap"
+description = "Allows group admins to change specific theme components inside of group."
+core = 7.x
+dependencies[] = og_menu
+package = GlobalNET

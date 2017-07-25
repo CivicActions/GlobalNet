@@ -1,0 +1,153 @@
+/*
+ * Styling the Media Lists Page.
+ * This is the page shown when Folder content is set to display
+ * as a list.
+ */
+
+$checkbox-fontsize: 1em;
+$checkbox-label-lineheight-factor: 1.25;
+$checkbox-label-lineheight: $checkbox-fontsize * $checkbox-label-lineheight-factor;
+
+$checkbox-height: $checkbox-label-lineheight;
+$checkbox-paddingtop: $checkbox-label-lineheight - $checkbox-fontsize;
+
+$checkbox-marginright: $checkbox-label-lineheight / 2;
+$checkbox-marginleft: $checkbox-marginright;
+$checkbox-label-paddingright: $checkbox-marginright * 2;
+
+.pane-gn2-file-download-gallery-media {
+
+  input.form-checkbox {
+    padding: 0;
+    // margin-right: $checkbox-marginright;
+    // margin-left: $checkbox-marginleft;
+  }
+  
+  .form-item { 
+    margin: 0;
+  }
+  
+  .form-type-checkbox {
+    /* This set of code for the input and label stops the label from dropping
+     * below the checkbox when the label text wraps to a second line */
+    input.form-checkbox {
+      float: left;
+      margin-right: $checkbox-marginright;
+      .gn2_file_edit_link {
+        margin-top: 4px;
+      }
+      // height: $checkbox-height;
+      margin-top: $checkbox-paddingtop;
+      overflow: hidden;
+    }
+    label {
+      display: block;
+      overflow: auto;
+      vertical-align: top;
+      @include breakpoint($small-screen-and-up) {
+        padding-right: $checkbox-label-paddingright;
+      }
+      a {
+        font-size: $checkbox-fontsize;
+        line-height: $checkbox-label-lineheight;
+      }
+    }
+  }
+
+  //Row Wrapper.
+  .gn2_file_download_link-wrap {
+    background-color: $white;
+    padding: .5em 0 .3em;
+    &:first-of-type {
+      background-color: transparent;
+    }
+    &:nth-child(even) {
+      background: url(../images/bg-diagonal-tile-grey.png);
+    }
+    &:last-of-type {
+      margin-bottom: 1em;
+    }
+  }
+  
+  // View File link.
+  /*
+  .gn2_file_download_link {
+    text-align: left;
+    padding-left: 3%;
+    padding-top: 1%;
+    &.sorter {
+      padding-top: 0;
+    }
+  }
+  */
+
+  /*====== Layout Styles ==========*/
+  
+    $zen-gutter-width: 0px;
+    $zen-column-count: 12 !global;
+    .gn2_file_download_link-wrap {
+      @include zen-grid-container();
+      @include zen-grid-item-base;
+      .form-type-checkbox,
+      .gn2_file_upload_date,
+      .gn2_file_info,
+      .gn2_file_edit_link {
+        @include zen-grid-item-base;
+      }
+    }
+
+    .gn2_file_download_link-wrap {
+
+      /* Small Screen */
+      @include breakpoint($small-screen-and-down) {
+        .form-type-checkbox   { @include zen-grid-item(12, 1);  }
+        .gn2_file_upload_date { @include zen-grid-item(5, 1);   }
+        .gn2_file_info        { @include zen-grid-item(4, 6);   }
+        .gn2_file_edit_link   { @include zen-grid-item(2, 11);  }
+      }
+
+      /* Medium screen and up */
+      @include breakpoint($medium-screen-and-up) {
+        .form-type-checkbox   { @include zen-grid-item(5, 1);   }
+        .gn2_file_upload_date { @include zen-grid-item(3, 6)    }
+        .gn2_file_info        { @include zen-grid-item(3, 9);   }
+        .gn2_file_edit_link   { @include zen-grid-item(1, 12);  }
+        > :first-child {
+          padding-left: $checkbox-marginleft;
+        }
+      }
+
+      /* Large screen and up */
+      /*
+      @include breakpoint($large-screen-and-up) {
+        .form-type-checkbox   { @include zen-grid-item(5, 1);   }
+        .gn2_file_upload_date { @include zen-grid-item(3, 5)    }
+        .gn2_file_info        { @include zen-grid-item(3, 8);   }
+        .gn2_file_edit_link   { @include zen-grid-item(2, 11);  }
+      }
+      */
+
+    }
+  
+} // END pane-gn2-file-download-gallery media (Block wrapper).
+
+
+
+
+
+// Global Styles for the select all checkbox in file download blocks
+
+input#custom-select-all {
+  float: left;
+  margin-left: $checkbox-marginleft;
+  margin-right: 8px;
+  margin-top: 4px;
+  + label {
+    display: block;
+    overflow: auto;
+    vertical-align: middle;
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+  }
+}

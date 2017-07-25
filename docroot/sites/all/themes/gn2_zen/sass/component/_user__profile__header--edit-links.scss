@@ -1,0 +1,19 @@
+/*
+ * Styling the User profile Header Dropdown edit links
+ */
+.user-edit__dropdown-menu{
+  ul{
+    margin: 100px auto 0px;
+    padding: 0px 10px;
+    width: 960px;
+    background: $white;
+    height: 50px;
+    border-radius: 3px;
+    font-size: 14px;
+
+    /* 	Dropdown shadow */
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.3);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.3);
+    
+  }//end ul
+}// End wrapper

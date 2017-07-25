@@ -1,0 +1,11 @@
+#ewheel-form {
+  max-width: 320px;
+  margin: auto;
+  text-align: center;
+  input {
+    margin: 0 10px;
+    &#CALCULATE {
+      margin-top: 20px;
+    }
+  }
+}

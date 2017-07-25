@@ -1,0 +1,16 @@
+.view-gn2-notifications {
+  tr {
+    border-bottom: thin solid $gray-c;
+  }
+  ul.pager {
+    li.pager-item,
+    li.pager-first,
+    li.pager-previous,
+    li.pager-next,
+    li.pager-last,
+    li.pager-current,
+    li.pager-ellipsis {
+      border-left: none;
+    }
+  }
+}

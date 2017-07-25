@@ -1,0 +1,43 @@
+***************
+*** 14,30 ****
+  }
+  
+  /**
+-  * Implements hook_theme().
+-  */
+- function charts_google_theme() {
+-   $info['charts_google_chart'] = array(
+-     'render element' => 'element',
+-     'file' => 'charts_google.inc',
+-   );
+-   return $info;
+- }
+- 
+- /**
+   * Implements hook_library().
+   */
+  function charts_google_library() {
+--- 14,19 ----
+  }
+  
+  /**
+   * Implements hook_library().
+   */
+  function charts_google_library() {
+***************
+*** 33,39 ****
+      'website' => 'https://google-developers.appspot.com/chart/',
+      'version' => '1.0',
+      'js' => array(
+-       array('data' => 'https://www.google.com/jsapi?autoload=' . urlencode('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'), 'type' => 'external'),
+      ),
+    );
+    $library['charts_google'] = array(
+--- 22,28 ----
+      'website' => 'https://google-developers.appspot.com/chart/',
+      'version' => '1.0',
+      'js' => array(
++       array('data' => 'https://www.google.com/jsapi', 'type' => 'external'),
+      ),
+    );
+    $library['charts_google'] = array(

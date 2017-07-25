@@ -1,0 +1,5 @@
+name = GN Group Admin
+description = Group admin menu and functions
+dependencies[] = og
+//  dependencies[] = clone
+core = 7.x

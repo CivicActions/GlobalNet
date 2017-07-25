@@ -1,0 +1,573 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_file_download.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_file_download_menu() {
+  $items['sort-files-list-form/%/%/%'] = array(
+    'page callback' => '_gn2_file_download_sort_files_list',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['download-grid-files/%'] = array(
+    'page callback' => '_gn2_file_download_grid_bulk_files',
+    'page arguments' => array(1),
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Our sort function.
+ */
+function _gn2_file_download_sort_files_list($field, $order) {
+  $resp = new stdClass();
+  $resp->form = '';
+
+  $params = new stdClass();
+  $params->field = $field;
+  $params->order = $order;
+
+  $resp->form = gn2_file_download_media_download($params);
+
+  $params->order = ($order == "ASC") ? "DESC" : "ASC";
+  $resp->params = $params;
+  drupal_json_output($resp);
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_file_download_block_info() {
+  $blocks['associated_media'] = array(
+    'info' => t('Associated Media File Downloads'),
+    'status' => TRUE,
+    'region' => 'content',
+  );
+
+  $blocks['gallery_media'] = array(
+    'info' => t('Resource Folder list view'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_file_download_form_alter(&$form, &$form_state, $form_id) {
+
+  if (substr($form_id, 0, 11) === "media_edit_") {
+    if (!empty($form['field_file_image_title_text'])) {
+      $form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
+      $form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
+    }
+    // Assign default alt and title values.
+    if (!empty($form['field_title'])) {
+      $form['field_title'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
+    }
+
+    if (!empty($form['field_file_document_title_text'])) {
+      $form['field_file_document_title_text'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
+    }
+
+    $destination = explode('/', $_GET['destination']);
+    $form['multi_media_parent_node'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $destination[1],
+    );
+    $options = array(
+      0 => t('Keep this item'),
+      1 => t('Remove this item'),
+    );
+
+    $form['multi_media_remove'] = array(
+      '#title' => t('File Status'),
+      '#type' => 'radios',
+      '#options' => $options,
+      '#default_value' => 0,
+      '#weight' => 110,
+    );
+    // We don't want vert tabs with multiples.
+    $form['additional_settings'] = array();
+    $form['field_file_image_caption'] = array();
+    $form['field_description'] = array();
+    $form['field_tags'] = array();
+    $form['redirect'] = array();
+    $form['destination'] = array();
+    $form['user'] = array();
+    $form['#after_build'][] = 'gn2_file_download_form_after_build';
+    if (!empty($form['field_file_image_alt_text'])) {
+      // On Media multi forms, disable the alt req.
+      $form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#required'] = FALSE;
+    }
+    $form['actions']['submit']['#submit'][] = 'gn2_file_download_media_bulk_upload_edit_multiple_form_alter_submit';
+  }
+}
+
+/**
+ * Our hook_form_alter after_build function.
+ */
+function gn2_file_download_form_after_build(&$form, &$form_state) {
+  // Take out the path alias field on the media multi.
+  unset($form['path']);
+  return $form;
+}
+
+/**
+ * Implements hook_media_bulk_upload_edit_multiple_form_alter().
+ */
+function gn2_file_download_media_bulk_upload_edit_multiple_form_alter(&$form) {
+  drupal_add_js(drupal_get_path('module', 'gn2_file_download') . '/gn2_file_download.js');
+  // Send back to node on cancel.
+  $destination = explode('/', $_GET['destination']);
+  $form['buttons']['cancel']['#href'] = $destination[0] . '/' . $destination[1];
+  $form['actions']['delete']['#access'] = TRUE;
+
+  $form['buttons']['Save']['#submit'][] = 'gn2_file_download_media_bulk_upload_edit_multiple_form_alter_submit';
+
+}
+
+/**
+ * Implements hook_media_bulk_upload_edit_multiple_form_alter().
+ */
+function gn2_file_download_media_bulk_upload_edit_multiple_form_alter_submit(&$form, &$form_state) {
+  // Send back top node on save.
+  $_GET['destination'] = '/node/' . $form_state['values']['multi_media_parent_node'];
+
+  // Disassociate files from node that user has picked from form.
+  if ($form_state['values']['multi_media_remove'] == 1) {
+    db_delete('field_data_media_gallery_file')
+      ->condition('entity_id', $form_state['values']['multi_media_parent_node'])
+      ->condition('media_gallery_file_fid', $form_state['values']['fid'])
+      ->execute();
+  }
+  // Ensure old associations are wiped from multi media form.
+  cache_clear_all('*', 'cache_entity_node', TRUE);
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Changing the text of the 'edit media' tab to reference files instead.
+ */
+function gn2_file_download_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if ($node->type == 'media_gallery') {
+      foreach ($data['tabs'] as $key1 => $tabs) {
+        foreach ($tabs['output'] as $key2 => $item) {
+          if (($item['#link']['path'] == 'node/%/edit') && ($item['#link']['title'] == 'Edit')) {
+            $data['tabs'][$key1]['output'][$key2]['#link']['title'] = 'Edit folder';
+          }
+          if (($item['#link']['path'] == 'node/%/edit') && ($item['#link']['title'] == 'Edit gallery')) {
+            $data['tabs'][$key1]['output'][$key2]['#link']['title'] = 'Edit folder';
+          }
+          if (($item['#link']['path'] == 'node/%/multiedit') && ($item['#link']['title'] == 'Edit media')) {
+            $data['tabs'][$key1]['output'][$key2]['#link']['title'] = 'Edit files';
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_file_download_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'associated_media':
+      $node = node_load(arg(1));
+      $data = drupal_get_form('gn2_file_download_form');
+
+      if (!empty($data['gn2_file_download']['options'])) {
+        $block['subject'] = '<h3>' . t('Associated Media') . '</h3>';
+        $block['content'] = $data;
+      }
+      break;
+
+    case 'gallery_media':
+      $block['subject'] = '';
+      $block['content'] = gn2_file_download_media_download();
+      $block['content'] .= t('<p class="description">Click the file name to download or view a single file.
+                             To download multiple files, check the box for each file you want to download
+                             and click Download Selected to create a .zip file to save to your drive.</p>',
+        array(':description' => 'description'));
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_form().
+ *
+ * This function is for news items etc that do not use the media gallery module.
+ */
+function gn2_file_download_form($form, &$form_state, $eid = NULL) {
+
+  $form = array();
+  if ($eid != NULL) {
+    $entity = reset(entity_load('field_collection_item', array($eid)));
+    $files = !empty($entity->field_media[LANGUAGE_NONE]) ? $entity->field_media[LANGUAGE_NONE] : '';
+  }
+  else {
+    $node = node_load(arg(1));
+    if (!empty($node->field_media[LANGUAGE_NONE])) {
+      $files = $node->field_media[LANGUAGE_NONE];
+    }
+  }
+  if (!empty($files)) {
+    foreach ($files as $file) {
+      $type_header = explode('/', $file['filemime']);
+      $type = $type_header[1];
+
+      if ($type == 'plain') {
+        $type = str_replace($type, 'plain', 'txt');
+      }
+      $size_info = ' (' . round($file['filesize'] / 1000000, 3) . ' MB)';
+      $filename = decode_entities($file['filename']);
+
+      $form['gn2_file_download']['options'][$file['fid']] = array(
+        '#prefix' => '<div class="gn2_file_download_link-wrap">',
+        '#type' => 'checkbox',
+        '#title' => l($filename, file_create_url($file['uri']),
+          array(
+            'attributes' =>
+              array(
+                'target' => '_blank',
+              ),
+          )
+        ),
+        '#suffix' => '<div class="gn2_file_download_link file"><div class="inner">' . l(t('View'), file_create_url($file['uri']),
+            array(
+              'attributes' =>
+                array(
+                  'target' => '_blank',
+                ),
+            )
+          ) . $size_info . '</div></div></div>',
+      );
+    }
+    $form['gn2_file_download']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Download selected'),
+    );
+    $form['#submit'][] = 'gn2_file_download_form_submit';
+
+    return $form;
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Callback for gn2_file_download submit.
+ */
+function gn2_file_download_form_submit($form, &$form_state) {
+  $options = $form['gn2_file_download']['options'];
+  gn2_file_download_create_zip($options);
+}
+
+/**
+ * Create download function.
+ *
+ * @return array
+ *   An array of
+ */
+function gn2_file_download_media_download($ops = NULL) {
+
+  $view = views_get_view('resource_folders');
+
+  if (is_object($view)) {
+    $view->set_display('panel_pane_1');
+    if (!is_null($ops)) {
+      $sorts = $view->display_handler->get_option('sorts');
+
+      if ($ops->field == 'filesize') {
+        unset($sorts['timestamp']);
+        unset($sorts['filename']);
+      }
+      else {
+        if ($ops->field == 'filename') {
+          unset($sorts['timestamp']);
+        }
+      }
+
+      $sorts[$ops->field]['order'] = $ops->order;
+      $view->display_handler->set_option('sorts', $sorts);
+    }
+
+    $args = array(arg(1));
+    $view->set_arguments($args);
+    $view->pre_execute();
+    $view->execute();
+
+    $files = $view->result;
+  }
+
+  if ($files && !empty($files[0]->field_data_media_gallery_file_media_gallery_file_fid)) {
+    $form = drupal_get_form('gn2_file_download_media_form', $files);
+
+    return render($form);
+  }
+
+}
+
+/**
+ * Form constructor for the media download form.
+ *
+ * @see gn2_file_download_media_form_submit()
+ *
+ * This function is for files in folders that use the media gallery module.
+ *
+ * @ingroups forms
+ */
+function gn2_file_download_media_form($form, &$form_state, $files) {
+  drupal_add_js(drupal_get_path('module', 'gn2_file_download') . '/gn2_file_download.js');
+  $form = array();
+  if (is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    $can_edit = ($node->type == 'media_gallery') ? node_access('update', $node) : FALSE;
+    // If 0 then Grid, if 1 then List layout.
+    $layout = $node->field_folder_layout[LANGUAGE_NONE][0]['value'];
+  }
+
+  foreach ($files as $key => $file) {
+    if ($layout == 1) {
+      $form['gn2_file_download']['options']['#prefix'] = '<input type="checkbox" id="custom-select-all" name="select-all" class="form-checkbox">';
+      $form['gn2_file_download']['options']['#prefix'] .= '<label class="option" for="custom-select-all">';
+      $form['gn2_file_download']['options']['#prefix'] .= t('Select All');
+      $form['gn2_file_download']['options']['#prefix'] .= '</label>';
+      $form['gn2_file_download']['options']['#prefix'] .= '<div class="gn2_file_download_link-wrap">' .
+        '<div class="form-type-checkbox"><a href="#" data-field="filename" data-sort="DESC" class="sort filename">File Name</a></div>' .
+        '<div class="gn2_file_upload_date"><a href="#" data-field="timestamp"  data-sort="DESC" class="sort timestamp">Date Created</a></div>' .
+        '<div class="gn2_file_edit_link"></div>' .
+        '<div class="gn2_file_info sorter"><a href="#" data-field="filesize"  data-sort="DESC" class="sort size">File Size</a></div>' .
+        '<span class="node-nid" data-nid="' . $node->nid . '"></span></div>';
+
+      _gn2_file_download_list_layout_item($file, $node, $can_edit, $form);
+    }
+    else {
+      $form['gn2_file_download']['options']['#prefix'] = '<div class="field-name-media-gallery-file mg-col mg-col-4"><div class="field-items">';
+      $form['gn2_file_download']['options']['#prefix'] .= '<input type="checkbox" id="custom-select-all" name="select-all" class="form-checkbox">';
+      $form['gn2_file_download']['options']['#prefix'] .= '<label class="option" for="custom-select-all">';
+      $form['gn2_file_download']['options']['#prefix'] .= t('Select All');
+      $form['gn2_file_download']['options']['#prefix'] .= '</label>';
+      $form['gn2_file_download']['options']['#suffix'] = '</div></div>';
+
+      _gn2_file_download_grid_layout_item($file, $node, $form);
+    }
+  }
+  $form['#attributes']['class'][] = 'file-download';
+
+  $form['gn2_file_download']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Download selected'),
+  );
+  $form['#submit'][] = 'gn2_file_download_form_submit';
+
+  return $form;
+}
+
+/**
+ * Helper function to render as Grid layout.
+ */
+function _gn2_file_download_grid_layout_item($file, $node, &$form) {
+  $file = file_load($file->field_data_media_gallery_file_media_gallery_file_fid);
+  $file_info = ' (' . format_size($file->filesize) . ')';
+  $path = file_create_url($file->uri);
+  if ($file->type == "image") {
+    $style_path = image_style_url('media_gallery__160x160_', $file->uri);
+    $image = '<img title="' . $file->filename . '" src="' . $style_path . '">';
+  }
+  else {
+    $variables['file'] = $file;
+    $image = gn2_zen_file_icon($variables);
+  }
+  if (!empty($path)) {
+    $title = $file->filename;
+    if (strlen($title) > 15) {
+      $title = substr($title, 0, 11) . '...';
+    }
+    $form['gn2_file_download']['options'][$file->fid] = array(
+      '#prefix' => '<div class="field-item">',
+      '#type' => 'checkbox',
+      '#title' => $title,
+      '#suffix' => '<a href="' . $path . '" target="_blank">' . $image . '</a></div>',
+    );
+  }
+}
+
+/**
+ * Helper function to render as List layout.
+ */
+function _gn2_file_download_list_layout_item($file, $node, $can_edit, &$form) {
+  $file = file_load($file->field_data_media_gallery_file_media_gallery_file_fid);
+  $file_info = format_size($file->filesize);
+  $path = file_create_url($file->uri);
+  
+  $edit_link = l(t('Edit'), 'admin/content/file/edit-multiple/' . $file->fid, array(
+    'query' => array(
+      'destination' => 'node/' . $node->nid,
+    ),
+  ));
+  $edit = ($can_edit) ? $edit_link : NULL;
+  if (!empty($path)) {
+    $title = $file->filename;
+    $date = $file->timestamp;
+    $real_date = date('M j, Y', $date);
+    $link_options = array('html' => TRUE);
+    if ($file->filemime === 'application/pdf') {
+      $link_options['attributes']['target'] = '_blank';
+    }
+    else {
+      $link_options['attributes']['download'] = '';
+    }
+    $form['gn2_file_download']['options'][$file->fid] = array(
+      '#prefix' => '<div class="gn2_file_download_link-wrap">',
+      '#type' => 'checkbox',
+      '#title' => l($title, $path, $link_options),
+      '#suffix' =>
+        '<div class="gn2_file_upload_date">' . $real_date . '</div>' .
+        '<div class="gn2_file_info">' . $file_info . '</div>' .
+        '<div class="gn2_file_edit_link">' . $edit . '</div>' .
+      '</div>',
+    );
+  }
+}
+
+/**
+ * Implements hook_file_download_access_alter().
+ */
+function gn2_file_download_file_download_access_alter(&$grants, $file_item, $entity_type) {
+  global $user;
+  if (isset($_SESSION['og_context'])) {
+    if (og_is_member('node', $_SESSION['og_context']['gid'], 'user', $user)) {
+      $grants['entity'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Form submission handler for media download form.
+ *
+ * @see gn2_file_download_media_download()
+ */
+function gn2_file_download_media_form_submit($form, $form_state) {
+
+  $options = $form_state['values']['options'];
+
+  gn2_file_download_create_zip($options);
+
+}
+
+/**
+ * Creates the zip file for downloading.
+ *
+ * @param array $options
+ *   An array of files to add to the zip.
+ */
+function gn2_file_download_create_zip(array $options) {
+  $archive_uri = 'temporary://gn_download_temp_' . REQUEST_TIME . '.zip';
+  $zip = new ZipArchive();
+  if ($zip->open(drupal_realpath($archive_uri), ZipArchive::CREATE) === TRUE) {
+    foreach ($options as $key => $value) {
+      if (is_int($key) && $value['#value'] == 1) {
+        $file = file_load($key);
+        $zip->addFile(drupal_realpath($file->uri), $file->filename);
+      }
+    }
+    $zip->close();
+    drupal_add_http_header('Content-disposition', 'attachment; filename=' . $archive_uri);
+    readfile($archive_uri);
+    exit();
+  }
+
+}
+
+/**
+ * Helper function to Update the parent Gallery after an Intem is removed.
+ */
+function _gn2_file_download_update_media_gallery($form, &$form_state) {
+  $node = node_load($form['nid']['#value']);
+  node_save($node);
+}
+
+/**
+ * RD-2739, Helper function to download files in Grid Layer view.
+ */
+function _gn2_file_download_grid_bulk_files($ids) {
+  $ids = explode('-', $ids);
+  $fixed_ids = array();
+  if (isset($ids)) {
+    for ($i = 0; $i <= count($ids); $i++) {
+      $temp = $ids[$i];
+      $fixed_ids[$temp] = array('#value' => 1);
+    }
+    gn2_file_download_create_zip($fixed_ids);
+  }
+}
+
+/**
+ * Implements hook_init();
+ */
+function gn2_file_download_init() {
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if ($node->type == 'media_gallery') {
+      drupal_add_js(drupal_get_path('module', 'gn2_file_download') . '/gn2_file_download.js');
+    }
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_file_download_form_media_gallery_node_form_alter(&$form, &$form_state, $form_id) {
+  // Set the rows number to 99; @see RD-3972.
+  $form['media_gallery_rows'][LANGUAGE_NONE][0]['value']['#default_value'] = 99;
+}
+
+/**
+ * Implements hook_clamav_file_is_scannable().
+ */
+function gn2_file_download_clamav_file_is_scannable($file) {
+  // Exempt files on the edit multiple form.
+  if (arg(3) == 'edit-multiple') {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function gn2_file_download_entity_view_alter(&$build, $type) {
+  $view_mode = $build['#view_mode'];
+  if ($type === 'file' && $view_mode === 'media_gallery_thumbnail') {
+    // Add a checkbox to each file.
+    $build['#suffix'] = '<input class="file-download" type="checkbox" name="file-download" value="' . $build['#file']->fid . '"> ';
+    $build['#suffix'] .= t('File: ') . $build['#file']->filename;
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function gn2_file_download_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name === 'resource_folders' && $display_id === 'panel_pane_2') {
+    // Bulk download js.
+    drupal_add_js(drupal_get_path('module', 'gn2_file_download') . '/gn2_file_download.bulk.js', array('every_page' => FALSE));
+  }
+}

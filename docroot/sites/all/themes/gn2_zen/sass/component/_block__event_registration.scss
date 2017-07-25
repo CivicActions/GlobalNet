@@ -1,0 +1,36 @@
+.block-event-registration {
+  background-color: $gray-f2;
+  border: 1px solid $solitude;
+  padding: 23px;
+  text-align: center;
+
+  h2.pane-title {
+    font-size: 19px;
+    font-weight: normal;
+    margin-top: 0;
+  }
+
+  .button-go-to-event {
+    a {
+      @include display_font;
+      line-height: .7;
+      border-radius: 0.25em 0.25em 0.25em 0.25em;
+      -moz-border-radius: 0.25em 0.25em 0.25em 0.25em;
+      -webkit-border-radius: 0.25em 0.25em 0.25em 0.25em;
+      padding: 0.4em 0.5em 0.2em;
+      display: inline-block;
+      text-align: center;
+      background-color: $very-dark-gray;
+      border: 2px solid $titanium;
+      color: $light-gray;
+      font-size: 1.3em;
+      margin: .3em 0 0;
+    }
+  }
+}
+
+.page-node.node-type-event.og-context-node{
+  .pane-panels-mini.block-event-registration {
+    padding: 0px;
+  }
+}

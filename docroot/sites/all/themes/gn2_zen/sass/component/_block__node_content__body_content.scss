@@ -1,0 +1,8 @@
+.pane-node-content-body-content-block {
+  h1, h2, h3, h4 {
+    &.pane-title {
+      @include h3_default;
+      @include subheading_full;
+    }
+  }  
+}

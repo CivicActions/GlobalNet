@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install file.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_og_schema() {
+  $schema = array();
+  $schema['gn2_og_membership_permission'] = array(
+    'description' => 'Stores Group Access settings',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Group Id',
+      ),
+      'grouptype' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Group Type',
+      ),
+    ),
+    'primary key' => array('nid'),
+
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Renames gn2_og_membership_membership_permission table.
+ */
+function gn2_og_update_7000() {
+  db_rename_table('gn2_og_membership_membership_permission', 'gn2_og_membership_permission');
+}

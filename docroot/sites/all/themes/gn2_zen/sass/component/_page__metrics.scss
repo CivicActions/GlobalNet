@@ -1,0 +1,56 @@
+.page-node-metrics {
+  h4 {
+    &.pane-title {
+      margin: 15px 0 10px;
+    }
+  }
+  .pane-group-statistics-panel-pane-2 {
+    table {
+      caption {
+        text-transform: uppercase;
+        text-align: left;
+        margin-top: 10px;
+      }
+      thead {
+        th {
+          &.views-field-og-simplestats-user-count {
+            font-weight: normal;
+            font-size: 0.9em;
+            text-align: center;
+          }
+          &.views-field-og-simplestats-node-count {
+            font-weight: normal;
+            font-size: 0.9em;
+            text-align: center;
+          }
+        }
+      }
+      td {
+        &.views-field-og-simplestats-user-count {
+          text-align: center;
+        }
+        &.views-field-og-simplestats-node-count {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .pane-gn2-metrics-group-metrics-chart {
+    padding-top: 20px;
+  }
+}
+
+// GA metrics
+.view-metrics-ga > .view-content {
+  table > caption {
+     padding: 20px 10px 10px;
+     border-bottom: 3px solid $lighter-blue-gray;
+     margin-bottom: 10px;
+  }
+  > .views-table .views-field {
+    vertical-align: top;
+  }
+  td .view-filters {
+    display: none;
+  }
+}

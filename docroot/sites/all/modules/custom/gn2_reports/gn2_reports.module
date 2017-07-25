@@ -1,0 +1,787 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_reports feature.
+ */
+
+include_once 'gn2_reports.features.inc';
+include_once 'gn2_reports.queries.inc';
+include_once 'gn2_reports.range.inc';
+include_once 'gn2_reports.countries.inc';
+include_once 'includes/role_watchdog.inc';
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_reports_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    if ($form['#id'] == 'views-exposed-form-report-user-page') {
+      $form['combine']['#type'] = 'textarea';
+      $form['combine']['#resizable'] = FALSE;
+      $form['combine']['#rows'] = 2;
+    }
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_reports_menu() {
+  $items = array();
+
+  $items['admin/reports/activity/site-activity-email'] = array(
+    'access arguments' => array('access site reports'),
+    'description' => 'Site activity report',
+    'page callback' => 'gn2_reports_block_view',
+    'title' => 'Site Activity Report',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/reports/activity/site-activity-range'] = array(
+    'access arguments' => array('access site reports'),
+    'description' => 'Site activity range report',
+    'page callback' => 'gn2_reports_block_view',
+    'title' => 'Site Activity Range Report',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/reports/activity/engagement'] = array(
+    'access arguments' => array('access site reports'),
+    'description' => 'Site user engagement google bar graph',
+    'page callback' => 'gn2_reports_block_view',
+    'title' => 'Site user engagement chart',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['role_watchdog/export_csv'] = array(
+    'access arguments' => array('access content'),
+    'description' => 'Exports CSV - OG Users role changes',
+    'page callback' => '_gn2_reports_og_role_watchdog_export_csv',
+    'title' => 'Export to CSV',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['node/%node/role_watchdog'] = array(
+    'title' => 'Role grants report',
+    'description' => 'View changes to role assignments for users.',
+    'page callback' => '_gn2_reports_role_watchdog_report',
+    'access callback' => 'gn2_admin_dashboard_access',
+    'access arguments' => array(1),
+    'file' => 'includes/role_watchdog.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_reports_block_info() {
+  $blocks = array();
+  $blocks['gn2_reports_email_form'] = array(
+    'info' => t('Gn2 Reports Email Form'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['gn2_reports_email_range_form'] = array(
+    'info' => t('Gn2 Reports Email Range Form'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['gn2_reports_userpoints'] = array(
+    'info' => t('Gn2 Reports Userpoints'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_reports_block_view() {
+  $block = array();
+  if (arg(3) == 'engagement') {
+    $block['title'] = t('Bar Graph');
+    $block['region'] = 'main';
+    $block['content'] = gn2_reports_userpoints_chart();
+    $block['content'] .= '<div id="chart_div"></div>';
+  }
+  elseif (arg(3) == 'site-activity-email') {
+    $block['content'] = drupal_get_form('gn2_reports_mail_form');
+    $block['content']['#suffix'] = _gn2_reports_query();
+  }
+  else {
+    $block['content'] = drupal_get_form('gn2_reports_date_range_form');
+    $block['content']['#suffix'] = gn2_reports_mail_range_output();
+    $block['content']['#suffix'] .= drupal_render(drupal_get_form('gn2_reports_mail_range_form'));
+
+  }
+  return $block;
+}
+
+/**
+ * Helper function to extract userpoints.
+ *
+ * @param int $interval
+ *   First time increment, ie, the before.
+ * @param int $interval_two
+ *   Second time increment, ie, the after.
+ *
+ * @return int mixed
+ *   Total userpoints.
+ */
+function gn2_reports_userpoints_chart_queries($interval, $interval_two) {
+  $status = 1;
+  if (arg(0) !== 'admin') {
+    $query = db_query("SELECT SUM(userpoints_txn.points) AS total
+FROM users
+LEFT JOIN og_membership ON users.uid = og_membership.etid 
+LEFT JOIN userpoints_txn ON users.uid = userpoints_txn.uid
+WHERE og_membership.gid = :gid
+AND og_membership.entity_type = 'user'
+AND users.status = :status
+AND userpoints_txn.time_stamp >= UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL :interval_two DAY)) 
+AND userpoints_txn.time_stamp < UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL :interval DAY))",
+      array(
+        ':status' => $status,
+        ':gid' => arg(1),
+        ':interval' => $interval,
+        ':interval_two' => $interval_two,
+      ));
+  }
+  else {
+    $query = db_query("SELECT SUM(userpoints_txn.points) AS total
+FROM users
+LEFT JOIN og_membership ON users.uid = og_membership.etid 
+LEFT JOIN userpoints_txn ON users.uid = userpoints_txn.uid
+WHERE og_membership.entity_type = 'user'
+AND users.status = :status
+AND userpoints_txn.time_stamp >= UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL :interval_two DAY)) 
+AND userpoints_txn.time_stamp < UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL :interval DAY))",
+      array(
+        ':status' => $status,
+        ':interval' => $interval,
+        ':interval_two' => $interval_two,
+      ));
+  }
+  $results = $query->fetchField();
+  return $results;
+}
+
+/**
+ * Provides data to build js chart.
+ */
+function gn2_reports_userpoints_chart() {
+  $status = 1;
+
+  // Get total number of members.
+  if (arg(0) !== 'admin') {
+    $members = db_query("SELECT COUNT(users.uid) AS total
+FROM users
+JOIN og_membership ON users.uid = og_membership.etid 
+WHERE og_membership.gid = :gid
+AND og_membership.entity_type = 'user'
+AND users.status = :status",
+      array(
+        ':gid' => arg(1),
+        ':status' => $status,
+      ));
+  }
+  else {
+    $members = db_query("SELECT COUNT(users.uid) AS total
+FROM users
+JOIN og_membership ON users.uid = og_membership.etid 
+WHERE og_membership.entity_type = 'user'
+AND users.status = :status",
+      array(
+        ':status' => $status,
+      ));
+  }
+  $members_total = $members->fetchField();
+
+  // Load our charts api js.
+  drupal_add_js('//www.gstatic.com/charts/loader.js', 'external');
+  drupal_add_js(drupal_get_path('module', 'gn2_reports') . '/gn2_reports.js');
+
+  // Plug our points and calculation values in settings for js consumption.
+  $week_points = gn2_reports_userpoints_chart_queries(0, 7);
+  $last_week_points = gn2_reports_userpoints_chart_queries(8, 15);
+  $month_points = gn2_reports_userpoints_chart_queries(0, 30);
+  $last_month_points = gn2_reports_userpoints_chart_queries(31, 60);
+  $quarter_points = gn2_reports_userpoints_chart_queries(0, 90);
+  $last_quarter_points = gn2_reports_userpoints_chart_queries(91, 180);
+  $year_points = gn2_reports_userpoints_chart_queries(0, 365);
+  $last_year_points = gn2_reports_userpoints_chart_queries(366, 730);
+
+  $week = $week_points / $members_total;
+  $month = $month_points / $members_total;
+  $quarter = $quarter_points / $members_total;
+  $year = $year_points / $members_total;
+
+  $last_week = $last_week_points / $members_total;
+  $last_month = $last_month_points / $members_total;
+  $last_quarter = $last_quarter_points / $members_total;
+  $last_year = $last_year_points / $members_total;
+
+  drupal_add_js(array(
+    'gn2_reports' => array(
+      'week' => $week,
+      'month' => $month,
+      'quarter' => $quarter,
+      'year' => $year,
+      'last_week' => $last_week,
+      'last_month' => $last_month,
+      'last_quarter' => $last_quarter,
+      'last_year' => $last_year,
+    ),
+  ), 'setting');
+}
+
+/**
+ * Implements Elysia cron hook_cronapi().
+ */
+function gn2_reports_cronapi($op, $job = NULL) {
+  // Schedule sending of site activity emails.
+  $items['monthly_report'] = array(
+    'description' => 'Send site activity report monthly',
+    'rule' => '0 12 1 * 1',
+    'callback' => 'gn2_reports_mail_cron_send',
+  );
+  return $items;
+}
+
+/**
+ * Our email form.
+ */
+function gn2_reports_mail_form($form, &$form_state) {
+  $form = array();
+  $form['#prefix'] = t('Email the site activity report.');
+  $form['gn2_reports_recipient'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email address'),
+    '#default_value' => variable_get('gn2_reports_recipient'),
+    '#required' => TRUE,
+  );
+  $form['gn2_reports_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Our date range form.
+ */
+function gn2_reports_date_range_form($form, &$form_state) {
+  $form = array();
+  $form['gn2_reports_date_field1'] = array(
+    '#title' => t('Date'),
+    '#type' => 'date_popup',
+    '#date_format' => 'Y-m-d',
+    '#description' => t('This should be the more recent date - will collect results from previous 30 days'),
+  );
+
+  $form['gn2_reports_date_field2'] = array(
+    '#title' => t('Comparison Date'),
+    '#type' => 'date_popup',
+    '#date_format' => 'Y-m-d',
+    '#description' => t('This should be the older date - will collect results from previous 30 days'),
+
+  );
+
+  $form['gn2_reports_date_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Our date range email form.
+ */
+function gn2_reports_mail_range_form($form, &$form_state) {
+  $form = array();
+  $form['#prefix'] = t('Email the date range activity report.');
+  $form['gn2_reports_range_recipient'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email address'),
+    '#default_value' => variable_get('gn2_reports_range_recipient'),
+    '#required' => TRUE,
+  );
+
+  $form['gn2_reports_range_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+
+}
+
+/**
+ * Simple wrapper function for drupal_mail() to avoid extraneous code.
+ */
+function gn2_reports_drupal_mail($to, $subject, $message) {
+  $my_module = 'gn2_reports';
+  $my_mail_token = microtime();
+  $from = 'GlobalNet Reports <no-reply@globalnetplatform.org>';
+
+  $message = array(
+    'id' => $my_module . '_' . $my_mail_token,
+    'to' => $to,
+    'subject' => $subject,
+    'body' => array($message),
+    'headers' => array(
+      'Content-Type' => 'text/html; charset=UTF-8;',
+      'From' => $from,
+      'Sender' => $from,
+      'Return-Path' => $from,
+    ),
+  );
+  $system = drupal_mail_system($my_module, $my_mail_token);
+  $message = $system->format($message);
+  if ($system->mail($message)) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Sends out report via email.
+ */
+function gn2_reports_mail_form_submit($form, &$form_state) {
+  variable_set('gn2_reports_recipient', $form_state['values']['gn2_reports_recipient']);
+  $content = _gn2_reports_query();
+  $to = !empty($form_state['values']['gn2_reports_recipient']) ? $form_state['values']['gn2_reports_recipient'] : variable_get('gn2_reports_recipient');
+  gn2_reports_drupal_mail($to, 'GlobalNet Site Activity Report', $content);
+  drupal_set_message(t('Report emailed.'));
+}
+
+/**
+ * Sends out range report via email.
+ */
+function gn2_reports_mail_range_form_submit($form, &$form_state) {
+  variable_set('gn2_reports_range_recipient', $form_state['values']['gn2_reports_range_recipient']);
+  $content = _gn2_reports_query();
+  $to = !empty($form_state['values']['gn2_reports_range_recipient']) ? $form_state['values']['gn2_reports_range_recipient'] : variable_get('gn2_reports_range_recipient');
+  gn2_reports_drupal_mail($to, 'GlobalNet Date Range Activity Report', variable_get('gn2_reports_range_form'));
+  drupal_set_message(t('Report emailed.'));
+}
+
+/**
+ * Sends out report via email on cron.
+ */
+function gn2_reports_mail_cron_send() {
+  $content = _gn2_reports_query();
+  $to = variable_get('gn2_reports_recipient');
+  gn2_reports_drupal_mail($to, 'GlobalNet Site Activity Report', $content);
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function gn2_reports_page_alter(&$page) {
+  // Add a link to Export the current results to CSV file; RD-1873.
+  if (arg(3) == 'engagement') {
+    $block = block_load('gn2_reports', 'gn2_reports_userpoints');
+    $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
+    $page['content']['system_main']['main']['#markup'] = $output;
+  }
+  if (arg(2) == "role_watchdog") {
+    $pager = 0;
+    if (isset($_GET['page'])) {
+      $pager = $_GET['page'];
+    }
+    $form = drupal_get_form('_gn2_reports_watchdog_filter_form');
+    $args = array();
+    if (isset($_GET['gt'])) {
+      $args['gt'] = $_GET['gt'];
+    }
+    if (isset($_GET['org'])) {
+      $args['org'] = $_GET['org'];
+    }
+    if (isset($_GET['or'])) {
+      $args['or'] = $_GET['or'];
+    }
+    if (isset($_GET['dmin'])) {
+      $args['dmin'] = $_GET['dmin'];
+    }
+    if (isset($_GET['dmax'])) {
+      $args['dmax'] = $_GET['dmax'];
+    }
+    if (isset($_GET['page'])) {
+      $args['page'] = $_GET['page'];
+    }
+
+    $page['content']['system_main']['download_link'] = array(
+      '#weight' => -10,
+      '#markup' => '<div class="form-wrapper">' . drupal_render($form) . '</div>' .
+        l(t('Export to CSV'), '/role_watchdog/export_csv', array('query' => $args)),
+    );
+  }
+}
+
+/**
+ * Helper form to filter the Role Watchdog report.
+ */
+function _gn2_reports_watchdog_filter_form($form, &$form_state) {
+  global $user;
+  // Organization.
+  $results = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', 'organization', '=')
+    ->condition('n.status', 1, '=')
+    ->orderBy('n.title', 'ASC')
+    ->execute()
+    ->fetchAllAssoc('nid');
+  $orgs = array('' => '- Select -');
+  foreach ($results as $key => $result) {
+    $orgs[$key] = $result->title;
+  }
+  $prefix = '<span style="float: left; margin-right: 10px;">';
+  $default = (isset($_GET['org']) ? $_GET['org'] : '');
+  if (!in_array('administrator', $user->roles)) {
+    if (gn2_manager_is_manager(array('org_manager', 'hr_manager'))) {
+      $default = gn2_context_get_org_id();
+      $prefix = '<span style="display: none;">';
+      $form['organization'] = array(
+        '#attributes' => array('disabled' => TRUE)
+      );
+    }
+  }
+  $form['organization'] = array(
+    '#prefix' => $prefix,
+    '#suffix' => '</span>',
+    '#title' => t('Organization'),
+    '#type' => 'select',
+    '#description' => '',
+    '#default_value' => $default,
+    '#options' => $orgs,
+  );
+
+  // Group Type.
+  $form['group-type'] = array(
+    '#prefix' => '<span style="float: left; margin-right: 10px;">',
+    '#suffix' => '</span>',
+    '#title' => t('Group Type'),
+    '#type' => 'select',
+    '#description' => '',
+    '#default_value' => (isset($_GET['gt'])) ? $_GET['gt'] : '',
+    '#options' => array(
+      '' => '- Select -',
+      'organization' => 'Organization',
+      'course' => 'Course',
+      'event' => 'Event',
+      'group' => 'Group'
+    ),
+  );
+
+  // OG Roles.
+  $results = db_select('og_role', 'o')
+    ->fields('o', array('rid', 'group_bundle', 'name'))
+    ->condition('o.group_type', 'node', '=')
+    ->condition('o.group_bundle', 'alumni_group', '!=')
+    ->condition('o.group_bundle', 'coi', '!=')
+    ->orderBy('o.group_bundle', 'ASC')
+    ->execute()
+    ->fetchAllAssoc('rid');
+  $org_roles = array('' => '- Select -');
+  foreach ($results as $key => $result) {
+    $org_roles[$key] = $result->group_bundle . ' - ' . $result->name;
+  }
+  $form['og-roles'] = array(
+    '#prefix' => '<span style="float: left; margin-right: 10px;">',
+    '#suffix' => '</span>',
+    '#title' => t('OG Roles'),
+    '#type' => 'select',
+    '#description' => '',
+    '#default_value' => (isset($_GET['or']) ? $_GET['or'] : ''),
+    '#options' => $org_roles,
+  );
+
+  // Dates.
+  $form['stamp-min'] = array(
+    '#prefix' => '<span style="float: left; margin-right: 10px;">',
+    '#suffix' => '</span>',
+    '#title' => t('From'),
+    '#type' => 'date_popup',
+    '#timepicker' => 'timepicker',
+    '#date_format' => 'd M Y',
+    '#date_year_range' => '-20:+1',
+    '#date_timezone' => date_default_timezone(),
+    '#default_value' => (isset($_GET['dmin']) ? date('Y-m-d H:i:s', $_GET['dmin']) : ''),
+    '#timepicker_options' => array(
+      'rows' => 6,
+    ),
+  );
+  $form['stamp-max'] = array(
+    '#prefix' => '<span style="float: left; margin-right: 10px;">',
+    '#suffix' => '</span>',
+    '#title' => t('To'),
+    '#type' => 'date_popup',
+    '#timepicker' => 'timepicker',
+    '#date_format' => 'd M Y',
+    '#date_year_range' => '-20:+1',
+    '#date_timezone' => date_default_timezone(),
+    '#default_value' => (isset($_GET['dmax']) ? date('Y-m-d H:i:s', $_GET['dmax']) : ''),
+    '#timepicker_options' => array(
+      'rows' => 6,
+    ),
+  );
+
+  // Submit button - Filter.
+  $form['submit'] = array(
+    '#prefix' => '<div style="display: block; clear: both; margin 10px;">',
+    '#suffix' => '</div>',
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+  );
+  return $form;
+}
+
+/**
+ * Form submit, _gn2_reports_watchdog_filter_form.
+ */
+function _gn2_reports_watchdog_filter_form_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  $args = array();
+  if ($values['group-type'] != '') {
+    $args['gt'] = $values['group-type'];
+  }
+  if ($values['organization'] != '') {
+    $args['org'] = $values['organization'];
+  }
+  if ($values['og-roles'] != '') {
+    $args['or'] = $values['og-roles'];
+  }
+  if (isset($values['stamp-min'])) {
+    $args['dmin'] = strtotime($values['stamp-min']);
+  }
+  if (isset($values['stamp-max'])) {
+    $args['dmax'] = strtotime($values['stamp-max']);
+  }
+  if (isset($_GET['page'])) {
+    $args['page'] = $_GET['page'];
+  }
+  drupal_goto($_GET['q'], array('query' => $args));
+}
+
+/**
+ * Exports the OG role watchdog results to CSV file.
+ * See: RD-3937, RD-1873.
+ */
+function _gn2_reports_og_role_watchdog_export_csv() {
+  // Prepares http headers for downloadble CSV file.
+  drupal_add_http_header('Content-Type', 'text/csv; utf-8');
+  drupal_add_http_header('Content-Disposition', 'attachment; filename=og-role-changes-log.csv');
+
+  $output = "Admin,Role,Date,Organization,Group,Type,Role,Change,User\r\n";
+
+  // Query to select role watchdog log.
+  $query = db_select('role_watchdog', 'rw');
+  $query->innerJoin('users', 'u', 'rw.aid = u.uid');
+  $query->innerJoin('users', 'u2', 'rw.uid = u2.uid');
+  $query->leftJoin('og_role_watchdog', 'orw', 'orw.hid = rw.hid');
+  $query->innerJoin('node', 'nd', 'orw.gid = nd.nid');
+  $query->addField('u2', 'name', 'admin');
+  $query->addField('rw', 'uid', 'adminid');
+  $query->addField('rw', 'aid', 'uid');
+
+  if (isset($_GET['org'])) {
+    // Filtered by Organization.
+    global $user;
+    if (!in_array('administrator', $user->roles)) {
+      if (gn2_manager_is_manager(array('org_manager', 'hr_manager'))) {
+        $_GET['org'] = gn2_context_get_org_id();
+      }
+      else {
+        return;
+      }
+    }
+    $query->leftJoin('field_data_field_parent_organization', 'po', 'po.entity_id = orw.gid');
+
+    $db_and = db_and();
+    $db_and->condition('nd.type', 'organization' , '=');
+    $db_and->condition('nd.nid', $_GET['org'], '=');
+
+    $db_or = db_or();
+    $db_or->condition($db_and);
+    $db_or->condition('po.field_parent_organization_target_id', $_GET['org']);
+
+    $query->condition($db_or);
+  }
+  if (isset($_GET['or'])) {
+    // Filtered by Org. role id.
+    $query->condition('orw.rid', $_GET['or'], '=');
+  }
+  if (isset($_GET['gt'])) {
+    // Filtered by Content type.
+    $query->condition('nd.type', $_GET['gt'] , '=');
+  }
+  if (isset($_GET['dmin']) && isset($_GET['dmax'])) {
+    // Filtered by date.
+    $query->condition('rw.stamp',array($_GET['dmin'], $_GET['dmax']) , 'BETWEEN');
+  }
+  elseif (isset($_GET['dmin'])) {
+    $query->condition('rw.stamp', $_GET['dmin'], '>=');
+  }
+  elseif (isset($_GET['dmax'])) {
+    $query->condition('rw.stamp', $_GET['dmax'], '<=');
+  }
+
+  $query->addField('orw', 'rid', 'orid');
+  $result = $query
+    ->extend('PagerDefault')
+    ->limit(variable_get('role_watchdog_pager', 50))
+    ->fields('rw', array('hid', 'action', 'rid', 'aid', 'stamp'))
+    ->fields('u', array('name'))
+    ->fields('orw', array('gid'))
+    ->orderBy('rw.stamp', 'DESC')
+    ->execute()
+    ->fetchAllAssoc('hid');
+
+  $actions = array(t('removed from'), t('added to'), t('requested by'), t('approved for'), t('blocked'), t('unblocked'), t('rejected for'));
+
+  $roles = user_roles();
+  foreach ($result as $hid => $row) {
+    list($group_name, $group_type, $role) = _gn2_reports_og_role_watchdog_row_group_name($row->gid, $row->rid, $row->orid, $roles, TRUE);
+    // Set Organization Name.
+    $org_name = "-";
+    if (isset($row->gid)) {
+      $group = node_load($row->gid);
+      $path = new GN2PathToOrganization($group);
+      $org = $path->getOrganization();
+      if (!empty($org->nid)) {
+        $org_name = str_replace(',', '', $org->title);
+      }
+    }
+    else {
+      // AVOID to display incomplete content.
+      continue;
+    }
+    // Set Admin name and roles;
+    $admin_roles = '';
+    if (isset($row->adminid)) {
+      // Name.
+      $admin_name = $row->admin;
+      // Roles;
+      $admin_user = user_load($row->adminid);
+      $admin_roles = implode('- ', $admin_user->roles);
+      if (isset($row->gid)) {
+        $admin_roles .= ' / ' . implode('- ', og_get_user_roles('node', $row->gid, $row->adminid));
+      }
+    }
+    $row_data = array(
+      $admin_name,
+      $admin_roles,
+      format_date($row->stamp, 'custom', 'd M Y H:i'),
+      $org_name,
+      $group_name,
+      $group_type,
+      $role,
+      $actions[$row->action],
+      $row->name,
+    );
+    $output .= implode(',', $row_data) . "\r\n";
+  }
+
+  print $output;
+  drupal_exit();
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function gn2_reports_views_pre_render(&$view) {
+  if ($view->name == 'user_bulk_block' || $view->name == 'report_user') {
+    $view->attachment_before = '<h4>Member Count: ' . $view->total_rows . '</h4>';
+  }
+  if ($view->name == 'admin_content' && ($view->current_display == 'page_1' || $view->current_display == 'page_manage_content')) {
+    $view->attachment_before = '<h4>Content Count: ' . $view->total_rows . '</h4>';
+  }
+}
+
+/**
+ * Implements hook_uif_header_alter().
+ */
+function gn2_reports_uif_header_alter($header_row) {
+  global $user;
+  $oid = (filter_input(INPUT_GET, 'oid')) ? filter_input(INPUT_GET, 'oid') : 0;
+  $iid = db_insert('gn2_user_report')
+    ->fields(array(
+      'uid' => $user->uid,
+      'oid' => $oid,
+      'timestamp' => REQUEST_TIME,
+    ))->execute();
+}
+
+/**
+ * Implements hook_uif_post_create()
+ */
+function gn2_reports_uif_post_create($account, $user_data, $form_state) {
+  $groups = (isset($user_data['groups'])) ? $user_data['groups'] : '';
+  gn2_reports_add_import_record($account, $groups, 0);
+}
+
+/**
+ * Implements hook_uif_post_update()
+ */
+function gn2_reports_uif_post_update($account, $user_data, $form_state) {
+  $groups = (isset($user_data['groups'])) ? $user_data['groups'] : '';
+  gn2_reports_add_import_record($account, $groups, 1);
+}
+
+/**
+ * Insert user import rows.
+ *
+ * @param object $account
+ *   The user object for the imported user.
+ * @param array $groups
+ *   The user groups.
+ * @param bool $existing
+ *   A boolean indicating whether the user is an existing user.
+ */
+function gn2_reports_add_import_record($account, $groups, $existing) {
+  global $user;
+  $iid = db_query('SELECT iid FROM {gn2_user_report} WHERE uid = :uid ORDER BY iid DESC LIMIT 1',
+    array(':uid' => $user->uid))->fetchField();
+
+  $row = db_insert('gn2_user_report_users')
+    ->fields(array(
+      'iid' => $iid,
+      'uid' => $user->uid,
+      'iuid' => $account->uid,
+      'existing' => $existing,
+      'groups' => $groups,
+      'timestamp' => REQUEST_TIME,
+    ))->execute();
+}
+
+/**
+ * Implements hook_node_delete().
+ * Clean up role_watchdog and og_role_watchdog.
+ *
+ * @param $node
+ *
+ * @return
+ *
+ * @ingroup hooks
+ */
+function gn2_reports_node_delete($node) {
+  db_delete('og_role_watchdog')
+    ->condition('gid', intval($node->nid))
+    ->execute();
+}
+
+/**
+ * Implements template_process_html().
+ */
+function gn2_reports_process_html(&$variables) {
+  // Adding Google Tag Manager js.
+  $tagmanager = '
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);})(window,document,"script","dataLayer","GTM-T8Q655");</script>
+<!-- End Google Tag Manager -->
+';
+  $variables['scripts'] .= $tagmanager;
+}

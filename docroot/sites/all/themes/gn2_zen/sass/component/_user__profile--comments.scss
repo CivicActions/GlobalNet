@@ -1,0 +1,49 @@
+/* Styling the Comments tab in the User Profile page */
+
+.user-profile--comments, .user-profile--posts, .user-profile--events{
+  .inner{
+    padding: 1em;
+    background: url(../images/bg-diagonal-tile-grey.png);
+  }
+
+
+}
+.user-profile--comments {
+  ul.pager {
+    padding: 0.6em 0;
+    font-size: 0.9em;
+    text-align: center;
+    li {
+      float: none;
+      display: inline-block;
+    }
+  }
+  .pager-current {
+    border-left: 0;
+    text-transform: lowercase;
+  }
+}
+
+/* Overidding default views accordion styles */
+.override-accordion{
+   .ui-state-default, .ui-widget-content{
+    background: $white;
+    border: 1px solid $light-gray;
+
+  }
+  .ui-widget-content{
+   font-size: 0.9em;
+   border-top: 0;
+  }
+  .ui-accordion-header{
+   border-bottom: 0;
+   @include body_font;
+   font-weight: bold;
+  }
+  .views-row{
+    padding: 0.5em 0;
+    border-bottom: 1px solid $light-gray;
+    &:last-child{border-bottom: 0;}
+
+  }
+}

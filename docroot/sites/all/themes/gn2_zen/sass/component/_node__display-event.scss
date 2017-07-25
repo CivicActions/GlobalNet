@@ -1,0 +1,65 @@
+.event-node-page {
+
+  h1 {
+    // line-height: 1.2;
+    padding: 0;
+    // margin: 0 0 .5em 0;
+  }
+
+  h2.pane-title {
+    // line-height: 1.2;
+    // font-size: 1.2em;
+    padding: 0;
+    // margin: 0 0 .5em 0;
+  }
+
+  .main-top {
+
+    .panel-pane.event-date,
+    .panel-pane.event-location {
+      display: table-cell;
+      padding-top: 0px;
+      padding-left: 73px;
+      padding-bottom: 1.8em;
+      font-size: .85em;
+      line-height: 1.4;
+      background-repeat: no-repeat;
+      * {
+        padding: 0;
+        margin: 0;
+        line-height: 1.25;
+      }
+      h4 {
+        color: $medium-gray;
+        padding-bottom: .2em;
+        font-weight: normal;
+        font-size: 1.5em;
+      }
+    }
+
+    .location-name {
+      font-weight: bold;
+    }
+
+    .panel-pane.event-date {
+      width: 49%;
+      padding-right: 2%;
+      background-image: url(../images/gn-icons/event_date_large.png);
+    }
+  
+    .panel-pane.event-location {
+      width: 49%;
+      background-image: url(../images/gn-icons/event_location_large.png);
+    }
+    
+  }
+  .panels-layout {
+    .sidebar {
+      .panel-pane > .panel-pane {
+        margin: 0 0 2em;
+         .panel-pane {margin-bottom: 0;}
+      }
+    }    
+  }
+
+}

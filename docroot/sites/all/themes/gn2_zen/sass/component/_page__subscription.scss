@@ -1,0 +1,21 @@
+.page-group-node-subscribe,
+.page-group-node-unsubscribe {
+  fieldset#edit-instruction-field {
+    border: none;
+    padding: 10px 0 0;
+    span.fieldset-legend {
+      text-transform: none;
+      color: $very-dark-gray;
+    }
+  }
+  .form-actions {
+    padding-top: .75em;
+    input {
+      @include admin-button($bgcolor: $blue-gray);
+      margin-right: .25em;
+    }
+    a {
+      @include admin-button($bgcolor: red);
+    }
+  }
+}

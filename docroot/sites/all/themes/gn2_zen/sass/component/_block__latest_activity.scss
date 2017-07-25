@@ -1,0 +1,12 @@
+.latest-activity--item {
+  border-bottom: 1px solid $titanium;
+  padding-bottom: .8em;
+  margin-bottom: .8em;
+  &.views-row-last {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .date-posted {
+    color: $gray-9;
+  }
+}

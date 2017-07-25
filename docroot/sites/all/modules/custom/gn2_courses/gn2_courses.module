@@ -1,0 +1,47 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_courses feature.
+ */
+
+include_once 'gn2_courses.features.inc';
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_courses_views_pre_render(&$view) {
+  // Sort course groups my integer on end of title string.
+  if ($view->name == 'subgroups' && $view->current_display == 'panel_pane_3') {
+    $new_order = array();
+    $existing_order = array();
+    foreach ($view->result as $item) {
+      $matches = array();
+      if (preg_match('#(\d+)$#', $item->node_title, $matches)) {
+        $new_order[$matches[1]] = $item;
+      }
+      else {
+        $existing_order[] = $item;
+      }
+    }
+    ksort($new_order);
+    $complete_array = array_merge($new_order, $existing_order);
+    $view->result = $complete_array;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_courses_menu() {
+  $items = array();
+
+  $items['DLICourseEstimator'] = array(
+    'title' => 'Course Estimator',
+    'page callback' => 'gn2_courses_ewheel',
+    'access callback' => TRUE,
+    'file' => 'gn2_courses.ewheel.inc',
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $items;
+}

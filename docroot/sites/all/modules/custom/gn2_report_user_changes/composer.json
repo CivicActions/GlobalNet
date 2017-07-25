@@ -1,0 +1,13 @@
+{
+    "name": "dsca/gn2_report_user_changes",
+    "description": "A report of user profile changes",
+    "authors": [
+        {
+            "name": "fmizzell",
+            "email": "fmizzell@1312210.no-reply.drupal.org"
+        }
+    ],
+    "autoload": {
+        "psr-4":  { "GN2ReportUserChanges\\": "src" }
+    }
+}

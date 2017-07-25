@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_captcha feature.
+ */
+
+include_once 'gn2_captcha.features.inc';

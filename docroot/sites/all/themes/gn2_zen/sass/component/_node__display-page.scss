@@ -1,0 +1,9 @@
+.page-node.node-type-page {
+  article {
+    &.view-mode-full {
+      > .form-type-item, .statistics_counter {
+        display: none;
+      }
+    }
+  }
+}

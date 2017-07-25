@@ -1,0 +1,19 @@
+/**
+ *Styles for overriding default  styles in the panels-layout sidebar org-info block
+ */
+
+.panels-layout{
+  .sidebar{
+    .org-info{
+      h2{
+        @include display_font;
+        font-size: 1.8em;
+        line-height: 1.25em;
+        color: $gray-51;
+        border-bottom: 1px solid $jungle_mist;
+        margin-bottom: 0;
+        margin-top:0.5em;
+        }
+    }
+  }
+}

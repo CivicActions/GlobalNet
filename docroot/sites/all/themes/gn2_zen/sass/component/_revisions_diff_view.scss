@@ -1,0 +1,107 @@
+@mixin diff-table {
+  display: table;
+  width: 100%;
+  border: 0px solid red;
+  tr {
+    display: table-row;
+    vertical-align: top;
+  }
+  td, th {
+    display: table-cell;
+    vertical-align: top;
+    padding: .5em;
+    border: none;
+  }
+  th input.form-submit {
+    @include button-as-link;
+
+  }
+}
+
+.page-node-revisions {
+}
+
+.revision-log {
+  border: 1px solid rgba(black, 0.125);
+  background: rgba(white, 0.5);
+  padding: .25em .4em;
+  margin: .25em 0;
+  color: $black;
+  font-size: .9em;
+}
+
+table.diff-revisions {
+  @include diff-table;
+}
+
+tr.diff-revision {
+
+  &.even {
+    background: rgba(#eee, 0.625);
+  }
+  &.odd {
+    background: rgba(#eee, 0.625);
+  }
+
+  td:nth-child(1) {
+    width: 60%;
+  }
+  td:nth-child(2) {
+    width: 10%;
+    text-align: center;
+  }
+  td:nth-child(3) {
+    width: 10%;
+    text-align: center;
+  }
+  td:nth-child(4) {
+    width: 10%;
+    &.revision-current {
+      font-style: italic;
+    }
+  }
+  td:nth-child(5) {
+    width: 10%;
+  }
+
+  td.revision-current {
+    background: rgba(#fff, .625);
+  }
+
+  &.selected td {
+    background: rgba($maya_blue, 0.125);
+  }
+
+}
+
+table.diff {
+  @include diff-table;
+}
+
+td.diff-marker {
+  padding: 0;
+}
+
+td.diff-section-title {
+  padding: 0;
+  background: rgba($maya_blue, 0.125);
+}
+
+td.diff-context {
+  padding: 0;
+  > div {
+    padding: .5em .75em !important;
+  }
+  &.diff-deletedline {
+    background-color: transparent;
+    div {
+      background: rgba(#ffa, 0.5);
+    }
+  }
+  &.diff-addedline {
+    background-color: transparent;
+    div {
+      background: rgba(#afa, 0.5);
+    }
+  }
+}

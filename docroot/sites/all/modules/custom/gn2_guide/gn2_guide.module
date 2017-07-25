@@ -1,0 +1,88 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_guide feature.
+ */
+
+include_once 'gn2_guide.features.inc';
+include_once 'gn2_guide_search.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_guide_menu() {
+  $items['guide-search-form'] = array(
+    'title' => 'Guide Searcher Form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_gn2_guide_searcher_form'),
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+  );
+
+  $items['guide-search-keyword/%'] = array(
+    'page callback' => '_gn2_guide_search_keyword',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_guide_theme(&$existing, $type, $theme, $path) {
+  $hook_theme = array(
+    'guide_keyword' => array(
+      'variables' => array('output' => NULL),
+      'template' => 'templates/guide_keyword',
+    ),
+  );
+  return $hook_theme;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_guide_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == '_gn2_guide_searcher_form') {
+    drupal_add_js(
+      drupal_get_path('module', 'gn2_guide') . '/js/guide_search.js'
+    );
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_guide_block_info() {
+  $blocks = array();
+  // Guide search form; @see RD-3211.
+  $blocks['gn2_guide_search'] = array(
+    'info' => t('Guide search form'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_guide_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'gn2_guide_search':
+      $block['subject'] = NULL;
+      $block['content'] = _gn2_guide_get_guide_form();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Creates the Guide page search form; see @RD-3211.
+ */
+function _gn2_guide_get_guide_form() {
+  $form = drupal_get_form('_gn2_guide_searcher_form', NULL);
+  return '<div class="panel-pane pane-custom pane-3">' . drupal_render($form) . '</div>';
+}

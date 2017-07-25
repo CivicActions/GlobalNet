@@ -1,0 +1,45 @@
+form#organization-node-form  {
+  
+  @include breakpoint($large-screen-and-up) {
+    div.form-item-title {
+      @include form--item--gap--top-only; 
+      display: inline-block;
+      padding-right: $form-item-gap-small;
+      vertical-align: top;
+      label {
+        @include form--item--label;
+      }
+    }
+    div.form-field-name-field-org-short-title {
+      @include form--item--gap--top-only;
+      display: inline-block;
+      vertical-align: top;
+      .form-item {
+        @include form--item--no-gap;
+      }
+    }
+  }
+
+}
+
+#theme-ajax-wrap {
+  font-weight: bold;
+  padding-bottom: 1em;
+  hr {
+    border: 0;
+    margin: 0;
+    display: none;
+  }
+  h2 {
+    display: none;
+  }
+  br {
+    display: none;
+  }
+  .description {
+    font-weight: normal;
+  }
+  select {
+    margin-top: .3em;
+  }
+}

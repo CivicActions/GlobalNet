@@ -1,0 +1,96 @@
+/*
+ * General page styles for the User Profile page
+ */
+
+body.page-user {
+  
+  fieldset.views-fieldset {
+    border: none;
+    background: url(../images/bg-diagonal-tile-grey.png);
+    padding: 1em;
+    margin: 0 0 1.25em 0;
+    legend {
+      float: left;
+      font-size: 1.1em;
+    }
+    .views-row {
+      margin-top: 1.5em;
+      &:first-child {margin-top: 0;}
+    }
+    .field-type-text-long {margin-top: 1em;}
+    .fieldset-wrapper {
+      clear: both;
+      padding-bottom: 1em;
+      > .views-field {
+        padding-left: $form-fieldset-indent; //This value is used in the _node__form component
+        .views-field {
+          margin-top: 1em;
+        }
+      }
+      ul {padding-left: 0;}
+      li {
+        display: block;
+        padding-bottom: 0.1em;
+      }
+    }
+    a.fieldset-title {
+      font-weight: bold;
+      color: $dark-gray;
+    }
+    .views-label {
+      color: grey;
+      font-weight: bold;
+      font-style: italic;
+    }
+    /* RD-1553: suppressing expertise fieldset on profile page. */
+    &.expertise {
+      display: none;
+    }
+    
+    &.collapsible {
+      legend {
+        padding-bottom: 1em;
+      }
+      &.collapsed {
+        legend {
+          padding-bottom: .6em;
+        }
+      }
+    }
+ 
+  }
+  
+ .views-field.views-field-field-organization, .field-name-field-organization {
+    display: table-cell;
+    color: $medium-gray;
+  }
+
+  fieldset.biography {
+    .fieldset-wrapper {
+      .field-content {
+        margin: 10px 0 30px;
+      }
+    }
+  }
+
+  #gn2-user-admin-form #edit-submit.ajax-processed {
+    @include form--item--gap--top-only(medium);
+  }
+
+  &:not(.admin-menu):not(.gn-manager) {
+    ul.tabs-primary.tabs.primary {
+      display: none;
+    }
+    .panels-layout.sidebar-right.node.gn-two-col-stackedflipped.gn2-2colstackedflipped {
+      margin-top: 1.25em;
+    }
+  }
+
+}
+
+#edit-privatemsg {
+  @include form--item--gap--top-only(medium);
+  legend > span.fieldset-legend a {
+    @include form--item--label;        
+  }
+}

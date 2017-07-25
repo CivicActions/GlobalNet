@@ -1,0 +1,68 @@
+/**
+ *Styling pubication node elements."
+ */
+.node-type-publication,
+.news-publication-page {
+
+  .node-header-links {
+    .print,
+    .share,
+    .download_pdf {
+      display: none !important;
+    }
+  }
+  
+  .main-bottom {
+    .panels-layout--region-inner {
+      > div {
+        margin-bottom: 1em;
+      }
+    }
+  }
+  
+  .panels-layout--region-inner {
+    > * {
+      clear: both;
+    }
+  }
+
+  .title-image-block {
+    width: 100%;
+    // background-color: pink;
+  }
+  
+  .publication_node__image_info {
+    width: auto;
+    padding: 0 0 1em 0;
+    @include breakpoint($small-screen-and-up) {
+      float: left;
+      padding: 0 1.5em 1em 0;
+      max-width: 40%;
+    }
+  }
+  
+  .publication_node__pub_image {
+    img {
+      width: 100%;
+      height: auto;
+      padding: 0;
+      margin: 0 0 .5em 0;
+    }
+  }
+  
+  .publication_node__pub_info {
+    font-size: .9em;
+    color: $medium-gray;
+    line-height: 1;
+    @include breakpoint($small-screen-and-up) {
+      border-left: 4px solid $lighter-blue-gray;
+      padding-left: 1em;
+    }
+  }
+  
+  .publication_node__pub_info__author,
+  .publication_node__pub_info__publisher {
+    margin-bottom: .5em;
+  }
+  
+}

@@ -1,0 +1,4 @@
+name = Gn2 User Delete
+description = Removes users that are malformed and throw errors when delete is attempted
+package = GN2
+core = 7.x

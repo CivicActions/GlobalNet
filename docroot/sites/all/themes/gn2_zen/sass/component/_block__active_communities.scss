@@ -1,0 +1,27 @@
+.active-communities {
+}
+
+.active-communities--item {
+  padding-left: 75px;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid $lightest-blue-gray;
+  min-height: 59px;
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-image: url(../images/gn-icons/icon-groups.png);
+  &.group {
+    background-image: url(../images/gn-icons/icon-groups.png);
+  }
+  &.organization {
+    background-image: url(../images/gn-icons/icon-groups.png);
+  }
+}
+
+.active-communities--item--title {
+  padding-bottom: .25em;
+}
+
+.active-communities--item--summary {
+  line-height: 1.4;
+}

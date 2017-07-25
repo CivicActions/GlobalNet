@@ -1,0 +1,88 @@
+/**
+ * @file
+ * Positioning for a three across layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 24, ../../../sass/layout/panels-layouts/gn2_footer.scss */
+.gn2-footer,
+.gn2-footer--col1,
+.gn2-footer--col1--info,
+.gn2-footer--col1--nav,
+.gn2-footer--col2,
+.gn2-footer--col2--info,
+.gn2-footer--col2--nav,
+.gn2-footer--col3,
+.gn2-footer--col3--info,
+.gn2-footer--col3--nav {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-footer:before, .gn2-footer:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-footer:after {
+  clear: both;
+}
+
+/**
+ * Use 3 grid columns for larger screens.
+ */
+@media all and (min-width: 400px) {
+  /* line 47, ../../../sass/layout/panels-layouts/gn2_footer.scss */
+  .gn2-footer--col1 {
+    float: left;
+    width: 33.33333%;
+    margin-left: 0%;
+    margin-right: -33.33333%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 50, ../../../sass/layout/panels-layouts/gn2_footer.scss */
+  .gn2-footer--col2 {
+    float: left;
+    width: 33.33333%;
+    margin-left: 33.33333%;
+    margin-right: -66.66667%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 53, ../../../sass/layout/panels-layouts/gn2_footer.scss */
+  .gn2-footer--col3 {
+    float: left;
+    width: 33.33333%;
+    margin-left: 66.66667%;
+    margin-right: -100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+}
+
+/*# sourceMappingURL=gn2_footer.css.map */

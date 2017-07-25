@@ -1,0 +1,224 @@
+
+
+/*====== Theming the Groups Tab=======*/
+
+.user__tab--groups{
+  .icon-home, .icon-linkedin, .icon-twitter, .icon-facebook{
+    margin-right: 0;
+  }
+  @include input--inset-style;
+  .view-content{
+    padding: 0 0.5em;
+    background: $white;
+  }
+
+  .caption_text{padding-top: 0.6em;}
+  td{
+    padding: 0.7em;
+    vertical-align: top;
+  }
+  .pager{
+    padding: 0;
+    background: $white;
+    font-size: 0.9em;
+    margin: 1em 0;
+  }
+  .panel-pane{
+    margin: 0;
+  }
+  /*=========== View header=============*/
+  .description{
+    @include description-text;
+  }
+
+  /*============ Styling the Search Form ===========*/
+  .views-submit-button {
+    .form-submit {
+      @include admin-button($bgcolor: $blue-gray);
+    }
+  }
+  .user--courses .views-submit-button {
+    .form-submit {
+      margin: 0.8em 0 0;
+    }
+  }
+  .views-reset-button {
+    .form-submit{
+      background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+      border: 0 none;
+      color: $medium-gray;
+      font-size: 0.8em;
+      margin-top: 1em;
+      text-decoration: underline;
+    }
+  }
+  
+  select {
+    border: 1px solid $light-gray;
+    color: initial;
+    font-size: 1em;
+    option {
+      padding: 0.1em 1.5em;
+    }
+  }
+
+  .views-exposed-widget {
+    padding: 0.5em 0.5em 0 0;
+  }
+  .views-widget-sort-by {
+    clear:both;
+  }
+
+  label[for="edit-sort-by"],
+  label[for="edit-sort-order"],
+  label[for="edit-title"],
+  label[for="edit-created"],
+  label[for="edit-field-course-dates-value"],
+  label[for="edit-field-course-dates-value2"] {
+    display: inline;
+    @include display_font;
+    font-size: 1.4em;
+    font-weight: normal;
+    color: $dark-gray;
+    padding: 0.3em 0.3em 0 0;
+  }
+  
+  .view-display-id-panel_pane_3, .view-display-id-panel_pane_4 { 
+    > .view-header{
+      position: relative;
+    }
+  }
+  
+  .view-display-id-panel_pane_3, .view-display-id-panel_pane_4 { 
+    > .view-footer table {
+      text-align: left !important;
+    }
+  }
+  
+  .view-display-id-panel_pane_3, .view-display-id-panel_pane_4 {
+    > .view-footer .link-all-teasers {
+      margin-top: 4em;
+      text-align: center;
+    }
+  }
+  
+  .view-display-id-panel_pane_3 > .view-footer,
+  .view-display-id-panel_pane_4 > .view-footer,
+  .view-display-id-panel_pane_5,
+  .view-display-id-panel_pane_6,
+  .view-display-id-panel_pane_5 > .view-content,
+  .view-display-id-panel_pane_6 > .view-content{
+    padding: 0 !important;
+  }
+
+  .view-display-id-panel_pane_5, .view-display-id-panel_pane_6 {
+    > .view-filters, > .view-empty {
+      display: none;
+    }
+  }
+
+  /*============ Testing a responsive grid==========*/
+  .three-col-responsive-grid{
+    margin: 1em 0;
+    vertical-align: top;
+    h4{
+      margin: 0.1em;
+      display: inline-block;
+      color: $medium-gray;
+      font-weight: normal;
+    }
+
+    .grid__inner-padding{
+      padding:0 0.5em;
+    }
+    width: auto;
+    min-width: 200px;
+    display: block;
+    /*Media Queries*/
+    @include breakpoint($medium-screen-and-up){
+      display: inline-block;
+      width: 32%;
+      min-height: 200px;
+      img{
+        height: 150px;
+        //width: 100%
+      }
+    }
+  }
+  /*========== Targetting specific fields=============*/
+  .field-name-og-group-ref{
+    @include display_font;
+    display: inline-block;
+    line-height: 0.7;
+    font-size: 1.375em;
+    color: $medium-gray;
+  }
+  /*========== Footer=================*/
+  a.general-content-button {
+    margin: auto;
+  }
+  /*========== Toggler icons=================*/
+  .toggler-container {
+    float: right;
+    span {
+      display: inline-block;
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 25px;
+      width: 25px;
+      opacity: 0.5;
+      cursor: pointer;
+
+      &.list {
+        background-image: url(../images/icon-list.png);
+      }
+      &.thumbnail {
+        background-image: url(../images/icon-thumbnail.png);
+      }
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  
+  /*========== Changes view =================*/
+  &.list-view {
+    span.list {
+      opacity: 1;
+    }
+    .view-display-id-panel_pane_3 > .item-list,
+    .view-display-id-panel_pane_4 > .item-list,
+    .view-display-id-panel_pane_3 > .view-content,
+    .view-display-id-panel_pane_4 > .view-content{
+      display: none;
+    }
+    .view-display-id-panel_pane_4 > .view-footer .view-display-id-panel_pane_6
+    .view-display-id-panel_pane_3 > .view-footer .view-display-id-panel_pane_5 {
+      display: block;
+    }
+  }
+  &.thumbnail-view {
+    span.thumbnail {
+      opacity: 1;
+    }
+    .view-display-id-panel_pane_3 > .item-list,
+    .view-display-id-panel_pane_4 > .item-list,
+    .view-display-id-panel_pane_3 > .view-content,
+    .view-display-id-panel_pane_4 > .view-content{
+      display: block;
+    }
+    .view-display-id-panel_pane_3 > .view-footer .view-display-id-panel_pane_5,
+    .view-display-id-panel_pane_4 > .view-footer .view-display-id-panel_pane_6 {
+      display: none;
+    }
+  }
+  
+  /*========== Group manager marker=================*/
+  .is-group-manager {
+    background-image: url(../images/icon-account-group-manage.png);
+    background-position: 3px;
+    background-repeat: no-repeat;
+    background-size: 15px;
+    padding-left: 25px;
+  }
+}

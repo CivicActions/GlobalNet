@@ -1,0 +1,45 @@
+/**
+ *For styling the highlighted content boxes with light shadow background
+ */
+@mixin light-inner-shadow {
+  -webkit-box-shadow: inset 0px 0px 90px rgba(238,238,238,1);
+  -moz-box-shadow: inset 0px 0px 90px rgba(238,238,238,1);
+  box-shadow: inset 0px 0px 90px rgba(238,238,238,1);
+  background-color: $gray-fe;
+}
+.block__highlighted--lightbg {
+  h3, h4 {
+    margin-bottom: .15em;
+  }
+  div.pane-content{
+    @include highlighted-block;
+    @include light-inner-shadow;
+    a.button,
+    button {
+      @include button--dark;
+      @include button-border-radius(5px);
+      @include button-shadow;
+      display: inline-block;
+      margin-top: 0.8em;
+      background: $very-dark-gray;
+      -webkit-appearance: initial; 
+    }
+    
+    a.button {
+      padding: 0.4em 0.3em 0.2em;
+      margin-top: 0.5em;
+      display: table;
+    }
+  }
+  &.pane-events-panel-pane-7 {
+    h2.pane-title {
+      @include subheading;
+      @include display_font;
+      line-height: 1;
+      padding-bottom: 0.05em;
+      border-bottom: 3px solid $botticelli;
+      margin-bottom: .5em;
+    }
+  }
+  
+}

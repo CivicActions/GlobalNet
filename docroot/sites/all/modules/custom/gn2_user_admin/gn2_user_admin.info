@@ -1,0 +1,4 @@
+name = GN User Admin
+description = Organization user admin functions
+core = 7.x
+dependencies[] = gn2_user_delete

@@ -1,0 +1,37 @@
+/**
+ *@file
+ *This partial is for theming images with captions.
+ */
+
+/* A generic class for images with captions. Used in the group banner
+ *(Group page main image with captions)
+ */
+@mixin gray-text {
+  color: $gray-ec;
+}
+.gray-text{@include gray-text;}
+
+.captioned-image{
+  .field{
+    position: relative;
+    overflow: hidden;
+
+    .field-name-field-file-image-caption{
+      position: absolute;
+      background: rgba(0,0,0, 0.7);
+      @include gray-text;
+      padding: 0.85em;
+      width:100%;
+      .field-items{
+        opacity: 1;
+      }
+    }
+    .field-name-field-file-image-title-text{
+      display: none;
+    }
+    .field-name-field-file-image-caption{
+      bottom: 5px;
+    }
+
+  }
+}

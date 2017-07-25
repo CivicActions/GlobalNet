@@ -1,0 +1,81 @@
+.user__tab--contacts {
+  .view-header{
+    @include description-text;
+    display: inline-block;
+    margin-bottom: 1.5em;
+  }
+  .view-filters {
+    display: inline-block;
+    padding-bottom: 0.4em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid $titanium;
+    width: 100%;
+  }
+  .views-field-picture {
+    text-align: center;
+    width: 75px;
+
+    img {
+      border: solid 4px $light-blue-gray;
+      max-width: 50px;
+    }
+  }
+  .views-field-nothing {
+    font-size: 15px;
+    text-align: center;
+  }
+  .views-field-status-link-1 {
+    text-align: left;
+  }
+}
+
+
+// Styling the Table elements
+.view--user-contacts {
+  position: relative;
+  th {
+    text-align: left;
+    font-weight: bold ;
+    padding-left: 7px;
+    &.views-field-status-link-1 {
+      text-align: left;
+      font-weight: bold;
+      font-style: normal;
+    }
+  }
+
+  //Visually hide the table caption
+  caption {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+}
+
+/*===== Grid Flow Layout ======*/
+$zen-gutter-width: 0px;
+$zen-column-count: 6 !global;
+
+.view--user-contacts {
+  .view-content {
+    @include zen-grid-container();
+  }
+}
+.user-contacts--row {
+
+  @include breakpoint($small-screen-and-up) {
+  }
+  @include breakpoint($large-screen-and-up) {
+  }
+  margin-bottom: 10px;
+  padding: 0 10px !important;
+  min-height: 200px;
+}
+
+.user-contacts__message-link {
+  vertical-align: bottom;
+}
+

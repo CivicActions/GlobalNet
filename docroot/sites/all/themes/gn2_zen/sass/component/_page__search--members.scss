@@ -1,0 +1,85 @@
+/**
+* Theming for the Members Search page
+**/
+.page_search--members,
+.page-members {
+  .view-search-member {
+    .views-row {
+      .user-search-teaser-with-thumb {
+        .pane-user-picture {
+          width: 90px;
+          h2.pane-title {
+            display: none;
+          }
+        }
+        h4.pane-content {
+          text-transform: none;
+          margin: 0 0 5px;
+        }
+        .admin-button-blue {
+          a {
+            color: $white;
+          }
+        }
+      }
+      &.views-row-last {
+        border-bottom: none;
+      }
+    }
+  }
+  h2.pane-title {
+    margin: 0;
+    font-weight: bold;
+    line-height: 1.4;
+    font-size: .9em;
+    margin-bottom: .75em;
+  }
+  .views-exposed-form {
+    .views-exposed-widget {
+      padding: 0;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+
+  $item-list-indicator-size: 14px;
+  $item-list-indicator-margin: 6px;
+  $item-list-indicator-position: 2px;
+
+  .item-list {
+    margin-bottom: 1.75em;
+    ul {
+      padding: 0;
+      li {
+        list-style-type: none;
+        font-size: $item-list-indicator-size;
+        margin-bottom: 11px;
+        line-height: 1.4;
+        a {
+          display: inline-block;
+          color: rgba(44, 44, 44, 0.9);
+          /* RD-3015 Setting a height causes a bug with overlapping text */
+          // height: $item-list-indicator-size + $item-list-indicator-position;
+          height: auto;
+          background-repeat: no-repeat;
+          background-position: 0px $item-list-indicator-position;
+          &.facetapi-inactive {
+            padding-left: $item-list-indicator-size + $item-list-indicator-margin;
+            background-image: url(../images/sidebar-checkbox-off.png);
+          }
+          &.facetapi-active {
+            margin-right: $item-list-indicator-margin;
+            width: $item-list-indicator-size;
+            background-image: url(../images/sidebar-checkbox-on.png);
+            text-indent: -9999px;
+          }
+        }
+      }
+    }
+  }
+  .general-content-button {
+    a {
+      color: $white;
+    }
+  }
+}

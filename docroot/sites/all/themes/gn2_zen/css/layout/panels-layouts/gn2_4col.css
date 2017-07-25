@@ -1,0 +1,105 @@
+/**
+ * @file
+ * Positioning for a three across layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 24, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+.gn2-4col,
+.gn2-4col--header,
+.gn2-4col--col1,
+.gn2-4col--col2,
+.gn2-4col--col3,
+.gn2-4col--col4,
+.gn2-4col--footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-4col:before, .gn2-4col:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-4col:after {
+  clear: both;
+}
+
+/* line 39, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+.gn2-4col--footer {
+  clear: left;
+}
+
+/**
+ * Use 3 grid columns for larger screens.
+ */
+@media all and (min-width: 400px) {
+  /* line 48, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+  .gn2-4col--col1 {
+    float: left;
+    width: 25%;
+    margin-left: 0%;
+    margin-right: -25%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 51, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+  .gn2-4col--col2 {
+    float: left;
+    width: 25%;
+    margin-left: 25%;
+    margin-right: -50%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 54, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+  .gn2-4col--col3 {
+    float: left;
+    width: 25%;
+    margin-left: 50%;
+    margin-right: -75%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 57, ../../../sass/layout/panels-layouts/gn2_4col.scss */
+  .gn2-4col--col4 {
+    float: left;
+    width: 25%;
+    margin-left: 75%;
+    margin-right: -100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+}
+
+/*# sourceMappingURL=gn2_4col.css.map */

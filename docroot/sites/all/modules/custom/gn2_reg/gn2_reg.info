@@ -1,0 +1,7 @@
+name = GN2 User Registration
+description = Creates a multi-step user registration form
+core = 7.x
+package = GlobalNET
+
+dependencies[] = entityform
+configure = admin/config/content/gn2_reg

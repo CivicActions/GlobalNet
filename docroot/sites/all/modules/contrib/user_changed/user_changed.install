@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the User Changed module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function user_changed_install() {
+  db_add_field('users', 'changed', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function user_changed_uninstall() {
+  db_drop_field('users', 'changed');
+}

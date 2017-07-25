@@ -1,0 +1,8 @@
+name = Entityform Submission export
+description = Provides Entityform Submission export.
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = entityform
+
+files[] = entityform_submissions_export.field.inc

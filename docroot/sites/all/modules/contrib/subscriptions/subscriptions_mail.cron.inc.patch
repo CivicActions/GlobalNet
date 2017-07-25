@@ -1,0 +1,15 @@
+diff --git subscriptions/subscriptions_mail.cron.inc subscriptions/subscriptions_mail.cron.inc
+index 41fd5a9..7033c43 100644
+--- subscriptions/subscriptions_mail.cron.inc
++++ subscriptions/subscriptions_mail.cron.inc
+@@ -279,6 +279,10 @@ function _subscriptions_mail_send($module, $mailkey, $name, $to, $from, $uid, $s
+     'object' => NULL,
+   ), $from, TRUE);
+ 
++  if (module_exists('privatemsg') && variable_get('subscriptions_privatemsg', 0)) {
++    privatemsg_new_thread(array($user), $mail_success['subject'],  $mail_success['body'], array('tags' => true));
++  }
++
+   $watchdog_params = array('%name' => $name, '!address' => "<a href='mailto:$to'>$to</a>");
+   if (!empty($mail_success['result'])) {
+     if (variable_get('subscriptions_watchgood', 1)) {

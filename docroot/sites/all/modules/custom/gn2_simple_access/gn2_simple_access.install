@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Install file for gn2_simple_access.
+ */
+
+/**
+ * Updating existing Private groups; see RD-2815.
+ */
+function gn2_simple_access_update_7001(&$sandbox) {
+  /**
+   * Set Private nodes to Group and update the node grants.
+   */
+  $nids = db_query('SELECT n.nid FROM {node} n'
+      . ' JOIN {field_data_field_gn2_simple_access} sa ON sa.revision_id = n.vid'
+      . ' WHERE sa.field_gn2_simple_access_value = :private',
+      array(':private' => 'private'))->fetchAll();
+
+  if (!empty($nids)) {
+    foreach ($nids as $nid) {
+      $node = node_load($nid->nid);
+      $node_wrapper = entity_metadata_wrapper('node', $node);
+      $node_wrapper->field_gn2_simple_access->set('group');
+      $node_wrapper->save();
+    }
+  }
+}

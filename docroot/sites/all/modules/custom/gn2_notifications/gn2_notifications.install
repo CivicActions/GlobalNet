@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Gn2_notifications module installation.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_notifications_schema() {
+  $schema['subscriptions_notifications_count'] = array(
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  $schema['subscriptions_notifications_messages'] = array(
+    'fields' => array(
+      'delta' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Message delta',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id',
+      ),
+      'initiator' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'initiator',
+        'description' => 'User who creates the action',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'timestamp',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'nid',
+        'default' => 1,
+        'description' => 'Node id',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'title' => 'type',
+        'description' => 'Type of message',
+      ),
+      'text' => array(
+        'type' => 'varchar',
+        'length' => 256,
+        'default' => '',
+        'title' => 'text',
+        'description' => 'Message Text',
+      ),
+    ),
+    'primary key' => array('delta'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Changed Message Text field type for subscriptions_notifications_messages.
+ */
+function gn2_notifications_update_7100() {
+  db_change_field(
+    'subscriptions_notifications_messages',
+    'text',
+    'text',
+    array(
+      'type' => 'text',
+      'title' => 'text',
+      'description' => 'Message Text',
+    )
+  );
+}
+
+/**
+ * Adding gn2_notifications email frequency options.
+ */
+function gn2_notifications_update_7102() {
+  $schema['subscriptions_notifications_frequency'] = array(
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => 'daily',
+        'title' => 'type',
+        'description' => 'Frequency',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+  db_create_table('subscriptions_notifications_frequency', $schema['subscriptions_notifications_frequency']);
+}
+
+/**
+ * Adding gn2_notifications per node notification options.
+ */
+function gn2_notifications_update_7103() {
+  $schema['subscriptions_notifications_per_node'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'nid',
+        'description' => 'Node id',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'status',
+        'description' => 'Status',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id',
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+  db_create_table('subscriptions_notifications_per_node', $schema['subscriptions_notifications_per_node']);
+}
+
+/**
+ * Adding gn2_notifications sms on off option.
+ */
+function gn2_notifications_update_7104() {
+  $schema['subscriptions_notifications_sms'] = array(
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'status',
+        'default' => 0,
+        'description' => 'Status',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+  db_create_table('subscriptions_notifications_sms', $schema['subscriptions_notifications_sms']);
+}

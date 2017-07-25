@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * The GN2 Bulk Delete provides an interface for bulk deleting Folder files.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_bulk_delete_menu() {
+  $items = array();
+
+  $items['admin/config/media/bulk-delete'] = array(
+    'title' => 'GlobalNET Bulk Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_bulk_delete_admin_form'),
+    'access arguments' => array('administer nodes'),
+    'weight' => 2,
+    'file' => 'gn2_bulk_delete.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['node/%node/bulk-delete'] = array(
+    'title' => 'Bulk Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_bulk_delete_form', 1),
+    'access callback' => 'gn2_bulk_delete_access',
+    'access arguments' => array(1),
+    'menu_name' => 'navigation',
+    'weight' => 2,
+    'file' => 'gn2_bulk_delete.form.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['node/%node/bulk-delete/confirm/%'] = array(
+    'title' => 'Bulk Delete',
+    'title callback' => 'gn2_bulk_delete_confirm_title',
+    'title arguments' => array(1),
+    'page callback' => 'gn2_bulk_delete_confirm_page',
+    'page arguments' => array(1, 4),
+    'access callback' => 'gn2_bulk_delete_access',
+    'access arguments' => array(1),
+    'file' => 'gn2_bulk_delete.confirm.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback for GN2 Bulk Delete.
+ *
+ * @param object $node.
+ */
+function gn2_bulk_delete_access($node) {
+  global $user;
+  // Hide tab for all but, Folders.
+  if ($node->type !== 'media_gallery') {
+    return FALSE;
+  }
+  // Allow access for Administrators.
+  if (in_array('administrator', $user->roles)) {
+    return TRUE;
+  }
+  // Only show for Folder content type.
+  if ($node->type === 'media_gallery') {
+    // Check if the user is a Group Manager for this Folder.
+    $group = field_get_items('node', $node, 'og_group_ref');
+    $gid = $group[0]['target_id'];
+    $group_role = og_get_user_roles('node', $gid);
+    // Check if the user is an Org Manager for this org.
+    $parent = field_get_items('node', $node, 'field_parent_organization');
+    $pid = $parent[0]['target_id'];
+    $org_role = ($pid) ? og_get_user_roles('node', $pid) : array();
+    return (in_array('org_manager', $org_role) || in_array('group_manager', $group_role))
+      ? TRUE : FALSE;
+  }
+  // Otherwise, deny access.
+  return FALSE;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_bulk_delete_theme($existing, $type, $theme, $path) {
+  return array(
+    'gn2_bulk_delete_table_form' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Form table theming function.
+ *
+ * @param array $form
+ *   The form array.
+ */
+function theme_gn2_bulk_delete_table_form(&$variables) {
+  $form = $variables['form'];
+  $rows = $form['rows'];
+  $header = $form['#header'];
+
+  $content = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => array(),
+  );
+
+  // Format our tables rows.
+  foreach (element_children($rows) as $row_index) {
+    $row = array();
+    foreach (element_children($rows[$row_index]) as $col_index) {
+      // Render the column form element.
+      $row[] = drupal_render($rows[$row_index][$col_index]);
+    }
+    // Add the row to the table.
+    $content['#rows'][] = $row;
+  }
+
+  // Redner the table and return.
+  return drupal_render($content);
+}
+
+/**
+ * Gets the files for a given deletion request.
+ *
+ * @param int $did
+ *   The bulk delete ID.
+ */
+function _gn2_bulk_delete_get_files($did) {
+  $request_data['info'] = db_query('SELECT * FROM {bulk_delete} WHERE did = :did', array(':did' => $did))->fetchAssoc();
+  $request_data['files'] = db_query('SELECT fid FROM {bulk_delete_files} WHERE did = :did', array(':did' => $did))->fetchCol();
+  return $request_data;
+}
+
+/**
+ * Get the email addresses for all admin users.
+ */
+function _gn2_bulk_delete_get_admins() {
+  $query = db_select('users', 'u');
+  $query->fields('u', array('mail', 'name'));
+  $query->join('users_roles', 'ur', 'ur.uid = u.uid');
+  $query->join('role', 'r', 'r.rid = ur.rid');
+  $query->condition('r.name', 'administrator');
+  $query->orderBy('u.name', 'ASC');
+  $admins = $query->execute()->fetchAll();
+
+  foreach ($admins as $admin_users) {
+    $options[$admin_users->name . ' <' . $admin_users->mail . '>'] = $admin_users->name;
+  }
+  return $options;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_bulk_delete_form_views_form_folder_bulk_delete_page_alter(&$form, &$form_state, $form_id) {
+  if (filter_input(INPUT_GET, 'did')) {
+    $did = filter_input(INPUT_GET, 'did');
+    // Get the files to be deleted.
+    $request_data = _gn2_bulk_delete_get_files($did);
+    // Load the user object for the user that requested the deletions.
+    $request_user = (isset($request_data['info']['uid'])) ? user_load($request_data['info']['uid']) : NULL;
+    if (isset($form['views_bulk_operations']) && isset($request_user)) {
+      foreach ($form['views_bulk_operations'] as $key => $value) {
+        if ($key !== '#tree') {
+          $form['views_bulk_operations'][$key]['#default_value'] = (in_array($value['#return_value'], $request_data['files'])) ?
+            TRUE : FALSE;
+        }
+      }
+      // Set a message telling who requested the deletions.
+      drupal_set_message(t('%name requested that the checked files be deleted. Select %delete from the Operations menu and click %execute.',
+        array('%name' => $request_user->name, '%delete' => 'Delete items', '%execute' => 'Execute')));
+    }
+  }
+}

@@ -1,0 +1,80 @@
+/**
+ * Pager.
+ */
+
+/* A list of page numbers when more than 1 page of content is available. */
+.pager {
+  clear: both;
+  padding: 0;
+  background-color: transparent;
+  text-align: left;
+}
+
+%pager__item {
+  display: inline;
+  padding: 0 0.5em;
+  list-style-type: none;
+  background-image: none;
+}
+
+li.pager-item,      /* A list item containing a page number in the list of pages. */
+li.pager-first,     /* The first page's list item. */
+li.pager-previous,  /* The previous page's list item. */
+li.pager-next,      /* The next page's list item. */
+li.pager-last,      /* The last page's list item. */
+li.pager-current,
+li.pager-ellipsis { /* A concatenation of several list items using an ellipsis. */
+  
+  @extend %pager__item;
+  font-size: 1em !important;
+  text-transform: capitalize;
+  line-height: 1 !important;  
+  margin: 0 0px !important;
+  padding: 0 7px 0 7px !important;
+  display: inline-block;
+  border-right: 0;
+  border-left: 1px solid $lighter-blue-gray;
+  
+  a {
+    color: $blue-gray !important;
+    line-height: inherit !important;
+  }
+  
+}
+
+li.pager-current.first,
+li.pager-first, 
+li.pager-previous,
+li.pager-next,
+li.pager-last {
+  border: none;
+}
+
+li.pager-first,
+li.pager-previous {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  padding-right: 0 !important;
+  margin-right: 16px !important;
+}
+
+li.pager-next,
+li.pager-last {
+  padding-left: 0 !important;
+  margin-left: 16px !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* The current page's list item. */
+.pager-current {
+  @extend %pager__item;
+  font-size: 1em !important;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.pager-item,
+.pager-current {
+  color: $blue-gray !important;
+}

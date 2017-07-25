@@ -1,0 +1,4 @@
+name = EZProxy GlobalNET
+description = "Allows Drupal to integrate with EZProxy"
+version = "7.x-0.1
+core = 7.x

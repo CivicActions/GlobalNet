@@ -1,0 +1,1 @@
+<?php print str_replace('>Cancel<', '>Cancel pending<', $output); ?>

@@ -1,0 +1,59 @@
+/**
+ *Styles for the navigation region.
+ */
+ 
+@import "zen";
+@import "zen/background";
+  
+$zen-grid-color: pink;
+$zen-grid-numbers: none;
+$display-zen-grid-background: true;
+ 
+.navigation-wrapper {
+  @include breakpoint($medium-screen-and-up) {
+    margin-bottom: 1em;
+    }
+  .block-gn2-themeparts-swap {
+    margin-bottom: 0;
+  }
+  font-size: 1em;
+  .menu li {
+    padding:0.8em;
+  }
+  a, a.active, a:visited {
+    color: $venice_blue;
+  }
+  .inner,
+  .org__menu--main,
+  .custom-search-default-block {
+    @include zen-grid-item-base();
+    margin-bottom: 0;
+  }
+  .custom-search-default-block {
+    border-bottom: 1px solid $lighter-blue-gray;
+    @include breakpoint($medium-screen-and-up){
+    margin-bottom: 3px;
+    }
+  }
+
+}
+
+@include breakpoint($medium-screen-and-up){
+  $zen-column-count: 3 !global;
+  $zen-gutter-width: 0px;
+
+  .navigation-wrapper{
+    .inner{
+    @include zen-grid-container();
+    border-bottom: 1px solid $lighter-blue-gray;
+    .org__menu--main {
+      @include zen-grid-item(2, 1);
+    }
+    .custom-search-default-block {
+      @include zen-grid-item(1, 3);
+      border-bottom: none;
+    }
+  }
+  
+  }
+}

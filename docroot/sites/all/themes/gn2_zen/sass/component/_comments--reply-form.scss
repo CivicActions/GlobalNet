@@ -1,0 +1,71 @@
+/**
+* Styling the comments reply form
+*/
+$zen-gutter-width: 0px;
+$zen-column-count: 12 !global;
+
+.page-comment-reply {
+  .comment-author-name {
+    line-height: 1.1em;
+    margin: 1em 0 0.4em;
+  }
+  .comment-author-image {
+    text-align: center;
+    padding: 10% 0 0;
+    img { border: 4px solid $light-blue-gray; }
+  }
+  .comment__date {
+    @include description-text;
+  }
+
+  /****** Layout *************/
+
+  .gn2-3col--col3 {
+    float: none;
+    margin-left: 0;
+    margin-right: 0;
+    width: auto;
+    .inner {
+      padding-right: 0;
+    }
+  }
+
+  @include breakpoint($xs-screen-only) {
+    .gn2-3col--col1 {
+      display: none;
+    }
+  }
+
+  /**
+   * Use 3 grid columns for larger screens.
+   */
+  @include breakpoint($small-screen-and-up) {
+    .gn2-3col--col1 {
+      @include zen-grid-item(3, 1);
+      padding-bottom: 0;
+      .inner {
+        padding-right: 9%;
+      }
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(8, 4);
+      padding-bottom: 0;
+      clear: none;
+      .inner {
+        padding-right: 0;
+      }
+    }
+
+    .gn2-3col--col3 {
+      @include zen-grid-item(12, 1);
+      padding-bottom: 0;
+      clear: left;
+      .inner {
+        padding-right: 0;
+      }
+    }
+  }
+
+
+
+}// End Comment Reply page

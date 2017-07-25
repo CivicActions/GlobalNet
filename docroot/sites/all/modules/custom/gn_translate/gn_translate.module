@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the gn_translate feature.
+ */
+
+include_once 'gn_translate.features.inc';

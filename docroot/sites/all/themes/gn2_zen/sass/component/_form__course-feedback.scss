@@ -1,0 +1,52 @@
+.entitytype-event_feedback-form,
+.entitytype-group_feedback-form,
+.entitytype-course_feedback-form {
+  .form-item {
+    label {
+      font-size: 1em;
+      margin: 0 0 0.5em;
+    }
+    .form-text, textarea {
+      border: 1px solid $color--gray-form-fields;
+      box-shadow: none;
+      margin: 1em 0 0;
+    }
+    .form-type-radio {
+      .form-radio {
+        position: relative;
+        visibility: hidden;
+        z-index: 1;
+      }
+      label {
+        left: -1em;
+        padding: 0;
+        position: relative;
+        z-index: 2;
+        &:before {
+          background: $white;
+          border-radius: 50%;
+          border: 1px solid $color--gray-form-fields;
+          box-shadow: 0px 0px 4px -2px $black inset;
+          content: '';
+          display: inline-block;
+          height: 1em;
+          margin-right: 0.5em;
+          vertical-align: middle;
+          width: 1em;
+        }
+      }
+      .form-radio:checked + label {
+        &:after {
+          background: $black;
+          border-radius: 50%;
+          content: '';
+          height: 0.5em;
+          left: 0.35em;
+          position: absolute;
+          top: 0.35em;
+          width: 0.5em;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+name = "DrupalAuth for SimpleSAMLphp"
+description = "This module tightly integrates the SimpleSAMLphp Identity Provider login experience with a Drupal site."
+core = 7.x
+configure = admin/config/people/drupalauth4ssp
+
+; Information added by Drupal.org packaging script on 2016-09-27
+version = "7.x-1.0-beta5"
+core = "7.x"
+project = "drupalauth4ssp"
+datestamp = "1474998840"
+

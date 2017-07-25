@@ -1,0 +1,24 @@
+<?php
+/**
+ * @file
+ * This module provides NULL authentication for pki_authentication module.
+ */
+
+/**
+ * Implements hook_pki_authentication_validate().
+ *
+ * In our installation Apache is configured with nightly cert blacklists
+ * and will only accept certs signed by a trusted CA thus limiting logins
+ * to people who have certs by a known signer that has not been revoked.
+ * Therefor, doing cert validation at login or during account request was
+ * deemed unnecessary.
+ */
+function pki_authentication_null_pki_authentication_validate($data) {
+
+  // The pki_authentication module only checks for the init index.
+  $output = array(
+    'init' => $data,
+  );
+  return $output;
+
+}

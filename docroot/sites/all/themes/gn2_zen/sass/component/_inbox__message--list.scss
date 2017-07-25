@@ -1,0 +1,218 @@
+/*
+ * Styling Inbox messages list
+ */
+
+.view-inbox {
+  span.field-content.new-message-indicator,
+  .new-message-indicator {
+    color: red;
+    font-style: italic;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+  .message--list {
+    clear: both;
+    padding: 1em 0;
+    &.new-message {
+      .message-subject {
+        font-weight: bold;
+      }
+    }
+    border-bottom: 1px solid $light-gray;
+    font-style: normal;
+  }
+
+  .views-table {
+    tr.odd, tr.even {
+      background-color: transparent;
+      td {
+        padding-bottom: 1.5em;
+        padding-top: 1.5em;
+      }
+    }
+    .views-field-timestamp {
+      width: 95px;
+      padding-right: 0;
+      font-style: italic;
+      font-size: 0.8em;
+      color: lighten($medium-gray, 20%);
+      float: right;
+    }
+    .views-field-body, .views-field-subject {
+      overflow: hidden;
+      p, div {
+        width: 200%;
+      }
+      > span {
+        width: 200%;
+        display: inline-block;
+        > span {
+          display: none;
+        }
+      }
+    }
+    .views-field-subject {
+      max-width: 220px;
+    }
+    
+    tr {
+      vertical-align: top;
+      &.is-new-message {
+        .views-field-thread-id, .views-field-subject {
+          font-weight: bold;
+        }
+      }
+      &:first-child {
+        border-top: 1px solid $gray-c;
+      }
+    }
+  }
+  //====== Overriding Accordion Styles======
+  .ui-widget {
+    font-size: 1em;
+    font-family: 'Arial' sans-serif;
+  }
+  .ui-widget-content {
+    border: none;
+  }
+  .ui-state-active,
+  .ui-widget-content .ui-state-active,
+  .ui-widget-header .ui-state-active,
+  .ui-state-default,
+  .ui-widget-content .ui-state-default,
+  .ui-widget-header .ui-state-default {
+    background: url(../images/bg-diagonal-tile-grey.png);
+    border: 1px solid $gray-d;
+  }
+  .ui-accordion h3.ui-accordion-header {
+    font-size: 1.4em;
+    overflow: hidden;
+    padding-bottom: 0.2em;
+    padding-top: 0.3em;
+    font-style: normal;
+  }
+  .ui-state-default a,
+  .ui-state-default a:link,
+    .ui-state-default a:visited {
+    color: $dark-gray;
+  }
+  .ui-state-active a,
+  .ui-state-active a:link,
+    .ui-state-active a:visited {
+    color: $very-dark-gray;
+    font-weight: bold;
+  }
+  
+  //================ TRASH ===============
+  &.view-display-id-block_4 {
+    .views-row {
+      padding: 1em;
+      border-bottom: 1px solid $gray-c;
+    }
+  }
+}
+
+//============ Styling the message thread page =========
+.page-messages-view {
+  h1#page-title {
+    display: inline-block;
+    padding-right: 10px;
+  }
+  .privatemsg-message-participants {
+    display: inline-block;
+    border: none;
+  }
+  #privatemsg-form-reply {
+    padding: 1em;
+    background-color: $white;
+    h2, label {
+      display: none;
+    }
+    .text-format-wrapper {
+      display: inline-block;
+      width: calc(100% - 85px);
+      .form-item-body-value {
+        margin: 0;
+      }
+    }
+    .message-delete-link {
+      display: block;
+      padding-top: 10px;
+    }
+  }
+  #edit-actions {
+    margin: 0;
+  }
+}
+
+.message-author-image {
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 1em;
+  img{
+    border: 4px solid $light-blue-gray;
+    max-width: 50px;
+  }
+}
+.message-date {
+  font-style: italic;
+  font-size: 0.8em;
+  color: lighten($medium-gray, 20%);
+  float: right;
+}
+
+.message--thread {
+  background-color: $white;
+  .message--list {
+    padding: 1em;
+    border-bottom: 1px solid $gray-c;
+    &:first-child {
+      border-top: 1px solid $gray-c;
+    }
+  }
+  .message-body {
+    padding-top: 10px;  
+  }
+  .message--content-wrapper {
+    display: inline-block;
+    width: calc(100% - 85px);
+  }
+  .message-reply{
+    @include admin-button($bgcolor: lighten($red, 10%));
+    margin-bottom: 0 !important;
+  }
+  .message-delete {
+    color: (lighten($red, 15%));
+    display: block;
+    font-size: 0.8em;
+    text-decoration: underline;
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-left: 10px;
+  }
+  .message-timestamp {
+    float: right;
+    font-size: 0.8em;
+    color: $gray-9;
+
+  }
+  .message-actions {
+    text-align: right;
+    float: right;
+    margin-top: -25px;
+    &.footer {
+      margin-top: -5px;
+    }
+  }
+  .messages--thread--title {
+    @include body_font;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: .15em 0 0 0;
+    margin-bottom: 0;
+  }
+  .view-header {
+    p { color: $medium-gray;}
+  }
+}

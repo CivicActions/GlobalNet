@@ -1,0 +1,47 @@
+.view-display-id-upcoming_events_page {
+  
+  margin-top: 1em;
+
+  .gn2-3col--col1 {
+    font-size: 100% !important;
+  }
+  
+  .event_teaser__date {
+    background-image: url(../images/gn-icons/event_location_large.png);
+    background-repeat: no-repeat;
+    min-height: 65px;
+    padding: 0 0 0 75px;
+  }
+  
+  .event-location {
+    * {
+      display: none;
+    }
+    .location-name {
+      display: block;
+    }
+  }
+}
+.node-type-program{
+  .sidebar-node-list--item{
+    border: none;
+  }
+  .view-display-id-view_pane__upcoming_events_teasers{
+    .column.first{
+      .view-display-id-panel_pane_2{
+        .views-row{
+          background-image: url("/sites/all/themes/gn2_zen/images/gn-icons/event_date_large.png");
+          background-repeat: no-repeat;
+          height: 60px;
+          background-position: 5px 0px;
+          min-width: 122px; 
+          > div{
+            display: inline-block;
+            margin-left: 75px;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}

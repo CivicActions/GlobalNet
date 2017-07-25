@@ -1,0 +1,376 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_themeparts_swap.
+ */
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function gn2_themeparts_swap_form_organization_node_form_alter(&$form, &$form_state, $form_id) {
+  if (!empty($form['nid']['#value'])) {
+    $node = node_load($form['nid']['#value']);
+    $nid = $node->nid;
+  }
+  else {
+    $node = '';
+    $nid = '';
+  }
+  $form['#group_children']['gn2_themeparts_swap_wrap'] = 'group_organization_styles';
+  $form['gn2_themeparts_swap_wrap']['#weight'] = 100;
+  $form['gn2_themeparts_swap_wrap']['#prefix'] = '<div id="theme-ajax-wrap"><hr /><h2>' . t("Modify organization styles.") . '</h2>';
+  $form['gn2_themeparts_swap_wrap']['#suffix'] = '<hr /></div>';
+  $form['gn2_themeparts_swap_wrap']['gn2_themeparts_swap_file_logo-' . $nid] = array(
+    '#default_value' => variable_get('gn2_themeparts_swap_fid_logo-' . $nid, NULL),
+    '#type' => 'managed_file',
+    '#prefix' => t('Current Logo Image:') . ' ' . variable_get('gn2_themeparts_swap_filename_logo-' . $nid),
+    '#title' => t('Logo image'),
+    '#size' => 22,
+    '#description' => t('This logo appears in the top header for the organization. Files must not exceed 1 MB. Allowed file types: png gif jpg jpeg.'),
+    '#suffix' => '<br /><br />',
+    '#upload_validators' => array(
+      'file_validate_extensions' => array('jpg jpeg png gif'),
+      'file_validate_size' => array(1 * 1024 * 1024),
+    ),
+    '#upload_location' => 'public://',
+  );
+  $form['#addendum'] = !empty($nid) ? $nid : '';
+  $form['#org_title'] = !empty($node->title) ? $node->title : '';
+  $options = array(
+    'black' => 'Black',
+    'blue' => 'Blue',
+    'green' => 'Green',
+    'brown' => 'Brown',
+    'grey' => 'Grey',
+    'violet' => 'Violet',
+  );
+  $form['gn2_themeparts_swap_wrap']['gn2_themeparts_swap_form_options-' . $nid] = array(
+    '#prefix' => t('Choose theme color scheme'),
+    '#type' => 'select',
+    '#default_value' => variable_get('gn2_themeparts_swap_form_options-' . $nid),
+    '#options' => $options,
+    '#suffix' => '<br /><br />',
+  );
+
+  $form['actions']['submit']['#submit'][] = 'gn2_themeparts_swap_submit';
+}
+
+/**
+ * Callback for gn2_themeparts_swap submit.
+ */
+function gn2_themeparts_swap_submit($form, &$form_state) {
+  // Wipe out old values and start fresh.
+  $nid = $form_state['nid'];
+  variable_del('og-themeswap-colorpick-' . $nid);
+  variable_del('gn2_themeparts_swap_filename_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_filepath_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_file_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_form_options-' . $nid);
+  file_unmanaged_delete('public://og-themeswap-' . variable_get('colorpick-' . $nid) . '.css');
+  drupal_clear_css_cache();
+
+  $org_title = $form_state['complete form']['#org_title'];
+  variable_set('gn2_themeparts_swap_form_options-' . $nid, $form_state['values']['gn2_themeparts_swap_form_options-' . $nid]);
+  variable_set('colorpick-' . $nid, 'colorpick-' . $nid);
+
+  $color_value = $form_state['values']['gn2_themeparts_swap_form_options-' . $nid];
+  $slice_path = drupal_get_path('module', 'gn2_themeparts_swap') . '/assets/';
+
+  switch ($color_value) {
+    case 'blue':
+      $header_bg = $slice_path . 'bg-header-tile-blue.png';
+      $footer_bg = 'rgba(2, 58, 90, .9)';
+      $vert_lines = '#3f7390';
+      break;
+
+    case 'brown':
+      $header_bg = $slice_path . 'bg-header-tile-brown.png';
+      $footer_bg = 'rgba(44, 31, 13, .9)';
+      $vert_lines = '#644f32';
+      break;
+
+    case 'black':
+      $header_bg = $slice_path . 'bg-header-tile-black.png';
+      $footer_bg = 'rgba(44, 44, 44, .9)';
+      $vert_lines = '#9c9c9c';
+      break;
+
+    case 'green':
+      $header_bg = $slice_path . 'bg-header-tile-green.png';
+      $footer_bg = 'rgba(49, 60, 31, .9)';
+      $vert_lines = '#697659';
+      break;
+
+    case 'grey':
+      $header_bg = $slice_path . 'bg-header-tile-grey.png';
+      $footer_bg = 'rgba(44, 44, 44, .9)';
+      $vert_lines = '#5f676d';
+      break;
+
+    case 'violet':
+      $header_bg = $slice_path . 'bg-header-tile-violet.png';
+      $footer_bg = 'rgba(22, 50, 94, .9)';
+      $vert_lines = '#456493';
+      break;
+  }
+
+  // Handle logo image.
+  $validators_logo = array(
+    'file_validate_is_image' => array(),
+  );
+
+  if ($form_state['input']['gn2_themeparts_swap_file_logo-' . $nid]['fid'] > 0) {
+    $fid = $form_state['values']['gn2_themeparts_swap_file_logo-' . $nid];
+    $file_logo = file_load($fid);
+
+    if (!empty($file_logo)) {
+      $file_logo->status = FILE_STATUS_PERMANENT;
+      file_save($file_logo);
+      file_usage_add($file_logo, 'gn2_themeparts_swap', 'node', $nid);
+
+      variable_set('gn2_themeparts_swap_fid_logo-' . $nid, $file_logo->fid);
+      variable_set('gn2_themeparts_swap_filename_logo-' . $nid, $file_logo->filename);
+      variable_set('gn2_themeparts_swap_filepath_logo-' . $nid, image_style_url('gn2_themeparts_swap_logo', $file_logo->uri));
+    }
+  }
+  else {
+    variable_del('gn2_themeparts_swap_fid_logo-' . $nid);
+    variable_del('gn2_themeparts_swap_filename_logo-' . $nid);
+    variable_set('gn2_themeparts_swap_filepath_logo-' . $nid, drupal_get_path('theme', 'gn2_zen') . '/images/org-logos/logo_globalnet.png');
+  }
+
+  // Start building our stylesheet.
+  $contents = '';
+
+  // @codingStandardsIgnoreStart
+  // @TODO: confirm with team if ok to remove.
+  // $contents .= '.header_org_title span:before{content:"' . $org_title . '"!important; padding: 0.5em 0; display: block;}';
+  // @codingStandardsIgnoreEnd
+  if (!empty($header_bg)) {
+    $contents .= '#header-wrapper{background:url(/' . $header_bg . ') repeat !important}';
+  }
+  if (!empty($footer_bg)) {
+    $contents .= '#footer-wrapper{background:' . $footer_bg . ' !important}';
+  }
+  if (!empty($vert_lines)) {
+    $contents .= '#footer-wrapper footer#footer .layout-wrapper.gn2-footer .gn2-footer--col1{border-color:' . $vert_lines . ' !important}';
+    $contents .= '#footer-wrapper footer#footer .layout-wrapper.gn2-footer .gn2-footer--col2{border-color:' . $vert_lines . ' !important}';
+  }
+
+  // @codingStandardsIgnoreStart
+  // @TODO: confirm with team if ok to remove.
+  /*
+  if (variable_get('gn2_themeparts_swap_filepath_logo-' . $nid)) {
+    $contents .= '.header__logo img, #block-gn2-base-config-site-logo img{visibility:hidden !important}';
+    $contents .= '.header__logo a, #block-gn2-base-config-site-logo a{display:block !important}';
+    $contents .= '.header__logo a, #block-gn2-base-config-site-logo {background:url(' . variable_get('gn2_themeparts_swap_filepath_logo-' . $nid) . ') no-repeat 0 0 !important}';
+  }
+  */
+  // @codingStandardsIgnoreEnd
+
+  // Save our new stylesheet and clear css cache.
+  if (!empty($contents)) {
+    file_put_contents('public://og-themeswap-' . variable_get('colorpick-' . $nid) . '.css', $contents);
+    drupal_clear_css_cache();
+  }
+
+  return $form['gn2_themeparts_swap_wrap'];
+}
+
+/**
+ * Callback for gn2_themeparts_swap reset.
+ */
+function gn2_themeparts_swap_reset($form, &$form_state) {
+  $nid = $form_state['complete form']['#addendum'];
+  // Wipe out css.
+  $file_body_bg = 'public://og-themeswap-' . variable_get('colorpick-' . $nid) . '.css';
+  if (file_exists($file_body_bg)) {
+    file_unmanaged_delete('public://og-themeswap-' . variable_get('colorpick-' . $nid) . '.css');
+    variable_del($file_body_bg);
+  }
+
+  // Wipe out corresponding variables.
+  variable_del('og-themeswap-colorpick-' . $nid);
+  variable_del('gn2_themeparts_swap_filename_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_filepath_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_file_logo-' . $nid);
+  variable_del('gn2_themeparts_swap_form_options-' . $nid);
+
+  drupal_clear_css_cache();
+  return $form['gn2_themeparts_swap_wrap'];
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function gn2_themeparts_swap_preprocess_page(&$vars) {
+
+  // If we are in a group that has an override stylesheet, load it.
+  $group_id = gn2_context_get_org_id();
+
+  // Verifies a value exists.
+  if (!empty($group_id)) {
+    $css = 'public://og-themeswap-' . variable_get('colorpick-' . $group_id) . '.css';
+    if (file_exists($css)) {
+      drupal_add_css('public://og-themeswap-' . variable_get('colorpick-' . $group_id) . '.css', array('weight' => -9999));
+    }
+  }
+
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_themeparts_swap_block_info() {
+  $blocks['organization_nav'] = array(
+    'info' => t('GN2 Org Navigation'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  // Footer About [Org] block.
+  $blocks['gn2_themeparts_about'] = array(
+    'info' => t('GN2 Footer About Org'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_themeparts_swap_block_view($delta = '') {
+  switch ($delta) {
+    case 'organization_nav':
+      $block = gn2_themeparts_swap_get_nav();
+      break;
+
+    // Footer About block.
+    case 'gn2_themeparts_about':
+      $block = gn2_themeparts_swap_footer_about();
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function gn2_themeparts_swap_block_view_alter(&$data, $block) {
+
+  // For the site logo block...
+  if ($block->module == 'gn2_base_config' && $block->delta == 'site-logo') {
+
+    // Site logo is changed depending on the organization.
+    $file_path = variable_get("gn2_themeparts_swap_filepath_logo-{$data['content']['#organization']->nid}", NULL);
+
+    // Replaces logo if under the account page. Keep login styles.
+    if (arg(0) == 'account' && isset($_SESSION['gn2_context_organization_nid'])) {
+      $file_path = variable_get("gn2_themeparts_swap_filepath_logo-{$_SESSION['gn2_context_organization_nid']}", NULL);
+    }
+
+    // Performs replacement of image source if found.
+    if ($file_path) {
+      $data['content']['logo']['#markup'] = preg_replace('/src="[^"]*"/', 'src="' . $file_path . '"', $data['content']['logo']['#markup']);
+    }
+
+    // Adds organization name.
+    $url_parameters = array(
+      'attributes' => array(
+        'class' => array('header_org_title'),
+        'id' => 'org-name',
+        'rel' => 'home',
+        'title' => t('GlobalNet Home'),
+      ),
+    );
+    $data['content']['name'] = array(
+      '#markup' => l($data['content']['#organization']->title, "<front>", $url_parameters),
+      '#prefix' => '<h1 class="organization-name">',
+      '#suffix' => '</h1>',
+    );
+
+  }
+
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_themeparts_swap_module_implements_alter(&$implementations, $hook) {
+  // For hook_custom_theme, makes sure this module's runs last.
+  if ($hook == 'custom_theme') {
+    $group = $implementations['gn2_themeparts_swap'];
+    unset($implementations['gn2_themeparts_swap']);
+    $implementations['gn2_themeparts_swap'] = $group;
+  }
+}
+
+/**
+ * Implements hook_custom_theme().
+ *
+ * Forces default theme when looking at user pages. (for admins it uses the
+ * admin theme).
+ */
+function gn2_themeparts_swap_custom_theme() {
+  if (drupal_match_path(current_path(), 'user/*/edit/account')) {
+    if ($default_theme = variable_get('theme_default', NULL)) {
+      return $default_theme;
+    }
+  }
+}
+
+/**
+ * Determine the parent Org and return the OG menu for it.
+ *
+ * @return string
+ *   Returns the OG menu.
+ */
+function gn2_themeparts_swap_get_nav() {
+  $gid = gn2_context_get_org_id();
+
+  $block = array();
+  $block['subject'] = '';
+
+  if ($gid) {
+    $menus = og_menu_get_group_menus(array(
+      'node' => array($gid),
+    ));
+    $menu = array_shift($menus);
+
+    if ($menu) {
+      $block['content'] = menu_tree($menu['menu_name']);
+      // Add contextual links.
+      if (in_array($menu['menu_name'], array_keys(menu_get_menus()))) {
+        $block['content']['#contextual_links']['og_menu'] = array('admin/structure/menu/manage', array($menu['menu_name']));
+      }
+    }
+  }
+
+  return $block;
+}
+
+/**
+ * Creating custom footer block show the About Org content, see RD-3087.
+ */
+function gn2_themeparts_swap_footer_about() {
+  $org = gn2_context_get_org_id();
+
+  $node = ($org) ? node_load($org) : NULL;
+
+  if ($node && $node->type == 'organization') {
+    $short_title = field_get_items('node', $node, 'field_org_short_title');
+    $description = field_get_items('node', $node, 'field_footer_description');
+    $links = field_view_field('node', $node, 'field_special_links', array('label' => 'hidden'));
+    $title = (!empty($short_title)) ? $short_title[0]['value'] : '';
+    $body = (!empty($description)) ? $description[0]['value'] : '';
+    // Creating block body.
+    $content = '<p>' . $body . '</p>';
+    $content .= ($links) ? '<br /><div class="org-links">' . render($links) . '</div>' : NULL;
+    $block = array(
+      'title' => t('About !title', array('!title' => $title)),
+      'content' => $content,
+    );
+    return $block;
+  }
+}

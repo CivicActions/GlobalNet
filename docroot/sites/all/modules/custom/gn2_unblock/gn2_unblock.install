@@ -1,0 +1,66 @@
+<?php
+/**
+ * @file
+ * Login tracking installation routines.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_unblock_schema() {
+  $schema['gn2_unblock_track'] = array(
+    'description' => 'Keeps track of failed login attempts, as a pair of the IP address and user name.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'ID of each login event.',
+      ),
+      'host' => array(
+        'type' => 'varchar',
+        'length' => 39,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The IP address of the request.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Clean username, submitted using the login form.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of the event.',
+      ),
+    ),
+    'indexes' => array(
+      'name' => array('name'),
+      'host' => array('host'),
+      'timestamp' => array('timestamp'),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Adding identifier field.
+ */
+function gn2_unblock_update_7001() {
+  $ret = array();
+  $spec = array(
+    'type' => 'varchar',
+    'length' => 39,
+    'not null' => FALSE,
+    'default' => '',
+    'description' => 'The Flood identifier for the request',
+  );
+  db_add_field('gn2_unblock_track', 'identifier', $spec);
+
+  return $ret;
+}

@@ -1,0 +1,45 @@
+.block__highlighted--lightbg.pane-courses-panel-pane-1 {
+  h2.pane-title {
+    padding-bottom: .25em;
+    margin-top: 0;
+    margin-bottom: .3em;
+    border-bottom: 1px solid $light-blue-gray;
+    line-height: 0.9;
+    color: $medium-gray;
+    @include display_font;
+    line-height: 1;
+    padding-bottom: 0.05em;
+    border-bottom: 3px solid $botticelli;
+    margin-bottom: .5em;
+  }
+  div.view-id-courses.view-display-id-panel_pane_1 {
+    border: solid 1px $solitude;
+    padding: 1.3em 1.5em 1.5em;
+    -webkit-box-shadow: inset 0px 0px 90px $gray-e;
+    -moz-box-shadow: inset 0px 0px 90px $gray-e;
+    box-shadow: inset 0px 0px 90px $gray-e;
+    background-color: $gray-fe;
+  }
+}
+.page-node-current-courses{
+  .view-courses.view-id-courses {
+    &.view-display-id-page_1{
+      margin: 20px 0;
+      border-top: 1px solid $gray-c3;
+      padding-top: 20px;
+    }
+    .course-teaser-date {
+      background-image: url('../images/gn-icons/event_location_large.png');
+      background-repeat: no-repeat;
+      min-height: 65px;
+      padding: 0 0 0 75px;
+      .course-teaser-date-field{
+        padding-top: 17px;
+        font-size: 14px;
+      }
+    }
+    .sidebar-node-list--item{
+      border: none;
+    }
+  }
+}

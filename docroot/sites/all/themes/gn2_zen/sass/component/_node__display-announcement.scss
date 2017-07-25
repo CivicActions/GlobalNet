@@ -1,0 +1,12 @@
+.node-type-announcement,
+.page-node.node-type-announcement {
+
+  .node-header-links {
+    .print,
+    .share,
+    .download_pdf {
+      display: none !important;
+    }
+  }
+
+}

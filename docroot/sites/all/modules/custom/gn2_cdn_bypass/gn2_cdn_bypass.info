@@ -1,0 +1,4 @@
+name = GN2 Content Distribution Network Bypass
+description = Bypassing the CloudFlare CDN because of the 100Mb upload limit
+package = GlobalNET
+core = 7.x

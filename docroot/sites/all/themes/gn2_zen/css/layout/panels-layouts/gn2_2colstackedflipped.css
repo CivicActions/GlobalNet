@@ -1,0 +1,116 @@
+/**
+ * @file
+ * Positioning for a 2 col 40:60 custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/**
+ * Partial for adding standard breakpoint variables
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 16, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.gn-two-col-stackedflipped,
+.top,
+.sidebar,
+.main-top,
+.main-bottom,
+.footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 25, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.main,
+.main-top,
+.main-bottom,
+.footer {
+  clear: both;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stackedflipped:before, .gn-two-col-stackedflipped:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stackedflipped:after {
+  clear: both;
+}
+
+/* line 38, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.gn-two-col-stackedflipped > .top,
+.gn-two-col-stackedflipped > .footer {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+/* line 43, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.gn-two-col-stackedflipped > .main {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+/* line 47, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.gn-two-col-stackedflipped .main-top,
+.gn-two-col-stackedflipped .main-bottom {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+/* line 52, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+.gn-two-col-stackedflipped > .sidebar {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+  clear: both;
+}
+
+@media (min-width: 48em) {
+  /* line 60, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+  .gn-two-col-stackedflipped > .top,
+  .gn-two-col-stackedflipped > .footer {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+  /* line 64, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+  .gn-two-col-stackedflipped > .main {
+    float: left;
+    width: 68.75%;
+    margin-left: 0%;
+    margin-right: -68.75%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* line 68, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+  .gn-two-col-stackedflipped .main-top,
+  .gn-two-col-stackedflipped .main-bottom {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+  }
+  /* line 72, ../../../sass/layout/panels-layouts/gn2_2colstackedflipped.scss */
+  .gn-two-col-stackedflipped > .sidebar {
+    float: left;
+    width: 31.25%;
+    margin-left: 68.75%;
+    margin-right: -100%;
+    clear: none;
+  }
+}
+
+/*# sourceMappingURL=gn2_2colstackedflipped.css.map */

@@ -1,0 +1,310 @@
+<?php
+
+/**
+ * @file
+ * And UserPoints, OG, Rules integration, each og has own's userpoints branding.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function userpoints_og_help($path, $arg) {
+  if ($path == 'admin/help#userpoints_og') {
+    if (current_path() != 'admin/help/userpoints_og') {
+      return TRUE;
+    }
+
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('And UserPoints, OG, Rules integration.') . '</p>';
+    $output .= '<p>' . t('Each og has own userpoints branding.') . '</p>';
+    $output .= '<p>' . t('When workflows changes with rules module, updating points to the og by og_group_ref.') . '</p>';
+
+    $output .= '<h3>' . t('Features') . '</h3>';
+    $output .= '<p>' . t('If og node create, automatic create term in userpoints category, and related to this og node.') . '</p>';
+    $output .= '<p>' . t('Have a batch page, batch the old group.') . '</p>';
+    $output .= '<p>' . t('At the config page, you can customize userpoints category term name, this is userpoints branding in this og.') . '</p>';
+    $output .= '<p>' . t('Rules integration, create actions in the rules, the new data selector is "node:userpoints-og-tid", When workflows changes with rules module, updating points to the og by og_group_ref.') . '</p>';
+    $output .= '<p>...</p>';
+
+    $output .= '<h3>' . t('Example use cases') . '</h3>';
+    $output .= '<p>' . t('A user in og1, og2, og3, he add a news to the og1 and add a comment to the og2, his og1 points increase 100 and og2 points decrease 20.') . '</p>';
+
+    return $output;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function userpoints_og_menu() {
+  $items['admin/config/workflow/userpoints_og'] = array(
+    'title' => 'Userpoints og',
+    'description' => 'Administer userpoints og config.',
+    'page callback' => 'userpoints_og_config',
+    'access arguments' => array('administer userpoints og'),
+    'file' => 'userpoints_og.pages.inc',
+  );
+
+  $items['admin/config/workflow/userpoints_og/config'] = array(
+    'title' => 'Config',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  $items['admin/config/workflow/userpoints_og/batch'] = array(
+    'title' => 'Batch',
+    'type' => MENU_LOCAL_TASK,
+    'description' => 'Userpoints og batch the old group.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('userpoints_og_batch_old_group_form'),
+    'access arguments' => array('administer userpoints og'),
+    'file' => 'userpoints_og.pages.inc',
+    'weight' => 1,
+  );
+
+  $items['admin/config/workflow/userpoints_og/config/edit/%userpoints_og_config'] = array(
+    'title callback' => 'userpoints_og_config_edit_title',
+    'title arguments' => array(6),
+    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('userpoints_og_config_edit_form', 6),
+    'access arguments' => array('administer userpoints og'),
+    'file' => 'userpoints_og.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function userpoints_og_permission() {
+  return array(
+    'administer userpoints og' => array(
+      'title' => t('Userpoints og settings'),
+      'description' => t('Administer userpoints og config.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function userpoints_og_node_insert($node) {
+  $is_group = og_is_group_type('node', $node->type);
+
+  if ($is_group) {
+    // Create a new userpoints category, related to group.
+    $vid = variable_get(USERPOINTS_CATEGORY_DEFAULT_VID, '');
+    if (!empty($vid) || taxonomy_vocabulary_load($vid)) {
+      $term = (object) array(
+        'name' => t('Points'),
+        'vid' => variable_get(USERPOINTS_CATEGORY_DEFAULT_VID, ''),
+      );
+      taxonomy_term_save($term);
+
+      if ($term) {
+        db_insert('userpoints_og')
+        ->fields(array(
+        'nid' => $node->nid,
+        'tid' => $term->tid,
+        ))
+        ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function userpoints_og_node_delete($node) {
+  $config = userpoints_og_config_load($node->nid);
+
+  if (isset($config->tid) && $config->tid > 0) {
+    taxonomy_term_delete($config->tid);
+  }
+
+  db_delete('userpoints_og')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+/**
+ * Title callback: Returns the title of the group.
+ */
+function userpoints_og_config_edit_title($config) {
+  $group = node_load($config->nid);
+  return $group->title . ' ' . t('Userpoints config');
+}
+
+/**
+ * Get related tid and config by group ID.
+ */
+function userpoints_og_config_load($nid) {
+  $result = db_select('userpoints_og', 'uo')
+    ->fields('uo')
+    ->condition('nid', $nid)
+    ->execute()
+    ->fetchObject();
+
+  $data = new stdClass();
+  if (!empty($result)) {
+    foreach ($result as $key => $value) {
+      if ($key == 'data' && $value != '') {
+        $data->config = unserialize($value);
+      }
+      else {
+        $data->$key = $value;
+      }
+    }
+
+    return $data;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_property_info_alter() on top of comment module.
+ * @see entity_entity_property_info_alter()
+ */
+function userpoints_og_entity_property_info_alter(&$info) {
+  $properties = &$info['node']['properties'];
+
+  $properties['userpoints_og_tid'] = array(
+    'label' => t('Userpoints og tid'),
+    'getter callback' => 'userpoints_og_property_tid',
+    'type' => 'integer',
+  );
+}
+
+/**
+ * Callback for getting userpoints og property tid.
+ *
+ * @see userpoints_og_entity_property_info_alter()
+ */
+function userpoints_og_property_tid($node) {
+  if (!isset($node->nid)) {
+    return FALSE;
+  }
+
+  $is_group = og_is_group('node', $node->nid);
+  $gid = 0;
+
+  // If is og node.
+  if ($is_group) {
+    $gid = $node->nid;
+  }
+  else {
+    if (!empty($node->og_group_ref)) {
+      $key = array_keys($node->og_group_ref[LANGUAGE_NONE]);
+      $gid = $node->og_group_ref[LANGUAGE_NONE][$key[0]]['target_id'];
+    }
+  }
+
+  // If is not og node and is not og content, return FALSE.
+  if ($gid > 0) {
+    $config = userpoints_og_config_load($gid);
+    return isset($config->tid) ? $config->tid : FALSE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Userpoints og batch old group.
+ */
+function userpoints_og_batch_old_group() {
+  $group_types = og_get_all_group_bundle();
+  $node_count = db_query('SELECT COUNT(DISTINCT nid) FROM {node} WHERE type IN (:type)', array(':type' => array_keys($group_types['node'])))->fetchField();
+
+  $operations = array();
+  for ($i = 0; $i < ceil($node_count / 20); $i++) {
+    $operations[] = array('userpoints_og_batch_old_group_op', array());
+  }
+
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'userpoints_og_batch_old_group_finished',
+    'progress_message' => t('Processed @current out of @total, each processed is 20.'),
+  );
+
+  return $batch;
+}
+
+/**
+ * Performs batch operation for userpoints_og_batch_old_group().
+ */
+function userpoints_og_batch_old_group_op(&$context) {
+  $group_types = og_get_all_group_bundle();
+
+  if (empty($context['sandbox'])) {
+    // Initiate multistep processing.
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['current_node'] = 0;
+    $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node} WHERE type IN (:type)', array(':type' => array_keys($group_types['node'])))->fetchField();
+  }
+
+  $limit = 20;
+  $result = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->orderBy('n.nid', 'ASC')
+    ->where('n.type IN (:type)', array(':type' => array_keys($group_types['node'])))
+    ->where('n.nid > :nid', array(':nid' => $context['sandbox']['current_node']))
+    ->extend('PagerDefault')
+    ->limit($limit)
+    ->execute();
+
+  foreach ($result as $row) {
+    $node = node_load($row->nid, NULL, TRUE);
+
+    $config = userpoints_og_config_load($node->nid);
+    if (!$config) {
+      // Create a new userpoints category, related to group.
+      $vid = variable_get(USERPOINTS_CATEGORY_DEFAULT_VID, '');
+      if (!empty($vid) || taxonomy_vocabulary_load($vid)) {
+        $term = (object) array(
+          'name' => t('Points'),
+          'vid' => variable_get(USERPOINTS_CATEGORY_DEFAULT_VID, ''),
+        );
+        taxonomy_term_save($term);
+
+        if ($term) {
+          db_insert('userpoints_og')
+            ->fields(array(
+              'nid' => $node->nid,
+              'tid' => $term->tid,
+            ))
+            ->execute();
+        }
+      }
+    }
+
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+    $context['sandbox']['progress']++;
+    $context['sandbox']['current_node'] = $node->nid;
+    $context['message'] = check_plain($node->title);
+  }
+
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = ($context['sandbox']['progress'] >= $context['sandbox']['max']);
+  }
+}
+
+/**
+ * Performs post-processing for userpoints_og_batch_old_group().
+ */
+function userpoints_og_batch_old_group_finished($success, $results, $operations) {
+  if ($success) {
+    drupal_set_message(t('The update has been performed.'));
+  }
+  else {
+    drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+    $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
+    $message .= theme('item_list', array('items' => $results));
+    drupal_set_message($message);
+  }
+}

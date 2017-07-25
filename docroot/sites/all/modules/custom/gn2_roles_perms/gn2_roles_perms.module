@@ -1,0 +1,269 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_roles_perms feature.
+ */
+
+include_once 'gn2_roles_perms.features.inc';
+
+/**
+ * Implements menu_local_tasks_alter().
+ */
+function gn2_roles_perms_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+
+  global $user;
+  if (arg(0) == 'node' && is_numeric(arg(1)) || drupal_is_front_page()) {
+    $gid = arg(1);
+
+    $tabs = (count($data['tabs']) > 0) ? $data['tabs'][0]['output'] : array();
+    foreach ($tabs as $key => $tab) {
+      if ($tab['#link']['path'] == 'node/%/group' || $tab['#link']['path'] == 'node/%/view') {
+        $edit_access = og_user_access('node', $gid, 'administer group');
+        if (!$edit_access && $user->uid != 1) {
+          if (!in_array('administrator', $user->roles)) {
+            unset($data['tabs'][0]['output'][$key]);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function gn2_roles_perms_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  $query = db_query('SELECT type from subscriptions_notifications_frequency WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+  if (!empty($query)) {
+    $default = $query;
+  }
+  else {
+    $default = 'daily';
+  }
+  // Subscriptions frequency form.
+  $options_freq = array(
+    'weekly' => 'Weekly',
+    'daily' => 'Daily',
+    'hourly' => 'Hourly',
+    'immediately' => 'Immediately',
+  );
+
+  $form['suspend']['send_frequency'] = array(
+    '#type' => 'select',
+    '#title' => 'Email send frequency',
+    '#weight' => 0,
+    '#default_value' => $default,
+    '#options' => $options_freq,
+  );
+
+  $options = array(0 => 'Yes', 1 => 'No');
+
+  $query_on = db_query('SELECT suspended from subscriptions_user WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+  if (!empty($query)) {
+    $default_on = $query_on;
+  }
+  else {
+    $default_on = 0;
+  }
+
+  $sms_query = db_query('SELECT status from subscriptions_notifications_sms WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+  if (!empty($sms_query)) {
+    $default = $sms_query;
+  }
+  else {
+    $default = 0;
+  }
+
+  // Subscriptions on/off.
+  $form['suspend']['state'] = array(
+    '#type' => 'radios',
+    '#title' => t('Receive email notifications'),
+    '#default_value' => $default_on,
+    '#options' => $options,
+  );
+  $form['suspend']['sms'] = array(
+    '#type' => 'radios',
+    '#title' => t('Receive sms notifications'),
+    '#default_value' => $default,
+    '#options' => $options,
+  );
+  $form['suspend']['uid'] = array(
+    '#type' => 'value',
+    '#value' => $user->uid,
+  );
+  $form['#submit'][] = 'gn2_notifications_sub_process';
+  $form['#group_children']['suspend'] = 'group_notifications';
+
+  if ($form['#user']->force_password_change == 1) {
+    unset($form['account']['current_pass_required_values']);
+    unset($form['account']['current_pass']);
+    unset($form['#validate'][1]);
+  }
+}
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function gn2_roles_perms_form_user_login_block_alter(&$form, &$form_state, $form_id) {
+
+  if (($key = array_search('user_login_final_validate', $form['#validate'])) == TRUE) {
+    unset($form['#validate'][$key]);
+  }
+  $form['#validate'][] = 'gn2_roles_perms_form_user_login_block_alter_validate';
+}
+
+/**
+ * This is the gn2_roles_perms_form_user_login_block_alter callback.
+ */
+function gn2_roles_perms_form_user_login_block_alter_validate($form, &$form_state) {
+
+  if (empty($form_state['uid'])) {
+    // Always register an IP-based failed login event.
+    flood_register_event('failed_login_attempt_ip', variable_get('user_failed_login_ip_window', 3600));
+    // Register a per-user failed login event.
+    if (isset($form_state['flood_control_user_identifier'])) {
+      flood_register_event('failed_login_attempt_user', variable_get('user_failed_login_user_window', 21600), $form_state['flood_control_user_identifier']);
+    }
+
+    if (isset($form_state['flood_control_triggered'])) {
+      if ($form_state['flood_control_triggered'] == 'user') {
+        form_set_error('name', format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+      }
+      else {
+        // We did not find a uid, so the limit is IP-based.
+        form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+      }
+    }
+    else {
+      form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a> Please refer to our <a href="@help">Help page</a> for further assistance.', array(
+            '@password' => url('user/password',
+                         array('query' => array('name' => $form_state['values']['name']))), '@help' => url('guide/Login-and-password'),
+          )));
+      watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+    }
+  }
+  elseif (isset($form_state['flood_control_user_identifier'])) {
+    // Clear past failures for this user so as not to block a user who might
+    // log in and out more than once in an hour.
+    flood_clear_event('failed_login_attempt_user', $form_state['flood_control_user_identifier']);
+  }
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function gn2_roles_perms_preprocess_views_view_fields(&$vars) {
+
+  global $user;
+
+  // If it is the view that displays user picture, login date, status and track
+  // data, then we hide the info if user is not admin.
+  $view = $vars['view'];
+  if ($view->name == 'users_contact_history_info') {
+    if ($view->current_display == 'block_1') {
+      if (!($user->uid == 1 || in_array('administrator', $user->roles))) {
+        $fields = &$vars['fields'];
+        unset($fields['login']);
+        unset($fields['nothing']);
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ */
+function gn2_roles_perms_form_node_form_alter(&$form, &$form_state) {
+  // Loads organization.
+  $extractor = new GN2PathToOrganization($form['#node']);
+  $parent = $extractor->getOrganization();
+  if (!empty($parent->nid)) {
+    $org_nid = $parent->nid;
+    if ($org_nid) {
+      // Gets the organization roles.
+      $roles = og_get_user_roles('node', $org_nid);
+
+      // If user is an organization manager...
+      if (in_array('org_manager', $roles)) {
+
+        // List of options to enable.
+        $options_to_enable = array(
+          'comment_settings',
+          'author',
+        );
+
+        // Enables option. if available.
+        foreach ($options_to_enable as $option) {
+          if (isset($form[$option])) {
+            $form[$option]['#access'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_file_entity_access().
+ */
+function gn2_roles_perms_file_entity_access($op, $file, $account) {
+  $access = FILE_ENTITY_ACCESS_IGNORE;
+  $node = NULL;
+
+  // Load the folder node.
+  if (arg(0) == 'node' && is_numeric(arg(1)) && $op == 'view') {
+    $node = menu_get_object();
+  }
+  // Multiedit Media Gallery.
+  elseif (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'multiedit') {
+    $node = node_load(arg(1));
+  }
+  // If this is a media-gallery lightbox, load the Folder node.
+  elseif (arg(0) == 'media-gallery' && arg(1) == 'lightbox' && is_numeric(arg(2))) {
+    $node = node_load(arg(2));
+  }
+  // If this is a media-gallery lightbox, load the Folder node.
+  elseif (arg(0) == 'media-gallery' && arg(1) == 'detail' && is_numeric(arg(2))) {
+    $node = node_load(arg(2));
+  }
+  // If this a file download page and there is an fid query string value.
+  elseif (arg(0) == 'media' && is_numeric(arg(1)) && arg(2) == 'download' && filter_input(INPUT_GET, 'fid')) {
+    $fid = filter_input(INPUT_GET, 'fid');
+    $node = node_load($fid);
+  }
+  // Edit Media Gallery files.
+  elseif (arg(3) == 'edit-multiple' && filter_input(INPUT_GET, 'destination')) {
+    $path = filter_input(INPUT_GET, 'destination');
+    $path_parts = explode('/', $path);
+    if ($path_parts && count($path_parts) > 1 && is_numeric($path_parts[1])) {
+      $node = node_load($path_parts[1]);
+    }
+  }
+
+  // Check that the user is a member of the Folders parent group.
+  if ($node && $node->type == 'media_gallery') {
+    $group = field_get_items('node', $node, 'og_group_ref');
+    if (is_array($group)) {
+      foreach ($group as $gid) {
+        $perm = ($op == 'view') ? 'update own media_gallery content' :
+            'update any media_gallery content';
+        $allowed = og_user_access('node', $gid['target_id'], $perm);
+        $access = ($allowed) ? FILE_ENTITY_ACCESS_ALLOW : $access;
+      }
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_url_outbound_alter().
+ */
+function gn2_roles_perms_url_outbound_alter(&$path, &$options, $original_path) {
+  // Append a query string.
+  if (preg_match('|^media/([0-9]*)/download(/.*)?|', $path, $matches)) {
+    $options['query'][] = array('fid' => arg(2));
+  }
+}

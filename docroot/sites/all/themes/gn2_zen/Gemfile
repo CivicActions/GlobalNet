@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+# A sample Gemfile
+# source 'https://rubygems.org'
+
+# gem 'rails'
+
+source 'https://rubygems.org'
+ruby '2.3.1'
+
+group :development do
+
+  # Sass, Compass and extensions.
+  gem 'sass', '3.4.22'           # Sass.
+  gem 'sass-globbing'            # Import Sass files based on globbing pattern.
+  gem 'compass', '1.0.3'         # Framework built on Sass.
+  gem 'compass-validator'        # So you can `compass validate`.
+  gem 'compass-normalize', '1.5' # Compass version of normalize.css.
+  gem 'compass-rgbapng', '0.2.1' # Turns rgba() into .png's for backwards compatibility.
+  gem 'toolkit'                  # Compass utility from the fabulous Snugug.
+  gem 'breakpoint', '2.5.0'      # Manages CSS media queries.
+  gem 'oily_png'                 # Faster Compass sprite generation.
+  gem 'css_parser'               # Helps `compass stats` output statistics.
+
+  # Some extras I believe we also need for GlobalNet.
+  gem 'compass-core', '1.0.3'
+  gem 'compass-import-once', '1.0.5'
+  gem 'sassy-maps', '0.4.0'
+
+  # Zen Grids.
+  gem 'zen-grids', '1.4'
+
+  # Guard.
+  gem 'guard'                    # Guard event handler.
+  gem 'guard-compass'            # Compile on sass/scss change.
+  gem 'guard-shell'              # Run shell commands.
+  gem 'guard-livereload'         # Browser reload.
+  gem 'yajl-ruby'                # Faster JSON with LiveReload in the browser.
+
+  # Dependency to prevent polling. Setup for multiple OS environments.
+
+  # Optionally remove the lines not specific to your OS.
+
+  # https://github.com/guard/guard#efficient-filesystem-handling
+  gem 'rb-inotify', '~> 0.9', :require => false      # Linux
+  gem 'rb-fsevent', :require => false                # Mac OSX
+  gem 'rb-fchange', :require => false                # Windows
+
+end

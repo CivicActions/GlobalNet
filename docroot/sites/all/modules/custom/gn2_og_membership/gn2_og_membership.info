@@ -1,0 +1,4 @@
+name = GN2 OG Membership
+description = Creates a multi-step user registration form
+core = 7.x
+package = GlobalNET

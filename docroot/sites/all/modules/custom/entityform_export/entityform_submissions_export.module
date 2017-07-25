@@ -1,0 +1,190 @@
+<?php
+
+/**
+ * @file
+ * Provide hook and helper functions for export Entityform Submissions data to csv file.
+ */
+
+/**
+ * Implement hook_menu().
+ */
+function entityform_submissions_export_menu() {
+  return array(
+    'admin/structure/entityform_types/manage/%/export/csv' => array(
+      'title' => 'Export Submission to CSV',
+      'page callback' => 'entityform_submissions_export_to_csv_file',
+      'page arguments' => array(4),
+      'access arguments' => array('administer entityform types'),
+      'type' => MENU_CALLBACK,
+    ),
+  );
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ *
+ * Add link for export submission in manager form.
+ */
+function entityform_submissions_export_form_entityform_type_overview_form_alter(&$form, $form_state) {
+  $form['table']['#header'][] = t('Export Submission');
+  foreach ($form['table']['#rows'] as &$row) {
+    $row[] = l(t('Export to csv'), 'admin/structure/entityform_types/manage/' . $row[0]['data']['#name'] . '/export/csv');
+  }
+}
+
+/**
+ * Handler function callback for output submissions in csv file.
+ *
+ * @param $entityform_type_name
+ *   Entityform type.
+ */
+function entityform_submissions_export_to_csv_file($entityform_type_name) {
+  $entityform_submissions = entityform_get_submissions($entityform_type_name);
+  $exclude_field_name = array('type', 'language', 'draft', 'url');
+
+  $header_rows = array();
+  $rows_item = array();
+
+  foreach ($entityform_submissions as $submission) {
+    $submission_entity = entityform_load($submission->entityform_id);
+    $submission_wrapp = entity_metadata_wrapper('entityform', $submission_entity);
+
+    // If Submission has status Draft.
+    if ((bool) $submission_wrapp->draft->value()) {
+      continue;
+    }
+
+    foreach ($submission_wrapp->getIterator() as $field_name => $field_value) {
+      // Exclude field from export.
+      if (in_array($field_name, $exclude_field_name)) {
+        continue;
+      }
+
+      $entity_type = 'entityform';
+      $bundle_name = $entityform_type_name;
+
+      $field_instance = _helper_entityform_submissions_export_field_instance($entity_type, $bundle_name, $field_name);
+
+      $field_type_callback_result = _helper_entityform_submissions_export_field_type_callback($field_instance, $field_name, $field_value);
+
+      if ($field_type_callback_result) {
+
+        // Header information
+        foreach($field_type_callback_result['header'] as $name=>$value) {
+          $header_rows[$name] = $value;
+        }
+
+        // Rows information
+        foreach($field_type_callback_result['rows'] as $name=>$value) {
+          $rows_item[$submission->entityform_id][$name] = $value;
+        }
+      }
+    }
+  }
+
+
+  // Prepare header row.
+  $rows = array();
+  foreach ($header_rows as $item) {
+    $rows[1][] = $item['label'];
+  }
+
+  header('Content-Type: text/csv');
+  // Set file name to entityform_submission_ENTITYFORM_TYPE_export_EXPORT_DATE.csv
+  header('Content-Disposition: attachment;filename=' . "entityform_submission_{$entityform_type_name}_export_" . date('d-m-Y', time()) . '.csv');
+
+  // UTF-8 Byte order mark. Specify it for Windows applications.
+  echo "\xEF\xBB\xBF";
+
+  foreach (array_merge($rows, $rows_item) as $row) {
+    _helper_entityform_submissions_export_echocsv($row);
+  }
+
+  drupal_exit();
+}
+
+/**
+ * Helper function for echo the input array as csv data maintaining consistency with most CSV implementations
+ * - uses double-quotes as enclosure when necessary
+ * - uses double double-quotes to escape double-quotes
+ * - uses CRLF as a line separator
+ */
+function _helper_entityform_submissions_export_echocsv($fields) {
+  $separator = '';
+  foreach ($fields as $field) {
+    if (preg_match('/\\r|\\n|,|"/', $field)) {
+      $field = '"' . str_replace('"', '""', $field) . '"';
+    }
+    echo $separator . $field;
+    $separator = ';';
+  }
+  echo "\r\n";
+}
+
+/**
+ * Helper function for check timestamp value.
+ * @param $timestamp
+ *   string date timestamp
+ *
+ * @return bool
+ */
+function _helper_entityform_submissions_export_isValidTimeStamp($timestamp) {
+  return ((string) (int) $timestamp === $timestamp)
+  && ($timestamp <= PHP_INT_MAX)
+  && ($timestamp >= ~PHP_INT_MAX);
+}
+
+/**
+ * Helper function for get information about field instance.
+ */
+function _helper_entityform_submissions_export_field_instance($entity_type, $bundle_name, $field_name) {
+  $field_instance = &drupal_static(__FUNCTION__);
+
+  if (!isset($field_instance[$field_name])) {
+    $field_info = field_info_instance($entity_type, $field_name, $bundle_name);
+    if (!is_null($field_info)) {
+      $field_instance[$field_name] = array(
+        'label' => $field_info['label'],
+        'info' => $field_info,
+        'name' => $field_name,
+      );
+    }
+    else {
+      $field_instance[$field_name] = array(
+        'label' => $field_name,
+        'info' => FALSE,
+        'name' => $field_name,
+      );
+    }
+  }
+  return $field_instance;
+}
+
+/**
+ * Helper function for call callback function for  field type.
+ *
+ * @param $field_instance
+ * @param $field_name
+ * @param $field_value
+ * @param bool $d
+ * @return bool
+ */
+function _helper_entityform_submissions_export_field_type_callback(&$field_instance, &$field_name, &$field_value) {
+  $field_type_name = 'default';
+  if (isset($field_instance[$field_name]['info']['display']['default']['type'])) {
+    $field_type_name = $field_instance[$field_name]['info']['display']['default']['type'];
+  }
+
+  $function_name = 'hp_submission_field_type_' . $field_type_name;
+  if (function_exists($function_name)) {
+    return $function_name($field_instance[$field_name], $field_value);
+  }
+  else {
+    $error = array(
+      'Call function name' => $function_name,
+      'Field name' => $field_name,
+    );
+    var_dump($error);
+  }
+  return FALSE;
+}

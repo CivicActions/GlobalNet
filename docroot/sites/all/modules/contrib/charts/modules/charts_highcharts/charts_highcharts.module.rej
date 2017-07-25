@@ -1,0 +1,26 @@
+***************
+*** 18,34 ****
+  }
+  
+  /**
+-  * Implements hook_theme().
+-  */
+- function charts_highcharts_theme() {
+-   $info['charts_highcharts_chart'] = array(
+-     'render element' => 'element',
+-     'file' => 'charts_highcharts.inc',
+-   );
+-   return $info;
+- }
+- 
+- /**
+   * Implements hook_library().
+   */
+  function charts_highcharts_library() {
+--- 18,23 ----
+  }
+  
+  /**
+   * Implements hook_library().
+   */
+  function charts_highcharts_library() {

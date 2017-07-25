@@ -1,0 +1,112 @@
+.page-node.node-type-organization {
+  #panels-ipe-display-panelizer-node-16-page-manager {
+    #panels-ipe-regionid-main_top {
+      .panels-ipe-portlet-wrapper {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+.flex-nav-container {
+  
+  padding: 0;
+  margin: 0;
+  border: 0px solid red;
+
+  .flexslider {
+    
+    margin: 0;
+    padding-bottom: 1em;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    
+    // background-color: pink;
+    
+    .views-field-title {
+      font-size: 1.8em;
+      margin-bottom: .1em;
+      line-height: 115%;
+      text-transform: capitalize;
+      a {color: black;}
+    }
+  
+    .slideshow-attribution {
+      font-size: .9em;
+      margin-bottom: 1em;
+      a {
+        font-style: italic;
+        }
+      }
+      
+    .slideshow-item--body {
+      padding-top: .6em;
+      p, div, br {
+        display: inline;
+        margin: 0;
+        padding: 0;
+      }
+      br {
+        height: 0px;
+        display: none;
+      }
+      img {
+        display: none;
+      }
+    }
+  
+    .views-field-field-main-image {
+      // margin-top: .5em;
+      margin-top: 0;
+      margin-bottom: 1.2em;
+      background-color: black;
+      border: 4px solid $light-gray;
+      .field-content {
+        width: 100%;
+        .img {
+            margin:0px auto 0px auto;
+            width: 100% !important;
+            height: auto;
+        }
+      }
+    }
+  
+    .flex-control-paging {
+      display: none;
+    }
+  
+    .flex-direction-nav {
+      li {
+        width: 37px;
+        height: 0;
+        overflow: visible;
+        a {
+          width: inherit;
+          height: 37px;
+          display: block;
+          color: white;
+          top: 35%;
+          background-color: transparent;
+          background-image: url(../images/slideshow_controls.png);
+          text-indent: -9999px;
+          &.flex-prev {
+            left: 4px;
+            background-position: 37px 0px;
+          }
+          &.flex-next {
+            right: 4px;
+            background-position: 37px 37px;
+            text-indent: 9999px;
+          }
+          opacity: .4;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+    
+  }
+  
+}

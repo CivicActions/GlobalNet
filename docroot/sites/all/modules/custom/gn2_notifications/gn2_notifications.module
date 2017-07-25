@@ -1,0 +1,1233 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_notifications.
+ *
+ * For testing set mail_system to 'SmtpMailSystem'.
+ * All other use cases set mail_system to 'Gn2NotificationsMailHandler'.
+ */
+
+include_once 'gn2_notifications.features.inc';
+include_once 'gn2_notifications_handler_notification_message.inc';
+include_once 'gn2_notifications_mail_handler.inc';
+variable_set('mail_system', array('default-system' => 'Gn2NotificationsMailHandler'));
+
+/**
+ * Notification types.
+ */
+define('GN2_NOTIFICATIONS_NODE_CREATED', 'Node Created in Group');
+define('GN2_NOTIFICATIONS_OG_EVENT_JOIN', 'Registered for');
+define('GN2_NOTIFICATIONS_OG_MEM_CREATED', 'Membership requested in Group');
+define('GN2_NOTIFICATIONS_OG_MEM_ACTIVATED', 'Membership activated in Group');
+define('GN2_NOTIFICATIONS_NODE_UPDATED', 'Node Updated in Group');
+define('GN2_NOTIFICATIONS_COMMENT', 'Comment Created');
+define('GN2_NOTIFICATIONS_COMMENT_UPDATED', 'Comment Updated');
+define('GN2_NOTIFICATIONS_CONTACT_REQUEST', 'Contact Status Change');
+define('GN2_NOTIFICATIONS_CONTACT_BULK_REQUEST', 'Group Contact Status Change');
+define('GN2_NOTIFICATIONS_RATING', 'Rating');
+define('GN2_NOTIFICATIONS_GROUP_INVITE', 'Group Invite');
+define('GN2_NOTIFICATIONS_FEEDBACK', 'Feedback');
+define('GN2_NOTIFICATIONS_SUPPORT', 'Support');
+define('GN2_NOTIFICATIONS_SUPPORT_UPDATE', 'Support update');
+
+/**
+ * Implements hook_views_api().
+ */
+function gn2_notificationsviews_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'gn2_notifications'),
+  );
+}
+
+/**
+ * Increments notification count.
+ *
+ * @param int $id Node ID of the group node.
+ * @param int $user_id User ID of the user being notified.
+ * @param string $type Type of notification being sent (see constant declarations in this file).
+ * @param string $message Message to send
+ * @param int $new_id
+ */
+function gn2_notifications_count_update($id, $user_id = NULL, $type = NULL, $message = NULL, $new_id = NULL) {
+  global $user;
+  // Avoids to send notifications to himself.
+  if ($user_id == $user->uid && $type !== 'Membership requested in Group' && $type !== 'Support') {
+    if ($type !== 'Membership activated in Group') {
+      if ($type !== 'Registered for') {
+        return;
+      }
+    }
+  }
+
+  $path = drupal_parse_url(current_path());
+  $tokens = explode('/', $path['path']);
+
+  if (arg(0) == 'group' && end($tokens) == 'add-user' || arg(0) == 'relationship' || arg(0) == 'user') {
+    db_merge('subscriptions_notifications_count')
+      ->key(array('uid' => $user_id))
+      ->expression('count', 'count + 1')
+      ->fields(array('uid' => $user_id)
+      )
+      ->execute();
+
+    if (!empty($type) && !empty($message)) {
+      db_insert('subscriptions_notifications_messages')
+        ->fields(array(
+            'uid' => $user_id,
+            'initiator' => $user->uid,
+            'type' => $type,
+            'nid' => $id,
+            'text' => truncate_utf8(strip_tags($message), 128),
+            'timestamp' => time(),
+          )
+        )
+        ->execute();
+    }
+  }
+  elseif ($type == 'Support' || $type == 'Support update' || $type == 'Membership activated in Group' || $type == 'Membership requested in Group' || $type == 'Registered for') {
+    db_merge('subscriptions_notifications_count')
+      ->key(array('uid' => $new_id))
+      ->expression('count', 'count + 1')
+      ->fields(array(
+          'uid' => $new_id,
+        )
+      )
+      ->execute();
+    db_insert('subscriptions_notifications_messages')
+      ->fields(array(
+          'uid' => $new_id,
+          'initiator' => $user_id,
+          'type' => $type,
+          'nid' => $id,
+          'text' => truncate_utf8(strip_tags($message), 128),
+          'timestamp' => time(),
+        )
+      )
+      ->execute();
+  }
+  elseif ($type == 'Group Contact Status Change') {
+    db_merge('subscriptions_notifications_count')
+      ->key(array('uid' => $user_id))
+      ->expression('count', 'count + 1')
+      ->fields(array('uid' => $user_id)
+      )
+      ->execute();
+
+    if (!empty($type) && !empty($message)) {
+      db_insert('subscriptions_notifications_messages')
+        ->fields(array(
+            'uid' => $user_id,
+            'initiator' => $user->uid,
+            'type' => $type,
+            'nid' => $id,
+            'text' => truncate_utf8(strip_tags($message), 128),
+            'timestamp' => time(),
+          )
+        )
+        ->execute();
+    }
+  }
+  else {
+    $results = db_query('SELECT recipient_uid FROM subscriptions where value = :nid', array(':nid' => $id));
+    $records = $results->fetchAll();
+    foreach ($records as $record) {
+
+      if ($record->recipient_uid !== $user->uid) {
+
+        db_merge('subscriptions_notifications_count')
+          ->key(array('uid' => $record->recipient_uid))
+          ->expression('count', 'count + 1')
+          ->fields(array(
+              'uid' => $record->recipient_uid,
+            )
+          )
+          ->execute();
+
+        if (!empty($type) && !empty($message)) {
+          db_insert('subscriptions_notifications_messages')
+            ->fields(array(
+                'uid' => $record->recipient_uid,
+                'initiator' => $user->uid,
+                'type' => $type,
+                'nid' => $new_id,
+                'text' => truncate_utf8(strip_tags($message), 128),
+                'timestamp' => time(),
+              )
+            )
+            ->execute();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add group members to recipients array.
+ */
+function gn2_notifications_get_group_manangers_subscription($gid) {
+  $recipients = array();
+  $group = node_load($gid);
+
+  // Lists course manangers fields.
+  $fields = array(
+    'field_course_director',
+    'field_deputy_course_director',
+    'field_course_event_coordinator',
+    'field_course_seminar_leader',
+    'field_course_faculty',
+    'field_course_support_staff',
+  );
+
+  // Get uids for all course managers.
+  foreach ($fields as $field) {
+    if (!empty($group->{$field})) {
+      foreach ($group->{$field}['und'] as $manager) {
+        $recipients[] = $manager['target_id'];
+      }
+    }
+  }
+
+  // Cleans up duplicated subscriptions.
+  $recipients = array_unique($recipients);
+
+  return $recipients;
+}
+
+/**
+ * Increments notification count for rate widget.
+ */
+function gn2_notifications_rate_count_update($id, $initiator, $user_id = NULL, $type = NULL, $message = NULL) {
+  db_merge('subscriptions_notifications_count')
+    ->key(array('uid' => $user_id))
+    ->expression('count', 'count + 1')
+    ->fields(array(
+        'uid' => $user_id,
+      )
+    )
+    ->execute();
+
+  if (!empty($type) && !empty($message)) {
+    db_insert('subscriptions_notifications_messages')
+      ->fields(array(
+          'uid' => $user_id,
+          'initiator' => $initiator,
+          'type' => $type,
+          'nid' => $id,
+          'text' => truncate_utf8(strip_tags($message), 128),
+          'timestamp' => time(),
+        )
+      )
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_rate_vote_alter().
+ */
+function gn2_notifications_rate_vote_alter($votes, $context) {
+  global $user;
+  $user_link = l($user->name, 'user/' . $user->uid);
+
+  if ($votes['entity_type'] == 'comment') {
+    $comment = comment_load($votes['entity_id']);
+    $node = node_load($comment->nid);
+  }
+  else {
+    $node = node_load($votes['entity_id']);
+  }
+
+  $node_notify = db_query('SELECT status FROM subscriptions_notifications_per_node where nid = :nid',
+    array(
+      ':nid' => $node->nid,
+    ))->fetchField();
+
+  if ($node_notify != 1) {
+    gn2_notifications_immediate_send($node->nid, $node->uid, $user->uid, GN2_NOTIFICATIONS_RATING, $user_link . ' liked ' . l($node->title, 'node/' . $node->nid), 'rated');
+    gn2_notifications_rate_count_update($node->nid, $user->uid, $node->uid, GN2_NOTIFICATIONS_RATING, $user_link . ' liked ' . l($node->title, 'node/' . $node->nid));
+  }
+}
+
+/**
+ * Implements hook_user_relationships_type_presave().
+ */
+function gn2_notifications_user_relationships_save($relationship, $action) {
+  global $user;
+
+  $person = $relationship->requestee_id;
+  $status = '';
+  if ($relationship->approved == FALSE) {
+    $status = 'False';
+  }
+  else {
+    $status = 'True';
+  }
+  gn2_notifications_immediate_send(NULL, $person, $user->uid, GN2_NOTIFICATIONS_CONTACT_REQUEST, 'Approved: ' . $status, 'sent you a contact request');
+
+  if ($action == 'request') {
+    gn2_notifications_count_update($user->uid, $person, GN2_NOTIFICATIONS_CONTACT_REQUEST, 'Approved: ' . $status);
+  }
+  else {
+    gn2_notifications_count_update($user->uid, $relationship->requester_id, GN2_NOTIFICATIONS_CONTACT_REQUEST, 'Approved: ' . $status);
+  }
+}
+
+/**
+ * Implements hook_user_relationships_delete().
+ */
+function gn2_notifications_user_relationships_delete($relationship, $action) {
+
+  // Removes the notifications related to this deleted relationship.
+  db_delete('subscriptions_notifications_messages')
+    ->condition('uid', $relationship->requester_id)
+    ->condition('initiator', $relationship->requestee_id)
+    ->execute();
+
+  db_delete('subscriptions_notifications_messages')
+    ->condition('initiator', $relationship->requester_id)
+    ->condition('uid', $relationship->requestee_id)
+    ->execute();
+}
+
+/**
+ * Implements hook_privatemsg_message_insert().
+ */
+function gn2_notifications_privatemsg_message_insert($message) {
+
+  foreach ($message->recipients as $recipient) {
+    // Using the clickatell http api for sending pm sms.
+    $sender = $message->author->name;
+    $user = user_load($recipient->uid);
+
+    $sub_status = db_query('SELECT suspended FROM subscriptions_user where uid = :uid', array(':uid' => $recipient->uid))
+      ->fetchColumn();
+
+    // Make sure we have a number and user has sms on.
+    $sms_on = db_query('SELECT status from subscriptions_notifications_sms WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+    if ($sms_on == 0) {
+      if (!empty($user->field_telephone[LANGUAGE_NONE][0]['value'])) {
+        $num_id = $user->field_telephone[LANGUAGE_NONE][0]['value'];
+
+        $num_pre = db_query('SELECT field_telephone_country_code_value FROM field_data_field_telephone_country_code WHERE entity_id = :num_id', array(':num_id' => $num_id))
+          ->fetchField();
+
+        $num_post = db_query('SELECT field_telephone_number_value FROM field_data_field_telephone_number WHERE entity_id = :num_id', array(':num_id' => $num_id))
+          ->fetchField();
+
+        if (!empty($num_pre) && !empty($num_post)) {
+
+          // Put together our number with country code.
+          $num_all = $num_pre . $num_post;
+
+          $text = t('GlobalNET user :sender says: :clean_text', array(
+            ':sender' => $sender,
+            ':clean_text' => $message->body,
+          ));
+
+          // Very simple formatting - we want to text to remove html tags,
+          // apostrophes, &nbsp's, etc.
+          $text = decode_entities(strip_tags($text));
+          $patterns = array(
+            "/&nbsp;/",
+            "/'/",
+            "/\t/",
+            "/\n/",
+            "/\r/",
+            "/\"/",
+            "/<p>/",
+            "/<\/p>/",
+          );
+          $replace = array("", "", " ", " ", " ", "", "", "");
+          $str = preg_replace($patterns, $replace, $text);
+          // Grab our login info.
+          $settings = variable_get('sms_clickatell_settings');
+          $url = 'http://api.clickatell.com/http/sendmsg';
+
+          // Assemble the data.
+          $data = array(
+            'user' => $settings['sms_clickatell_user'],
+            'password' => $settings['sms_clickatell_password'],
+            'api_id' => $settings['sms_clickatell_api_id'],
+            'to' => $num_all,
+            'text' => $str,
+            'mo' => '1',
+            'from' => '14129964113',
+          );
+          $full_url = url($url, array('query' => $data));
+          // Submit our call.
+          drupal_http_request($full_url);
+        }
+      }
+    }
+
+    if ($sub_status != 1) {
+      // The default notification treatment.
+      gn2_notifications_immediate_send(NULL, $recipient->uid, $message->author->uid, 'Private Message', $message->body, 'sent a message.');
+    }
+  }
+}
+
+/**
+ * Implements hook_comment_update().
+ */
+function gn2_notifications_comment_update($comment) {
+  $node = node_load($comment->nid);
+  $text = $comment->comment_body[LANGUAGE_NONE][0]['value'];
+
+  $node_notify = db_query('SELECT status FROM subscriptions_notifications_per_node where nid = :nid',
+    array(
+      ':nid' => $node->nid,
+    ))->fetchField();
+
+  if ($node_notify !== 1) {
+    gn2_notifications_immediate_send($node->nid, $node->uid, $comment->uid, GN2_NOTIFICATIONS_COMMENT_UPDATED, $text, 'updated a comment on');
+    gn2_notifications_count_update($node->nid, $user_id = NULL, GN2_NOTIFICATIONS_COMMENT_UPDATED, '"' . $comment->comment_body[LANGUAGE_NONE][0]['value'] . '"', $node->nid);
+  }
+}
+
+/**
+ * Implements hook_comment_insert().
+ */
+function gn2_notifications_comment_insert($comment) {
+  $node = node_load($comment->nid);
+  $text = $comment->comment_body[LANGUAGE_NONE][0]['value'];
+
+  if ($node->type == 'support') {
+    $admins = _get_all_admin_group($node->field_parent_organization[LANGUAGE_NONE][0]['target_id']);
+    foreach ($admins as $admin) {
+      gn2_notifications_immediate_send($node->nid, $admin, $node->uid, 'Support update', 'Support Request', $node->nid);
+      gn2_notifications_count_update($node->nid, $node->uid, 'Support update', l($node->title, 'node/' . $node->nid) . ' updated', $admin);
+    }
+    global $base_url;
+    $text = t("There has been an update to your support request. You can track it's progress via this !link.", array(
+      '!link' => l('link', $base_url . '/node/' . $node->nid),
+    ));
+    $to = $node->field_email_address[LANGUAGE_NONE][0]['email'];
+    $name = $node->field_name_first[LANGUAGE_NONE][0]['value'] . ' ' . $node->field_name_last[LANGUAGE_NONE][0]['value'];
+    $language = language_default();
+    $params['text']['user_id'][] = $name;
+    $params['text']['body'][] = $text;
+
+    drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $to, $language, $params);
+    if (!empty($node->field_support_owner[LANGUAGE_NONE][0]['target_id'])) {
+      $owner = user_load($node->field_support_owner[LANGUAGE_NONE][0]['target_id']);
+      drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $owner->mail, $language, $params);
+    }
+  }
+
+  $node_notify = db_query('SELECT status FROM subscriptions_notifications_per_node where nid = :nid',
+    array(
+      ':nid' => $node->nid,
+    ))->fetchField();
+
+  if ($node_notify !== 1) {
+    if ($node->type != 'support') {
+      gn2_notifications_immediate_send($node->nid, $node->uid, $comment->uid, GN2_NOTIFICATIONS_COMMENT, $text, 'commented on');
+    }
+    gn2_notifications_count_update($comment->nid, $user_id = NULL, GN2_NOTIFICATIONS_COMMENT, '"' . $comment->comment_body[LANGUAGE_NONE][0]['value'] . '"', $node->nid);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function gn2_notifications_node_update($node) {
+  if (arg(1) != 'non-modal') {
+    $p_node = $node;
+    global $user;
+    $user_two = $user->uid;
+
+    // Support request from help desk sends regardless of notification settings.
+    if ($node->type == 'support') {
+      if ($node->field_json_capture[LANGUAGE_NONE][0]['value'] == $node->original->field_json_capture[LANGUAGE_NONE][0]['value']) {
+        $admins = _get_all_admin_group($node->field_parent_organization[LANGUAGE_NONE][0]['target_id']);
+        foreach ($admins as $admin) {
+          gn2_notifications_immediate_send($node->nid, $admin, $node->uid, 'Support update', 'Support Request', $node->nid);
+          gn2_notifications_count_update($node->nid, $node->uid, 'Support update', l($node->title, 'node/' . $node->nid) . ' updated', $admin);
+        }
+        global $base_url;
+        $text = t("There has been an update to your support request. You can track it's progress via this !link.", array(
+          '!link' => l('link', $base_url . '/node/' . $node->nid),
+        ));
+        $to = $node->field_email_address[LANGUAGE_NONE][0]['email'];
+        $name = $node->field_name_first[LANGUAGE_NONE][0]['value'] . ' ' . $node->field_name_last[LANGUAGE_NONE][0]['value'];
+        $language = language_default();
+        $params['text']['user_id'][] = $name;
+        $params['text']['body'][] = $text;
+
+        drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $to, $language, $params);
+        if (!empty($node->field_support_owner[LANGUAGE_NONE][0]['target_id'])) {
+          $owner = user_load($node->field_support_owner[LANGUAGE_NONE][0]['target_id']);
+          drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $owner->mail, $language, $params);
+        }
+      }
+    }
+
+    elseif ($node->type !== 'group') {
+      $p_node_key = !empty($node->og_group_ref[LANGUAGE_NONE]) ? reset($node->og_group_ref[LANGUAGE_NONE]) : '';
+      $p_node = !empty($p_node_key) ? node_load($p_node_key['target_id']) : '';
+      $user_two = $node->uid;
+    }
+    elseif (!empty($p_node) && $p_node->subscriptions_notify == 1) {
+      $text = (isset($node->body)) ? $node->body[LANGUAGE_NONE][0]['value'] :
+        t('No body text.');
+      // Check the parent node notification settings.
+      $notify = gn2_notifications_get_node_update_settings($p_node->nid, $p_node->uid);
+      // If it is set to notify, send the notification.
+      if ($notify) {
+        if ($node->type != 'support') {
+          gn2_notifications_immediate_send($p_node->nid, $p_node->uid, $user_two, GN2_NOTIFICATIONS_NODE_UPDATED, $text, $node->nid);
+        }
+        gn2_notifications_count_update($p_node->nid, $p_node->uid, GN2_NOTIFICATIONS_NODE_UPDATED, l($node->title, 'node/' . $node->nid) . ' updated', $node->nid);
+      }
+      // Notify the author of the current node.
+      if ($node->gn2_notification_updates_for_node) {
+        gn2_notifications_immediate_send($node->nid, $node->uid, $user_two, GN2_NOTIFICATIONS_NODE_UPDATED, $text, $node->nid);
+        gn2_notifications_count_update($node->nid, $node->uid, GN2_NOTIFICATIONS_NODE_UPDATED, l($node->title, 'node/' . $node->nid) . ' updated', $node->nid);
+      }
+      gn2_notifications_node_insert_sub_prefs($node);
+    }
+  }
+}
+
+/**
+ * Helper function to get all org admins.
+ */
+function _get_all_admin_group($gid) {
+  $uids = array();
+  $role_admin = array('org_manager', 'hr_manager');
+
+  $query = db_select('og_users_roles', 'ogur');
+  $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
+
+  $rids = $query
+    ->fields('ogur', array('uid'))
+    ->condition('ogur.gid', $gid, '=')
+    ->condition('ogr.name', $role_admin, 'IN')
+    ->execute();
+
+  foreach ($rids as $item) {
+    $uids[] = $item->uid;
+  }
+
+  return $uids;
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function gn2_notifications_node_insert($node) {
+  $p_node_key = (isset($node->og_group_ref)) ? field_get_items('node', $node, 'og_group_ref') : NULL;
+  $p_node = ($p_node_key) ? node_load($p_node_key[0]['target_id']) : NULL;
+
+  // Support request from help desk sends regardless of notification settings.
+  if ($node->type == 'support') {
+
+    // load the parent org from the node
+    $parent = field_get_items('node', $node, 'field_parent_organization');
+    $pid = $parent[0]['target_id'];
+
+    // get all admins from the parent org
+    $admins = _get_all_admin_group($pid);
+
+    // send notifications to each admin
+    foreach ($admins as $admin) {
+      gn2_notifications_immediate_send($node->nid, $admin, $node->uid, 'Support', 'Support Request', $node->nid);
+      gn2_notifications_count_update($node->nid, $node->uid, 'Support', l($node->title, 'node/' . $node->nid) . ' created', $admin);
+    }
+    global $base_url;
+    $text = t("We have received your support request. You can track it's progress via this !link.", array(
+      '!link' => l('link', $base_url . '/node/' . $node->nid),
+    ));
+    if ($node->uid == 0) {
+      $to = $node->field_email_address[LANGUAGE_NONE][0]['email'];
+      $name = $node->field_name_first[LANGUAGE_NONE][0]['value'] . ' ' . $node->field_name_last[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      global $user;
+      $to = $user->mail;
+      $name = $user->name;
+    }
+    $language = language_default();
+    $params['text']['user_id'][] = $name;
+    $params['text']['body'][] = $text;
+
+    drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $to, $language, $params);
+  }
+
+  if (!empty($p_node) && $p_node->subscriptions_notify == 1) {
+    if (!empty($node->body[LANGUAGE_NONE][0]['value'])) {
+      $text = $node->body[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      $text = '';
+    }
+    // Check the parent node notification settings.
+    $notify = gn2_notifications_get_node_update_settings($p_node->nid, $p_node->uid);
+    // If it is set to notify, send the notification.
+    if ($notify) {
+      if ($node->type != 'support') {
+        gn2_notifications_immediate_send($p_node->nid, $p_node->uid, $node->uid, GN2_NOTIFICATIONS_NODE_CREATED, $text, $node->nid);
+      }
+      gn2_notifications_count_update($p_node->nid, $p_node->uid, GN2_NOTIFICATIONS_NODE_CREATED, l($node->title, 'node/' . $node->nid) . ' created', $node->nid);
+    }
+    gn2_notifications_node_insert_sub_prefs($node);
+  }
+}
+
+/**
+ * Get the update status for a given node.
+ *
+ * @param int $nid
+ *   The node ID to look up.
+ * @param int $uid
+ *   The user id for the node.
+ */
+function gn2_notifications_get_node_update_settings($nid, $uid) {
+  $update = db_query('SELECT status FROM {subscriptions_notifications_per_node} WHERE uid = :uid AND nid = :nid',
+    array(
+      ':uid' => $uid,
+      ':nid' => $nid,
+    ))->fetchField();
+
+  return $update;
+}
+
+/**
+ * Implements hook_og_membership_update().
+ */
+function gn2_notifications_og_membership_update(OgMembership $og_membership) {
+  if ($og_membership->state == 1) {
+    $node = node_load($og_membership->gid);
+    $text = 'Group Membership request';
+    gn2_notifications_immediate_send($og_membership->gid, $og_membership->etid, $og_membership->etid, 'Membership activated in Group', GN2_NOTIFICATIONS_OG_MEM_ACTIVATED, 'membership activated in');
+    gn2_notifications_count_update($og_membership->gid, $og_membership->etid, GN2_NOTIFICATIONS_OG_MEM_ACTIVATED, l($node->title, 'node/' . $node->nid) . ' created', $og_membership->etid, $og_membership->etid);
+  }
+}
+
+/**
+ * Implements hook_og_membership_insert().
+ */
+function gn2_notifications_og_membership_insert(OgMembership $og_membership) {
+  $node = node_load($og_membership->gid);
+  if ($og_membership->state == 2) {
+    $text = 'Group Membership request';
+    gn2_notifications_immediate_send($og_membership->gid, $node->uid, $og_membership->etid, 'Membership activation request in Group', GN2_NOTIFICATIONS_OG_MEM_CREATED, 'membership activation request in');
+    gn2_notifications_count_update($og_membership->gid, $og_membership->etid, GN2_NOTIFICATIONS_OG_EVENT_JOIN, l($node->title, 'node/' . $node->nid) . ' created', $node->uid, $node->uid);
+  }
+  elseif ($og_membership->state == 1 && $node->type == 'event') {
+    $text = 'Group Membership request';
+    gn2_notifications_immediate_send($og_membership->gid, $node->uid, $og_membership->etid, 'Membership activation request in Group', GN2_NOTIFICATIONS_OG_EVENT_JOIN, 'registered for');
+    gn2_notifications_count_update($og_membership->gid, $og_membership->etid, GN2_NOTIFICATIONS_OG_EVENT_JOIN, l($node->title, 'node/' . $node->nid) . ' created', $node->uid, $node->uid);
+  }
+}
+
+/**
+ * Our alter form callback for feedback form.
+ */
+function gn2_notification_course_feedback_entityform_edit_form_submit(&$form, &$form_state) {
+  global $user;
+  $query = drupal_get_query_parameters();
+  $gid = $query['gid'];
+  $node = node_load($gid);
+  gn2_notifications_count_update($gid, $user->uid, GN2_NOTIFICATIONS_FEEDBACK, 'Feedback submitted', $gid);
+  gn2_notifications_immediate_send($node->nid, $node->uid, $user->uid, GN2_NOTIFICATIONS_FEEDBACK, $form_state['values']['field_description'][LANGUAGE_NONE][0]['value'], 'gave feedback');
+
+}
+
+/**
+ * Our alter form callback.
+ */
+function gn2_notification_form_og_ui_add_users_alter_submit(&$form, &$form_state) {
+  global $user;
+  $node = node_load($form_state['values']['gid']);
+  $op = $form_state['input']['op'];
+  $invitee = user_load_by_name($form_state['input']['name']);
+  $text = t('The following operation has occured for your account: :op', array(':op' => $op));
+  gn2_notifications_immediate_send($node->nid, $invitee->uid, $user->uid, GN2_NOTIFICATIONS_GROUP_INVITE, $text);
+  gn2_notifications_count_update($form_state['og_membership']->gid, $form_state['og_membership']->etid, GN2_NOTIFICATIONS_GROUP_INVITE, 'Group invite');
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function gn2_notifications_menu_alter(&$items) {
+  // We don't want users to have access to these confusing options.
+  $items['user/%user/subscriptions']['access callback'] = 'gn2_notifications_user_access';
+}
+
+/**
+ * Alter menu callback.
+ */
+function gn2_notifications_user_access($account) {
+  // We don't want anyone to use this admin - we built our own.
+  return FALSE;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_notifications_form_alter(&$form, &$form_state, $form_id) {
+
+  if (preg_match('/_node_form/', $form_id)) {
+    global $user;
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $default = db_query('SELECT status FROM {subscriptions_notifications_per_node} where uid = :uid AND nid = :nid',
+        array(
+          ':uid' => $user->uid,
+          ':nid' => arg(1),
+        ))->fetchField();
+    }
+    else {
+      $default = 1;
+    }
+
+    $options = array(
+      1 => 'Yes',
+      0 => 'No',
+    );
+
+    if ($form_id !== 'support_node_form') {
+      $form['gn2_notification_updates_for_node'] = array(
+        '#title' => t('Receive notifications related to this content'),
+        '#description' => t('As the Author of this content, select "Yes" if you want to receive all related notifications.<br>E.g. For news and posts, receive notice when someone comments. For a group or course,<br>receive notice each time some activity is created by another member or group manager.'),
+        '#type' => 'select',
+        '#options' => $options,
+        '#default_value' => ($default == 1) ? 1 : 0,
+      );
+    }
+  }
+
+  if ($form_id == 'announcement_node_form') {
+    global $user;
+    $user_link = l($user->name, 'user/' . $user->uid);
+    if (!empty($_GET['gid'])) {
+      $node = node_load($_GET['gid']);
+      gn2_notifications_rate_count_update($node->nid, $user->uid, $node->uid, GN2_NOTIFICATIONS_NODE_CREATED, $user_link . ' Created an Anouncement in: ' . l($node->title, 'node/' . $node->nid));
+    }
+  }
+
+  if ($form_id == 'og_ui_add_users') {
+    $form['#submit'][] = 'gn2_notification_form_og_ui_add_users_alter_submit';
+  }
+
+  if ($form_id == 'course_feedback_entityform_edit_form') {
+    $form['#submit'][] = 'gn2_notification_course_feedback_entityform_edit_form_submit';
+    $form['actions']['submit']['#submit'][] = 'gn2_notification_course_feedback_entityform_edit_form_submit';
+  }
+}
+
+/**
+ * Node form callback.
+ */
+function gn2_notifications_node_insert_sub_prefs($node) {
+  if (isset($node->gn2_notification_updates_for_node)) {
+    db_merge('subscriptions_notifications_per_node')
+      ->insertFields(array(
+        'nid' => $node->nid,
+        'status' => $node->gn2_notification_updates_for_node,
+        'uid' => $node->uid,
+      ))
+      ->updateFields(array(
+        'nid' => $node->nid,
+        'status' => $node->gn2_notification_updates_for_node,
+      ))
+      ->key(array('nid' => $node->nid))
+      ->execute();
+  }
+}
+
+/**
+ * Subscriptions form callback.
+ */
+function gn2_notifications_sub_process(&$form_state) {
+  // Record how often user wants to receive notification emails.
+  $table = 'subscriptions_notifications_frequency';
+  $table_on = 'subscriptions_user';
+  $sms_on = 'subscriptions_notifications_sms';
+  global $user;
+  db_merge($table)
+    ->insertFields(array(
+      'uid' => $user->uid,
+      'type' => $form_state['suspend']['send_frequency']['#value'],
+    ))
+    ->updateFields(array(
+      'type' => $form_state['suspend']['send_frequency']['#value'],
+    ))
+    ->key(array('uid' => $user->uid))
+    ->execute();
+  // Determine whether or not subscriptions are on for user.
+  db_merge($table_on)
+    ->updateFields(array(
+      'suspended' => $form_state['suspend']['state']['#value'],
+    ))
+    ->key(array('uid' => $user->uid))
+    ->execute();
+  // Determine whether or not sms is on for user.
+  db_merge($sms_on)
+    ->updateFields(array(
+      'status' => $form_state['suspend']['sms']['#value'],
+    ))
+    ->key(array('uid' => $user->uid))
+    ->execute();
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_notifications_block_info() {
+  $blocks = array();
+  $blocks['notification_alerts'] = array(
+    'info' => t('Returns notification alerts'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_notifications_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'notification_alerts':
+      if (user_access('post comments')) {
+        $alert = gn2_notifications_block_view_alerts();
+        $block['content'] = $alert;
+      }
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Block view callback.
+ */
+function gn2_notifications_block_view_alerts() {
+  global $user;
+
+  $icon_no_alerts = drupal_get_path('theme', 'gn2_zen') . '/images/gn-icons/icon-notification-utility-nav.png';
+  $icon_alerts = drupal_get_path('theme', 'gn2_zen') . '/images/gn-icons/icon-notification-utility-nav-alert.png';
+  $user_count = db_query('SELECT count FROM subscriptions_notifications_count where uid = :uid', array(':uid' => $user->uid))->fetchField();
+
+  return l(t('<img src="/@icon_alerts" /> <span class="red_number">@user_count</span>', array(
+      '@icon_alerts' => $user_count > 0 ? $icon_alerts : $icon_no_alerts,
+      '@user_count' => $user_count > 0 ? $user_count : '',
+    )
+  ), 'inbox/notifications',
+    array(
+      'html' => TRUE,
+    )
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_notifications_init() {
+  global $user;
+  if (arg(0) == 'inbox' || (arg(0) == 'user' && is_numeric(arg(1)) && arg(2) == 'edit')) {
+    drupal_add_js(drupal_get_path('module', 'gn2_notifications') . '/gn2_notifications.js');
+  }
+  // Turn this off, and let gn2_notifications handle subscriptions.
+  if (module_exists('subscriptions_mail')) {
+    module_disable(array('subscriptions_mail'));
+  }
+  global $user;
+  $user_query = db_query('SELECT count FROM subscriptions_notifications_count where uid = :uid', array(':uid' => $user->uid));
+  $user_count = $user_query->fetchField();
+
+  // When the user visits their notification page, consider notifications stale.
+  if (arg(0) == 'inbox' && arg(1) == 'notifications') {
+    db_merge('subscriptions_notifications_count')
+      ->key(array('uid' => $user->uid))
+      ->fields(array(
+          'count' => 0,
+        )
+      )
+      ->execute();
+  }
+
+  // When the user visits their message page, consider messages stale.
+  if (arg(0) == 'inbox' && arg(1) == 'message') {
+    db_update('pm_index')
+      ->fields(array(
+          'is_new' => 0,
+        )
+      )
+      ->condition('recipient', $user->uid, '=')
+      ->condition('thread_id', arg(2), '=')
+      ->condition('is_new', '1', '>=')
+      ->execute();
+  }
+}
+
+/**
+ * Implements Elysia cron hook_cronapi().
+ */
+function gn2_notifications_cronapi($op, $job = NULL) {
+  // Schedule notifcation emails.
+  $items['hourly'] = array(
+    'arguments' => array('hourly'),
+    'description' => 'Send subscriptions hourly',
+    'rule' => '*/1 * * * *',
+    'callback' => 'gn2_notifications_grab_results',
+  );
+  $items['daily'] = array(
+    'arguments' => array('daily'),
+    'description' => 'Send subscriptions daily',
+    'rule' => '0 1 * * *',
+    'callback' => 'gn2_notifications_grab_results',
+  );
+  $items['weekly'] = array(
+    'arguments' => array('weekly'),
+    'description' => 'Send subscriptions weekly',
+    'rule' => '5 8 * * 6',
+    'callback' => 'gn2_notifications_grab_results',
+  );
+
+  return $items;
+}
+
+/**
+ * For sending notices immediately.
+ */
+function gn2_notifications_immediate_send($nid, $uid, $uid_two, $action, $text = NULL, $subject_nid = NULL) {
+  $status = db_query('SELECT suspended FROM {subscriptions_user} WHERE uid = :uid LIMIT 1', array(':uid' => $uid))->fetchField();
+
+  if ($uid !== $uid_two && $status != 1 && !empty($uid) && !empty($uid_two) || $action == 'Membership activated in Group'
+      || $action == 'Membership activation request in Group' || $action == 'Support' || $action == 'Support update'
+  ) {
+    $interval = db_query('SELECT type from subscriptions_notifications_frequency WHERE uid = :uid LIMIT 1', array(':uid' => $uid))->fetchField();
+
+    if (isset($interval) && $interval == 'immediately' || $action == 'Private Message' || $action == 'Support' || $action == 'Support update') {
+      global $base_url;
+
+      $language = language_default();
+      $user = user_load($uid);
+
+      if (!empty($user)) {
+        if ($uid != 0) {
+          $second_user = user_load($uid_two);
+        }
+        else {
+          $second_user = 'Anonymous';
+        }
+        $node = node_load($nid);
+        $p_node = $node;
+        $glue = '';
+        if (!empty($subject_nid) && is_numeric($subject_nid)) {
+          $subject = node_load($subject_nid);
+          if ($action == GN2_NOTIFICATIONS_NODE_UPDATED) {
+            $event = 'updated';
+          }
+          else {
+            $event = 'created';
+          }
+          if (!empty($subject->og_group_ref[LANGUAGE_NONE])) {
+            $glue = ' in ' . $p_node->title;
+          }
+          $node = $subject;
+        }
+        elseif (!empty($subject_nid) && !is_numeric($subject_nid)) {
+          $event = $subject_nid;
+        }
+        $params = array();
+        if (!empty($second_user->uid) || $action == 'Support' || $action == 'Support update') {
+
+          $date = new DateTime();
+          $date->getTimestamp();
+          $actioneer = l(!empty($second_user->name) ? $second_user->name : 'Anonymous', $base_url . '/user/' . !empty($second_user->uid) ? $second_user->uid : 'Anonymous');
+          $params['text']['body'][] = l($second_user->name, $base_url . '/user/' . $second_user->uid);
+          if ($action == 'Membership activation request in Group') {
+            $params['text']['body'][] = t('!event !type !subject !glue !time', array(
+              '!event' => !empty($event) ? $event : '',
+              '!type' => !empty($node->type) ? $node->type : '',
+              '!subject' => !empty($node->title) ? l($node->title, $base_url . '/group/node/' . $node->nid . '/admin/people') : '',
+              '!glue' => $glue,
+              '!time' => $date->format('\o\n\ m/d/Y \a\t H:i\.'),
+            ));
+          }
+          elseif ($action == 'Group Invite') {
+            $params['text']['body'][] = t('added you to !type !subject !glue !time', array(
+              '!type' => !empty($node->type) ? $node->type : '',
+              '!subject' => !empty($node->title) ? l($node->title, $base_url . '/node/' . $node->nid) : '',
+              '!glue' => $glue,
+              '!time' => $date->format('\o\n\ m/d/Y \a\t H:i\.'),
+            ));
+          }
+          elseif ($action == 'Support') {
+            $text = t("You have received a support request: !link.", array(
+              '!link' => l($node->title, $base_url . '/node/' . $node->nid),
+            ));
+            $params['text']['body'][] = $text;
+          }
+          elseif ($action == 'Support update') {
+            $text = t("There has been an update to support desk item !link.", array(
+              '!link' => l($node->title, $base_url . '/node/' . $node->nid),
+            ));
+            $params['text']['body'][] = $text;
+          }
+          else {
+            $params['text']['body'][] = t('!event !type !subject !glue !time', array(
+              '!event' => !empty($event) ? $event : '',
+              '!type' => !empty($node->type) ? $node->type : '',
+              '!subject' => !empty($node->title) ? l($node->title, $base_url . '/node/' . $node->nid) : '',
+              '!glue' => $glue,
+              '!time' => $date->format('\o\n\ m/d/Y \a\t H:i\.'),
+            ));
+          }
+          if ($action == 'Contact Status Change') {
+            $params['text']['body'][] = l(t('Manage Relationship'), $base_url . '/user/' . $user->uid . '/relationships/received');
+          }
+          if ($action == 'Private Message') {
+            $params['text']['body'][] = l(t('View Messages'), $base_url . '/inbox/messages');
+          }
+          else {
+            $params['text']['body'][] = '';
+          }
+          $params['text']['body'][] = '<br />';
+          if ($action == 'Support' || $action == 'Support update') {
+            drupal_mail('gn2_notifications', 'gn2_notifications_support_desk', $user->mail, $language, $params);
+          }
+          else {
+            drupal_mail('gn2_notifications', 'gn2_notifications_send', $user->mail, $language, $params);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Grabs user notifications data from db.
+ */
+function gn2_notifications_grab_results($op) {
+  $time = time();
+  switch ($op) {
+    case 'hourly':
+      $duration = 3600;
+      break;
+
+    case 'daily':
+      $duration = 86400;
+      break;
+
+    case 'weekly':
+      $duration = 604800;
+      break;
+  }
+
+  // Grab notifications within duration.
+  $query = db_select('subscriptions_notifications_messages', 'n')
+    ->fields('n', array('nid', 'type', 'text', 'initiator', 'uid', 'timestamp'))
+    ->condition('timestamp', array($time - $duration, $time), 'BETWEEN')
+    ->execute()->fetchAll();
+  global $base_url;
+  $comments = array();
+  // Push notices into array matching user key.
+  foreach ($query as $key => $item) {
+    if ($item->uid != $item->initiator || $item->type == 'Membership activated in Group') {
+
+      $node = node_load($item->nid);
+      $comments[$item->uid][$key] = '';
+      if ($item->initiator != 0) {
+        $user = user_load($item->initiator);
+        $comments[$item->uid][$key] .= l($user->name, $base_url . '/user/' . $user->uid);
+      }
+      else {
+        $comments[$item->uid][$key] .= 'An anonymous user';
+      }
+      switch ($item->type) {
+        case 'Membership activated in Group':
+          $comments[$item->uid][$key] .= t('&nbsp;membership activated in !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Membership requested in Group':
+          $comments[$item->uid][$key] .= t('&nbsp;requested to join !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/group/node/' . $node->nid . '/admin/people'),
+          ));
+          break;
+
+        case 'Registered for':
+          $comments[$item->uid][$key] .= t('&nbsp;registered for !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/group/node/' . $node->nid . '/admin/people'),
+          ));
+          break;
+
+        case 'Node Created in Group':
+          $comments[$item->uid][$key] .= t('&nbsp;created @action_type !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Support':
+          $comments[$item->uid][$key] .= t('&nbsp;created a support ticket: !title', array(
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Node Updated in Group':
+          $comments[$item->uid][$key] .= t('&nbsp;updated @action_type !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Comment Created':
+          $comments[$item->uid][$key] .= t('&nbsp;created comment in @action_type !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Comment Updated':
+          $comments[$item->uid][$key] .= t('&nbsp;updated comment in @action_type !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Contact Status Change':
+          if (is_object($node)) {
+            $comments[$item->uid][$key] .= t('&nbsp; sent a !contact_request', array(
+              '!contact_request' => l(t('contact request'), $base_url . '/user/' . $user->uid . '/relationships/received'),
+              '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+            ));
+          }
+          else {
+            $comments[$item->uid][$key] .= t('&nbsp; sent a !contact_request', array(
+              '!contact_request' => l(t('contact request'), $base_url . '/user/' . $user->uid . '/relationships/received'),
+              '!title' => l('A site page', $base_url),
+            ));
+          }
+          break;
+
+        case 'Group Invite':
+          $comments[$item->uid][$key] .= t('&nbsp; invited you to join !title', array(
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+
+        case 'Rating':
+          $comments[$item->uid][$key] .= t('&nbsp;liked @action_type !title', array(
+            '@action_type' => $node->type,
+            '!title' => l($node->title, $base_url . '/node/' . $node->nid),
+          ));
+          break;
+      }
+
+      $date = new DateTime();
+      $date->setTimestamp($item->timestamp);
+      $comments[$item->uid][$key] .= ' ' . $date->format('\o\n m/d/Y \a\t H:i');
+
+      $comments[$item->uid][$key] .= '<br /><hr />';
+    }
+  }
+
+  $pm_query_raw = db_select('pm_message', 'm');
+  $pm_query_raw->join('pm_index', 'i', 'i.mid = m.mid');
+  $pm_query = $pm_query_raw->fields('m', array('author', 'body', 'timestamp'))
+                           ->fields('i', array('recipient', 'mid'))
+                           ->condition('m.timestamp', array(
+                             $time - $duration,
+                             $time,
+                           ), 'BETWEEN')
+                           ->execute()->fetchAll();
+  $remove = array('<p>', '</p>');
+  $replace = array('', '');
+  foreach ($pm_query as $key => $pm_item) {
+    if ($pm_item->recipient != $pm_item->author) {
+      $user = user_load($pm_item->author);
+      $node = !empty($pm_item->nid) ? node_load($pm_item->nid) : '';
+      $comments[$pm_item->recipient][$key] .= l($user->name, $base_url . '/user/' . $user->uid);
+
+      $comments[$pm_item->recipient][$key] .= t('&nbsp;sent you a !private', array(
+        '!private' => l(t('private message'), $base_url . '/inbox/messages/unread'),
+      ));
+
+      $date = new DateTime();
+      $date->setTimestamp($pm_item->timestamp);
+      $comments[$pm_item->recipient][$key] .= ' ' . $date->format('\o\n m/d/Y \a\t H:i');
+      $comments[$pm_item->recipient][$key] .= '<br /><hr />';
+    }
+  }
+
+  ksort($comments, SORT_NUMERIC);
+  // Put the message together and send through drupal_mail().
+  foreach ($comments as $key => $comment) {
+    $module = 'gn2_notifications';
+    $name = 'gn2_notifications';
+    $language = language_default();
+    $params = array();
+
+    /* Adding a user load a second time is necessary. Passing by ref is not
+     * really feasible in this instance; setting global scope won't
+     * work either as first declaration of user needs to occur in another loop.
+     * Trying to pass user values in previously defined
+     * array var returns unpredictable results.
+     */
+    $user = $key !== 0 ? user_load($key) : 'Anonymous';
+    /*
+     * Less of a performance hit to run this query here
+     * to check user notification status then higher up in the
+     * function where it would have to run multiple times.
+     */
+    if ($user !== 'Anonymous') {
+      $status = db_query('SELECT suspended from subscriptions_user WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+      $frequency = db_query('SELECT type from subscriptions_notifications_frequency WHERE uid = :uid LIMIT 1', array(':uid' => $user->uid))->fetchField();
+    }
+    if ($status != 1 && $frequency == $op || $user == 'Anonymous') {
+      foreach ($comment as $text) {
+        $params['text']['user_id'][] = !empty($user->uid) ? $user->uid : 'Anonymous';
+        $params['text']['body'][] = $text;
+      }
+      drupal_mail('gn2_notifications', 'gn2_notifications_send', $user->mail, $language, $params);
+    }
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function gn2_notifications_mail($key, &$message, $params) {
+  global $base_url;
+  switch ($key) {
+    case 'gn2_notifications_send':
+      // Format the message.
+      $message['headers']['Content-Type'] = 'text/html; charset=utf-8';
+      $message['subject'] = t('Recent Globalnet notifications');
+      $message['body'] = array();
+      foreach ($params['text'] as $param) {
+        $message['body'] = $params['text']['body'];
+      }
+      $message['body'][] = t('View your notifications on&nbsp;');
+      $message['body'][] = l(t('GlobalNET'), $base_url . '/inbox/notifications');
+      break;
+
+    case 'gn2_notifications_support_desk':
+      // Format the message.
+      $message['headers']['Content-Type'] = 'text/html; charset=utf-8';
+      $message['subject'] = t('GlobalNet Support Desk Ticket Update');
+      $message['body'] = array();
+      foreach ($params['text'] as $param) {
+        $message['body'] = $params['text']['body'];
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function gn2_notifications_mail_alter(&$message) {
+  $message['body'][] = "--\nPlease do not respond to this message as it is sent from an account that is not monitored. If you have questions, please contact your Organization Manager.";
+}

@@ -1,0 +1,218 @@
+<?php
+/**
+ * @file
+ * Code for the GN2 CAC feature.
+ */
+
+include_once 'gn2_cac.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_cac_menu() {
+  $items = array();
+
+  // CAC login page.
+  $items['user/cac'] = array(
+    'page callback' => 'gn2_cac_page',
+    'title' => 'CAC Login',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // Clear the CAC field.
+  $items['user/clear/cac'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_cac_clear_form', 3),
+    'title' => 'CAC Login',
+    'access callback' => 'gn2_cac_access',
+    'access arguments' => array(3),
+    'file' => 'gn2_cac.clear_form.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // CAC ajax callback.
+  $items['cac/ajax'] = array(
+    'page callback' => 'gn2_cac_check',
+    'page argument' => array(2),
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_cac_module_implements_alter(&$implementations, $hook) {
+  $hooks = array('form_alter');
+  if (in_array($hook, $hooks)) {
+    // Move our hook implementation to the bottom.
+    // We want to expand upon the entity api's access implementation for nodes,
+    // so we need to alter the entity_info after it.
+    $group = $implementations['gn2_cac'];
+    unset($implementations['gn2_cac']);
+    $implementations['gn2_cac'] = $group;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_cac_form_alter(&$form, $form_state, $form_id) {
+  global $user;
+  // Add a description field for out CAC page.
+  if ($form_id == 'pki_authentication_admin_settings') {
+    // Adding a field for the CAC subdomain.
+    $form['gn2_cac_url'] = array(
+      '#type' => 'textfield',
+      '#title' => t('CAC Subdomain URL'),
+      '#description' => t('Enter the URL for the CAC subdomain.'),
+      '#default_value' => variable_get('gn2_cac_url', NULL),
+    );
+    // Adding a description field for the intersticial page.
+    $form['gn2_cac_description'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Login Instructions & Support Information'),
+      '#description' => t('Enter the helper text to display on the CAC Login page.'),
+      '#default_value' => variable_get('gn2_cac_description', NULL),
+    );
+    // Add additional validation handler.
+    $form['#validate'][] = 'gn2_cac_pki_validator';
+  }
+  // Remove pki_authentication link and add our own.
+  elseif (($form_id == 'user_login' || $form_id == 'user_login_block') && isset($form['links'])) {
+    $items = array();
+    $items[] = l(t('Log in with CAC'), 'user/cac', array(
+      'query' => array(
+        'destination' => current_path(),
+      ),
+    ));
+    $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
+  }
+  elseif ($form_id == 'user_profile_form' && isset($form['pki_extract_markup'])) {
+    drupal_add_js(drupal_get_path('module', 'gn2_cac') . '/gn2_cac.js', array('every_page' => FALSE));
+    $form['pki_extract_markup']['#weight'] = 10;
+    $form['pki_authentication_pki_string']['#weight'] = 11;
+    $form['#group_children']['pki_extract_markup'] = 'group_external_accounts';
+    // Alter the message text if the cert has not been extracted.
+    if (strpos($form['pki_extract_markup']['#markup'], 'not been extracted') == 25) {
+      global $base_url;
+      $cac_base_root = variable_get('pki_authentication_base_root', $base_url);
+      $url = variable_get('gn2_cac_url', $cac_base_root) . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php');
+      $text = t('Your CAC certificate information has not been extracted from your card. Insert CAC card into your reader and click the link below to extract the data from your card. This will enable you to log in directly to GlobalNET with your CAC card.');
+      $link = l(t('Extract certificate information from your CAC card.'), $url,
+        array(
+          'query' => array(
+            'form' => $form_id,
+            'uid' => $user->uid,
+          ),
+          'external' => TRUE,
+          'attributes' => array(
+            'title' => t('Will allow you to login directly with PKI.'),
+          ),
+        ));
+      $form['pki_extract_markup']['#markup'] = '<p>' . $text . '</p><p>' . $link . '</p>';
+    }
+    else {
+      $form['pki_extract_markup']['#markup'] = str_replace('PKI', 'CAC', $form['pki_extract_markup']['#markup']);
+    }
+  }
+  // Adding a link to clear the CAC settings; @see RD-3564.
+  if (isset($form['pki_authentication_pki_string']) && (in_array('administrator', $user->roles) || $user->uid == $form['#user']->uid)) {
+    $link = l(t('Clear CAC settings information'), 'user/clear/cac/' . $form['#user']->uid,
+      array('query' => array('destination' => 'user/' . $form['#user']->uid)));
+    $form['pki_authentication_pki_string']['#suffix'] = '<div class="description">' . $link . '</div>';
+  }
+}
+
+/**
+ * Form validation handler for the PKI Authentication settings form.
+ */
+function gn2_cac_pki_validator($form, &$form_state) {
+  if (isset($form_state['values']['gn2_cac_url']) && !valid_url($form_state['values']['gn2_cac_url'])) {
+    form_set_error('gn2_cac_url', t('The URL that you entered for the CAC subdomain is not valid.'));
+  }
+}
+
+/**
+ * Creates the CAC login page.
+ */
+function gn2_cac_page() {
+  global $user;
+  global $base_url;
+
+  // If the user is already logged in, redirect them to their profile page.
+  if ($user->uid > 0) {
+    drupal_goto('user/' . $user->uid);
+  }
+
+  $content = '<section>';
+  $content .= '<header>' . t('Insert your CAC/ECA to begin your login') . '</header>';
+  $path = variable_get('pki_authentication_pki_extraction_path', NULL);
+  if (!$path) {
+    drupal_set_message(t('CAC configuration is incorrect.'), 'error');
+    drupal_goto('user');
+  }
+  $subdomain = variable_get('gn2_cac_url', $base_url);
+  $content .= '<article>';
+  $parsed = parse_url($subdomain);
+  $url = (empty($parsed['scheme'])) ? 'https://' . $subdomain . $path . 'extract_pki.php' :
+    $subdomain . $path . 'extract_pki.php';
+  $query = array(
+    'form' => 'user_login_block',
+  );
+  if (filter_input(INPUT_GET, 'destination')) {
+    $query['destination'] = filter_input(INPUT_GET, 'destination');
+  }
+  $content .= l(t('Log in'), $url, array(
+    'absolute' => TRUE,
+    'external' => ($subdomain == $base_url) ? FALSE : TRUE,
+    'query' => $query,
+    'attributes' => array(
+      'class' => array(
+        'large-callout-button',
+      ),
+    ),
+  ));
+  // If there is a destination query string, use it for the link path.
+  $last_page = filter_input(INPUT_GET, 'destination');
+  $last_path = ($last_page) ? $last_page : 'user';
+  $content .= '<p>' . l(t('Log in with user name and password instead'), $last_path) . '</p>';
+  $content .= '</article>';
+  $text = variable_get('gn2_cac_description', NULL);
+  $content .= '<article class="description">';
+  $content .= $text;
+  $content .= '</article>';
+  $content .= '</section>';
+
+  return $content;
+}
+
+/**
+ * Ajax callback to return the user's PKI string.
+ *
+ * @param int $uid
+ *   The user's user ID.
+ */
+function gn2_cac_check($uid) {
+  $query = db_select('field_data_pki_authentication_pki_string', 'p');
+  $query->addField('p', 'pki_authentication_pki_string_value');
+  $query->join('users', 'u', 'u.vid = p.revision_id');
+  $query->condition('p.entity_id', $uid);
+  $result = $query->execute()->fetchField();
+
+  drupal_json_output(array('pki_string' => $result));
+}
+
+/**
+ * Menu access check for the unset form.
+ *
+ * @param int $uid
+ *   The user ID for the user object being altered.
+ */
+function gn2_cac_access($uid = NULL) {
+  global $user;
+  return ($uid && ($user->uid === $uid || in_array('administrator', $user->roles))) ? TRUE : FALSE;
+}

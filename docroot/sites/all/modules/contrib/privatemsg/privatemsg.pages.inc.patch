@@ -1,0 +1,13 @@
+diff --git privatemsg/privatemsg.pages.inc b/privatemsg/privatemsg.pages.inc
+index 0dbd4aa..5992943 100644
+--- privatemsg/privatemsg.pages.inc
++++ privatemsg/privatemsg.pages.inc
+@@ -318,7 +318,7 @@ function privatemsg_new($form, &$form_state, $recipients = '', $subject = '') {
+   }
+ 
+   if (!empty($recipients_title)) {
+-    drupal_set_title(t('Write new message to %recipient', array('%recipient' => $recipients_title)), PASS_THROUGH);
++    drupal_set_title(t('Write new message to @recipient', array('@recipient' => $recipients_title)), PASS_THROUGH);
+   }
+   else {
+     drupal_set_title(t('Write new message'));

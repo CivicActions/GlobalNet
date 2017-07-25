@@ -1,0 +1,6 @@
+name = "GN2 Course Sessions"
+description = "Controls Sessions and how they relate to Courses."
+core = 7.x
+package = GlobalNET
+dependencies[] = replicate
+dependencies[] = gn2_sessions_fc

@@ -1,0 +1,82 @@
+<?php
+/**
+ * @file
+ * Install/update functions.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function pki_authentication_install() {
+  _field_info_collate_fields(TRUE);
+  _field_info_collate_types(TRUE);
+
+  if (!field_info_field('pki_authentication_pki_string')) {
+    $field = array(
+      'field_name' => 'pki_authentication_pki_string',
+      'type' => 'text',
+      'settings' => array(
+        'required' => FALSE,
+      ),
+      'default_widget' => 'text_fextfield',
+      'default_formatter' => 'hidden',
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => 'pki_authentication_pki_string',
+      'entity_type' => 'user',
+      'label' => 'The user\'s PKI string',
+      'bundle' => 'user',
+      'required' => FALSE,
+      'settings' => array(
+        'user_register_form' => 0,
+      ),
+      'widget' => array(
+        'type' => 'text_field',
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function pki_authentication_uninstall() {
+  // Delete all the pki_authentication variables and then clear the cache.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'pki_authentication_%'");
+  cache_clear_all('variables', 'cache');
+  // Do not remove the pki_string field, make them do that manually.
+  drupal_set_message(t("The user field pki_authentication_pki_string has not been removed from the user bundle and must be removed manually in Configuration -> Account Settings -> Manage Fields."));
+}
+
+/**
+ * Implements hook_schema().
+ */
+function pki_authentication_schema() {
+  return array(
+    'pki_authentication_temp' => array(
+      'description' => 'A place to pass data securely from one page to another when session data is not been established.',
+      'fields' => array(
+        'nonce' => array(
+          'description' => 'The passed, publicly visible nonce for this record',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'ttl' => array(
+          'description' => 'Timestamp when this row expires',
+          'type' => 'int',
+          'size' => 'big',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'data' => array(
+          'description' => 'Any data we want to pass securely with our nonce',
+          'type' => 'text',
+        ),
+      ),
+      'primary key' => array('nonce'),
+    ),
+  );
+}

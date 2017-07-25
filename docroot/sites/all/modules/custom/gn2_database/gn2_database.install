@@ -1,0 +1,966 @@
+<?php
+/**
+ * @file
+ * Install file for gn2_database.
+ *
+ * @see
+ * www.computerminds.co.uk/drupal-update-hooks-multi-developer-environment
+ *
+ * Increment each successive update hook (leave 7000 empty; start with 7001).
+ * Example of an update hook function that removes a field:
+ * /**
+ *  * Implements hook_update_N().
+ *  *
+ *  function gn2_database_update_7000(&$sandbox) {
+ *    field_delete_field('field_event_archive_date');
+ *  }
+ */
+
+/**
+ * Enables the feature with the field for simplified node access management.
+ */
+function gn2_database_update_7001(&$sandbox) {
+  module_enable(array("gn2_simple_access"));
+}
+
+/**
+ * Removing unnecessary fields replaced with simple_access.
+ */
+function gn2_database_update_7002(&$sandbox) {
+  field_delete_field("field_access_settings");
+  field_delete_field("field_privacy_settings");
+}
+
+/**
+ * Removing unnecessary fields from event content type (2015.04.21 RD-1015).
+ */
+function gn2_database_update_7003(&$sandbox) {
+  field_delete_field("field_event_cocom");
+  field_delete_field("field_location_building_room");
+  field_delete_field("field_co_sponsoring_organization");
+}
+
+/**
+ * Fixing og roles (2015.04.24).
+ */
+function gn2_database_update_7004(&$sandbox) {
+  $rids = array(3, 6, 7, 10, 13, 16);
+  foreach ($rids as $rid) {
+    og_role_delete($rid);
+  }
+}
+
+/**
+ * Removing the Web conference details field (2015.04.29 RD-944).
+ */
+function gn2_database_update_7005(&$sandbox) {
+  field_delete_field("field_web_conference_details");
+}
+
+/**
+ * Removing the field_description from Course bundle only.
+ */
+function gn2_database_update_7006(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_description", "course"));
+}
+
+/**
+ * Removing unnecessary fields from course content type (2015.05.19 RD-1024).
+ */
+function gn2_database_update_7007(&$sandbox) {
+  field_delete_field("field_course_id");
+  field_delete_instance(field_info_instance("node", "field_recommended_links", "course"));
+}
+
+/**
+ * Enable the redirect module.
+ */
+function gn2_database_update_7008(&$sandbox) {
+  module_enable(array("redirect"));
+}
+
+/**
+ * Removing fields from post and announcement content types (RD-1038).
+ */
+function gn2_database_update_7009(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_additional_images", "post"));
+  field_delete_instance(field_info_instance("node", "field_subtitle", "post"));
+  field_delete_instance(field_info_instance("node", "field_additional_images", "announcement"));
+  field_delete_instance(field_info_instance("node", "field_subtitle", "announcement"));
+}
+
+/**
+ * Removing sticky field from post and announcement content types (RD-1038).
+ */
+function gn2_database_update_7010(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_sticky", "post"));
+  field_delete_instance(field_info_instance("node", "field_sticky", "announcement"));
+}
+
+/**
+ * Removing field_media field from post & announcement types (RD-1038).
+ */
+function gn2_database_update_7011(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_media", "post"));
+  field_delete_instance(field_info_instance("node", "field_media", "announcement"));
+}
+
+/**
+ * Removing group_register field from announcement type (RD-1038).
+ */
+function gn2_database_update_7012(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "group_register", "announcement"));
+}
+
+/**
+ * Removing field_existing_user field from announcement type (RD-217).
+ */
+function gn2_database_update_7013(&$sandbox) {
+  field_delete_instance(field_info_instance("entityform", "field_existing_user", "userreg"));
+}
+
+/**
+ * Removing field_existing_user field from announcement type (RD-217).
+ */
+function gn2_database_update_7014(&$sandbox) {
+  field_delete_instance(field_info_instance("entityform", "field_requesting_member", "join_org"));
+}
+
+/**
+ * Removing field_expertise_validated_by field from User object (RD-65).
+ */
+function gn2_database_update_7015(&$sandbox) {
+  field_delete_field("field_expertise_validated_by");
+}
+
+/**
+ * Removing field_existing_user field from announcement type (RD-217).
+ */
+function gn2_database_update_7016(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_description", "alumni_group"));
+}
+
+/**
+ * Removing group_register field from group nodes.
+ */
+function gn2_database_update_7017(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "group_register", "group"));
+  field_delete_instance(field_info_instance("node", "group_register", "organization"));
+  field_delete_instance(field_info_instance("node", "group_register", "event"));
+  field_delete_instance(field_info_instance("node", "group_register", "course"));
+  field_delete_instance(field_info_instance("node", "group_register", "alumni_group"));
+}
+
+/**
+ * Removing recommended_links field from group type (RD-217).
+ */
+function gn2_database_update_7018(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "recommended_links", "group"));
+}
+
+/**
+ * Removing fields from publication type (RD-781).
+ */
+function gn2_database_update_7019(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_country", "publication"));
+  field_delete_instance(field_info_instance("node", "field_region", "publication"));
+  field_delete_instance(field_info_instance("node", "field_isbn", "publication"));
+}
+
+/**
+ * Removing field_footer_links field from organization object (RD-1494).
+ */
+function gn2_database_update_7020(&$sandbox) {
+  field_delete_field("field_footer_links");
+  field_delete_instance(field_info_instance("node", "field_footer_links", "organization"));
+}
+
+/**
+ * Removing field_feedback_username from course feedback form (RD-1311).
+ */
+function gn2_database_update_7022(&$sandbox) {
+  field_delete_field("field_feedback_username");
+}
+
+/**
+ * Removing field_organization from field_collection expertise (RD-1379).
+ */
+function gn2_database_update_7023(&$sandbox) {
+  field_delete_instance(field_info_instance("field_collection_item", "field_organization", "field_expertise"));
+}
+
+/**
+ * Disabling Realname Registration module (RD-1572).
+ */
+function gn2_database_update_7024(&$sandbox) {
+  if (module_exists('realname_registration')) {
+    module_disable(array('realname_registration'));
+  }
+}
+
+/**
+ * Removing field_page_name from basic page (RD-1428).
+ */
+function gn2_database_update_7025(&$sandbox) {
+  field_delete_field("field_page_name");
+  field_delete_instance(field_info_instance("node", "field_page_name", "page"));
+}
+
+/**
+ * Disabling Label Help module (RD-1424).
+ */
+function gn2_database_update_7026(&$sandbox) {
+  if (module_exists('label_help')) {
+    module_disable(array('label_help'));
+  }
+}
+
+/**
+ * Removing field_description from document file entity (RD-1469).
+ */
+function gn2_database_update_7027(&$sandbox) {
+  field_delete_instance(field_info_instance('file', 'field_description', 'document'));
+}
+
+/**
+ * Removing field_cocom and field_country from Organization content type.
+ */
+function gn2_database_update_7028(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_cocom", "organization"));
+  field_delete_instance(field_info_instance("node", "field_country", "organization"));
+}
+
+/**
+ * Removing field_shoutout from Organization content type (RD-1278).
+ */
+function gn2_database_update_7029(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_shoutout", "organization"));
+}
+
+/**
+ * Removing legacy_nid field from all nodes.
+ */
+function gn2_database_update_7031(&$sandbox) {
+  field_delete_field("field_legacy_nid");
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "alumni_group"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "announcement"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "course"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "event"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "group"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "news"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "organization"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "post"));
+  field_delete_instance(field_info_instance("node", "field_legacy_nid", "publication"));
+}
+
+/**
+ * Removing sticky field from all nodes.
+ */
+function gn2_database_update_7032(&$sandbox) {
+  field_delete_field("field_sticky");
+  field_delete_instance(field_info_instance("node", "field_sticky", "news"));
+}
+
+/**
+ * Removing sticky field from non-group page ('program') content type.
+ */
+function gn2_database_update_7033(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_group_short_title", "program"));
+}
+
+/**
+ * Disable the Userpoints OG module.
+ */
+function gn2_database_update_7034(&$sandbox) {
+  if (module_exists('userpoints_og')) {
+    module_disable(array('userpoints_og'));
+    $deleted = db_delete('taxonomy_term_data')
+            ->condition('name', 'Points')
+            ->execute();
+  }
+}
+
+/**
+ * Update the Group Access field for all Orgs and rebuild node access.
+ */
+function gn2_database_update_7035(&$sandbox) {
+  $nodes = db_query('SELECT nid FROM {node} n '
+          . 'JOIN {field_data_group_access} ga ON ga.entity_id = n.nid '
+          . 'WHERE type = :type', array(':type' => 'organization'))->fetchAll();
+  if (!empty($nodes)) {
+    foreach ($nodes as $nid) {
+      $org = node_load($nid->nid);
+      $org_wrapper = entity_metadata_wrapper('node', $org);
+      $org_wrapper->group_access->set(0);
+      $org_wrapper->save();
+    }
+    node_access_rebuild();
+  }
+}
+
+/**
+ * Enabling hook_update_deploy_tools.
+ */
+function gn2_database_update_7036() {
+  $modules = array('hook_update_deploy_tools');
+  module_enable($modules);
+}
+
+/**
+ * Enabling entity_bulk_delete.
+ */
+function gn2_database_update_7037() {
+  $modules = array(
+    'entity_bulk_delete',
+  );
+  $message = HookUpdateDeployTools\Modules::enable($modules);
+  return $message;
+}
+
+/**
+ * Reverting gn2_base_config so that update 7038 runs.
+ */
+function gn2_database_update_7038() {
+  $modules = array(
+    'gn2_base_config',
+  );
+  $message = HookUpdateDeployTools\Modules::enable($modules);
+  $features = array(
+    'gn2_base_config',
+  );
+  $message .= HookUpdateDeployTools\Features::revert($features);
+  return $message;
+}
+
+/**
+ * Update the Group Access field for all Orgs and rebuild node access.
+ */
+function gn2_database_update_7039() {
+  $nodes = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'organization'))->fetchAll();
+  if (!empty($nodes)) {
+    foreach ($nodes as $nid) {
+      $org = node_load($nid->nid);
+      $org_wrapper = entity_metadata_wrapper('node', $org);
+      $org_wrapper->group_access->set(0);
+      $org_wrapper->save();
+    }
+    node_access_rebuild();
+  }
+}
+
+/**
+ * RD-1388: cache table query so panels layout can be removed; see RD-2035.
+ */
+function gn2_database_update_7040() {
+  db_query("delete from cache where cid like 'ctools_plugin%'");
+}
+
+/**
+ * Removing User field from Entityform Reject Request.
+ */
+function gn2_database_update_7041() {
+  field_delete_instance(field_info_instance('entityform', 'field_user', 'reject_request'));
+}
+
+/**
+ * Rebuilding node access permissions for optimised simple access code.
+ */
+function gn2_database_update_7042() {
+  node_access_rebuild();
+}
+
+/**
+ * Disabling GN2_Searching module (RD-2122).
+ */
+function gn2_database_update_7043(&$sandbox) {
+  if (module_exists('gn2_searching')) {
+    module_disable(array('gn2_searching'));
+  }
+}
+
+/**
+ * Rebuilding node access to rewrite grants; see RD-2165.
+ */
+function gn2_database_update_7044() {
+  node_access_rebuild();
+}
+
+/**
+ * Fixing userpoints anomalies; see RD-305.
+ */
+function gn2_database_update_7055() {
+  db_query('DELETE FROM {userpoints} WHERE tid NOT IN'
+      . ' (125, 128, 129, 130, 131, 132, 133)');
+}
+
+/**
+ * Removing field_registration_handling field from Event node.
+ */
+function gn2_database_update_7056() {
+  field_delete_instance(field_info_instance('node', 'field_registration_handling', 'event'));
+}
+
+/**
+ * Removing field_date_of_birth field from user.
+ */
+function gn2_database_update_7057() {
+  field_delete_instance(field_info_instance('user', 'field_date_of_birth', 'user'));
+}
+
+/**
+ * Enabling gn2_report_user_changes.
+ */
+function gn2_database_update_7058() {
+  $modules = array(
+    'user_changed',
+    'user_revision',
+    'gn2_report_user_changes',
+  );
+  $message = HookUpdateDeployTools\Modules::enable($modules);
+  return $message;
+}
+
+/**
+ * Removing unused fields from sessions.
+ */
+function gn2_database_update_7059() {
+  if ($instance = field_info_instance('entityform', 'field_mdy_for_filterering', 'session')) {
+    field_delete_instance($instance);
+  }
+
+  if ($instance = field_info_instance('entityform', 'field_event_date', 'session')) {
+    field_delete_instance($instance);
+  }
+}
+
+/**
+ * Removing pm counts not associated with message.
+ */
+function gn2_database_update_7060() {
+  db_query('UPDATE pm_index set is_new = :val', array(':val' => 0));
+}
+
+/**
+ * Uninstalling easy_breadcrumb module (RD-2391).
+ */
+function gn2_database_update_7061() {
+  $modules = array('easy_breadcrumb');
+  $message = HookUpdateDeployTools\Modules::disableAndUninstall($modules);
+  return $message;
+}
+
+/**
+ * Enabling gn2_context.
+ */
+function gn2_database_update_7062() {
+  $modules = array('gn2_context');
+  $message = HookUpdateDeployTools\Modules::enable($modules);
+  return $message;
+}
+
+/**
+ * Increase gn2_context weight to allow it to catch page title set by other
+ * modules.
+ */
+function gn2_database_update_7063() {
+  db_query("UPDATE {system} SET weight = 999 WHERE type = 'module' AND name = 'gn2_context'");
+}
+
+/**
+ * Removing User Profile Updates content type.
+ */
+function gn2_database_update_7064() {
+  node_type_delete('user_profile_updates');
+}
+
+/**
+ * Updating Topic terms alias URL.
+ */
+function gn2_database_update_7065() {
+  $aliases = db_select('url_alias', 'ua')
+    ->fields('ua')
+    ->condition('alias', '%gn-topics%', 'LIKE')
+    ->execute();
+
+  foreach ($aliases as $alias) {
+    $new_alias = str_replace('gn-', '', $alias->alias);
+
+    db_update('url_alias')
+      ->fields(array('alias' => $new_alias))
+      ->condition('pid', $alias->pid, '=')
+      ->execute();
+  }
+}
+
+/**
+ * Updating Countries and Regions terms alias URL.
+ */
+function gn2_database_update_7066() {
+  $aliases = db_select('url_alias', 'ua')
+    ->fields('ua')
+    ->condition('alias', 'gn-%', 'LIKE')
+    ->execute();
+
+  foreach ($aliases as $alias) {
+    $new_alias = str_replace('gn-', '', $alias->alias);
+
+    db_update('url_alias')
+      ->fields(array('alias' => $new_alias))
+      ->condition('pid', $alias->pid, '=')
+      ->execute();
+  }
+}
+
+/**
+ * Increase gn2_base_config weight so it's form_alters don't put things in
+ * places that other form alters later expect them to be.
+ */
+function gn2_database_update_7067() {
+  db_query("UPDATE {system} SET weight = 1 WHERE type = 'module' AND name = 'gn2_base_config'");
+}
+
+/**
+ * Removes Military Date format to add the updated format and avoid duplicated.
+ */
+function gn2_database_update_7068() {
+  // Delete old Military date format.
+  db_query("DELETE FROM {date_format_type} WHERE type = 'military_without_timezone' AND locked = FALSE");
+  db_query("DELETE FROM {date_format_type} WHERE type = 'military_with_timezone' AND locked = FALSE");
+
+  // Update variables.
+  variable_set("date_format_military_with_time", 'd M Y - H:i');
+  variable_set("date_format_military_without_time", 'd M Y');
+  variable_del("date_format_military_without_timezone");
+  variable_del("date_format_military_with_timezone");
+}
+
+/**
+ * Enabling Linkit so that we can remove it properly.
+ */
+function gn2_database_update_7069() {
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::enable(array('linkit'));
+    return $message;
+  }
+}
+
+/**
+ * Removing Linkit.
+ */
+function gn2_database_update_7070() {
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::disableAndUninstall(array('linkit'));
+    return $message;
+  }
+}
+
+/**
+ * Removing field_thumbnail_image
+ */
+function gn2_database_update_7071() {
+  field_delete_instance(field_info_instance("node", "field_thumbnail_image", "post"));
+}
+
+/**
+ * RD-3261 Remove apcss.portalmgr from a ton of unwanted group memberships.
+ */
+function gn2_database_update_7072() {
+  // All the titles.
+  $nodes1 = node_load_multiple(array(), array(
+    'title' => array('GlobalNET Site Admin Collaboration',
+      'Governance and Security COI',
+      'Crisis Management COI',
+      'CCM 09-1 Content',
+      'ASC 09-2 Content',
+      'APCSS ALUMNI VIETNAM',
+      'Oceania Security Issues COI',
+      'APOC 11-2 Alumni',
+      'Logos and icons',
+      'Admin help',
+      'Regional Security Cooperation Mechanisms COI',
+      'APCSS Staff and Faculty BIOS',
+      'APCSS Staff and Faculty Only Group',
+      'Site Managers Meeting DC July 2015',
+      'The Power of Identity COI',
+      'CSRT 09-1 - Content',
+      'ASC 11-2 Alumni',
+      'Support Issues',
+      'Icons and Images',
+      'ASC test content',
+      'Organizational Development and Innovation COI',
+      'Content',
+      'Blog Spot',
+      'APCSS ALUMNI PAKISTAN',
+      'APCSS COI',
+      'APCSS Link Administrators',
+      'APCSS Staff and Faculty',
+      'Energy Security COI',
+      'CCM 10-1 Content',
+      'CCM 10-1 PAO Content folder',
+      'GlobalNET Platform Development and Improvement',
+      'Maldives symposium data repository',
+      'APCSS course pre-registration',
+      'APOC 10-3 Alumni',
+      'WMD and Nuclear Power COI',
+      'Counter-Terrorism COI',
+      'APOC 10-1 Content',
+      'FY15 Alumni Sustained Engagement Program',
+      'Senior Executive Forum COI',
+      'Water Security in South Asia COI',
+      'ASC 12-1 content: Admin only',
+      'CCM 10-1 Fellows project discussion',
+      'APOC 12-1 Alumni',
+      'CSRT 10-1 Alumni Content',
+      'NEA Maritime Security Outreach',
+      'Health Security COI',
+      'Media, Conflict and Terrorism COI',
+      'APCSS GLOBALNET CONTENT',
+      'Migration 2015-2016',
+      'ASC 12 content',
+      'Maritime Cooperation in the Indo-Pacific Region COI',
+      'US/INDIA Workshop 2012',
+      'SSD 10-2',
+      'Maritime Security COI',
+      'APCSS Site Members',
+      'APCSS Workshops',
+      'Bougainville Parliamentarian Course',
+      'APCSS Interns',
+      'US/India Workshop 2011 content',
+      'ASC 10-1 Content',
+      'SSD 10-2 Content',
+      'APCSS COOP',
+      'Environment and Security workshop COI',
+      'APCSS site content',
+      'APCSS Fellows Advocacy group',
+      'APCSS Seminar Leaders',
+      'Science and Technology COI',
+      'Outreach',
+      'Maldives CT Symposium Content',
+      'APOC 10-3 Alumni Content',
+      'COI content',
+      'Biosecurity Workshop 2014',
+      'APCSS ALUMNI SRI LANKA',
+      'CCM 12-1 content',
+      'South Asia Alumni Association',
+      'Fellows\' Advocacy Workshop',
+      'CCM 11 - 1 Alumni',
+      'Maldives CT Symposium',
+      'Far East Russia Alumni',
+      'Exercise of Information Power COI',
+    ),
+  ));
+
+  $nids = array();
+  // Grab our gids which are the nid from our titles.
+  foreach ($nodes1 as $node) {
+    $nids[] = (int) $node->nid;
+  }
+
+  // Our gids extracted from paths in sheet.
+  $nodes2 = array(
+    867,
+    14324,
+    33022,
+    14951,
+    14977,
+    14973,
+    35185,
+    14968,
+    17801,
+    17800,
+    17774,
+    17712,
+    18072,
+    17974,
+    18058,
+    18095,
+    18069,
+    18032,
+    17826,
+    17849,
+    17746,
+    17713,
+    17824,
+    17773,
+    14381,
+    17823,
+  );
+
+  // Put both arrays into one for our query.
+  $all_nids = array_merge($nids, $nodes2);
+
+  // Delete +-500 items not in array from the membership table.
+  db_delete('og_membership')
+    ->condition('etid', 3165)
+    ->condition('gid', ($all_nids), 'NOT IN')
+    ->execute();
+}
+/**
+ * Removing fields from Event and Organization bundles only.
+ */
+function gn2_database_update_7073(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_group_short_title", "event"));
+  field_delete_instance(field_info_instance("node", "field_thumbnail_image", "organization"));
+}
+/**
+ * Dispabling pki_authentication_cac; see @see RD-1214.
+ */
+function gn2_database_update_7074(&$sandbox) {
+  $modules = array(
+    'pki_authentication_cac',
+  );
+  $message = HookUpdateDeployTools\Modules::uninstall($modules);
+  return $message;
+}
+/**
+ * Disabling gn2_support module. RD-3840
+ */
+function gn2_database_update_7075(&$sandbox) {
+  if (module_exists('gn2_support')) {
+    module_disable(array('gn2_support'));
+  }
+}
+/**
+ * Enables the feature with the field for simplified node access management.
+ */
+function gn2_database_update_7076(&$sandbox) {
+  module_enable(array("gn2_support_desk"));
+}
+/**
+ * Removing fields from Event and Organization bundles only. RD-3840
+ */
+function gn2_database_update_7077(&$sandbox) {
+  field_delete_instance(field_info_instance("node", "field_how_can_we_help_you_", "support"));
+}
+/**
+ * Removing fields from Support content type. RD-3888
+ */
+function gn2_database_update_7078(&$sandbox) {
+  field_delete_field("field_jira_id");
+  field_delete_instance(field_info_instance("node", "field_content", "support"));
+}
+
+/**
+ * Reverting feature
+ */
+function gn2_database_update_7079(&$sandbox) {
+  $features = array(
+    'gn2_support_desk',
+  );
+  $message = HookUpdateDeployTools\Features::revert($features);
+  return $message;
+}
+
+/**
+ * Updating all Folder nodes to use 99 rows; @see RD-3972.
+ */
+function gn2_database_update_7080(&$sandbox) {
+  $num_nodes = db_update('field_data_media_gallery_rows')
+    ->fields(array('media_gallery_rows_value' => 99))
+    ->execute();
+  $num_revisions = db_update('field_revision_media_gallery_rows')
+    ->fields(array('media_gallery_rows_value' => 99))
+    ->execute();
+  return t('!node nodes and !rev revisions updated', array('!node' => $num_nodes, '!rev' => $num_revisions));
+}
+
+/**
+ * Enables the GN2 Bulk Delete module.
+ */
+function gn2_database_update_7081(&$sandbox) {
+  module_enable(array('gn2_bulk_delete'));
+}
+
+/**
+ * Creating group to be associated with orphaned groups.
+ */
+function gn2_database_update_7082(&$sandbox) {
+  // Get GlobalNET org ID.
+  $pid = db_query('SELECT nid FROM {node} WHERE title = :gnet AND type = :type',
+    array(':gnet' => 'GlobalNET Platform', ':type' => 'organization'))->fetchField();
+  $uid = db_query('SELECT uid FROM {users} WHERE name = :name', array(':name' => 'lisa.berry'))->fetchField();
+  if ($pid && $uid ) {
+    $values = array(
+      'type' => 'group',
+      'uid' => $uid,
+      'status' => 1,
+      'comment' => 0,
+      'promote' => 0,
+    );
+
+    $entity = entity_create('node', $values);
+    $ewrapper = entity_metadata_wrapper('node', $entity);
+    $ewrapper->title->set('Orphaned Groups');
+    $ewrapper->body->set(array('value' => 'This group is used to associate groups that had no Group Reference'));
+    // Assign to GlobalNET Platform organization.
+    $ewrapper->og_group_ref[] = $pid;
+    // Set Privacy Settings to Group.
+    $ewrapper->field_gn2_simple_access->set('group');
+    // Save the new node.
+    $ewrapper->save();
+
+    print 'Orphaned Groups group created.';
+  }
+}
+
+/**
+ * Associate orphaned groups with new group.
+ */
+function gn2_database_update_7083(&$sandbox) {
+  $pid = db_query('SELECT nid FROM {node} WHERE title = :title', array(':title' => 'Orphaned Groups'))->fetchField();
+  $uid = db_query('SELECT uid FROM {users} WHERE name = :name', array(':name' => 'lisa.berry'))->fetchField();
+  if ($pid) {
+    $group_types = array('group', 'event', 'course', 'course_group', 'alumni_group', 'program');
+    $subquery = db_select('og_membership', 'om')
+      ->fields('om', array('etid'))
+      ->condition('om.entity_type', 'node');
+
+    $results = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->condition('n.type', $group_types, 'IN')
+      ->condition('n.nid', $subquery, 'NOT IN')
+      ->execute()->fetchCol();
+
+    foreach ($results as $nid) {
+      $node = node_load($nid);
+      if ($node->uid !== 1) {
+        $node->uid = $uid;
+      }
+      // Assign to node to the Orphaned Groups group.
+      $node->og_group_ref[LANGUAGE_NONE][] = array('target_id' => $pid);
+      node_save($node);
+    }
+  }
+}
+/**
+ * Group nodes are not translatable, but content on them is.
+ * Set groups to be language-neutral.
+ */
+function gn_database_update_7084() {
+  global $language;
+
+  // Fetch group nodes where language is not 'und'
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $query->condition('n.language', LANGUAGE_NONE, '!=');
+
+  // Select Groups OR Organizations.
+  $db_or = db_or();
+  $db_or->condition('n.type', 'group', '=');
+  $db_or->condition('n.type', 'organization', '=');
+  $query->condition($db_or);
+
+  $results = $query->execute();
+
+  while ($result = $results->fetchObject()) {
+    // Set node to be language neutral
+    $node = node_load($result->nid);
+    $term_wrapper = entity_metadata_wrapper('node', $node);
+    $term_wrapper->language->set(LANGUAGE_NONE);
+    $term_wrapper->save();
+
+    // Update aliases for this node to be language neutral
+    db_update('url_alias')
+      ->fields(array('language' => LANGUAGE_NONE,))
+      ->condition('source', 'node/' . $result->nid, '=')
+      ->execute();
+  }
+}
+
+/**
+ * Deletes improperly deleted users.
+ */
+function gn2_database_update_7085(&$sandbox) {
+  // Get all users that exist in the User Revision table but not in the Users table.
+  $result = db_query('SELECT * FROM {user_revision} ur WHERE ur.uid NOT IN (SELECT u.uid FROM {users} u) GROUP BY ur.uid');
+  // Reinsert that data into the Users table.
+  $delete = array();
+  $query = db_insert('users')->fields(array(
+    'uid', 'vid', 'name', 'mail', 'theme', 'signature', 'signature_format', 'status', 'timezone', 'language', 'picture', 'data','ip'));
+  foreach ($result as $record) {
+    $user = array(
+      'uid' => $record->uid,
+      'vid' => $record->vid,
+      'name' => $record->name,
+      'mail' => $record->mail,
+      'theme' => $record->theme,
+      'signature' => $record->signature,
+      'signature_format' => $record->signature_format,
+      'status' => 0,
+      'timezone' => $record->timezone,
+      'language' => $record->language,
+      'picture' => $record->picture,
+      'data' => $record->data,
+      'ip' => $record->ip,
+    );
+    $query->values($user);
+    $delete[] = $record->uid;
+  }
+  $query->execute();
+
+  if (!empty($delete)) {
+    // Delete their Group associations to avoid errors.
+    db_delete('og_membership')
+      ->condition('etid', $delete, 'IN')
+      ->execute();
+    // Delete the users.
+    user_delete_multiple($delete);
+    // Log total records.
+    watchdog('GN2 User Delete', 'Attempting to delete %count users', array('%count' => count($delete)), WATCHDOG_NOTICE);
+  }
+
+  return t('!count records updated', array('!count' => count($delete)));
+}
+
+/**
+ * Uninstalling previously removed modules.
+ */
+function gn2_database_update_7086(&$sandbox) {
+  if (module_exists('hook_update_deploy_tools')) {
+    $modules = array('betterselect',
+      'crumbs',
+      'label_help',
+      'easy_breadcrumb',
+      'login_one_time',
+      'nocurrent_pass',
+      'og_bulkadd',
+      'og_subgroups',
+      'private_files_download_permission',
+      'radix_layouts',
+      'realname_registration',
+      'user_field_privacy',
+      'views_privatemsg',
+      'gn2_og_membership',
+      'gn2_searching',
+      'gn2_support',
+      'gn2_yandex',
+      'gn_file_download_feature');
+  }
+  $message = HookUpdateDeployTools\Modules::disableAndUninstall($modules);
+
+  return $message;
+}
+
+/**
+ * Updating all gn2_base_config; @see RD-4000.
+  */
+function gn2_database_update_7087(&$sandbox) {
+  $features = array('gn2_support_desk');
+  $message = HookUpdateDeployTools\Features::revert($features);
+  return $message;
+}
+
+/**
+ * Revert base_config and roles_perms features for new "who liked this?" block.
+ */
+function gn2_database_update_7088(&$sandbox) {
+  $features = array(
+    'gn2_base_config',
+    'gn2_roles_perms',
+  );
+
+  $message = HookUpdateDeployTools\Features::revert($features);
+
+  return $message;
+}
+

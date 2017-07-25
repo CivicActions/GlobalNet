@@ -1,0 +1,109 @@
+.view-search-member {
+  
+  .views-row {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  .three-col-responsive-grid.views-row {
+    @include breakpoint($large-screen-and-up) {
+      border-top: 1px solid $lighter-blue-gray;
+      margin-right: -5px;
+      &.views-row-1,
+      &.views-row-2,
+      &.views-row-3 {
+        border-top-width: 0px;
+        padding-top: 0;
+      }
+    }
+    padding-top: 1em;
+    margin-top: 0;
+  }
+  
+}
+
+.user-search-teaser-with-thumb {
+  
+  .gn2-2col-v2 {
+    $zen-column-count: 16 !global;
+    .gn2-2col-v2--col1 {
+      @include zen-grid-item(4, 1);
+      .inner {
+        padding-right: 8%;
+      }
+    }
+    .gn2-2col-v2--col2 {
+      @include zen-grid-item(12, 5);
+      .inner {
+        padding-right: 0;
+        line-height: 1.4;
+      }
+    }
+  }
+  
+  @include breakpoint($medium-screen-and-up) {
+    .gn2-2col-v2 {
+      $zen-column-count: 16 !global;
+      .gn2-2col-v2--col1 {
+        @include zen-grid-item(6, 1);
+        .inner {
+          padding-right: 10%;
+          padding-bottom: 1em;
+        }
+      }
+      .gn2-2col-v2--col2 {
+        @include zen-grid-item(10, 7);
+        .inner {
+          padding-right: 8%;
+          padding-bottom: 1em;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+  
+  .panel-pane {
+    padding-bottom: .5em;
+    margin-bottom: 0;
+  }
+  
+  .search-teaser--user--image {
+    
+  }
+  
+  .search-teaser--user--full-name {
+    font-weight: bold;
+    font-size: .9em;
+    padding-bottom: .5em;
+  }
+  
+  .search-teaser--user--job-title {
+    padding-top: 0;
+    padding-bottom: .25em;
+    font-size: .8em;
+  }
+  
+  .search-teaser--user--organization {
+    padding-top: 0;
+    padding-bottom: .25em;
+    font-size: .8em;
+  }
+  
+  .search-teaser--user--country {
+    padding-top: 0;
+    padding-bottom: .25em;
+    font-size: .8em;
+  }
+  
+  .search-teaser--user--relationship-link {
+    padding-top: .5em;
+    font-size: .8em;
+  }
+  
+  .search-teaser--user--send-message-button {
+    padding-top: .5em;
+    font-size: .8em;
+  }
+  
+}

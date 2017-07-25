@@ -1,0 +1,318 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_base_invitations module.
+ */
+
+variable_set('og_invite_send_invitation_by_rules', 1);
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_invitations_menu() {
+  $items['get-all-groups'] = array(
+    'page callback' => '_gn2_invitations_get_all_groups',
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_invitations_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == '_og_invite_form') {
+    $invitation_types = array(
+      'individual' => t('Select individual members to invite'),
+      'email' => t('Invite users by email'),
+      //'group' => t('Invite all group members'),
+      //'required' => t('All group members are automatically enrolled in event. A message will be sent'),
+      //'csv' => t('Import CSV file'),
+    );
+    // This field is needed to select how the invitation will be sent.
+    $form['invitation_type'] = array(
+      '#type' => 'radios',
+      '#options' => $invitation_types,
+      '#weight' => -10,
+      '#description' => t('Please choose how the invitation will be sent.'),
+    );
+    // This field will be used to send invites to users via email.
+    $form['email'] = array(
+      '#type' => 'textfield',
+      '#title' => t('By email'),
+      '#weight' => -1,
+      '#description' => t('Invite an user by email address.'),
+    );
+    // This field will be used to send invitations to all members of a group.
+   /* $form['group'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Group name'),
+      '#autocomplete_path' => 'get-all-groups',
+      '#weight' => -1,
+      '#description' => t('Send an invitation to all members of a group.'),
+    );*/
+    // This field will be used to import email addresses from a CSV file.
+    /*$form['import'] = array(
+      '#title' => t('Import'),
+      '#type' => 'managed_file',
+      '#description' => t('The uploaded csv will be imported and temporarily saved.'),
+      '#upload_location' => 'public://',
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('csv'),
+      ),
+    );*/
+
+    $form['#submit'][] = '_gn2_invitations_process_invitations';
+    $form['#submit'][] = '_gn2_invitations_invitees_notification';
+    $form['invitee']['#required'] = FALSE;
+  }
+}
+
+/**
+ * Detects the invitation type and process the invitation(s).
+ */
+function _gn2_invitations_process_invitations($form, &$form_state) {
+  $invitation_type = $form_state['input']['invitation_type'];
+  switch ($invitation_type) {
+    // Sends an invitation by user email.
+    case 'email':
+      $group = $form_state['input']['group'];
+      $emails = $form_state['input']['email'];
+      $form_state['group_invitees'] = _gn2_invitations_get_email_invitees($group, $emails);
+      break;
+
+    // Sends an invitation to all the members of a group.
+    case 'group':
+      $group = $form_state['input']['group'];
+      $form_state['group_invitees'] = _gn2_invitations_get_all_group_members($group);
+      break;
+
+    // Sets up a flag to enroll all members of a group.
+    case 'required':
+      $group = $form_state['input']['group'];
+      $form_state['group_invitees'] = _gn2_invitations_get_all_group_members($group);
+      $form_state['register_all'] = TRUE;
+      break;
+
+    case 'csv':
+      $gid = $form_state['build_info']['args'][1];
+      $file = file_load($form_state['input']['import']['fid']);
+      $uri = $file->uri;
+      if (!empty($uri)) {
+        if (file_exists(drupal_realpath($uri))) {
+          $handle = fopen(drupal_realpath($uri), "r");
+          while (($data = fgetcsv($handle, 0, '\n', '"')) !== FALSE) {
+            $operations[] = array(
+              '_gn2_invitations_import_batch_processing',
+              array($data, $gid),
+            );
+          }
+          $batch = array(
+            'title' => t('Importing CSV...'),
+            'operations' => $operations,
+            'finished' => '_gn2_invitations_import_finished',
+            'error_message' => t('The installation has encountered an error.'),
+            'progress_message' => t('Imported @current of @total invitation.'),
+          );
+          batch_set($batch);
+          fclose($handle);
+        }
+      }
+      else {
+        drupal_set_message(t('There was an error uploading your file. Please contact a System administator.'), 'error');
+      }
+      break;
+  }
+}
+
+/**
+ * Invite people via email.
+ */
+function _gn2_invitations_get_email_invitees($group, $emails) {
+  $emails = explode(',', $emails);
+  $invitees = '';
+
+  if (!empty($emails)) {
+    foreach ($emails as $email) {
+      $user = user_load_by_mail($email);
+      if ($user) {
+        $invitees .= $user->name . ' [' . $user->uid . '], ';
+      }
+      else {
+        drupal_set_message($email . ' ' . t("doesn't belong to any user"), 'warning');
+      }
+    }
+  }
+
+  return $invitees;
+}
+
+/**
+ * Invite all group members.
+ */
+function _gn2_invitations_get_all_group_members($group) {
+  $invitees = '';
+  preg_match_all('/\[([A-Za-z0-9 ]+?)\]/', $group, $result);
+  $group_id = $result[1][0];
+  $group_node = node_load($group_id);
+  $group_members = og_get_group_members_properties($group_node, array(), 'members', 'node');
+
+  if (!empty($group_members)) {
+    // Add group members to invitee field.
+    foreach ($group_members as $member) {
+      $user = user_load($member);
+      $invitees .= $user->name . ' [' . $user->uid . '], ';
+    }
+  }
+
+  return $invitees;
+}
+
+/**
+ * Runs when the batch processing is complete.
+ */
+function _gn2_invitations_import_finished() {
+  drupal_set_message(t('Invitations were sent successfully.'));
+}
+
+/**
+ * Runs the batch processing and creates nodes with then given information.
+ */
+function _gn2_invitations_import_batch_processing($data, $gid) {
+  $row = explode(',', $data[0]);
+  $user = user_load_by_mail($row[2]);
+  if ($user) {
+    _gn2_invitations_send_invitation($user->name, $user->uid, $gid);
+  }
+}
+
+/**
+ * Get all group names for autocomplete.
+ */
+function _gn2_invitations_get_all_groups($string) {
+  $result = db_query(
+              "SELECT n.nid, n.title FROM node n WHERE type = 'group' AND title LIKE '%$string%' LIMIT 10"
+            )->fetchAll();;
+  $nids = array();
+  foreach ($result as $group) {
+    $nids[$group->title . ' [' . $group->nid . ']'] = $group->title;
+  }
+  $nids = drupal_json_output($nids);
+
+  return $nids;
+}
+
+/**
+ * Helper function to create invite notifications when the form is submited.
+ */
+function _gn2_invitations_invitees_notification($form, &$form_state) {
+  $group_type = $form_state['values']['group_type'];
+  $gid = $form_state['values']['gid'];
+
+  if (isset($form_state['group_invitees'])) {
+    // Name is not appearing.
+    $invitees = explode(',', str_replace(', ', ',', $form_state['group_invitees']));
+    array_pop($invitees);
+  }
+  else {
+    $invitees = explode(',', str_replace(', ', ',', $form_state['values']['invitee']));
+  }
+
+  $entity = entity_load_single($group_type, $gid);
+
+  foreach ($invitees as $invitee) {
+    if (empty($invitee)) {
+      continue;
+    }
+    list($name, $uid) = explode('||', preg_replace('#^(.*)\s\[([0-9]+)\]$#', '$1||$2', $invitee));
+    if (isset($form_state['register_all'])) {
+      _gn2_invitations_register_to_event($name, $uid, $gid);
+    }
+    else {
+      _gn2_invitations_send_invitation($name, $uid, $gid);
+    }
+  }
+}
+
+/**
+ * Helper function to register users to events.
+ */
+function _gn2_invitations_register_to_event($name, $uid, $gid) {
+  $account = user_load($uid);
+  og_group('node', $gid, array(
+    "entity type" => "user",
+    "entity" => $account,
+  ));
+  drupal_set_message(l($name, 'user/' . $uid) . " joined the event.");
+}
+
+
+/**
+ * Helper function to add an user with a pending membership.
+ */
+function _gn2_invitations_add_pending_membership($uid, $gid) {
+  $account = user_load($uid);
+  $membership = og_group('node', $gid, array(
+              "entity type" => "user",
+              "entity" => $account,
+              "state" => OG_STATE_PENDING,
+  ));
+
+  return $membership;
+}
+
+/**
+ * Helper function to create invite notifications.
+ */
+function _gn2_invitations_send_invitation($name, $uid, $gid) {
+  global $user;
+  $data = db_select('og_membership', 'n')
+    ->fields('n', array('id'))
+    ->condition('gid', $gid, '=')
+    ->condition('entity_type', 'user')
+    ->condition('group_type', 'node')
+    ->execute()
+    ->fetchAll();
+
+  if ($data) {
+    $id = $data[0]->id;
+    _gn2_invitations_add_pending_membership($uid, $gid);
+
+    // Preparing membership objetct.
+    $og_membership = og_membership_load($id);
+    $og_membership->og_membership_invitation['und'][0]['value'] = 1;
+    $og_membership->state = 2;
+    og_membership_save($og_membership);
+
+    // Creating hash and invite link.
+    $hash = og_invite_generate_hash($og_membership);
+    $answer_link = url(og_invite_answer_path_by_hash('node', $gid, $hash, 'answer'));
+
+    _gn2_base_config_subscribe_member_get_notification($gid, $uid);
+
+    db_merge('subscriptions_notifications_count')
+      ->key(array('uid' => $uid))
+      ->expression('count', 'count + 1')
+      ->fields(array(
+          'uid' => $uid,
+        )
+      )
+      ->execute();
+
+    db_insert('subscriptions_notifications_messages')
+      ->fields(array(
+        'uid' => $uid,
+        'initiator' => $user->uid,
+        'type' => 'Group invitation',
+        'nid' => $gid,
+        'text' => l(t('Click to answer'), $answer_link),
+        'timestamp' => time(),
+        )
+      )
+      ->execute();
+
+    drupal_set_message(l($name, 'user/' . $uid) . " was invited successfully");
+  }
+}

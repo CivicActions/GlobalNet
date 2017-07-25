@@ -1,0 +1,492 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_context.
+ */
+
+/**
+ * Returns current group NID based on path, alias and current user context.
+ *
+ * This starts with the lowest common denominator fallbacks, and sets better
+ * values if we have more information available.
+ *
+ * @param bool $fallback_org
+ *   Indicate if the group selection should fall back to the organization
+ *   group. This should be TRUE in most cases, in which case this function is
+ *   guaranteed to return a valid node ID.
+ *
+ * @return int
+ *   Node ID of current group.
+ */
+function gn2_context_get_group_id($fallback_org = TRUE) {
+  $nid = NULL;
+  // Gets group based on current node.
+  $node = FALSE;
+  if (!$node && arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+  }
+  // Node using comment path.
+  if (!$node && arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
+    $node = node_load(arg(2));
+  }
+  // Node using media-gallery path.
+  if (!$node && arg(0) == 'media-gallery' && arg(1) == 'detail' && is_numeric(arg(2))) {
+    $node = node_load(arg(2));
+  }
+  // Node using search path.
+  $matches = array();
+  if (!$node && preg_match('@(?:[^/]+/|)search/(?:[^/]+/)*group/([0-9]+)@', current_path(), $matches)) {
+    if (is_numeric($matches[1])) {
+      $node = node_load($matches[1]);
+    }
+  }
+  // Check for gid in querystring.
+  if (!$node && !empty($_GET['gid'])) {
+    $node = node_load($_GET['gid']);
+  }
+  // If we have a destination that is a node path, we use that.
+  if (!$node && !empty($_GET['destination'])) {
+    $parts = explode('/', $_GET['destination']);
+    if (count($parts) > 1 && $parts[0] == 'node' && is_numeric($parts[1])) {
+      $node = node_load($parts[1]);
+    }
+  }
+  if ($node) {
+    if (og_is_group('node', $node)) {
+      // The current node is a group, so we use that.
+      $nid = $node->nid;
+    }
+    else {
+      // If the current node is not a group, fetch it's group.
+      $gid = GN2GroupIDExtractor::fromNode($node);
+      if ($gid) {
+        $nid = $gid;
+      }
+    }
+  }
+  // Fall back to the detected organization group, if desired.
+  if (!$nid && $fallback_org) {
+    $nid = gn2_context_get_org_id();
+  }
+
+  return $nid;
+}
+
+/**
+ * Returns current org NID based on path, alias and current user context.
+ *
+ * This starts with the lowest common denominator fallbacks, and sets better
+ * values if we have more information available.
+ *
+ * @return int
+ *   Node ID of current organization.
+ */
+function gn2_context_get_org_id() {
+  // Initial fallback to homepage organization if we don't have any yet.
+  $nid = explode('/', variable_get('site_frontpage', 'globalnet'))[1];
+
+  // Gets it based on login organization if that is set.
+  if (!empty($_SESSION['gn2_context_organization_nid'])) {
+    $nid = $_SESSION['gn2_context_organization_nid'];
+  }
+
+  // Gets it based on og_context.
+  if (!empty($_SESSION['og_context']['gid'])) {
+    $group_nid = $_SESSION['og_context']['gid'];
+    $path = new GN2PathToOrganization(node_load($group_nid));
+    $org = $path->getOrganization();
+    if (!empty($org->nid)) {
+      $_SESSION['gn2_context_organization_nid'] = $nid = $org->nid;
+    }
+  }
+
+  // On search page, look for the /org/[nid] facet value.
+  if (arg(0) == 'search' && arg(1) == 'org' && is_numeric(arg(2)) &&
+      !isset($_SESSION['gn2_context_organization_nid'])) {
+    $nid = arg(2);
+    $_SESSION['gn2_context_organization_nid'] = $nid;
+  }
+  // On members search, look for the /org/[short_title] facet value.
+  elseif (arg(0) == 'members' && arg(1) == 'org' && arg(2) &&
+      !isset($_SESSION['gn2_context_organization_nid'])) {
+    $query = db_select('node', 'n');
+    $query->addField('n', 'nid');
+    $query->join('field_data_field_org_short_title', 'st', 'st.revision_id = n.vid');
+    $query->condition('st.field_org_short_title_value', arg(2));
+    $result = $query->execute()->fetchField();
+    $nid = ($result) ? $result : $nid;
+    $_SESSION['gn2_context_organization_nid'] = $nid;
+  }
+  // If we can identify an organization based on the path prefix, then use
+  // that in preference.
+  $path_nid = _gn2_context_org_from_prefix();
+  if (!empty($path_nid)) {
+    $nid = $path_nid;
+  }
+  elseif (stripos(current_path(), 'group/node') !== FALSE && isset($group_nid)) {
+    $nid = $group_nid;
+  }
+  else {
+    // We don't have a path prefix, so we check if we have a specific
+    // group context, then we use the organizational parent of that group.
+    // We need set the first parameter to FALSE to ensure that doesn't
+    // fallback to this function creating a loop.
+    $group_nid = gn2_context_get_group_id(FALSE);
+    if ($group_nid) {
+      $path = new GN2PathToOrganization(node_load($group_nid));
+      $org = $path->getOrganization();
+      if (!empty($org->nid)) {
+        $nid = $org->nid;
+      }
+    }
+  }
+
+  // Special case logic based on first path argument.
+  if (in_array(arg(0), array('registration', 'join'))) {
+    // Pages using a path/org pattern.
+    $path_nid = _gn2_context_org_from_prefix(arg(1));
+    if (isset($path_nid)) {
+      $nid = $path_nid;
+    }
+  }
+  // Special case handling for user password reset.
+  // TODO: Look at just including the gid in the link instead of using the session.
+  if (current_path() == 'user/password') {
+    $path = NULL;
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+      $path = str_replace(url('<front>', array('absolute' => TRUE)), '', $_SERVER['HTTP_REFERER']);
+      $path = preg_replace('/\/$/', '', $path);
+      $path = drupal_lookup_path('source', $path);
+      $path_segments = explode('/', $path);
+      if (count($path_segments) > 1 && $path_segments[0] == 'node' && is_numeric($path_segments[1])) {
+        // Validate the node ID and ensure we have an organization.
+        $node = node_load($path_segments[1]);
+        if ($node) {
+          $path = new GN2PathToOrganization($node);
+          $org = $path->getOrganization();
+          if (!empty($org->nid)) {
+            $nid = $org->nid;
+          }
+        }
+      }
+    }
+  }
+
+  return $nid;
+}
+
+/**
+ * Determine the trail from the current page through the group hierarchy.
+ *
+ * @return array
+ *   Returns an array of links - path as the key (to coalesce any duplicates)
+ *   and the text content as the value.
+ */
+function gn2_context_get_trail() {
+  $trail = array();
+  // Get the top part of the menu trail.
+  $item = menu_get_item();
+  if (!empty($item['access'])) {
+    // Reverse it, since we build our breadcrumbs starting at the right.
+    $active_trail = array_reverse(menu_get_active_trail());
+    // We exclude the "Home" item.
+    array_pop($active_trail);
+
+    foreach ($active_trail as $parent) {
+      $trail[$parent['href']] = $parent['title'];
+    }
+  }
+  // Special cases.
+  _gn2_context_get_trail_special_cases($trail);
+  // Fallback for pages that don't have a title in the menu system.
+  if (empty($trail)) {
+    $trail[current_path()] = drupal_get_title();
+  }
+  // Formulate the trail up the group hierarchy to the organization.
+  $node = node_load(gn2_context_get_group_id());
+  $trail['node/' . $node->nid] = $node->title;
+  while ($group = GN2PathToOrganization::nextGroupUp($node)) {
+    $trail['node/' . $group->nid] = $group->title;
+    $node = $group;
+  }
+  _gn2_context_trim_breadcrumb_texts($trail);
+  return array_reverse($trail);
+}
+
+/**
+ * Add/update any special cases based on the menu trail breadcrumbs.
+ *
+ * @param array $trail
+ *   Menu trail link array.
+ */
+function _gn2_context_get_trail_special_cases(&$trail) {
+  global $user;
+  $node = FALSE;
+  // Special cases for nodes.
+  if (arg(0) == 'node') {
+    if (is_numeric(arg(1))) {
+      $node = node_load(arg(1));
+      if (!empty($node->nid)) {
+        if ($node->type == 'help') {
+          $trail['help'] = t('Help');
+        }
+      }
+    }
+    // Special cases for node add pages
+    else if (arg(1) == 'add') {
+      // Remove "Add content" from trail (users add content from block).
+      array_pop($trail);
+    }
+  }
+  // Special cases for users.
+  if (arg(0) == 'user' && is_numeric(arg(1))) {
+    $account = user_load(arg(1));
+    if (!empty($account->uid)) {
+      // TODO: This can probably be removed after RD-2475 is complete.
+      // Replace the last time with the users name.
+      array_pop($trail);
+      $trail['user/' . $account->uid] = gn2_base_config_get_user_proper_name($account->uid);
+    }
+  }
+  // Special case for comment reply pages.
+  if (!$node && arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
+    $node = node_load(arg(2));
+    if ($node) {
+      $trail['node/' . $node->nid] = $node->title;
+    }
+  }
+  // Special cases for pages that should appear "under" the current users page.
+  if (in_array(arg(0), array('messages', 'relationship', 'inbox'))) {
+    $trail['user/' . $user->uid] = gn2_base_config_get_user_proper_name($user->uid);
+  }
+  // Special cases for media galleries - fix the title and insert the folder.
+  if (arg(0) == 'media-gallery' && arg(1) == 'detail' && is_numeric(arg(2)) && is_numeric(arg(3))) {
+    $trail[key($trail)] = drupal_get_title();
+    $node = node_load(arg(2));
+    if ($node) {
+      $trail['node/' . $node->nid] = $node->title;
+    }
+  }
+  // Multiple edit for folders.
+  if (arg(0) == 'admin' && arg(1) == 'content' && arg(2) == 'file' && arg(3) == 'edit-multiple') {
+    $destination = drupal_get_destination();
+    if (!empty($destination['destination'])) {
+      $parts = explode('/', $destination['destination']);
+      if (count($parts) > 1 && $parts[0] == 'node' && is_numeric($parts[1])) {
+        $node = node_load($parts[1]);
+        if ($node) {
+          $trail = array(current_path() => drupal_get_title());
+          $trail['node/' . $node->nid] = $node->title;
+        }
+      }
+    }
+  }
+  // Whitelist of paths to use the page title.
+  if (arg(0) == 'relationship' && arg(2) == 'request' ||
+      arg(0) == 'group' && arg(1) == 'node' ||
+      arg(0) == 'inbox' && arg(1) == 'notifications' ||
+      arg(0) == 'node' && is_numeric(arg(1)) && in_array(arg(2), array('all-related-stories', 'all-related-groups')) ||
+      arg(0) == 'members') {
+    // Set the first array item to the page title.
+    $trail[key($trail)] = strip_tags(drupal_get_title());
+  }
+  // Account page.
+  if (arg(0) == 'account') {
+    $trail['account'] = t('Account');
+  }
+  // Registration page.
+  if (arg(0) == 'registration') {
+    $trail = array(current_path() => t('Registration'));
+  }
+  // Join page.
+  if (arg(0) == 'join') {
+    $trail = array(current_path() => t('Join'));
+  }
+  // Make search breadcrumbs a bit more helpful.
+  if (arg(0) == 'search' && empty($trail['search'])) {
+    // Make sure we always have at least a "Search" breadcrumb.
+    $trail['search'] = t('Search');
+  }
+  if (arg(0) == 'search' || arg(1) == 'search') {
+    // Add some context about the content type and author being searched, for
+    // users coming in from a "more" link.
+    $parts = explode('/', current_path());
+    $valid_types = array_keys(node_type_get_types());
+    // We support multiple types (since they have facet selectors), but only a
+    // single author (since it is populated via more links only).
+    $types = array();
+    $author = '';
+    foreach ($parts as $i => $part) {
+      if ($part == 'type' && in_array($parts[$i+1], $valid_types)) {
+        $types[] = $parts[$i+1];
+      }
+      if ($part == 'author' && is_numeric($parts[$i+1])) {
+        $account = user_load($parts[$i+1]);
+        if ($account) {
+          $author = t(' by @author', array('@author' => gn2_base_config_get_user_proper_name($account->uid)));
+        }
+      }
+    }
+    if (!empty($types)) {
+      if (count($types) > 1) {
+        $types = array_reverse($types);
+        $trail[key($trail)] = t('Search @type and @last content', array('@type' => implode(', ', array_slice($types, 0, -1)), '@last' => array_pop($types))) . $author;
+      }
+      else {
+        $trail[key($trail)] = t('Search @type content', array('@type' => implode(', ', $types))) . $author;
+      }
+    }
+  }
+  if (arg(2) == "dashboard") {
+    if ((arg(3) == "userforms" || arg(3) == "forms") && arg(4) == "submissions") {
+      foreach ($trail as $key => $value) {
+        if ($value == "Submissions") {
+          unset($trail[$key]);
+          $trail['node/' . $node->nid . '/dashboard/forms'] = "Submissions";
+        }
+      }
+    }
+  }
+  _gn2_context_trim_breadcrumb_texts($trail);
+}
+
+/**
+ * Fetch the organization nid from a possible organization prefix alone.
+ *
+ * @param string $organization_prefix
+ *   An optional organization prefix, matching a org_short_title field value.
+ *   If omitted the prefix will be selected from the current path.
+ *
+ * @return int
+ *   Node ID for an organization matching the prefix, or NULL if not found.
+ */
+function _gn2_context_org_from_prefix($organization_prefix = NULL) {
+  // Default values.
+  $nid = NULL;
+
+  if (empty($organization_prefix)) {
+    // If it is an organization page...
+    if (($node = menu_get_object('node')) && $node->type == 'organization') {
+      $nid = $node->nid;
+      $organization_prefix = $node->field_org_short_title[LANGUAGE_NONE][0]['safe_value'];
+    }
+    else {
+      // Tries to match the prefix to an organization short name.
+      $organization_prefix = explode('?', request_uri());
+      $organization_prefix = arg(0, substr($organization_prefix[0], 1));
+    }
+  }
+  if (!isset($nid)) {
+    $org_short_name_query = db_select('field_data_field_org_short_title', 'orgt');
+    $org_short_name_query
+      ->fields('orgt', array('entity_id'))
+      ->condition('orgt.field_org_short_title_value', $organization_prefix)
+      ->condition('orgt.bundle', 'organization')
+      ->condition('orgt.entity_type', 'node')
+      ->condition('orgt.deleted', 0);
+    $nid = $org_short_name_query->execute()->fetchField();
+  }
+  return $nid;
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function gn2_context_user_login(&$edit, $account) {
+  $nid = _gn2_context_org_from_prefix();
+  // If we have an organization available on the path, store it in the users
+  // session to be used as a fallback for pages that don't have any
+  // organization context themselves.
+  if (isset($nid)) {
+    $_SESSION['gn2_context_organization_nid'] = $nid;
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function gn2_context_token_info() {
+  $tokens = array();
+  // Core tokens for nodes.
+  $tokens['organization'] = array(
+    'name' => t("Organization"),
+    'description' => t("The top level organization group for a node."),
+    'type' => "node",
+  );
+
+  $tokens['parent'] = array(
+    'name' => t("Parent"),
+    'description' => t("The immediate parent group of a node."),
+    'type' => "node",
+  );
+
+  $tokens['org-child'] = array(
+    'name' => t("Organization's Child"),
+    'description' => t("In the path from the current node to the upmost organization group, the group right underneath the organization."),
+    'type' => "node",
+  );
+
+  return array(
+    'tokens' => array('node' => $tokens),
+  );
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function gn2_context_tokens($type, $tokens, $data, $options) {
+  $replacements = array();
+  if ($type == "node" && isset($data['node'])) {
+
+    $path = NULL;
+
+    $prefixes = array('organization', 'parent', 'org-child');
+
+    foreach ($prefixes as $prefix) {
+      if ($filtered_tokens = token_find_with_prefix($tokens, $prefix)) {
+
+        // Initiallize the path from the node to the organization.
+        if (!isset($path)) {
+          $path = new GN2PathToOrganization($data['node']);
+        }
+        $node = NULL;
+        switch ($prefix) {
+          case 'organization':
+            $node = $path->getOrganization();
+            break;
+
+          case 'parent':
+            $node = $path->getParent();
+            break;
+
+          case 'org-child':
+            $node = $path->getOrganizationChild();
+            break;
+        }
+        if (!empty($node->nid)) {
+          $replacements += token_generate('node', $filtered_tokens, array('node' => $node), $options);
+        }
+      }
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function gn2_context_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'gn2_context') . '/views',
+  );
+}
+
+/**
+ * Helper function to trim too long titles displayed in the breadcrumb.
+ */
+function _gn2_context_trim_breadcrumb_texts(&$trail) {
+  foreach($trail as $key => $value) {
+    $trail[$key] = mb_strimwidth($value, 0, 50, "...");
+  }
+}

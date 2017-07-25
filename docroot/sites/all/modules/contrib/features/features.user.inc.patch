@@ -1,0 +1,22 @@
+diff --git features/includes/features.user.inc features/includes/features.user.inc
+index 152c5a8..478f0fb 100644
+--- features/includes/features.user.inc
++++ features/includes/features.user.inc
+@@ -101,7 +101,7 @@ function user_permission_features_export_render($module, $data) {
+       $permission['module'] = $perm_modules[$perm_name];
+     }
+     $perm_identifier = features_var_export($perm);
+-    $perm_export = features_var_export($permission, '  ');
++    $perm_export = features_var_export($permission, "  /* $perm_name */ ");
+     $code[] = "  // Exported permission: {$perm_identifier}.";
+     $code[] = "  \$permissions[{$perm_identifier}] = {$perm_export};";
+     $code[] = "";
+@@ -203,7 +203,7 @@ function user_role_features_export_render($module, $data) {
+     if ($role = user_role_load_by_name($name)) {
+       unset($role->rid);
+       $role_identifier = features_var_export($name);
+-      $role_export = features_var_export($role , '  ');
++      $role_export = features_var_export($role , "  /* $name */ ");
+       $code[] = "  // Exported role: {$name}.";
+       $code[] = "  \$roles[{$role_identifier}] = {$role_export};";
+       $code[] = "";

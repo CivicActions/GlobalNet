@@ -1,0 +1,17 @@
+<?php
+/**
+ * @file
+ * Code for the GN2 Library feature.
+ */
+
+include_once 'gn2_library.features.inc';
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function gn2_library_form_resource_item_node_form_alter(&$form, &$form_state, $form_id) {
+  if (!empty($_GET['gid'])) {
+    $form['og_group_ref'][LANGUAGE_NONE][0]['default']['#default_value'] = $_GET['gid'];
+  }
+  $form['og_group_ref'][LANGUAGE_NONE][0]['#access'] = FALSE;
+}

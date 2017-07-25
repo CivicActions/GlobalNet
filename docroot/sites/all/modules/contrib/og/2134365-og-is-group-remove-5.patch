@@ -1,0 +1,17 @@
+diff --git a/og.module b/og.module
+index 34d8121..cc8bf1b 100644
+--- a/og.module
++++ b/og.module
+@@ -2062,12 +2062,6 @@ function og_user_access($group_type, $gid, $string, $account = NULL, $skip_alter
+   // Mark the group ID and permissions that invoked an alter.
+   $perm_alter = &drupal_static(__FUNCTION__ . '_alter', array());
+ 
+-  if (!og_is_group($group_type, $gid)) {
+-    // Not a group.
+-    return NULL;
+-  }
+-
+-
+   if (empty($account)) {
+     $account = clone $user;
+   }

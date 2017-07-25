@@ -1,0 +1,30 @@
+/**
+ *For styling the highlighted content boxes with dark patterned background
+ */
+@mixin darkbg {
+  background: url(../images/bg-diagonal-tile-blue.png);
+}
+.block__highlighted--darkbg {
+  h3, h4, p {
+    margin-bottom: .25em;
+  }
+  div.pane-content,
+  .field-name-field-call-to-action,
+  .pane-inner {
+    @include highlighted-block;
+    @include darkbg;
+    color: $oyster_bay;
+    a.button,
+    button {
+      background: $blue-gray;
+      display: block;
+      @include large-callout-button($font-size: 1.4em);
+      margin-top: 0.8em;
+    }
+    a.button{
+      -webkit-appearance: inherit;
+      display: inline-table;
+      margin-bottom: 0 0 0 0.5em;
+    }
+  }
+}

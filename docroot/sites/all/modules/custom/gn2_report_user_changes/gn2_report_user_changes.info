@@ -1,0 +1,7 @@
+name = Globalnet 2 User Profile Changes Report
+description = A report showing user profile changes.
+core = 7.x
+package = GlobalNET
+
+dependencies[] = user_changed
+dependencies[] = user_revision

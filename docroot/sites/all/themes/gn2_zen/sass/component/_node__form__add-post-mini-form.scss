@@ -1,0 +1,110 @@
+div.add-post-mini-form {
+  
+  form {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid $lighter-blue-gray;
+  }
+  
+  label {
+    font-weight: normal;
+   }
+  
+  input[type=text],
+  textarea {
+    border: 1px solid $light-gray;
+    box-shadow: 0px 0px 3px $light-gray;
+    margin-bottom: 10px;
+  }
+  
+  div.form-item {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+  div.panel-pane {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+  
+  fieldset.filter-wrapper.form-wrapper {
+    display: none;
+  }
+  
+  .views-field-picture {
+    @include author-image;
+    img {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: auto;
+    }
+  }
+  
+  .form-item-title {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .text-format-wrapper label {
+    display: none;
+  }
+  
+  .description {
+    display: none;
+  }
+  
+  .form-textarea-wrapper {
+    margin-bottom: 10px;
+    textarea {
+      height: 150px;
+    }
+  }
+  
+  $left-width: 30%;
+  $right-width: 100% - $left-width;
+  
+  div.pane-node-field-main-image {
+    float: left;
+    clear: both;
+    width: $left-width;
+    height: 30px;
+    vertical-align: top;
+    text-align: left;
+    label {
+      display:none;
+    }
+    .media-widget .preview {
+      display: none;
+    }
+    .button.browse {
+      border: none;
+      padding: 0;
+      margin: 0;
+      width: 26px;
+      height: 24px;
+      overflow: hidden;
+      display: block;
+      text-indent: -9999px;
+      background-image: url(../images/gn-icons/camera.png);
+    }
+  }
+  
+  div.pane-node-form-buttons {
+    float: none;
+    display: block;
+    margin-left: $left-width !important;
+    width: $right-width;
+    height: 30px;
+    label {
+      display:none;
+    }
+    vertical-align: top;
+    text-align: right;
+    .form-submit {
+      @include button--dark;
+      margin-left: 5px;
+    }
+  }
+  
+}

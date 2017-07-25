@@ -1,0 +1,6 @@
+name = GN2 Redirects
+description = Handles 404's
+core = 7.x
+package = GlobalNET
+version = 7.x-1.0
+project = gn2_redirects

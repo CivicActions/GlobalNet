@@ -1,0 +1,123 @@
+@mixin modal-wrapper {
+  border-radius: 0;
+  padding: 0em;
+}
+
+@mixin modal-container {
+  //background-color: white;
+  border: 1px solid $medium-gray;
+  border-radius: 0;
+  padding: 0 0 .29em 0;
+  margin: 0;
+  .vertical-tabs {
+    display: none;
+    font-size: 1em;
+    .vertical-tab-button {
+      font-size: 85%;
+    }
+  }
+}
+
+@mixin modal-titlebar {
+  padding: .25em .5em .25em .5em;
+  margin: 0;
+  border: none;
+  background: none;
+  background-color: $medium-gray;
+  border-radius: 0;
+  .close {
+    padding-right: 0px;
+    img {
+      padding-left: 9px;
+      top: 2px;
+    }  
+  }
+}  
+
+@mixin modal-title {
+  font-size: 1em;
+  font-weight: bold;
+  color: $white;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@mixin modal-content {
+  overflow: auto;
+  padding: 1em .78em 0em .79em;
+}
+
+@mixin modal-formitem {
+  background: transparent;
+  padding: 0;
+  margin: 0 0 1.5em 0;
+  font-size: .825em;
+  line-height: 1.3;
+  label {
+    float: none;
+    width: auto;
+    text-transform: uppercase;
+  }
+  input,
+  .form-textarea-wrapper,
+  select {
+    margin-left: .75em;
+    margin-bottom: .75em;
+    max-width: 90%;
+    box-shadow: none;
+    font-size: .8em;
+  }
+  .description {
+    font-style: normal;
+    color: $gray-6;
+  }  
+  input.form-autocomplete, input.form-text, input.form-file, textarea.form-textarea, select.form-select {
+    padding: 2px;
+    border: 1px solid $gray-c;
+    border-top-color: $gray-9;
+    background: $white;
+    color: $gray-3;
+    box-shadow: none;
+    &#edit-replace-upload {
+      padding: 0;
+      border: 0;
+    }
+  }
+}
+
+#media-browser-page {
+  background-color: transparent;
+  border: 10px solid red;
+}
+
+.ui-dialog, .ui-widget-content,
+.modal-default {
+  @include modal-wrapper;
+}
+
+.modal-default {
+  background: white;
+}
+
+div.ctools-modal-content {
+  @include modal-container;
+}
+
+.ui-dialog .ui-dialog-titlebar,
+div.ctools-modal-content .modal-header {
+  @include modal-titlebar;  
+}
+
+div.ctools-modal-content .modal-title {
+  @include modal-title;  
+}
+
+div.ctools-modal-content .modal-content {
+  @include modal-content;  
+}
+
+form#file-entity-add-upload .form-item,
+div.ctools-modal-content .form-item,
+#edit-focal-point {
+  @include modal-formitem;
+}

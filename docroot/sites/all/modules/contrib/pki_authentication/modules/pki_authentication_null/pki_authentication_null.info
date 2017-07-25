@@ -1,0 +1,6 @@
+name = PKI Authentication NULL
+description = NULL PKI validator for PKI Authentication module - no validation done by module.
+package = PKI Authentication
+core = 7.x
+
+dependencies[] = pki_authentication

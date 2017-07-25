@@ -1,0 +1,99 @@
+/*
+ * Styling the Gallery node output.
+ */
+ 
+/* Media Gallery page. */
+.node-type-media-gallery {
+  .pane-node-title {
+    @include page_title;
+    margin-bottom: 0.5em;
+  }
+  h2.node-title {display: none;}
+  
+  li {
+    list-style: none;
+  }
+  a.media-gallery-add {
+    @include admin-button($bgcolor: $blue-gray);
+    margin-bottom: 0;
+  }
+  .btn-wrapper {
+    display: inline-block;
+    width: 100%;
+  }
+  a.download-selected {
+    @include button--dark;
+    @include button-border-radius(5px);
+    @include button-shadow;
+    clear: both;
+    display: table;
+    margin-top: 30px;
+    margin-bottom: 0;
+  }
+  .action-links {
+    padding-left: 0;
+    margin-left: 0;
+  }
+  .term-tree-list li {
+      @extend .bulleted-list;
+    }
+  /* Media Gallery node links*/
+  ul.links {
+    float: right;
+  }
+  
+  label[for="edit-sort-order"] {
+    display: inline-block;
+    @include display_font;
+    vertical-align: top;
+    font-size: 1.4em;
+    font-weight: normal;
+    color: $dark-gray;
+    padding: 0.15em 0.3em 0 0;
+  }
+}// End node-media-gallery
+
+.field-name-media-gallery-file {
+  background: url(../images/bg-diagonal-tile-grey.png);
+  padding: 1.5%;
+  .field-item {
+    width: 23%;
+    display: inline-block;
+    margin: 15px 1%;
+  }
+}
+.media-gallery-media {
+  .media-gallery-item {
+    background: $white none repeat scroll 0 0;
+    border: 1px solid $gray-d;
+    padding: 2%;
+  }
+}
+
+// Media Gallery Teaser
+.node-media-gallery.node-teaser {
+    &.mg-teaser {
+      padding: 2%;
+      h2 {
+        font-size: 1em;
+      }
+    }
+  }
+
+// Attachment view for displaying file count
+.view--file-count{
+  .file-count--wrapper{
+    font-size: 1.1em;
+    padding-top: 0.5em;
+    margin-bottom: 1em;
+    border-top: 1px solid $light-gray;
+  }
+  .file-count--label{font-weight: bold;}
+}
+
+.page-node-add-media-gallery,
+.node-type-media-gallery {
+  .vertical-tab-button.first {
+    display: none;
+  }
+}

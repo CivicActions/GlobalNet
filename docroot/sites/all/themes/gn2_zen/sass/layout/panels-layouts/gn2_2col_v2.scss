@@ -1,0 +1,52 @@
+/**
+ * @file
+ * Positioning for a three across layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+
+// Add the Zen Grids responsive layout mixins.
+@import "zen";
+@import "zen/background";
+
+$zen-grid-color: transparent !default;
+$zen-grid-numbers: none !default;
+$display-zen-grid-background: false !default;
+
+// $zen-column-count:  1;
+// $zen-gutter-width:  0px;
+// $zen-auto-include-item-base: false;
+
+$zen-column-count: 2;
+$zen-gutter-width: 0px;
+
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+.gn2-2col-v2,
+.gn2-2col-v2--header,
+.gn2-2col-v2--col1,
+.gn2-2col-v2--col2,
+.gn2-2col-v2--footer {
+  @include zen-grid-item-base();
+}
+
+.gn2-2col-v2 {
+  @include zen-grid-container();
+  // @include zen-grid-background();
+}
+
+.gn2-2col-v2--footer {
+  @include zen-clear();
+}
+
+/**
+ * Use 3 grid columns for larger screens.
+ */
+@media all and (min-width: 400px) {
+  $zen-column-count: 20 !global;
+  .gn2-2col-v2--col1 {
+    @include zen-grid-item(10, 1);
+  }
+  .gn2-2col-v2--col2 {
+    @include zen-grid-item(10, 11);
+  }
+}

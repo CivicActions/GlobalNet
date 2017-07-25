@@ -1,0 +1,14 @@
+diff --git a/rate.js b/rate.js
+index e0e262a..21731f6 100644
+--- a/rate.js
++++ b/rate.js
+@@ -37,7 +37,8 @@
+     }
+ 
+     // fetch all widgets with this id as class
+-    widget = $('.' + widget.attr('id'));
++    var id = widget.attr('id').split('--');
++    widget = $('.' + id[0]);
+ 
+     $.get(Drupal.settings.rate.basePath + q, function(response) {
+       if (response.match(/^https?\:\/\/[^\/]+\/(.*)$/)) {

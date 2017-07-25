@@ -1,0 +1,53 @@
+/*Styles and mixins for Form Elements*/
+
+/*============= INPUT Fields ==========*/
+@mixin input--inset-style {
+
+  input[type="text"] {
+    display: block;
+    margin: 0;
+    width: 100%;
+    font-size: 18px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+  }
+
+  input[type="text"] {
+    padding: 0.3em 0.5em;
+    border: solid 1px $white;
+    color: $medium-gray;
+    font-size: 0.9em;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: box-shadow 0.3s;
+    -moz-transition: box-shadow 0.3s;
+    -o-transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s;
+  }
+
+  input[type="text"]:focus, .style-5 input[type="text"].focus {
+    -webkit-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+    -moz-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+    box-shadow: inset 1px 1px 2px 0 $gray-c9;
+  }
+
+}
+
+.input--inset-style {
+  @include input--inset-style;
+}
+
+select {
+  border: 1px solid $light-gray;
+  color: $gray-5;
+  font-size: 1em;
+  option {
+    padding: 0.1em 1.5em;
+  }
+}

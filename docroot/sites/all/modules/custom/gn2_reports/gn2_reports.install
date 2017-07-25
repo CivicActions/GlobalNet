@@ -1,0 +1,109 @@
+<?php
+/**
+ * @file
+ * GN2 Reporting installation routines.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_reports_schema() {
+  // User Import table.
+  $schema['gn2_user_report'] = array(
+    'description' => 'Bulk user import',
+    'fields' => array(
+      'iid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique ID for each imported users',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID for the user that is importing the new users',
+      ),
+      'oid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Organization ID',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of the event.',
+      ),
+    ),
+    'primary key' => array('iid'),
+  );
+  // User Import user table.
+  $schema['gn2_user_report_users'] = array(
+    'description' => 'Bulk user import users',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique ID for each imported users',
+      ),
+      'iid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The import unique ID',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID for the user doing the import',
+      ),
+      'iuid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The imported user ID',
+      ),
+      'existing' => array(
+        'type' => 'int',
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'A boolean to indicate whether or not the user was an existing user.',
+      ),
+      'groups' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'A pipe delimited list of groups to which the user was added.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of the event.',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Add new database table.
+ */
+function gn2_reports_update_7001() {
+  if (!db_table_exists('gn2_user_report')) {
+    drupal_install_schema('gn2_reports');
+  }
+}
+
+/**
+ * Reorder module weight.
+ */
+function gn2_reports_update_7002() {
+  db_update('system')
+    ->fields(array('weight' => 1))
+    ->condition('name', 'gn2_reports')
+    ->execute();
+}

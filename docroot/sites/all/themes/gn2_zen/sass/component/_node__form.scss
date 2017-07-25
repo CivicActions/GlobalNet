@@ -1,0 +1,698 @@
+/**
+ *Styling node entry form elements."
+ */
+
+@mixin form--inner-element {
+  margin-left: $form-fieldset-indent;
+  padding-bottom: $fieldset-padding-bottom;
+  margin-bottom: $fieldset-padding-bottom;
+}
+
+@mixin form--item--gap--top-only($gap-size:medium) {
+  margin-top: map-get($gap-sizes, $gap-size);
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+@mixin form--item--gap--bottom-only($gap-size:medium) {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: map-get($gap-sizes, $gap-size);
+  margin-left: 0;
+}
+
+@mixin form--item--no-gap {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+@mixin form--accordion--title {
+  line-height: 1;
+  text-transform: capitalize;
+  font-weight: normal;
+  font-size: 1em;
+  text-transform: capitalize;
+  color: $medium-gray;
+  display: block;
+  width: auto;
+  padding: 0;
+  margin: 0;
+  background-image: none !important;
+  // background-color: orange;
+}
+
+@mixin form--item--label {
+  font-family: $body-font;
+  font-weight: bold;
+  padding: 0;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: $form-item-gap-xsmall;
+  margin-left: 0;
+  line-height: $default-line-height;
+  text-transform: capitalize;
+  font-size: 0.95rem;
+  background: none !important;
+  font-style: normal;
+  color: $body-color;
+  // background-color: yellow;
+}
+
+@mixin form--item--option-label {
+  line-height: 1;
+  text-transform: none;
+  font-size: 0.95rem;
+  font-weight: normal;
+  padding: 0;
+  padding-left: .5em;
+  margin: 0;
+  margin-bottom: $form-item-gap-xsmall;
+  background: none;
+  display: table-cell;
+  vertical-align: top;
+  color: $body-color;
+}
+
+.page-node-add,
+.page-node-edit,
+.section-node-add,
+.section-node-edit,
+.page-user-edit,
+.page-eform-submit-course-feedback,
+.page-eform-submit-group-feedback,
+.page-eform-submit-event-feedback,
+.page-inbox-notifications,
+.page-messages {
+
+  form {
+
+    // line breaks occur in some modules; best to suppress them from display.
+    br {
+      display: none;
+    }
+
+    // adding margin only to the top of main form items...
+    .form-item,
+    .form-field-type-list-text,
+    .gn2_og_form_options__label,
+    .fieldset-description,
+    .form-field-type-datetime {
+      @include form--item--gap--top-only(medium);
+      position: relative;
+      // ...but form items within form items should not have margin.
+      .form-item {
+        @include form--item--no-gap;
+      }
+    }
+
+    .form-actions {
+      @include form--item--gap--top-only(medium);
+    }
+
+    .field__privacy-settings {
+      @include form--item--gap--bottom-only(medium);
+      h4 {
+        @include form--item--label;
+      }
+    }
+
+    // default style for all labels.
+    label {
+      @include form--item--label;
+      &.option {
+        @include form--item--option-label;
+      }
+    }
+
+    #edit-password-policy {
+      @include form--item--gap--top-only(medium);
+      .fieldset-legend {
+        @include form--item--label;
+      }
+    }
+
+    // special consideration for checkboxes and radio buttons.
+    .form-type-checkbox,
+    .form-type-radio {
+      margin-bottom: $form-item-gap-xsmall !important;
+      &:first-of-type {
+        margin-top: $form-item-gap-xsmall !important;
+      }
+      padding: 0px;
+      display: block;
+      input, label {
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
+
+    .form-field-type-list-text {
+      .form-type-radios {
+        @include form--item--gap--top-only(small);
+      }
+    }
+
+    .form-radios {
+      @include form--item--gap--top-only(small);
+    }
+
+    .text-format-wrapper .description,
+    .description {
+      @include form--item--gap--top-only(small);
+    }
+
+    .group-help {
+      background: none;
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .field-name-og-group-ref fieldset {
+      @include form--item--no-gap;
+    }
+
+    .vertical-tabs .form-item {
+      @include form--item--gap--bottom-only;
+    }
+
+    .field-multiple-table {
+      margin: 0;
+      th {
+        padding: 0;
+      }
+    }
+
+    .tabledrag-toggle-weight-wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .field-name-og-group-ref legend {
+      display: none;
+    }
+
+    input[type="submit"],
+    a.button {
+      margin-top: $form-item-gap-xsmall;
+      margin-bottom: 0;
+    }
+
+    ul.tips.gn2_og_form_options__tips {
+      @include form--item--no-gap;
+    }
+
+    .form-item-gn2-og-form-options select {
+      @include form--item--no-gap;
+    }
+
+    .form-checkboxes,
+    .form-select {
+      // background-color: transparent;
+    }
+
+    .container-inline-date .form-item {
+      // background-color: pink;
+      @include form--item--gap--top-only(xsmall);
+    }
+
+  }
+
+  h1 {
+    margin: 0 0 .7em 0;
+  }
+
+  margin-bottom: 0;
+  background-image: none;
+
+  .node-form {
+    // margin: 10px 0 0 0;
+  }
+
+  .form-field-name-field-gn2-simple-access {
+    border-bottom: none;
+    border-top: none;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    > legend {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .filter-wrapper {
+    padding: 0em;
+    font-size: 0.8em;
+    border: none;
+    margin-top: 0;
+  }
+
+  .filter-wrapper .form-item {
+    margin: 0.5em 0em;
+    padding: 0 0 0 0;
+  }
+
+  .filter-guidelines {
+    padding: 0;
+  }
+
+  ul.tips {
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0;
+    font-size: 0.8rem;
+    color: gray;
+
+    li {
+      margin: 0;
+      list-style-type: none;
+      line-height: $form-element-lineheight;
+    }
+  }
+
+  input[type=text] {
+    border: 1px solid $color--gray-form-fields;
+    border-radius: 0;
+    padding: 5px 7px;
+    line-height: $form-element-lineheight;
+  }
+
+  /*======= Styling Fieldgroup Sections====*/
+  /* Each accordion has groups of related fields within them. These are seperated by
+   * horizontal lines. I grouped these elements within fieldgroup sections to apply
+   * these styles. Each section has a common class of group-section
+   */
+  .group-section {
+    border-bottom: 1px solid $lighter-blue-gray;
+    padding-bottom: $form-item-gap-medium;
+    margin-bottom: $form-item-gap-medium;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  .group-section--last {
+    border-bottom: none;
+  }
+  .group-image-section {
+    // padding: 0 1em;
+  }
+  .required-fields .fieldset-legend > a:after {
+    content: "*";
+    color: red;
+    padding-left: 3px;
+  }
+
+  /*======= Styling Input fields ========== */
+  input[type="text"],
+  textarea {
+    @include input-field;
+  }
+  select {
+    @include select-field-style;
+  }
+
+  /*========== Submit buttons============*/
+  #edit-actions {
+    text-align: center;
+  }
+  /*Override form submit buttons*/
+  input {
+    &[type="submit"] {
+      @include general-content-button;
+    }
+    &[value = "Publish"] {
+      @include large-callout-button;
+    }
+  }
+  input[type="submit"], input[value = "Publish"] {
+    border: none;
+    display: inline-block;
+  }
+  /*Override node entry form buttons*/
+  a.button {
+    @include admin-button($bgcolor: $blue-gray);
+    -webkit-appearance: inherit;
+    display: inline-table;
+    margin-bottom: 0.5em;
+  }
+
+  /*=============== Styling Vertical Tabs Region==========*/
+  div.vertical-tabs {
+    border-color: darken($light-gray, 5%);
+    margin-top: $form-item-gap-large;
+  }
+  ul.vertical-tabs-list li {
+    background: url(../images/bg-diagonal-tile-grey.png);
+    border-color: darken($light-gray, 5%);
+    &.selected {
+      background: $white;
+    }
+    a:hover {
+      outline: none;
+    }
+  }
+
+  .form-type-media {
+    .media-widget {
+      .preview {
+        padding: 0 10px 10px 0;
+      }
+    }
+  }
+
+  /*========== TABLES ===================*/
+  table.tabledrag-processed {
+    width: 100%;
+    margin: 0.4em 0; //was 1em 0;
+    tbody {
+      border-top: 1px solid $light-gray;
+      border-bottom: 1px solid $light-gray;
+    }
+    th {
+      border: none;
+      text-align: left;
+      padding: 0 0 5px 0;
+    }
+    td {
+      text-align: left;
+      vertical-align: middle; //top
+      padding: 10px;
+      .media-item {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        label.media-filename {
+          line-height: $form-element-lineheight;
+          padding: 5px 3px;
+          margin: 0;
+        }
+      }
+    }
+    tr.odd, tr.even {
+      border-bottom: none;
+    }
+    tr.odd {
+      background-color: $white;
+    }
+    tr.even {
+      background-image: url("../images/table_row_background_even.png");
+    }
+    a.button.edit {
+      @include large-callout-button;
+      display: inline-block;
+      margin-bottom: 0;
+      border: none;
+    }
+    .form-type-textfield {
+    }
+  }
+
+  .vertical-tabs fieldset.vertical-tabs-pane {
+    padding: 1em;
+  }
+
+  .form-field-name-field-legacy-nid {
+    display: none;
+  }
+
+  .no-term-reference-tree-button {
+    display: none;
+  }
+
+  /* ========== Inline Fields============*/
+  .form-field-name-field-event-location,
+  .form-field-name-field-event-type,
+  .form-field-name-field-topic,
+  .field-name-field-user-suffix {
+    display: inline-block;
+    margin-right: 6em;
+  }
+  .field-name-field-name-last {
+    vertical-align: top;
+  }
+
+  #edit-field-event-date {
+    .fieldset-legend {
+      @include form--item--label;
+    }
+  }
+  .form-field-name-field-gn2-simple-access {
+    // border-bottom: 1px solid $light-gray;
+    // border-top: 1px solid $light-gray;
+  }
+  #edit-field-group-short-title,
+  .form-item-title {
+    display: inline-block;
+    padding-right: $form-item-gap-small;
+  }
+
+  /*============= Privacy Settings ============*/
+  .group-privacy-settings {
+    .fieldset-wrapper {
+      // padding: 0.4em 2em;
+      > div:not(.form-type-select) {
+        // border-bottom: 1px solid $light-gray;
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+}
+
+// End section-node-add & section-node-edit
+
+// Extra special theming for the "Who Can See This Content" radios.
+.form-field-name-field-gn2-simple-access {
+  > label {
+    display: inline;
+  }
+  > .form-item {
+    display: inline;
+    > label {
+      display: inline;
+      > .form-required {
+        display: inline;
+      }
+    }
+    .form-item.form-radios {
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+/* Collapsible fieldsets in forms */
+
+$accordion-header--height: auto;
+
+html.js {
+
+  fieldset.collapsible {
+    min-height: $accordion-header--height;
+    border-bottom: 1px solid $lighter-blue-gray;
+    padding: 0 0 $form-item-gap-medium 0;
+    margin: 0;
+    > div.fieldset-wrapper {
+      &:first-of-type {
+        margin-top: $form-item-gap-small;
+      }
+    }
+    > legend {
+      padding: $form-item-gap-small 0;
+      margin: 0;
+    }
+    .form-field-type-datetime .fieldset-legend,
+    .form-field-type-image .fieldset-legend,
+    .form-field-type-file .fieldset-legend {
+      @include form--item--label;
+    }
+    .form-item {
+      // background-color: pink;
+      margin-top: 0;
+      margin-bottom: $form-item-gap-medium;
+    }
+  }
+
+  fieldset.collapsible > legend > span.fieldset-legend {
+    @include form--accordion--title;
+    .summary {
+      display: none;
+    }
+    .form-wrapper & {
+      color: unset;
+      font-style: normal !important;
+      font-size: .95em;
+      font-weight: bold;
+    }
+  }
+
+  fieldset.collapsible > legend > span.fieldset-legend a {
+    background-image: url("../images/gn-icons/icon-arrow-down-grey.png") !important;
+    background-position: 0px 3px !important;
+    background-repeat: no-repeat;
+    padding-left: 25px; //This value is used in the _user__profile--page component
+    display: block;
+    line-height: 1;
+    height: 18px;
+    padding-top: 3px;
+    font-size: 16px;
+    color: inherit;
+  }
+
+  fieldset.collapsed {
+    border-bottom: 1px solid $lighter-blue-gray;
+    height: $accordion-header--height;
+    margin: 0;
+    padding: 0;
+    > legend {
+      border-bottom: 0px solid $lighter-blue-gray;
+      &:last-child {
+        border-bottom: none;
+      }
+      > span.fieldset-legend a {
+        background-image: url("../images/gn-icons/icon-arrow-right-grey.png") !important;
+        background-position: 3px 0px !important;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
+}
+
+.description,
+.fieldset-description,
+.counter {
+  @include description-text;
+  &.label-description {
+    min-height: 2px;
+    display: block;
+    margin-bottom: $form-label-gap-bottom;
+    line-height: $form-element-lineheight;
+  }
+}
+
+.text-format-wrapper {
+  margin-bottom: $form-item-gap-bottom;
+  .wysiwyg-toggle-wrapper {
+    margin-top: .5em;
+  }
+  .form-item {
+    margin-bottom: 0;
+  }
+  .description {
+    margin-top: 0;
+  }
+  .filter-wrapper {
+    margin-bottom: 0;
+  }
+}
+
+/*==== Topics and Countries ========*/
+#edit-field-topic,
+#edit-field-country,
+#edit-field-region {
+  width: 90%;
+  margin-right: 0;
+  // margin-bottom: 5px;
+  position: relative;
+  padding: 0;
+  // padding: 0 0 0 ($form-fieldset-indent + 8px);
+  // line-height: 1em;
+  .form-type-checkbox-tree {
+    width: 100%;
+  }
+  .form-type-checkbox {
+    margin-bottom: 5px;
+    @include breakpoint($medium-screen-and-up) {
+      float: left;
+      margin-right: 3%;
+      width: 45%;
+    }
+    input, label {
+      display: inline-block;
+    }
+    input {
+      // margin-left: -2em;
+    }
+    .description {
+
+    }
+  }
+}
+
+/* Hack for Firefox since Webkit rendering of margins is buggy */
+body:not(:-moz-handler-blocked) fieldset {
+  display: table-cell !important; // This ensures that fieldsets are contained in the parent.(Firefox-only)
+  margin-top: 0; //0.4em;
+}
+
+.page-user-edit {
+  .gn-two-col-stacked {
+    margin: 0 0 ($form-item-gap-bottom * 5)
+  }
+  .horizontal-tabs {
+    fieldset.horizontal-tabs-pane {
+      padding: 0;
+      border: 0;
+    }
+  }
+  .user-picture {
+    display: block;
+    margin: 0 0 $form-item-gap-bottom;
+  }
+  .form-item-files-picture-upload {
+    margin: 0;
+  }
+  .form-wrapper {
+    .field-multiple-table {
+      tbody {
+        background: url(../images/bg-diagonal-tile-grey.png) repeat 0 0;
+        border: none;
+        tr {
+          background: none;
+        }
+      }
+    }
+  }
+}
+
+.page-node-add-group,
+.page-node-add-coi,
+.page-node-add-alumni-group,
+.page-node-add-course {
+  .form-item-og-menu {
+    display: none;
+  }
+}
+
+[class$="-multi-media-remove"] {
+  padding: 5px 0 10px 0;
+  display: block;
+  clear: both;
+  color: red;
+}
+
+div#field-date2-add-more-wrapper fieldset {
+  .fieldset-legend {
+    @include form--item--label;
+  }
+}
+
+.page-node-add-support {
+  .file-widget.form-managed-file {
+    input.form-submit {
+      display: none;
+    }
+  }
+}

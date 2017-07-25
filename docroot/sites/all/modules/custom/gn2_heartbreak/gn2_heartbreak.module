@@ -1,0 +1,57 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_heartbreak feature.
+ */
+
+include_once 'gn2_heartbreak.features.inc';
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function gn2_heartbreak_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if (!empty($data['tabs'])) {
+    global $user;
+    $og_roles = array();
+    $is_admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+    // Check that we are on a node and that the node is an OG Group.
+    if ($root_path === 'node/%' && !empty($router_item['page_arguments']) && is_object($router_item['page_arguments'][0])) {
+      $node = $router_item['page_arguments'][0];
+      $is_group = (!empty($node->type)) ? og_is_group('node', $node) : FALSE;
+      // Get the user's roles for this Group.
+      $og_roles = ($is_group) ? og_get_user_roles('node', $node->nid) : array();
+    }
+    foreach ($data['tabs'][0]['output'] as $key => $value) {
+      // Remove results tab from polls.
+      if ($value['#link']['path'] == 'node/%/results') {
+        unset($data['tabs'][0]['output'][$key]);
+      }
+      elseif ($value['#link']['path'] == 'node/%/eform' && !$is_admin && !in_array('org_manager', $og_roles)) {
+        unset($data['tabs'][0]['output'][$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_panels_pre_render().
+ */
+function gn2_heartbreak_panels_pre_render(&$panels_display, $renderer) {
+  if ($panels_display->storage_id == 'session_entityform_results') {
+    foreach ($panels_display->context as &$context) {
+      // Override entity form id with correct ID.
+      if ($context->keyword == 'entityform_type') {
+        // Retrieve session Entity Form ID.
+        $ef_id = db_select('entityform_type', 'ef')
+          ->fields('ef')
+          ->condition('type', 'session')
+          ->execute()
+          ->fetchAssoc();
+        // Set mini panel argument to dynamic ID.
+        if (isset($ef_id['id'])) {
+          $context->argument = $ef_id['id'];
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+name = User revision
+description = Adds revision support for users.
+package = Other
+core = 7.x
+
+configure = admin/config/people/revisions
+files[] = views/user_revision.views.inc
+files[] = views/views_handler_field_user_revision.inc
+files[] = views/views_handler_field_user_revision_link_revert.inc
+files[] = views/views_handler_argument_user_vid.inc
+files[] = views/views_handler_field_user_revision_link_delete.inc

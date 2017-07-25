@@ -1,0 +1,60 @@
+***************
+*** 6,21 ****
+  
+  Drupal.behaviors.chartsGoogle = {};
+  Drupal.behaviors.chartsGoogle.attach = function(context, settings) {
+-   google.setOnLoadCallback(renderCharts);
+    function renderCharts() {
+-     for (var elementId in settings['chartsGoogle']) {
+-       if (settings['chartsGoogle'].hasOwnProperty(elementId)) {
+-         var config = settings['chartsGoogle'][elementId];
+          var wrap = new google.visualization.ChartWrapper();
+          wrap.setChartType(config.visualization);
+          wrap.setDataTable(config.data);
+          wrap.setOptions(config.options);
+-         wrap.setContainerId(elementId);
+  
+          // Apply data formatters. This only affects tooltips. The same format is
+          // already applied via the hAxis/vAxis.format option.
+--- 6,25 ----
+  
+  Drupal.behaviors.chartsGoogle = {};
+  Drupal.behaviors.chartsGoogle.attach = function(context, settings) {
++   // First time loading in Views preview may not work because the Google JS
++   // API may not yet be loaded.
++   if (typeof google !== 'undefined') {
++     google.load('visualization', '1', { callback: renderCharts });
++   }
++ 
+    function renderCharts() {
++     $('.charts-google').once('charts-google-processed', function() {
++       if ($(this).attr('data-chart')) {
++         var config = $.parseJSON($(this).attr('data-chart'));
+          var wrap = new google.visualization.ChartWrapper();
+          wrap.setChartType(config.visualization);
+          wrap.setDataTable(config.data);
+          wrap.setOptions(config.options);
+  
+          // Apply data formatters. This only affects tooltips. The same format is
+          // already applied via the hAxis/vAxis.format option.
+***************
+*** 79,87 ****
+            }
+          }
+  
+-         wrap.draw();
+        }
+-     }
+    }
+  };
+  
+--- 83,91 ----
+            }
+          }
+  
++         wrap.draw(this);
+        }
++     });
+    }
+  };
+  

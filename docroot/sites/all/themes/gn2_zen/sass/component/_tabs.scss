@@ -1,0 +1,172 @@
+/* Variables and mixins for tabs */
+
+$tabs-margin: 2px;
+$tabs-border-width: 4px;
+
+@mixin tabs--wrapper {
+  border: none;
+  background-color: transparent;
+  background: transparent;
+  padding: 0;
+}
+
+@mixin tabs--ul {
+  display: inline-block;
+  position: relative; /* IE6 */
+  list-style: none;
+  list-style-image: none; /* IE6 */
+  background-color: transparent;
+  width: 100%;
+  height: auto;
+  clear: both;
+  padding: 0;
+  margin: 0 0 1em 0;
+  background: transparent;
+  border-top: 0px solid $dark-gray;
+  border-right: 0px solid $dark-gray;
+  border-bottom: 0px solid $dark-gray;
+  border-left: 0px solid $dark-gray;
+  border-radius: 0;
+  &.nowrap {
+    border-bottom: $tabs-border-width solid $dark-gray;
+  } 
+}
+  
+@mixin tabs--li {
+  border-right: 0px solid $gray-c; /* LTR */
+  min-width: 0; /* IE7 */
+  float: left; /* LTR */
+  list-style: none;
+  float: left;
+  position: relative;
+  top: 0;
+  white-space: nowrap;
+  margin: 0 $tabs-margin 0 0;
+  padding: 0;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 0px;
+  background: transparent;
+  background-color: transparent;
+  border-radius: 0;
+  display: table-cell;
+}
+
+@mixin tabs--li--a {
+  @include button(
+    $font-face: $display-font-regular,
+    $bgcolor: transparent,
+    $font-size: 1.2em,
+    $padding-top-factor: .275,
+    $padding-right-factor: .275,
+    $padding-bottom-factor: 0.05,
+    $padding-left-factor: .275,
+    $margin: 0
+  );
+  position: relative;
+  top: 0px;
+  display: block;
+  float: left;
+  line-height: 1;
+  outline: none;
+  &:hover {
+    outline: none;
+    background-color: transparent;
+  }
+  &:focus strong,
+  &:active strong,
+  &:hover strong {
+    text-decoration: none;
+    outline: none;
+    font-weight: normal;
+  }
+}
+
+@mixin tabs--li--default-state {
+  @include tabs--li;
+  background-color: $medium-gray;
+  border-bottom-color: $site-bg-color;
+  padding-bottom: 0px;
+  &.wrap {
+    padding-bottom: 0;
+    margin-bottom: $tabs-margin;
+  }
+  a {
+    @include tabs--li--a;
+    color: $light-gray;
+    strong {
+      color: $light-gray;
+    }
+  }
+}
+
+@mixin tabs--li--active-state {
+  @include tabs--li;
+  background-color: $dark-gray;
+  border-bottom-color: $dark-gray;
+  padding-bottom: $tabs-margin;
+  &.wrap {
+    padding-bottom: 0;
+    margin-bottom: $tabs-margin;
+  }
+  a {
+    @include tabs--li--a;
+    color: white;
+    strong {
+      color: white; 
+    }
+  }
+}
+
+/* Styles for tabs */
+
+div.horizontal-tabs {
+  margin: 0 0 1em 0; /* LTR */
+  padding: 0;
+  border: 1px solid $gray-c;
+  position: relative; /* IE6/7 */
+  ul.horizontal-tabs-list {
+    @include tabs--ul;
+    li {
+      @include tabs--li--default-state;
+      &.selected {
+        @include tabs--li--active-state;
+      }
+      &:hover,
+      &:focus {
+        @include tabs--li--active-state;
+      }
+    }
+  }
+}
+
+.horizontal-tabs fieldset.horizontal-tabs-pane {
+  padding: 0 1em;
+  border: 0;
+}
+
+fieldset.horizontal-tabs-pane > legend,
+fieldset.vertical-tabs-pane fieldset.horizontal-tabs-pane > legend {
+  display: none;
+}
+
+.ui-tabs,
+.fieldgroup-tabs {
+  @include tabs--wrapper;
+  .ui-tabs-nav,
+  .horizontal-tabs-list {
+    @include tabs--ul;
+    li {
+      @include tabs--li--default-state;
+      &.ui-tabs-active,
+      &:hover {
+        @include tabs--li--active-state;
+      }
+    }
+  }
+}
+
+.ui-tabs-panel {
+  @include body_font;
+  font-size: .95rem;
+}

@@ -1,0 +1,459 @@
+$zen-gutter-width: 0px;
+$zen-column-count: 12 !global;
+
+/**
+ * Layout-specific styles
+ */
+
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+.gn2-3col,
+.gn2-3col--header,
+.gn2-3col--col1,
+.gn2-3col--col2,
+.gn2-3col--col3,
+.gn2-3col--footer {
+  @include zen-grid-item-base();
+}
+
+.gn2-3col {
+  @include zen-grid-container();
+}
+
+.gn2-3col--footer {
+  @include zen-clear();
+}
+
+.gn2-3col--col1 {
+  float: none;
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  padding-bottom: 1em;
+  .inner {
+    padding-right: 0;
+  }
+}
+
+.gn2-3col--col2 {
+  float: none;
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  padding-bottom: 1em;
+  .inner {
+    padding-right: 0;
+    img {
+      max-width: 50%;
+      height: auto;
+    }
+  }
+}
+
+/* See comments below
+ *.gn2-3col--col3 {
+  display: none;
+}*/
+
+.gn2-3col--col3 {
+        float: none;
+    margin-left: 0;
+    margin-right: 0;
+    width: auto;
+    .inner {
+      padding-right: 0;
+    }
+}
+
+/**
+ * Use 3 grid columns for larger screens.
+ */
+@include breakpoint($medium-screen-and-up) {
+  .gn2-3col--col1 {
+    @include zen-grid-item(3, 1);
+    padding-bottom: 0;
+    .inner {
+      padding-right: 9%;
+    }
+  }
+  .gn2-3col--col2 {
+    @include zen-grid-item(9, 4);
+    padding-bottom: 0;
+    clear: none;
+    .inner {
+      padding-right: 0;
+    }
+  }
+ .gn2-3col--col3 {
+    @include zen-grid-item(12, 1);
+    padding-bottom: 0;
+    clear: left;
+    .inner {
+      padding-right: 0;
+    }
+  }
+}
+
+@include breakpoint($large-screen-and-up) {
+  .gn2-3col--col1 {
+    @include zen-grid-item(4, 1);
+    .inner {
+      padding-right: 9%;
+    }
+  }
+  .gn2-3col--col2 {
+    @include zen-grid-item(6, 5);
+    .inner {
+      padding-right: 3%;
+    }
+  }
+  .gn2-3col--col3 {
+    display: block;
+    clear: none;
+    @include zen-grid-item(2, 11);
+  }
+}
+
+@include breakpoint($larger-screen) {
+  .gn2-3col--col2 {
+    @include zen-grid-item(6, 5);
+  }
+  .gn2-3col--col3 {
+    clear: none;
+    @include zen-grid-item(2, 11);
+  }
+}
+
+/**
+ * Content-specific styles
+ */
+ 
+.single-node {
+  .views-row {
+    display: none;
+  }
+  .views-row-first {
+    display: block;
+  }
+}
+
+.teaser-text {
+  @include teaser-body-cleanse;
+}
+
+.view.teasers {
+  .view-filters {
+    display: none;
+  }
+  .view-header {
+    a.teaser-header-add-new-link {
+      @include button--dark($font-size: 1.3em);
+      margin-bottom: .5em;
+    }
+    .teaser-header-links {
+      margin-top: 1.25em;
+      margin-bottom: 1.25em;
+      text-align: right;
+      border-top: 1px solid $medium-gray;
+      padding-top: 20px;
+    }
+    .teaser_header_link{
+      padding: 0.1em 0.4em 0.1em 0.7em;
+      border-left: 1px solid $black;
+      &:first-child{
+        border-left: none;
+      }
+    }
+    .show-view-header & {
+      display: block;
+      margin-bottom: 1.25em;
+      text-align: right;
+    }
+  }  
+}
+
+.post-teaser-main-image {
+  margin-top: 1em;
+}
+
+.teaser-meta-items {
+  margin-top: 1em;
+}
+
+.panelizer-view-mode.node-teaserthumb,
+.panelizer-view-mode.node-teaser,
+.node-post-teaser-group-landing-page {
+  
+  /**
+   * RD-2061: overriding the default bottom margin for panel.
+   */
+  .panels-ipe-portlet-wrapper, 
+  .panel-pane {
+    margin-bottom: 0;  
+  }
+
+  .teaser-header--parent-org {
+    display: none;
+    .show-parent-org & {
+      display: inline;
+    }
+  }
+  
+  background-color: transparent;
+  font-size: 85%;
+  line-height: 1.4;
+  
+  .layout-wrapper {
+    margin-bottom: 1.25em;
+    padding-bottom: 1.25em;
+    border-bottom: 1px solid $lighter-blue-gray;
+    .views-row-last & {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+  }
+  
+  .pane-node-field-main-image.thumbnail {
+    display: block;
+  }
+  
+  .download-pdf.icon-link {
+    display: block;
+  }
+      
+  .gn2-3col--col1 {
+    background-color: transparent;
+    font-size: 90%;
+    //Preventing profile photos in posts from getting too wide.
+    .teaser__posts--author{
+      img {max-width:200px;}
+      // Hiding posts author image in small screens (< 768px) RD-1385
+      @include breakpoint($small-screen-and-down) {
+        display: none;
+      }
+    }
+    img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      @include breakpoint($small-screen-and-down) {
+        &.image-placeholder {
+          display: none;
+        }
+      }
+    }
+  }
+      
+  .gn2-3col--col3 {
+    .panel-pane {
+      margin-bottom: 5px;
+    }
+    .teaser__news--meta,
+    .teaser__publications--meta,
+    .teaser__announcements--meta,
+    .teaser__posts--meta {
+      @include breakpoint($medium-screen) {
+        text-align: center;
+      }
+      @include breakpoint ($medium-screen-and-down) {
+        // Styling the Node links in news, pubs and posts teasers
+        margin-top: 1em;
+        > .pane-views-panes,
+        > .panel-pane {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .teaser-header {
+    margin-bottom: 1em;
+    h2.teaser-title {
+      @include teaser--headline;
+    }
+    h5 {
+      margin: 0;
+      font-weight: normal;
+      font-size: 1em;
+    }
+    .teaser-author-postdate {
+      padding-top: 5px;
+    }
+  }
+  
+  .teaser-text {
+    @include teaser--text;
+    a {
+      color: $blue-gray;
+    }
+    .readmore {
+      white-space: nowrap;
+    }
+  }
+
+} /* .panelizer-view-mode.node-teaserthumb */
+
+.panelizer-view-mode.node-teaser-w-thumb-and-search,
+.panelizer-view-mode.node-post-teaser-group-landing-page,
+.panelizer-view-mode.teaser-posts {  
+  
+  background-color: transparent;
+  font-size: 85%;
+  line-height: 1.4;
+  
+  .layout-wrapper {
+    margin-bottom: 1.25em;
+    padding-bottom: 1.25em;
+    border-bottom: 1px solid $lighter-blue-gray;
+  }
+   
+  h2 {
+    margin: 0;
+    padding: 0 0 5px 0;
+    font-size: 120%;
+    line-height: 1;
+  }
+  
+  .pane-node-field-main-image.thumbnail {
+    display: block;
+  }
+  
+  .download-pdf.icon-link {
+    display: block;
+  }
+      
+  .gn2-3col--col1 {
+    background-color: transparent;
+    font-size: 90%;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+      
+  .gn2-3col--col3 {
+    .panel-pane {
+      margin-bottom: 5px;
+    }
+  }
+
+  .teaser-header {
+    margin-bottom: .5em;
+    h2.teaser-title {
+      @include teaser--headline;
+    }
+    .teaser-author-postdate {
+      @include teaser--subhead;
+    }
+  }
+  
+  .teaser-text {
+    @include teaser--text;
+    .readmore {
+      white-space: nowrap;
+    }
+  }
+
+} /* .panelizer-view-mode.node-teaser-w-thumb-and-search */
+
+.three-teasers {
+  table {
+    margin: 0;
+    td {
+      width: 33%;
+      vertical-align: top;
+      h2 {
+        line-height: 1.2;
+        margin: .5em 0;
+        font-size: .95em;
+      }
+      .field-content {
+        word-break: break-word;
+        line-height: 1.4;
+        font-size: .95em;
+        p {
+          margin: 0;
+        }
+      }
+      &.col-1 {
+        width: 33%;
+        padding-right: 3%;
+      }
+      &.col-2 {
+        width: 34%;
+        padding-left: 2%;
+        padding-right: 2%;
+      }
+      &.col-3 {
+        width: 33%;
+        padding-left: 3%;
+      }
+    }
+  }
+}
+  
+$meta-icon--color: $medium-gray;
+$meta-icon--height: 20px;
+$meta-icon--font-size: .95em;
+$meta-icon--line-height: $meta-icon--height;
+$meta-icon--left-padding: 25px;
+
+@mixin meta-icon {
+  height: $meta-icon--height;
+  overflow: hidden;
+  display: block;
+  width: auto;
+  padding: 0;
+  margin: 0 0 5px 0;
+  @include breakpoint ($medium-screen-and-down) {
+    margin-right: 10px;
+  }
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+@mixin meta-icon--text {
+  color: $meta-icon--color;
+  font-size: $meta-icon--font-size;
+  line-height: $meta-icon--line-height;
+}
+
+@mixin meta-icon--background {
+  background-repeat: no-repeat;
+  background-size: $meta-icon--height auto;
+  background-position: left center;
+}
+  
+.num-views,
+.num-comments {
+  @include display_font;
+  @include meta-icon;
+  @include meta-icon--background;
+  @include meta-icon--text;
+  padding-left: $meta-icon--left-padding;
+}
+.num-views {
+  background-image: url(../images/teaser-metadata/num_views.png);
+}
+.num-comments {
+  background-image: url(../images/teaser-metadata/num_comments.png);
+}
+
+.node-teaserthumb .rate-widget {
+  @include display_font;
+  @include meta-icon;
+  a.rate-button {
+    text-indent: -9999px;
+    width: $meta-icon--left-padding;
+    float: left;
+    height: $meta-icon--height;
+    @include meta-icon--background;
+    background-image: url(../images/teaser-metadata/num_likes.png);
+  }
+  .rate-info {
+    @include meta-icon--text;
+    clear: none;
+    display: inline;
+    height: auto;
+    padding: 0;
+  }
+}

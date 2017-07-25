@@ -1,0 +1,71 @@
+.views-exposed-form {
+
+  display: table;
+  font-size: 14px;
+  // background: $views-debug-color;
+
+  .views-exposed-widget {
+    // background: orange;
+    display: table-cell;
+    padding: 0;
+    margin: 0 1em 0 0;
+
+    label,
+    label[for="edit-combine"] {
+      font-family: Arial, Helvetica, "Nimbus Sans L", sans-serif;
+      font-weight: bold;
+      color: black;
+      font-size: 1em;
+      line-height: 1.3;
+      padding: 0;
+      margin: 0 0 .5em 0;
+      text-transform: none;
+      display: block;
+    }
+
+    label[for="edit-created-min"],
+    label[for="edit-changed-min"],
+    label[for="edit-created-max"],
+    label[for="edit-changed-max"] {
+      font-size: .8em;
+      margin-bottom: .1em;
+      font-weight: normal;
+    }
+
+    .form-submit {
+      margin-top: 0;
+    }
+
+  }
+
+  .form-item {
+    padding: 0;
+    margin: 0;
+  }
+
+  input, textarea, select, button {
+    margin: 0 0 .5em 0;
+  }
+
+  input, textarea, option {
+    font-size: .95em;
+    padding: .25em .4em;
+  }
+
+  select {
+    overflow: visible;
+    font-size: .95em;
+  }
+
+  .form-text {
+    width: 10em;
+    &.bef-datepicker {
+      width: 7em;
+    }
+  }
+
+  input.bef-datepicker {
+    margin-bottom: .1em;
+  }
+
+}

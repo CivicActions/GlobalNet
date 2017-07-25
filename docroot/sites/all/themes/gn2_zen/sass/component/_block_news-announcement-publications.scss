@@ -1,0 +1,15 @@
+.view-news-announcements-publications {
+  .org-name{
+    @include display_font;        
+    padding: 0.15em 0px 0px;
+    color: $gray-80;
+    font-size: 1.1em;
+    line-height: 1.4;
+  }
+  .trimmed-text{
+    font-size: 0.9em;
+  }
+  > .second middle > .inner{
+    margin-top: -5px;
+  }
+}

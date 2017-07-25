@@ -1,0 +1,115 @@
+.panelizer-view-mode.node-post-teaser-group-landing-page,
+.panelizer-view-mode.teaser-posts {
+
+  $zen-column-count: 16 !global;
+  $zen-gutter-width: 0px;
+
+  /* Apply the shared properties of grid items in a single, efficient ruleset. */
+  .gn2-3col,
+  .gn2-3col--header,
+  .gn2-3col--col1,
+  .gn2-3col--col2,
+  .gn2-3col--col3,
+  .gn2-3col--footer {
+    @include zen-grid-item-base();
+  }
+  
+  .gn2-3col {
+    @include zen-grid-container();
+  }
+  
+  .gn2-3col--footer {
+    @include zen-clear();
+  }
+
+  .gn2-3col--col1 {
+    img,
+    .author-image {
+      max-width: 200px;
+    }
+  }
+  
+  .gn2-3col--col2 {
+    padding-bottom: 0;
+  }
+
+  @include breakpoint($xs-screen-only) {
+    .gn2-3col--col1{
+      .author-image {
+        width: 100px;
+        display: none; //inline-block
+        /* RD-1385 New ticket specs to hide the author image and profile in small screens
+           Temporarily using display: none to hide without removing the rest of the code
+           for styling it.
+           @TODO: Remove the rest of the styles, same goes for the .author-name styles */
+      }
+      .author-name {
+        border-bottom: none;
+        display: none; //inline-block;
+        width: 45%;
+        margin: 10px;
+        padding: 9px;
+        text-align: left;
+        vertical-align: top;
+        a {font-size: 1.2em;}
+      }
+    }
+    .gn2-3col--col2 {
+      // Make attached images fill screen width.
+      img{
+        max-width: 100%;
+      }
+    }
+  }
+
+  @include breakpoint($small-screen-and-up) {
+    .gn2-3col--col1 {
+      @include zen-grid-item(3, 1);
+      .inner {
+        padding-right: 9%;
+      }
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(13, 4);
+      .inner {
+        padding-right: 0%;
+      }
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(13, 4);
+      @include zen-clear();
+    }
+  }
+  
+  .post-teaser-main-image {
+    margin-bottom: .75em;
+  }
+  
+  .post-teaser--rate-widget {
+    clear: both;
+    width: 25%;
+    float: left;
+    margin-bottom: 0;
+    vertical-align: top;
+    min-height: 30px;
+  }
+  .post-teaser--meta-data {
+    width: 75%;
+    float: none;
+    margin-left: 25%;
+    text-align: right;
+    margin-bottom: 0;
+    vertical-align: top;
+    min-height: 30px;
+  }
+
+}
+.teasers--posts--in-groups{
+  // Hiding sorting links in xs screens
+  @include breakpoint($xs-screen-only) {
+    .teaser-header-links,
+    .teaser_header_link {
+      display: none;
+    }
+  }
+}

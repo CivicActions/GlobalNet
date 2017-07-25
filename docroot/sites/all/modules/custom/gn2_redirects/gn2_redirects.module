@@ -1,0 +1,102 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_redirects module.
+ *
+ * Used for creating redirects for the outliers.
+ *
+ * Default is empty search in org (if org available).
+ * Search is empty to prevent abundance of expensive queries.
+ * Paths that do not exist, but begin with existing nodes, ala:
+ * node/15/this/does/not/exist, will resolve to node/15, so no need for
+ * expensive lookup in redirects table. Paths that are just
+ * "node/non-existent-nid" will go to default search. We are using
+ * drupal_goto(), so paths that have multiple args, and "node/existing-nid"
+ * somewhere other that arg(0) and arg(1) will resolve to node/nid, and will
+ * show the path alias. Paths that do not have node and nid arg side by
+ * side will return a search suggestion, as opposed to actually generating
+ * the search query on the search page, to prevent multiple
+ * expensive search queries.
+ */
+
+/**
+ * Implements hook_page_alter().
+ */
+function gn2_redirects_page_alter(&$page) {
+  $status = drupal_get_http_header();
+  $org_id = !empty($_SESSION['gn2_context_organization_nid']) ? $_SESSION['gn2_context_organization_nid'] : '';
+  // Act when we get a 404.
+  if ((!empty($status['status']) && $status['status'] == '404 Not Found') || ($status == '404 Not Found')) {
+    $destination = explode('/', $_GET['destination']);
+    unset($_GET['destination']);
+    // Not much to go on here, so send to an empty query search page.
+    if (count($destination) == 2 && $destination[0] == 'node' && is_numeric($destination[1])) {
+      drupal_goto('search/' . $org_id);
+    }
+    // Otherwise, let's get fancy.
+    else {
+      $not_found = FALSE;
+      $args = '';
+      // We don't want these in our search.
+      $baddies = array('node', 'and', 'or', 'the');
+      $i = 1;
+      // Build our search string.
+      foreach ($destination as $item) {
+        if (!in_array($item, $baddies)) {
+          if ($i < count($destination)) {
+            $args .= $item . ' ';
+          }
+          else {
+            $args .= $item;
+          }
+        }
+        $i++;
+      }
+      // Now we look for specific other words in the args and funnel accordingly.
+      if (array_search('event', $destination)) {
+        $alias = drupal_get_path_alias('node/' . $org_id);
+        drupal_goto($alias . '/upcoming-events');
+      }
+      elseif (in_array('join', $destination)) {
+        drupal_goto($destination[1] . '/join');
+      }
+      elseif (array_search('course', $destination)) {
+        drupal_goto('search/org/' . $org_id . '/type/course');
+      }
+      elseif (array_search('group', $destination)) {
+        drupal_goto('search/org/' . $org_id . '/type/group');
+      }
+      elseif (array_search('news', $destination)) {
+        drupal_goto('search/org/' . $org_id . '/type/news');
+      }
+      elseif (array_search('node', $destination)) {
+        $first = array_search('node', $destination);
+        // If we have a sibling number, send to the node.
+        if ($destination[$first + 1] && is_numeric($destination[$first + 1])) {
+          $second = $destination[$first + 1];
+          drupal_goto('node/' . $second);
+
+        }
+        // Provide search suggestion if no 'nid' arg.
+        else {
+          $not_found = TRUE;
+        }
+      }
+      // Provide search suggestion if no 'node' or 'nid' arg.
+      else {
+        $not_found = TRUE;
+      }
+      if ($not_found) {
+        $page['content']['system_main']['#markup'] = t("<div class=\"messages--customerror messages customerror\">");
+        $page['content']['system_main']['#markup'] .= t("<p>We are sorry, we cannot reach the page you're looking for. The page may not exist, or you may need to login to gain access.</p>");
+        $page['content']['system_main']['#markup'] .= t("<p>Please try the following:</p>");
+        $page['content']['system_main']['#markup'] .= t("<ul>");
+        $page['content']['system_main']['#markup'] .= t("<li><a href=\"/user\">Click here to login to GlobalNET</a></li>");
+        $page['content']['system_main']['#markup'] .= t("<li><a href=\"/search\">Click here to search for what you are trying to find</a></li>");
+        $page['content']['system_main']['#markup'] .= t("<li>Check the URL you entered for possible errors, including the use of upper and lower case letters.</li>");
+        $page['content']['system_main']['#markup'] .= t("</ul>");
+        $page['content']['system_main']['#markup'] .= t("</div>");
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+/**
+* Specific styles for the manage members page
+*/
+.view--admin--manage-members {
+  position: relative;
+  #edit-uid-wrapper {
+    width: 70%;
+    margin-bottom: 10em;
+    @include breakpoint($small-screen-and-up) {
+      margin-bottom: 7.5em;
+      width: 70%;
+    }
+    @include breakpoint($medium-screen-and-up) {
+      margin-bottom: 6.5em;
+      width: 400px;
+      input {
+        max-width: 380px;
+      }
+    }
+  }
+  .description {
+    position: absolute;
+    left: 0;
+    @include breakpoint($medium-screen-and-up) {
+      width: 80%;
+    }
+  }
+
+}
+

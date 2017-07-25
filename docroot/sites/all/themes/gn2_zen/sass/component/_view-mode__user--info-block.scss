@@ -1,0 +1,61 @@
+/* Styling the User Info block and Participant teaser view modes */
+
+.user-user-info-block,
+.user-participant-teaser {
+  
+  font-size: 1em;
+  line-height: 1.2;
+  margin-bottom: 1em;
+  
+  .ui-tabs & {
+    font-size: 82%;
+  }
+  
+  .sidebar,
+  .main-content {
+    padding: 0;
+    .inner {
+      padding: 0;
+    }
+    .panel-pane {
+      font-size: 0.9em;
+      margin-left: 0;
+      margin-bottom: .6em;
+    }
+  }
+  
+  .sidebar {
+    .inner {
+      padding-right: 10%;
+    }
+  }
+  
+  .main-content {
+    .inner {
+    }
+    .info-block__full-name {
+      font-size: 1.05em;
+      margin-bottom: .5em;
+    }
+    .icon-email {
+      font-size: 14px;
+      line-height: normal;
+      padding-top: 2px;
+      margin-top: 3px;
+    }
+  }
+  .pane-user-field-country-of-residence {
+    .pane-title {
+      border: medium none;
+      display: inline;
+      font-family: Arial;
+      font-size: 1em;
+      letter-spacing: unset;
+      text-transform: none;
+    }
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+}

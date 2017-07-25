@@ -1,0 +1,49 @@
+/**
+ * General styles for the inbox.
+ */
+// Messages
+.page-inbox h1.page__title{
+  border-bottom: 1px solid $light-blue-gray;
+  padding: 0.2em 0;
+}
+.inbox {
+  .gn2-2col {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid $lighter-blue-gray;
+  }
+}
+
+.inbox-unread-filter {
+  color: $blue-gray;
+  font-size: 15px;
+  text-align: right;
+}
+
+.page-inbox-message {
+  .views-row {
+    border: none;
+  }
+
+  .message-timestamp {
+    display: block;
+    font-size: 15px;
+    font-style: italic;
+  }
+}
+
+// Notifications
+.page-inbox-notifications {
+  .views-exposed-widget .form-submit {
+    margin-top: 1.3em;
+  }
+  tr.even,
+  tr.odd{
+    border-bottom: none;
+  }
+  tr.even{background: $white;}
+  tr.odd{background: url(../images/bg-diagonal-tile-grey.png);}
+  td{
+    padding: 0.4em;
+  }
+}

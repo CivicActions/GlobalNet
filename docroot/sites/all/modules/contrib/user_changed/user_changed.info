@@ -1,0 +1,3 @@
+name = User changed
+description = Adds a "changed" database field to users (like nodes have).
+core = 7.x

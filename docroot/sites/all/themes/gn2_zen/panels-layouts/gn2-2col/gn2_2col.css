@@ -1,0 +1,50 @@
+/**
+ * @file
+ * Positioning for a 2 col 40:60 custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 15, ../../../sass/layout/panels-layouts/gn2_2col.scss */
+.gn-two-col,
+.main-content,
+.sidebar {
+  padding-left: 2px;
+  padding-right: 2px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col:before, .gn-two-col:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col:after {
+  clear: both;
+}
+
+/**
+ * Use 3 grid columns for larger screens and tablets.
+ */
+/*!global is a fix for an issue where zen-grid-item doesn't generate the right CSS when using Compass 1.x
+ * See https://www.drupal.org/node/2346291#comment-9475791
+ */
+/* line 34, ../../../sass/layout/panels-layouts/gn2_2col.scss */
+.gn-two-col .sidebar {
+  float: left;
+  width: 40%;
+  margin-left: 0%;
+  margin-right: -40%;
+}
+/* line 37, ../../../sass/layout/panels-layouts/gn2_2col.scss */
+.gn-two-col .main-content {
+  float: left;
+  width: 60%;
+  margin-left: 40%;
+  margin-right: -100%;
+}

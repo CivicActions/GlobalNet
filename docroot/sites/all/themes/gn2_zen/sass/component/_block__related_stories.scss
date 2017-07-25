@@ -1,0 +1,54 @@
+/**
+ * Theming the Related stories block found on news pages.
+ */
+
+$zen-column-count: 20 !global;
+
+.related-stories--item {
+  margin-bottom: 15px;
+  &.views-row-last {
+    margin-bottom: 0px;
+  }
+  .gn2-2col-v2 {
+    .top,
+    .bottom {
+      display: none;
+    }
+    .col {
+      &.first {
+        @include zen-grid-item(6, 1);
+        .inner {
+          padding-right: 12%;
+          * {
+            margin: 0;
+            padding: 0;
+          }
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
+      }
+      &.last {
+        @include zen-grid-item(14, 7);
+        * {
+          margin: 0;
+          padding: 0;
+        }
+        .related-stories--item--topic {
+          .first-topic-link a {
+            @include display_font;
+            color: $medium-gray;
+            padding-bottom: 9px;
+            font-size: 1.4em;
+            line-height: 1;
+          }
+        }
+        .related-stories--item--title {
+          font-weight: bold;
+          line-height: 1.25;
+        }
+      }
+    }
+  }
+}

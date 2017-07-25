@@ -1,0 +1,368 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_support_desk feature.
+ */
+
+include_once 'gn2_support_desk.features.inc';
+
+/**
+ * Implements hook_node_access().
+ */
+function gn2_support_desk_node_access($node, $op, $account) {
+  if (!empty($node->field_parent_organization)) {
+    // Bookmark.
+    $gid = $node->field_parent_organization[LANGUAGE_NONE][0]['target_id'];
+    $roles = og_get_user_roles('node', $gid);
+
+    if (in_array('org_manager', $roles)) {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  // Set default values for logged in users.
+  if (user_is_logged_in() && arg(2) != 'edit') {
+    $loaded_user = user_load($user->uid);
+    $form['field_name_first'][LANGUAGE_NONE][0]['value']['#default_value'] = $loaded_user->field_name_first[LANGUAGE_NONE][0]['value'];
+    $form['field_name_last'][LANGUAGE_NONE][0]['value']['#default_value'] = $loaded_user->field_name_last[LANGUAGE_NONE][0]['value'];
+    $form['field_email_address'][LANGUAGE_NONE][0]['email']['#default_value'] = $loaded_user->mail;
+  }
+
+  // Hide fields in the group_admin fieldgroup from non-admins.
+  // Check to see if user is admin, org_manager or hr_manager.
+  $admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+  $hr_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 35', array(':uid' => $user->uid))->fetchField();
+  $org_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 17', array(':uid' => $user->uid))->fetchField();
+
+  // Check to see if the user is an org_manager, hr_manager, or admin,
+  // and if they are not, then hide the group-admin fieldgroup.
+  if (!($org_manager || $hr_manager || $admin)) {
+    field_group_hide_field_groups($form, array('group_admin'));
+    // Hide org field from non-admin users.
+    $form['field_parent_organization']['#access'] = FALSE;
+  }
+  // We don't need anyone to see the json response from jira.
+  $form['field_json_capture']['#access'] = FALSE;
+
+  // Set group or organization id.
+  if (filter_input(INPUT_GET, 'gid')) {
+    $gid = filter_input(INPUT_GET, 'gid');
+  }
+  elseif (isset($form['root_parent_organization'])) {
+    $gid = $form['root_parent_organization'];
+  }
+  else {
+    $gid = gn2_context_get_org_id();
+  }
+
+  // Getting and setting the parent  org id using our gn2_context_get_org_id function
+  $org_id = gn2_context_get_org_id();
+
+  // Limit options in owner field to admins and group admins.
+  unset($form['field_support_owner'][LANGUAGE_NONE]['#options']);
+  $form['field_support_owner'][LANGUAGE_NONE]['#options'] = array();
+  $form['field_support_owner'][LANGUAGE_NONE]['#options']['_none'] = "-None-";
+
+  // First, if we have a group ID, add org managers (role id = 17)
+  if (isset($gid)) {
+    $qry__org_managers = db_select('og_users_roles', 'r');
+    $qry__org_managers->join('users', 'u', 'r.uid = u.uid');
+    $qry__org_managers->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
+    $qry__org_managers->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
+    $qry__org_managers->fields('u', array('uid', 'name'));
+    $qry__org_managers->fields('fn', array('field_name_first_value'));
+    $qry__org_managers->fields('ln', array('field_name_last_value'));
+    $qry__org_managers->condition('u.status', '1');
+    $qry__org_managers->condition('r.rid', '17');
+    $qry__org_managers->condition('r.gid', $org_id);
+    $qry__org_managers->orderBy('ln.field_name_last_value', 'ASC');
+    $qry__org_managers->orderBy('fn.field_name_first_value', 'ASC');
+    $results__org_managers = $qry__org_managers->execute()->fetchAll();
+    foreach ($results__org_managers as $org_manager) {
+      $this_uid = $org_manager->uid;
+      $first_name = $org_manager->field_name_first_value;
+      $last_name = $org_manager->field_name_last_value;
+      $this_name = $first_name . ' ' . $last_name . ' (' . $org_manager->name . ')';
+      $form['field_support_owner'][LANGUAGE_NONE]['#options'][$this_uid] = $this_name;
+    }
+  }
+
+  // Next, global administrators (role id = 9)
+  $qry__global_admins = db_select('users_roles', 'r');
+  $qry__global_admins->join('users', 'u', 'r.uid = u.uid');
+  $qry__global_admins->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
+  $qry__global_admins->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
+  $qry__global_admins->fields('u', array('uid', 'name'));
+  $qry__global_admins->fields('fn', array('field_name_first_value'));
+  $qry__global_admins->fields('ln', array('field_name_last_value'));
+  $qry__global_admins->condition('u.status', '1');
+  $qry__global_admins->condition('r.rid', '9');
+  $qry__global_admins->orderBy('ln.field_name_last_value', 'ASC');
+  $qry__global_admins->orderBy('fn.field_name_first_value', 'ASC');
+  $results__global_admins = $qry__global_admins->execute()->fetchAll();
+  foreach ($results__global_admins as $global_admin) {
+    $this_uid = $global_admin->uid;
+    $first_name = $global_admin->field_name_first_value;
+    $last_name = $global_admin->field_name_last_value;
+    $this_name = $first_name . ' ' . $last_name . ' (' . $global_admin->name . ')';
+    $form['field_support_owner'][LANGUAGE_NONE]['#options'][$this_uid] = $this_name;
+  }
+
+  // Set default parent org value
+  if (arg(2) != 'edit') {
+    $form['field_parent_organization'][LANGUAGE_NONE]['#default_value'] = $gid;
+  }
+
+  $short_title = NULL;
+  $node = node_load($gid);
+
+  if ($node->type !== 'organization') {
+    $parent = field_get_items('node', $node, 'field_parent_organization');
+    $pid = $parent[0]['target_id'];
+  }
+  else {
+    $pid = $gid;
+  }
+  $short_title = db_query('SELECT field_org_short_title_value FROM {field_data_field_org_short_title} sh
+JOIN {node} n ON n.vid = sh.revision_id
+WHERE sh.entity_id = :nid', array(':nid' => $pid))->fetchField();
+
+  $userip = $_SERVER['REMOTE_ADDR'];
+  $ip = str_replace('.', '', $userip);
+
+  $identifier = ($short_title) ? '-' . $short_title : '-0-' . $ip;
+
+  // Generates title for the current new content.
+  $username = ($user->uid != 0) ? $user->name : 'anonymous';
+  if (!isset($form['title']['#default_value'])) {
+    $form['title']['#default_value'] = time() . '-' . strtolower($username . $identifier);
+  }
+
+  $form['title']['#attributes']['class'][] = 'hide';
+
+  // Hide title field.
+  $form['title']['#access'] = FALSE;
+
+  array_unshift($form['actions']['submit']['#submit'], 'gn2_support_desk_form_alter_submit');
+}
+
+/**
+ * Support node form callback.
+ */
+function gn2_support_desk_form_alter_submit(&$form, &$form_state) {
+  // Insert stubborn fields.
+  if (!empty($form_state['input']['field_expected_functionality'][LANGUAGE_NONE][0]['value'])) {
+    $form_state['values']['field_expected_functionality'][LANGUAGE_NONE][0]['value'] = $form_state['input']['field_expected_functionality'][LANGUAGE_NONE][0]['value'];
+    $form_state['values']['field_expected_functionality'][LANGUAGE_NONE][0]['format'] = $form_state['input']['field_expected_functionality'][LANGUAGE_NONE][0]['format'];
+  }
+  if (!empty($form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['value'])) {
+    $form_state['values']['field_actual_functionality'][LANGUAGE_NONE][0]['value'] = $form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['value'];
+    $form_state['values']['field_actual_functionality'][LANGUAGE_NONE][0]['format'] = $form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['format'];
+  }
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function gn2_support_desk_node_view_alter(&$build) {
+  if ($build['#bundle'] == 'support') {
+    global $user;
+    // Hide the Admin Note fields.
+    if (!in_array('administrator', $user->roles)) {
+      $build['field_admin_note']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_support_desk_init() {
+  if (arg(0) != 'admin') {
+    drupal_add_js(drupal_get_path('module', 'gn2_support_desk') . '/gn2_support_desk.js');
+  }
+  if ((arg(1) == 'manage' && arg(2) == 'support') || (arg(2) == 'dashboard' && arg(3) == 'support')) {
+    drupal_add_js(drupal_get_path('module', 'gn2_support_desk') . '/gn2_support_desk_theming.js');
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_support_desk_block_info() {
+  $blocks = array();
+  $blocks['gn2_support_desk'] = array(
+    'info' => t('Returns Support desk form'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_support_desk_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'gn2_support_desk':
+      $tickets = gn2_support_desk_ticket();
+      $block['content'] = $tickets;
+      if (empty($tickets)) {
+        $block['content'] .= drupal_render(drupal_get_form('gn2_support_desk_form'));
+      }
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Creates support desk ticket output.
+ */
+function gn2_support_desk_ticket() {
+  $ticket = '';
+  $node = node_load(arg(1));
+  if (!empty($node->field_json_capture[LANGUAGE_NONE][0]['value'])) {
+    $json_str = json_decode($node->field_json_capture[LANGUAGE_NONE][0]['value']);
+
+    $date = new DateTime($json_str->issue->fields->created);
+    $ticket .= '<div id="jira-ticket">';
+    $ticket .= '<h4>' . t('Related Jira Ticket') . '</h4><hr />';
+    $ticket .= '<span id="jira-status">' . $json_str->issue->fields->status->statusCategory->name . '</span>';
+    $ticket .= '<span id="jira-issue">' . l($json_str->issue->key, 'https://globalnet.atlassian.net/browse/' . $json_str->issue->key, array(
+        'attributes' => array('target' => '_blank'),
+      )) . ' - </span>';
+
+    $ticket .= '<span id="jira-title">' . $json_str->issue->fields->summary . '</span>';
+    if ($json_str->issue->fields->assignee->displayName) {
+      $ticket .= '<span id="jira-assignee">, assigned to ' . $json_str->issue->fields->assignee->displayName . '</span>';
+    }
+    $ticket .= '<br /><span id="jira-time">Created ' . $date->format('Y-m-d H:i:s') . '</span>';
+
+    $ticket .= '</div>';
+  }
+
+  return $ticket;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_support_desk_menu() {
+  $items['jira-listen'] = array(
+    'page callback' => 'gn2_support_desk_jira_callback',
+    'delivery callback' => 'drupal_json_encode',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Jira listener callback.
+ */
+function gn2_support_desk_jira_callback() {
+  $json_str = file_get_contents('php://input');
+  $post = json_decode($json_str);
+  watchdog('gn2_support_desk', $post->issue->fields->customfield_11401);
+  $node = node_load($post->issue->fields->customfield_11401);
+  $node->field_json_capture[LANGUAGE_NONE][0]['value'] = $json_str;
+  node_save($node);
+}
+
+/**
+ * Creates out jira ticket creation form.
+ */
+function gn2_support_desk_form($form, &$form_state) {
+  if (arg(0) !== 'admin') {
+    $node = node_load(arg(1));
+    $category_field = field_info_field('field_support_category');
+    if ($node->field_support_category[LANGUAGE_NONE][0]['value']) {
+      $category_value = $category_field['settings']['allowed_values'][$node->field_support_category[LANGUAGE_NONE][0]['value']];
+
+      $form['gn2_support_desk_jira_summary'] = array(
+        '#type' => 'hidden',
+        '#value' => $category_value,
+      );
+    }
+
+    if ($node->field_support_priority[LANGUAGE_NONE][0]['value']) {
+
+      $priority_field = field_info_field('field_support_priority');
+      $priority_value_raw = $priority_field['settings']['allowed_values'][$node->field_support_priority[LANGUAGE_NONE][0]['value']];
+
+      switch ($priority_value_raw) {
+        case 'High':
+          $priority_value = 'Critical';
+          break;
+
+        case 'Medium':
+          $priority_value = 'Major';
+          break;
+
+        case 'Low':
+          $priority_value = 'Minor';
+          break;
+      }
+      $form['gn2_support_desk_jira_priority'] = array(
+        '#type' => 'hidden',
+        '#value' => $priority_value,
+      );
+    }
+
+    $form['gn2_support_desk_jira_title'] = array(
+      '#type' => 'hidden',
+      '#value' => $node->title,
+    );
+    $form['gn2_support_desk_jira_description'] = array(
+      '#type' => 'hidden',
+      '#value' => $node->field_description[LANGUAGE_NONE][0]['value'],
+    );
+    $form['gn2_support_desk_jira_nid'] = array(
+      '#type' => 'hidden',
+      '#value' => arg(1),
+    );
+
+    global $user;
+    $role = $user->roles;
+    $account = user_load($user->uid);
+    $roles = og_get_user_roles('node', $node->field_parent_organization[LANGUAGE_NONE][0]['target_id']);
+
+    if (in_array('org_manager', $roles) || in_array('administrator', $role)) {
+      $form['gn2_support_desk_jira_submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Add New Jira Ticket'),
+      );
+    }
+
+    return $form;
+  }
+}
+
+/**
+ * Creates issue on jira board.
+ */
+function gn2_support_desk_form_submit($form, &$form_state) {
+  $issue_data = array(
+    'fields' => array(
+      'project' => array('key' => 'RD'),
+      'summary' => $form_state['values']['gn2_support_desk_jira_summary'],
+      'description' => $form_state['values']['gn2_support_desk_jira_description'],
+      'priority' => array('name' => $form_state['values']['gn2_support_desk_jira_priority']),
+      'issuetype' => array('name' => 'Bug'),
+      'customfield_11401' => (int) $form_state['values']['gn2_support_desk_jira_nid'],
+    ),
+  );
+
+  jira_rest_issue_create($issue_data);
+}

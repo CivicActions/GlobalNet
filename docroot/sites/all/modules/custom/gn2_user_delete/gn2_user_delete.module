@@ -1,0 +1,109 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_user_delete.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_user_delete_menu() {
+  $items = array();
+
+  $items['admin/config/remove-users'] = array(
+    'title' => 'User deletion page',
+    'description' => 'Removes stubborn users that throw errors',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_user_delete_form'),
+    'access arguments' => array('administer users'),
+  );
+
+  return $items;
+}
+
+/**
+ * Form constructor for the User delete form.
+ *
+ * @see gn2_user_delete_form_validate()
+ * @see gn2_user_delete_form_submit()
+ *
+ * @ingroup forms
+ */
+function gn2_user_delete_form($form, &$form_state) {
+  $form['users'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Enter a comma separated list of user emails for deletion',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+    '#action' => 'gn2_user_delete_form_submit',
+  );
+  return $form;
+}
+
+/**
+ * Form validation handler for gn2_user_delete_form().
+ *
+ * @see gn2_user_delete_form_submit()
+ */
+function gn2_user_delete_form_validate($form, &$form_state) {
+  // Map the textarea field.
+  $users = array_map('trim', explode(',', $form_state['values']['users']));
+  foreach ($users as $key => $value) {
+    if ($value) {
+      // Check that email submitted is a valid email address.
+      if (!valid_email_address($value)) {
+        form_set_error('users', t('%mail is not a valid email address.', array('%mail' => $value)));
+      }
+
+      // Check that the valid email address exists for a user.
+      $exists = db_query('SELECT name, uid FROM {users} WHERE mail = :mail', array(':mail' => $value))->fetch();
+      if (!$exists) {
+        form_set_error('users', t('There is no user with the email address %mail.', array('%mail' => $value)));
+      }
+      // Don't allow user 1 to be deleted.
+      elseif ((int)$exists->uid === 1) {
+        form_set_error('users', t('User %name cannot be deleted.', array('%name' => $exists->name)));
+      }
+    }
+    // Unset any blank values.
+    else {
+      unset($users[$key]);
+    }
+  }
+
+  // If there are no email addresses, set the error.
+  if (empty($users)) {
+    form_set_error('users', t('No email addresses found.'));
+  }
+  // If we have valid email address, set the form value.
+  else {
+    $form_state['values']['users'] = implode(',', $users);
+  }
+}
+
+/**
+ * Form submission handler for gn2_user_delete_form().
+ *
+ * @see gn2_user_delete_form_validate()
+ */
+function gn2_user_delete_form_submit($form, &$form_state) {
+  // Map the textarea field.
+  $users = array_map('trim', explode(',', $form_state['values']['users']));
+  $items = array();
+  foreach ($users as $mail) {
+    // Get username and user ID.
+    $user_data = db_query('SELECT uid,name FROM {users} WHERE mail = :mail', array(':mail' => $mail))->fetchAssoc();
+    if ($user_data) {
+      // Delete the user.
+      db_delete('users')
+        ->condition('uid', $user_data['uid'])
+        ->condition('uid', array(1,0), 'NOT IN')
+        ->execute();
+      $items[] = t('%name with email address %mail was deleted.', array('%name' => $user_data['name'], '%mail' => $mail));
+    }
+  }
+  drupal_set_message('Users deleted');
+}

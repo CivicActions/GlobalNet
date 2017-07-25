@@ -1,0 +1,111 @@
+/*
+ * Styling the Colorbox display
+ */
+
+#colorbox {
+  img {
+  max-width: none !important;
+  max-height: none !important;
+  }
+} //end colorbox
+
+#cboxLoadedContent {
+  overflow: hidden !important;
+}
+
+.mg-lightbox-wrapper {
+  .lightbox-title {
+    padding: 0;
+    margin: 0;
+  }
+  .mg-lightbox-detail {
+    float: none;
+    padding: 0;
+    .lightbox-stack {
+      width: 800px;
+      height: 560px;
+      overflow: hidden;
+      position: relative;
+      .media-gallery-item {
+        .gallery-thumb-outer {
+        }
+      }
+      .media-gallery-detail-info {
+        margin: 0;
+        height: 20px;
+        text-align: right;
+        position: relative; 
+        z-index: 50;
+        .media-license {
+          display: none;
+        }
+      }
+    }
+  }
+  .mg-lightbox-description {
+    display: block;
+    float: none;
+    margin: 0;
+    width: auto;
+    position: absolute;
+    top: 540px;  
+    width: 600px;
+    height: 20px;
+    overflow: hidden;
+    z-index: 100;
+  }
+}
+
+div.lightbox-stack div.media-gallery-item div.gallery-thumb-outer div.gallery-thumb-inner a img {
+  width: 800px;
+  height: 533px;
+}
+
+.node-media-gallery {
+  .gallery-thumb-inner {
+    a + a {
+      display: none;
+      width: 90%;
+      font-size: 0.8em;
+    }
+    &:hover {
+      a + a {
+        background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
+        bottom: 3px;
+        color: $lightest-blue-gray;
+        position: absolute;
+        padding: 5px;
+        display: block;
+      }
+    }
+  }
+
+  .meta-wrapper .media-title {
+    font-weight: normal;
+    margin-left: -5px;
+    width: 94%;
+  }
+
+  .meta-wrapper.hover {
+    .slider,
+    .slider.meta-outer {
+      background: none;
+    }
+    .media-title {
+        background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
+        bottom: 10px;
+        color: $lightest-blue-gray;
+        position: absolute;
+        padding: 5px;
+        display: block;
+
+    }
+  }
+} // end node-media-gallery
+
+.media-gallery-detail-wrapper {
+  // background: pink;
+  > * {
+    display: block;
+  }
+}

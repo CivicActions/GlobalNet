@@ -1,0 +1,13 @@
+diff --git og/includes/og_features_role.features.inc og/includes/og_features_role.features.inc
+index 7c239af..3966f35 100644
+--- og/includes/og_features_role.features.inc
++++ og/includes/og_features_role.features.inc
+@@ -76,7 +76,7 @@ function og_features_role_features_export_render($module, $data) {
+       'name' => $rolename,
+     );
+     $role_identifier = features_var_export($name);
+-    $role_export = features_var_export($role, '  ');
++    $role_export = features_var_export($role, "  /* $name */ ");
+     $code[] = "  // Exported OG Role: {$role_identifier}.";
+     $code[] = "  \$roles[{$role_identifier}] = ${role_export};";
+     $code[] = "";

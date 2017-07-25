@@ -1,0 +1,62 @@
+/*Styling h1 to h6 */
+/*Mixins for font-families moved into _mixins.scss*/
+
+.all-caps{@include all_caps;}
+
+/*Base font size is set to 16px. Other sizes will be set in em's*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $very-dark-gray;
+}
+
+@mixin h1_default {
+  @include body_font;
+  display: block;
+  font-size: 1.875em; /*30px*/
+  &.page-title,
+  &.page__title {
+    font-weight: normal;
+    margin: 0 0 0.5em;
+  }
+}
+
+@mixin h2_default {
+  @include body_font;
+  display: block;
+  font-size: 1.625em; /*26px*/
+}
+
+@mixin h3_default {
+  @include display_font;
+  font-weight: bold;
+  display: block;
+  font-size: 1.45em; /*24px*/
+}
+
+@mixin h4_default {
+  @include display_font;
+  font-weight: bold;
+  display: block;
+  font-size: 1.35em;
+}
+
+h1 {
+  @include h1_default;
+}
+
+h2 {
+  @include h2_default;
+}
+
+h3 {
+  @include h3_default;
+}
+
+h4 {
+  @include h4_default;
+}

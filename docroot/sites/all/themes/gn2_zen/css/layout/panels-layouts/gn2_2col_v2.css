@@ -1,0 +1,73 @@
+/**
+ * @file
+ * Positioning for a three across layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 24, ../../../sass/layout/panels-layouts/gn2_2col_v2.scss */
+.gn2-2col-v2,
+.gn2-2col-v2--header,
+.gn2-2col-v2--col1,
+.gn2-2col-v2--col2,
+.gn2-2col-v2--footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-2col-v2:before, .gn2-2col-v2:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn2-2col-v2:after {
+  clear: both;
+}
+
+/* line 37, ../../../sass/layout/panels-layouts/gn2_2col_v2.scss */
+.gn2-2col-v2--footer {
+  clear: left;
+}
+
+/**
+ * Use 3 grid columns for larger screens.
+ */
+@media all and (min-width: 400px) {
+  /* line 46, ../../../sass/layout/panels-layouts/gn2_2col_v2.scss */
+  .gn2-2col-v2--col1 {
+    float: left;
+    width: 50%;
+    margin-left: 0%;
+    margin-right: -50%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+
+  /* line 49, ../../../sass/layout/panels-layouts/gn2_2col_v2.scss */
+  .gn2-2col-v2--col2 {
+    float: left;
+    width: 50%;
+    margin-left: 50%;
+    margin-right: -100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+  }
+}
+
+/*# sourceMappingURL=gn2_2col_v2.css.map */

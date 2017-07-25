@@ -1,0 +1,34 @@
+
+Admin Menu 7.x-2.x, 2017-03-24
+------------------------------
+commit ad735a3608c1853fc2310f7202fb533cf527d786
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 24 18:45:20 2017 -0400
+
+    RD-4182 - Changing default display for courses to be full page override
+
+commit a3cdd4a087cc2fd1f04d913cf6097bbf4d8a050f
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 24 13:20:58 2017 -0400
+
+    RD-4182 - Adding ajax blocks to features
+
+commit 3facec020ead378b0ea30d754f56584a0bf59931
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 24 12:34:27 2017 -0400
+
+    RD-4182 - Adding ajax loading gif style to tabs
+
+commit 66511b6a5458f9a643a1411e07a5cac421e1ed79
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 24 12:33:29 2017 -0400
+
+    RD-4182 - Adding ajax block catchers
+
+commit acd5acee07c151abc3b05bcb30a3f115a013411e
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 23 22:24:13 2017 -0400
+
+    RD-4182 - Adding logic to lazy load tabs on courses
+
+

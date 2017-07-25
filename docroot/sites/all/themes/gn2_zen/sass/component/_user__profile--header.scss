@@ -1,0 +1,86 @@
+/**
+*Theming the user profile header and the user profile history block (member since.. block)
+*/
+.user__profile--header {
+  position: relative;
+  .panel-pane {
+    margin: 0;
+    padding: 0;
+  }
+  
+  margin-bottom: 0;
+  &:not(.user-profile--header-name) .view-footer {
+    display: none;
+  }
+
+  .user-profile--header-name{
+    @include subheading;
+    margin-bottom: 0.8em;
+    .btn-contact {
+      display: block;
+    }
+    h2{
+      margin-bottom: 0.3em;
+      font-weight: normal;
+      @include breakpoint ($xs-screen-only){
+        margin-bottom: 0;
+      }
+    }
+    .view-users-contact-history-info{
+    display: block;
+      > div{
+        display: inline-block;
+        &.view-content {
+          width: calc(100% - 280px);
+          min-width: 250px;
+          @include breakpoint ($xs-screen-only){
+            width: 100%;
+          }
+        }
+        &.view-footer {
+          width: 270px;
+          text-align: right;
+          margin-bottom: 10px;
+          @include breakpoint ($xs-screen-only) {
+            text-align: left;
+          }
+          a.btn-contact {
+            display: inline-block;
+            margin-bottom: 0;
+
+          }
+        }
+      }
+    }
+  }
+  .user__profile--history{
+    h3{display: none;}
+    //Hide the H3 title of the user history block
+    dt, dd{
+      display: inline;
+      margin: 0;
+      }
+    dl{
+      display: inline-block;
+      margin-left: 2em;
+      }
+    // Styles for extra small screens
+    @include breakpoint ($xs-screen-only) {
+      dl {
+        margin-left: 0;
+        display: block;
+      }
+    }
+  }
+
+  /*====== The profile header view========*/
+  .view-users-contact-history-info{
+    display: inline-block;
+  }
+  /*====== Unblock block section ========*/
+  .pane-gn2-user-admin-gn2-user-admin-unblock-user {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}

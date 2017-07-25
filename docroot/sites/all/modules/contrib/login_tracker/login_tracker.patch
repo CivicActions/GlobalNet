@@ -1,0 +1,12 @@
+index 005f0fc..8a008f8 100644
+--- a/login_tracker.module
++++ b/login_tracker.module
+@@ -40,7 +40,7 @@ function login_tracker_user_login(&$edit, $account) {
+   drupal_alter('login_tracker_track_login', $track_login, $edit, $account);
+ 
+   if (!$track_login) {
+-    return;
++    //return;
+   }
+ 
+   $data = array();

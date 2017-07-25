@@ -1,0 +1,8 @@
+name = Userpoints og
+description = And UserPoints, OG, Rules integration, Each og has own's userpoints branding, When workflows changes with rules module, updating points to the og by og_group_ref.
+package = Userpoints
+dependencies[] = userpoints
+dependencies[] = userpoints_rules
+dependencies[] = rules
+dependencies[] = og
+core = 7.x

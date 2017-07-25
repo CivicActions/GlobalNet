@@ -1,0 +1,73 @@
+/**
+ * Styles for the page breadcrumbs.
+ */
+
+.page-entityform-edit {
+  .breadcrumb__list {
+    display: none; 
+  }
+}
+
+.breadcrumb__list {
+  margin: 0 0 1em;
+  padding: 0;
+}
+
+.breadcrumb__list-item {
+  background: $bookmark-gray;
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  position: relative;
+  &:before, &:after {
+    content: ' ';
+    display: block;
+  	height: 0;
+    left: 100%;
+    top: 50%;
+  	width: 0; 
+    position: absolute;
+  }
+  &:before {
+  	border-top: 1.45em solid transparent;
+    border-bottom: 1.45em solid transparent;
+    border-left: .9em solid $site-bg-color;
+    margin-left: 0px;
+    margin-top: -1.45em;
+    z-index: 1;
+  }
+  &:after {
+  	border-top: 1.2em solid transparent;
+    border-bottom: 1.2em solid transparent;
+    border-left: .75em solid $bookmark-gray;
+    margin-top: -1.2em;
+    z-index: 2;
+  }
+}
+
+.breadcrumb__list-item--before-last {
+  background: $gray-d1;
+  &:after {
+    border-left-color: $gray-d1;
+  }
+}
+
+.breadcrumb__list-item--last {
+  background: none;
+  &:after, &:before {
+    display: none;
+  }
+}
+
+.breadcrumb__link,
+.breadcrumb__text {
+  color: $medium-gray!important;
+  display: inline-block;
+  padding: 0.5em 1em 0.5em 1.5em;
+}
+
+.breadcrumb__list-item--first.breadcrumb__list-item--last {
+  .breadcrumb__text {
+    padding: 0.5em 0;
+  }
+}

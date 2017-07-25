@@ -1,0 +1,58 @@
+.page-relationships,
+.page-relationship,
+.page-user-relationships {
+  
+  &.page-relationship-request {
+    #edit-rtid {
+      display: none;
+    }
+  }
+  
+  #content {
+    table.tableheader-processed {
+      // background: pink;
+      th, td {
+        vertical-align: top;
+        text-align: left;
+        padding: .5em;
+      }
+      th {
+        line-height: 1;
+      }
+      tr {
+        padding: 0;
+      }
+    }
+  }
+  
+  .user-picture img {
+    width: 100px;
+    height: auto;
+  }
+
+  .form-item-rtid {
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    label {
+      padding-bottom: .75em;
+    }
+  }
+  .form-actions {
+    padding-top: .75em;
+    input {
+      @include admin-button($bgcolor: $blue-gray);
+      margin-right: .25em;
+    }
+    a {
+      @include admin-button($bgcolor: red);
+    }
+  }
+  
+  a.user_relationships_popup_link {
+    @include admin-button($bgcolor: $blue-gray);
+    margin-right: .25em;    
+  }
+
+}

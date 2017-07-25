@@ -1,0 +1,586 @@
+<?php
+/**
+ * @file
+ * Module to allow PKI protected login and user registration.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * We want to add a "PKI Authentication Settings" menu option
+ *                   that links to admin/settings/pki_authentication
+ */
+function pki_authentication_menu() {
+  $items = array();
+  // Add a settings menu for pki_authentication
+  $items['admin/config/people/pki_authentication'] = array(
+    'title' => 'PKI Authentication Settings',
+    'description' => 'Configuration settings for using PKI.',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('pki_authentication_admin_settings'),
+    'access arguments' => array('administer pki'),
+    'file' => 'settings.inc',
+  );
+
+  $items['user/pki_login/%'] = array(
+    'title' => 'Process Login with PKI',
+    'description' => 'Log in with PKI.',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'page callback' => 'pki_authentication_login',
+    'page arguments' => array(2),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function pki_authentication_permission() {
+  $perms = array(
+    'administer pki' => array(
+      'title' => t('Administer PKI'),
+      'description' => t('Perform administration tasks for PKI Authentication.'),
+      'restrict access' => TRUE,
+    ),
+  );
+  if (variable_get('pki_authentication_enable_regular_login_permission', 0)) {
+    $perms['regular login'] = array(
+      'title' => t('Regular login'),
+      'description' => t('Enable regular login by roles'),
+      'restrict access' => TRUE,
+    );
+  }
+  return $perms;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function pki_authentication_block_info() {
+  $blocks['user_block']['info'] = t('PKI Authentication login block - displays username or LOGIN link.');
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function pki_authentication_block_view($delta='') {
+  switch ($delta) {
+    case 'user_block':
+      $blocks['subject'] = t('');
+      $blocks['content'] = pki_authentication_user_block();
+      break;
+
+    default:
+      $blocks['subject'] = t('Error');
+      $blocks['content'] = t('Software error: undefined block in pki_authentication module hook_block_view.');
+  }
+  return $blocks;
+}
+
+/**
+ * Displays user information with login / logout links.
+ */
+function pki_authentication_user_block() {
+  global $user;
+  $temp_name = '';
+  if (isset($user->name)) {
+    $temp_name = check_plain($user->name);
+  }
+  if ($user->uid > 0) {
+    return "<div id='userBlock'><span class='username'>{$temp_name}</span> &nbsp; <span class='logout'>" . l(t('LOGOUT'), 'user/logout', array('attributes' => array('class' => 'logout'))) . "</span></div>";
+  }
+  return "<div id='userBlock'><span class='login'>" . l(t('LOGIN'), 'user/login') . "</span></div>";
+}
+
+/**
+ * Implments hook_cron().
+ */
+function pki_authentication_cron() {
+  db_delete('pki_authentication_temp')
+    ->condition('ttl', REQUEST_TIME, '<')
+    ->execute();
+}
+
+/**
+ * Implements hook_login().
+ */
+function pki_authentication_login($token = '') {
+  global $user;
+
+  db_delete('pki_authentication_temp')
+    ->condition('ttl', REQUEST_TIME, '<')
+    ->execute();
+
+  // If token is empty this was probably not called from a proper redirect.
+  if ($token == '') {
+    watchdog('pki_authentication', 'pki_auth_login empty nonce.', WATCHDOG_NOTICE);
+    drupal_goto('');
+  }
+  $result = db_select('pki_authentication_temp', 'c')
+    ->condition('c.nonce', $token, '=')
+    ->condition('c.ttl', REQUEST_TIME, '>')
+    ->fields('c', array('ttl', 'data'))
+    ->execute();
+  $row = $result->fetch();
+  $payload = $row->data;
+
+  // Invalid or expired nonce passed. Redirect to home page.
+  if (empty($payload)) {
+    watchdog('pki_authentication', 'pki_auth_login invalid nonce', WATCHDOG_NOTICE);
+    drupal_goto('');
+  }
+
+  // The nonce was valid and $payload contains extracted cert data.
+  // Delete it so it's only used once.
+  db_delete('pki_authentication_temp')
+    ->condition('nonce', $token, '=')
+    ->execute();
+
+  // Is our login user a valid user in our system?
+  $data = @unserialize($payload);
+  if (isset($data['pki_string'])) {
+    $user_row = pki_authentication_find_pki_string($data['pki_string']);
+    if (!empty($user_row->name)) {
+      if ($user_row->status == 1) {
+        $user = user_load($user_row->uid, TRUE);
+        $form_state['uid'] = $user->uid;
+        $form_state['values']['name'] = $user->name;
+        user_login_submit(array(), $form_state);
+        watchdog('pki_authentication', 'User login: @name', array('@name' => $user->name), WATCHDOG_NOTICE);
+      }
+      else {
+        drupal_set_message(t("Your account is still pending approval."), 'error');
+      }
+    }
+    else {
+      $login = l('log in', 'user');
+      drupal_set_message(t('We could not locate the information from your CAC card. If have a US DoD Common Access Card (CAC) and would like to set up CAC login on your account, please, !login and edit your profile to extract your information.', array('!login' => $login)), 'error');
+    }
+  }
+  else {
+    drupal_set_message(t("System or configuration error. Please try again later."));
+  }
+  $_SESSION['used_cac'] = TRUE;
+  $destination = (filter_input(INPUT_GET, 'destination')) ? filter_input(INPUT_GET, 'destination') :
+    '';
+  drupal_goto($destination);
+  drupal_goto('');
+}
+/**
+ * Extract the user info generated from the temporary table.
+ *
+ * Envoking our hook can be expensive, so invoke it once and save the data back
+ * in the temporary table for use later.
+ */
+function pki_authentication_extract_user_data($payload) {
+  $data = unserialize($payload);
+  if (isset($data['user_data']) == FALSE or is_array($data['user_data']) == FALSE) {
+    $user_data = module_invoke_all("pki_authentication_validate", $data['pki_string']);
+    $new_data = $data;
+    $new_data['user_data'] = $user_data;
+    db_update('pki_authentication_temp')
+      ->fields(array('data' => serialize($new_data)))
+      ->condition('data', $payload, '=')
+      ->execute();
+    $data = $new_data;
+  }
+  return $data['user_data'];
+}
+/**
+ * Implements hook_form_alter().
+ *
+ * Allow for the capture and validation of PKI string for users.
+ */
+function pki_authentication_form_alter(&$form, &$form_state, $form_id) {
+  global $base_url, $base_path, $user;
+  // Process form_id user_login_block @TODO move it a seperate function.
+  if ($form_id == 'user_login_block') {
+    $items = array();
+    if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
+      $items[] = l(t('Request an account'), 'user/register', array('attributes' => array('title' => t('Request a new user account.'))));
+    }
+
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE) {
+      $form['name']['#type'] = 'hidden';
+      $form['pass']['#type'] = 'hidden';
+      $form['pass']['#required'] = FALSE;
+      $form['name']['#required'] = FALSE;
+      unset($form['actions']);
+    }
+
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE or variable_get('pki_authentication_enable_pki_login', 1)) {
+      if (variable_get('pki_authentication_enable_regular_login', 1)) {
+        $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
+      }
+      // We are doing pki authentication too, add the link to the links markup.
+      $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id, array('external' => TRUE));
+      $items[] = l(t('Login with PKI'), $url, array('attributes' => array('title' => t('Login using your PKI card.'))));
+      $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
+    }
+  }
+
+  // Process form_id user_profile_form @TODO move it a seperate function.
+  if ($form_id == 'user_profile_form') {
+    // Have we been sent PKI data?
+    $user_data = array();
+    if (isset($_GET['T'])) {
+      $dbtag = $_GET['T'];
+      $form['account']['nonce'] = array(
+        '#type' => 'hidden',
+        '#value' => $dbtag,
+      );
+      $result = db_select('pki_authentication_temp', 'c')
+        ->condition('c.nonce', $dbtag, '=')
+        ->fields('c', array('ttl', 'data'))
+        ->execute();
+      $row = $result->fetch();
+      $data = ($row)? $row->data : '';
+      if ($data <> '') {
+        $user_data = pki_authentication_extract_user_data($data);
+      }
+    }
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE) {
+      $form['account']['name']['#disabled'] = TRUE;
+      $form['account']['mail']['#disabled'] = TRUE;
+      $form['account']['current_pass']['#type'] = 'hidden';
+      $form['account']['pass']['#type'] = 'hidden';
+    }
+    // Allways disable this form element. Should never be edited by hand.
+    $form['pki_authentication_pki_string']['#disabled'] = TRUE;
+    // Create PKI form data if enabled or if regular logins are disabled.
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE or variable_get('pki_authentication_enable_pki_login', 1)) {
+      $user = user_load($user->uid, TRUE);
+      // Translatable user fields caused the PKI field to not be saved.
+      // $lang = (empty($account->language)) ? 'und' : $account->language;
+      $lang = LANGUAGE_NONE;
+      if ($form['#user']->uid == $user->uid and empty($user->pki_authentication_pki_string[$lang][0]['value'])) {
+        // $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
+        global $base_url;
+        $cac_base_root = variable_get('pki_authentication_base_root', $base_url);
+        $url = variable_get('gn2_cac_url', $cac_base_root) . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
+        if (isset($user_data['init'])) {
+          $save_link = l('Click here to save', 'javascript:',
+              array(
+                'external' => TRUE,
+                'attributes' => array(
+                  'class' => 'pki_save',
+                ),
+              ));
+          $markup = t('Your PKI information has been extracted (%userdata) but has not yet been saved! -- !save the information to your user profile.',
+              array(
+                '%userdata' => check_plain($user_data['init']),
+                '!save' => $save_link,
+              ));
+          drupal_set_message($markup, 'status');
+          $form['pki_extract_markup'] = array(
+            '#markup' => $markup,
+            '#prefix' => '<hr />',
+            '#suffix' => '<hr />',
+            '#weight' => -999,
+          );
+
+          $form['user_data'] = array(
+            '#type' => 'hidden',
+            '#value' => serialize($user_data),
+          );
+        }
+        else {
+          $markup = t("Your PKI information has not been extracted from your card. Insert the card and click the link below. <br />");
+          $markup .= l(t('Extract data from your PKI card.'), $url, array('attributes' => array('title' => t('Will allow you to login directly with PKI.'))));
+          $markup .= t("<br />This will enable you to log in directly with your PKI card.");
+          $form['pki_extract_markup'] = array(
+            '#markup' => $markup,
+            '#prefix' => '<hr />',
+            '#suffix' => '<hr />',
+            '#weight' => -999,
+          );
+          $form['pki_authentication_pki_string']['#disabled'] = TRUE;
+        }
+      }
+      else {
+        $form['pki_authentication_pki_string']['#disabled'] = TRUE;
+      }
+    }
+
+    $form['#submit'][] = 'pki_authentication_user_edit_submit';
+
+    $final_validator = array_pop($form['#validate']);
+    $form['#validate'][] = 'pki_authentication_edit_validate';
+    $form['#validate'][] = $final_validator;
+  }
+
+  // Process form_id user_register_form @TODO move it a seperate function.
+  if ($form_id == 'user_register_form') {
+    // Have we been sent PKI data?
+    $user_data = array();
+    if (isset($_GET['T'])) {
+      $dbtag = $_GET['T'];
+      $form['account']['nonce'] = array(
+        '#type' => 'hidden',
+        '#value' => $dbtag,
+      );
+      $result = db_select('pki_authentication_temp', 'c')
+        ->condition('c.nonce', $dbtag, '=')
+        ->fields('c', array('ttl', 'data'))
+        ->execute();
+      $row = $result->fetch();
+      $data = ($row)? $row->data : '';
+      if ($data <> '') {
+        $user_data = pki_authentication_extract_user_data($data);
+      }
+    }
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE) {
+      $default_mail = (empty($user_data['email']))? '' : check_plain($user_data['email']);
+      $default_name = (empty($user_data['name']))? '' : check_plain($user_data['name']);
+      $disable_submit = (empty($default_mail) or empty($default_name))? TRUE : FALSE;
+      $form['account']['mail']['#disabled'] = TRUE;
+      $form['account']['mail']['#default_value'] = $default_mail;
+      $form['account']['mail']['#description'] = t('Email address is pulled from Smart Card.');
+      $form['account']['name']['#disabled'] = TRUE;
+      $form['account']['mail']['#disabled'] = TRUE;
+      $form['account']['name']['#default_value'] = $default_name;
+      $form['account']['name']['#description'] = t('Username is pulled from Smart Card. Please click on the link above to populate this field');
+      $form['actions']['submit']['#disabled'] = $disable_submit;
+      $form['#submit'][] = 'pki_authentication_user_register_submit';
+      $final_validator = array_pop($form['#validate']);
+      $form['#validate'][] = 'pki_authentication_register_validate';
+      $form['#validate'][] = $final_validator;
+      unset($form['account']['pass']);
+    }
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE or variable_get('pki_authentication_enable_pki_login', 1)) {
+      if (variable_get('pki_authentication_enable_pki_login', 1)) {
+        $form['#submit'][] = 'pki_authentication_user_register_submit';
+        $final_validator = array_pop($form['#validate']);
+        $form['#validate'][] = 'pki_authentication_register_validate';
+        $form['#validate'][] = $final_validator;
+      }
+      if (isset($user_data['init'])) {
+        $markup = t("Your PKI information has been extracted (") . check_plain($user_data['init']) . t(") -- You must save this form below.");
+        $form['pki_extract_markup'] = array(
+          '#markup' => $markup,
+          '#prefix' => '<hr />',
+          '#suffix' => '<hr />',
+          '#weight' => -999,
+        );
+
+        if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE and !empty($user_data['email'])) {
+          $form['account']['mail']['#default_value'] = check_plain($user_data['email']);
+        }
+        if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE and !empty($user_data['name'])) {
+          $form['account']['name']['#default_value'] = check_plain($user_data['name']);
+        }
+        $form['user_data'] = array(
+          '#type' => 'hidden',
+          '#value' => serialize($user_data),
+        );
+      }
+      else {
+        $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id, array('external' => TRUE));
+
+        $markup = t("To use PKI login with your account, insert the card and click the link below. <br />");
+        $markup .= l(t('Extract data from your PKI card.'), $url, array('attributes' => array('title' => t('Will allow you to login directly with PKI.'))));
+
+        $form['pki_extract_markup'] = array(
+          '#markup' => $markup,
+          '#prefix' => '<hr />',
+          '#suffix' => '<hr />',
+          '#weight' => -999,
+        );
+      }
+    }
+  }
+  // Process form_id user_pass @TODO move it a seperate function.
+  if ($form_id == 'user_pass') {
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE) {
+      $form['actions']['submit']['#disabled'] = TRUE;
+      $form['name']['#type'] = 'hidden';
+      $form['markup'] = array(
+        '#markup' => t("<br /><b>Logging into this site requires PKI authentication. Passwords are not required.</b>"),
+      );
+    }
+  }
+  // Process form_id user_login @TODO move it a seperate function.
+  if ($form_id == 'user_login') {
+    $items = array();
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE) {
+      $form['name']['#type'] = 'hidden';
+      $form['pass']['#type'] = 'hidden';
+      $form['pass']['#required'] = FALSE;
+      $form['name']['#required'] = FALSE;
+      unset($form['actions']);
+    }
+    if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE or variable_get('pki_authentication_enable_pki_login', 1)) {
+      // We are doing pki authentication too, add the link to the links markup.
+      $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id, array('external' => TRUE));
+      $items[] = l(t('Login with PKI'), $url, array('attributes' => array('title' => t('Login using your PKI card.'))));
+      $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Add 'pki_authentication_user_regular_login_permission_validate' before the
+ * final validation to allow login depending on regular_login permission if
+ * configured.
+ */
+function pki_authentication_form_user_login_alter(&$form, $form_state) {
+  if (variable_get('pki_authentication_enable_regular_login_permission', 0)) {
+    $final_validator = array_pop($form['#validate']);
+    $form['#validate'][] = 'pki_authentication_user_regular_login_permission_validate';
+    $form['#validate'][] = $final_validator;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function pki_authentication_form_user_login_block_alter(&$form, $form_state) {
+  return pki_authentication_form_user_login_alter($form, $form_state);
+}
+
+/**
+ * Validate the regular login is allowed to login.
+ */
+function pki_authentication_user_regular_login_permission_validate($form, &$form_state) {
+  $account = user_load_by_name($form_state['values']['name']);
+  if (!user_access('regular_login', $account)) {
+    form_set_error('name', t('User %name is not allowed to use regular login.', array('%name' => $form_state['values']['name'])));
+  }
+}
+
+/**
+ * Process and save our fields in the user_profile form.
+ */
+function pki_authentication_user_edit_submit($form, &$form_state) {
+  global $user;
+  $account = user_load($form_state['user']->uid, TRUE);
+  $lang = LANGUAGE_NONE;
+  if (isset($account->pki_authentication_pki_string[$lang][0]['value'])) {
+    return;
+  }
+  if (isset($form_state['user']->uid) and $form_state['user']->uid == $account->uid) {
+    if (isset($account->pki_authentication_pki_string[$lang][0]['value'])) {
+      return;
+    }
+    $user_data = (empty($form_state['values']['user_data']))? array() : @unserialize($form_state['values']['user_data']);
+    if (!empty($user_data['init'])) {
+      $account->pki_authentication_pki_string[$lang][0]['value'] = (empty($user_data['init']))? '' : check_plain($user_data['init']);
+      $account = user_save($account);
+    }
+  }
+}
+
+/**
+ * Validate our fields in the user_profile form.
+ */
+function pki_authentication_edit_validate($form, &$form_state) {
+  global $user;
+
+  $account = user_load($form_state['user']->uid, TRUE);
+  // Translatable user fields caused the PKI field to not be saved.
+  // $lang = (empty($account->language)) ? 'und' : $account->language;
+  $lang = LANGUAGE_NONE;
+  if (isset($account->pki_authentication_pki_string[$lang][0]['value'])) {
+    return;
+  }
+  if (isset($form_state['user']->uid) and $form_state['user']->uid == $account->uid) {
+    $user_data = (isset($form_state['values']['user_data']))? unserialize($form_state['values']['user_data']) : array();
+    if (!empty($user_data['init'])) {
+      $user_row = pki_authentication_find_pki_string($user_data['init']);
+      if (!empty($user_row->uid)) {
+        $account = user_load($user_row->uid);
+        form_set_error('', t('PKI string is already being used by user @name.', array('@name' => format_username($account))));
+      }
+    }
+  }
+}
+
+/**
+ * Returns the user db record with field_pki_authentication_pki_string field.
+ */
+function pki_authentication_find_pki_string($edipi) {
+  $query = db_select('users', 'u');
+  $query->leftjoin('field_data_pki_authentication_pki_string', 'p', 'p.entity_id = u.uid');
+  $result = $query->condition('p.pki_authentication_pki_string_value', $edipi, '=')
+    ->fields('u', array(
+        'uid',
+        'name',
+        'mail',
+        'access',
+        'login',
+        'status',
+        'init',
+        'data'))
+    ->execute();
+  return $result->fetch();
+}
+
+/**
+ * Our user registration form validate function - from hook_form_alter above.
+ */
+function pki_authentication_register_validate($form, &$form_state) {
+  if (!empty($form_state['values']['nonce'])) {
+    $nonce = $form_state['values']['nonce'];
+    db_delete('pki_authentication_temp')
+      ->condition('ttl', REQUEST_TIME, '<')
+      ->execute();
+    $result = db_select('pki_authentication_temp', 'c')
+      ->condition('c.nonce', $nonce, '=')
+      ->condition('c.ttl', REQUEST_TIME, '>')
+      ->fields('c', array('ttl', 'data'))
+      ->execute();
+    $row = $result->fetch();
+    $data = ($row)? $row->data : '';
+    if ($data == '') {
+      form_set_error('name', t('Sorry, the PKI information has expired.'));
+      $form_state['values']['name'] = '';
+      unset($form_state['values']['nonce']);
+    }
+    $user_data = pki_authentication_extract_user_data($data);
+    if (!empty($user_data['init'])) {
+      $user_row = pki_authentication_find_pki_string($user_data['init']);
+      if (!empty($user_row->uid)) {
+        $account = user_load($user_row->uid);
+        form_set_error('', t('PKI string is already being used by user @name.', array('@name' => format_username($account))));
+      }
+    }
+  }
+}
+
+/**
+ * Our user registration form submit function - from hook_form_alter above.
+ */
+function pki_authentication_user_register_submit($form, &$form_state) {
+  if (!empty($form_state['values']['nonce'])) {
+    $nonce = $form_state['values']['nonce'];
+    $result = db_select('pki_authentication_temp', 'c')
+      ->condition('c.nonce', $nonce, '=')
+      ->fields('c', array('ttl', 'data'))
+      ->execute();
+    $row = $result->fetch();
+    $data = ($row)? $row->data : '';
+    if (!empty($data)) {
+      $user_data = pki_authentication_extract_user_data($data);
+      if (isset($user_data['init'])) {
+        $user_row = pki_authentication_find_pki_string($user_data['init']);
+        if (empty($user_row->uid)) {
+          $account = user_load($form_state['user']->uid, TRUE);
+          // Translatable user fields caused the PKI field to not be saved.
+          // $lang = (empty($account->language)) ? 'und' : $account->language;
+          $lang = LANGUAGE_NONE;
+          $account->pki_authentication_pki_string[$lang][0]['value'] = (empty($user_data['init']))? '' : check_plain($user_data['init']);
+          $account = user_save((object) array('uid' => $account->uid), (array) $account);
+        }
+        else {
+          $account = user_load($user_row->uid, TRUE);
+          form_set_error('', t('PKI string is already being used by user @name. User PKI string not updated updated.', array('@name' => format_username($account))));
+        }
+      }
+    }
+  }
+}

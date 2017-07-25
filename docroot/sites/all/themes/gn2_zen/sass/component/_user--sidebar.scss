@@ -1,0 +1,61 @@
+/**
+ *Theming the User Account and the User profile sidebars
+ */
+
+.bulleted-list{
+  @include bulleted_list_item;
+  //font-size: 1em;
+}
+
+.page-account, 
+.page-user {
+
+ .sidebar {
+    .panel-pane {
+      margin: 0 1em 1.5em;
+    }
+  }
+
+  a.button {
+    @include general-content-button;
+    -webkit-appearance: inherit;
+  }
+
+  .user-picture {
+    margin-bottom: 1em;
+    img{border: 4px solid $light-blue-gray;}
+  }
+
+  ul.paging {
+    padding: 0;
+  }
+
+  h3.pane-title {
+    border-bottom: 3px solid $light-blue-gray;
+    padding-bottom: .1em;
+    margin: 0 0 .5em 0;
+  }
+
+  span.activity-date {
+    color: $light-blue-gray;
+    display: block;
+    font-size: 10px;
+  }
+
+  /*==== Profile Page Social Links========*/
+  .icon-mobile,
+  .icon-linkedin, 
+  .icon-twitter, 
+  .icon-facebook, 
+  .icon-email,
+  // placeholder class for the website icon
+  .icon-website{
+    font-size: 1em;
+    padding: 0.1em 2em 0.5em;
+  }
+  .icon-mobile{
+    height: 25px;
+  }
+  .icon-website a{margin-bottom: 10px;}
+
+} //end .page-account

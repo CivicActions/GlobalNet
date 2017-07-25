@@ -1,0 +1,23 @@
+/**
+ *Theming the Group Admin contact block displayed in Group Landing pages
+ */
+.block__contact--group-admin{
+  .view-content{
+    margin-top:0.3em;
+    line-height: 1.5em;
+    img{width:100%;}
+  }
+  .inner{
+    padding: 5px;
+    ul,h4{margin-bottom: 0;}
+    h4{
+      font-size: 1.2em;
+      font-weight: normal;
+    }
+  }
+  .views-field-mail a{
+    @include gn-icon(28px, url(../images/gn-icons/private_message.png));
+    font-size: 1em;
+    padding-top: 2px;
+  }
+}

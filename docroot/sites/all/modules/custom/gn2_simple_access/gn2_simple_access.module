@@ -1,0 +1,353 @@
+<?php
+/**
+ * @file
+ * Simplify the selection of a nodes visibility for GlobalNet content creators.
+ */
+
+// ini_set('display_errors', 'On');
+module_load_include('inc', 'gn2_simple_access', 'includes/gn2_simple_access');
+
+/**
+ * Return the array of permissions.
+ */
+function gn2_simple_access_permissions_array() {
+  $visibility = array('public', 'group', 'organization', 'sitewide');
+  $permissions = array();
+  foreach ($visibility as $v) {
+    $permission_string = 'gn2_simple_access_' . $v;
+    $label = ucfirst($v);
+    $title = $label;
+    $description = 'Can make group content ' . $v . '.';
+    $permissions[$permission_string] = array(
+      'title' => $title,
+      'description' => $description,
+    );
+  }
+  return $permissions;
+}
+
+/**
+ * Implements hook_permissions().
+ */
+function gn2_simple_access_permission() {
+  $perms = gn2_simple_access_permissions_array();
+
+  // Bypass the restriction of changing parent groups on edit.
+  $perms['gn2_simple_access_bypass_group_edit_restriction'] = array(
+    'title' => "Bypass group edit restrictions",
+    'description' => "Bypass group edit restrictions",
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_og_permissions().
+ */
+function gn2_simple_access_og_permission() {
+  return gn2_simple_access_permissions_array();
+}
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function gn2_simple_access_field_widget_form_alter(&$element, &$form_state, $context) {
+  /*
+   * Adding additional check to not alter ajax form widgets.
+   * Not doing so results in simple access being run twice, and
+   * validation errors. Use case for ajax widgets is NA = By the
+   * time a user has access to node form, they should be
+   * allowed to do form ajax ops, which are comprised
+   * of media selections, and additional form options field widgets.
+   */
+  if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+    if (isset($element['#field_name']) && $element['#field_name'] == "field_gn2_simple_access") {
+      $visibility = array(
+        'public',
+        'group',
+        'organization',
+        'sitewide',
+      );
+
+      $gid = gn2_simple_access_get_gid_from_form_state($form_state);
+      // Check to see if the user is an Org Manager.
+      $org_manager = FALSE;
+      if ($gid) {
+        $group = node_load($gid);
+        $extractor = new GN2PathToOrganization($group);
+        $parent = $extractor->getOrganization();
+        $org_id = ($parent->nid) ? $org_id = $parent->nid : NULL;
+        $org_role = og_get_user_roles('node', $org_id);
+        $org_manager = (in_array('org_manager', $org_role)) ? TRUE : FALSE;
+      }
+
+      $node_permissions = NULL;
+      // Get the default permissions for the current node.
+      if (isset($form_state['node']->nid) && og_is_group('node', $form_state['node'])) {
+        $nid = $form_state['node']->nid;
+        $roles = og_get_user_roles('node', $nid);
+        $node_permissions = og_role_permissions($roles);
+      }
+
+      // Get the default permissions for the parent node.
+      if ($gid) {
+        $parent_roles = og_get_user_roles('node', $gid);
+        $parent_permissions = og_role_permissions($parent_roles);
+      }
+
+      foreach ($visibility as $v) {
+        $permission_string = "gn2_simple_access_{$v}";
+        $user_access = user_access($permission_string);
+        $og_user_access = FALSE;
+        // Check the permissions for the current node.
+        if ($node_permissions) {
+          foreach ($node_permissions as $key => $value) {
+            $og_user_access = (isset($value[$permission_string])) ? TRUE : $og_user_access;
+          }
+        }
+
+        // Check the permissions for the parent node.
+        if (isset($parent_permissions) && !$og_user_access) {
+          foreach ($parent_permissions as $key => $value) {
+            $og_user_access = (isset($value[$permission_string])) ? TRUE : $og_user_access;
+          }
+        }
+
+        if (!$user_access && !$og_user_access && !$org_manager) {
+          unset($element['#options'][$v]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_simple_access_form_alter(&$form, &$form_state, $form_id) {
+  // We are only interested in node forms for content types managed by simple
+  // access.
+  if (isset($form['#node_edit_form']) && $form['#node_edit_form'] && isset($form['field_gn2_simple_access'])) {
+
+    // Always hide group_content_access as we always set it to PRIVATE.
+    $form['group_content_access']['#type'] = "hidden";
+    $form['group_access']['#type'] = "hidden";
+
+    // If we are in a node create form and group context was provided through
+    // the URL.
+    $current_path = current_path();
+    $path_pieces = explode("/", $current_path);
+
+    $possibly_relevant_node_path = count($path_pieces) == 3 && $path_pieces[0] == "node";
+
+    $on_create_with_gid = $possibly_relevant_node_path &&
+      $path_pieces[1] == "add" && gn2_simple_access_has_gid();
+
+    // Or if we are updating a node, and we don't have permission to
+    // to manipulate the "Group Audience" OG field directly.
+    $on_edit_page_without_access = $possibly_relevant_node_path &&
+      $path_pieces[2] == "edit" && !user_access("gn2_simple_access_bypass_group_edit_restriction");
+
+    // Hide the go_group_ref (Group Audience) field.
+    if ($on_create_with_gid || $on_edit_page_without_access) {
+      $form['og_group_ref']['#access'] = FALSE;
+    }
+
+    $form['#validate'] = array_merge($form['#validate'], array('gn2_simple_access_validate'));
+
+    // We are taking care of setting up the og_group_ref field. No need to let
+    // its validation interfere.
+    $key = array_search('og_form_group_reference_validate', $form['#validate']);
+    unset($form['#validate'][$key]);
+    $key = array_search('og_validate_widgets', $form['#validate']);
+    unset($form['#validate'][$key]);
+  }
+}
+
+/**
+ * Validation callback.
+ */
+function gn2_simple_access_validate($form, &$form_state) {
+  $values = $form_state['values'];
+  if (isset($values['field_gn2_simple_access'])) {
+    // Every piece of content handled by simple access must have a group
+    // associated with it.
+    $gid = gn2_simple_access_get_gid_from_form_state($form_state);
+
+    if (!isset($gid)) {
+      form_set_error('og_group_ref', "This content does not seem to be associated with any group.");
+    }
+
+    // Since certain users can access og_group_ref directly, we need to
+    // make sure the state of our content does not go beserk.
+    // 1) og_group_ref should have a max of 2 values.
+    $number_of_groups = 0;
+
+    if (isset($values['og_group_ref']) &&
+      isset($values['og_group_ref'][LANGUAGE_NONE])) {
+      $number_of_groups = count($values['og_group_ref'][LANGUAGE_NONE]);
+    }
+
+    // Too many groups.
+    if ($number_of_groups > 2) {
+      form_set_error("og_group_ref", "No more than 2 parent groups should be referenced - contact support for further assistance.");
+    }
+
+    // 2) If it has 2 values.
+    // 2.a) The values should be a group and it upmost organization.
+    if ($number_of_groups == 2 && !gn2_simple_access_correct_group_and_org($values['og_group_ref'][LANGUAGE_NONE])) {
+      form_set_error("og_group_ref", "The 2 parent groups must be any group (event, group, course, etc) and its topmost organization");
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function gn2_simple_access_entity_presave($entity, $type) {
+  // In some cases og_group_ref is malformed. Fix it.
+  gn2_simple_access_fixing_og_group_ref($entity);
+
+  if ($type == 'node' && isset($entity->field_gn2_simple_access)) {
+    // No matter what visibility level was chose we want to make sure things
+    // are private to the group, not public.
+    $entity->group_content_access[LANGUAGE_NONE][0]['value'] = OG_CONTENT_ACCESS_PRIVATE;
+    // Group access settings are as follow: 0:default, 1:Private, 2:Public.
+    $entity->group_access[LANGUAGE_NONE][0]['value'] = 1;
+
+    $visibility = gn2_simple_access_get_visibility($entity);
+
+    $two_groups = isset($entity->og_group_ref) && isset($entity->og_group_ref[LANGUAGE_NONE]) &&
+      count($entity->og_group_ref[LANGUAGE_NONE]) == 2;
+
+    // If we had 2 groups set previously, we should respect that unless
+    // visibility has been changed to goup.
+    if (isset($visibility) && $visibility != "group" && $two_groups) {
+      gn2_simple_access_set_og_perms_for_organization($entity);
+    }
+    // Otherwise we have either 1 group, or no groups, so we should set
+    // og_group_ref correctly, no matter what the visibility is.
+    else {
+      gn2_simple_access_set_og_perms_for_group($entity);
+    }
+
+    if (isset($visibility) && $visibility == "organization") {
+      gn2_simple_access_set_og_perms_for_organization($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function gn2_simple_access_node_access($node, $op, $account) {
+
+  if ($op == "create") {
+    // If the current path is not a creation path, it must be a link so
+    // let the appropriate permissions systems do their thing.
+    $entity_type = arg(0);
+    $entity_action = arg(1);
+    $content_type = arg(2);
+    if ($entity_type == 'node' && $entity_action == 'add' && !empty($content_type) && !empty($_GET['gid'])) {
+      // We cannot know for sure we have the content type in the $node var,
+      // so grab content type from path.
+      $gid = check_plain($_GET['gid']);
+      $content_type = str_replace('-', '_', $content_type);
+      $content_permission = "create " . $content_type . " content";
+      return og_user_access($entity_type, $gid, $content_permission);
+    }
+    else {
+      return NODE_ACCESS_IGNORE;
+    }
+
+  }
+  elseif ($op == "view") {
+    // We only deal with nodes that have an instance of the simple access
+    // field.
+    if (isset($node->field_gn2_simple_access)) {
+      $visibility = gn2_simple_access_get_visibility($node);
+
+      if ($visibility == "public") {
+        // Everyone gets access.
+        return NODE_ACCESS_ALLOW;
+      }
+      elseif ($visibility == "sitewide") {
+        return gn2_simple_access_sitewide_check($node, $account);
+      }
+      elseif ($visibility == "group" || $visibility == "organization") {
+        // If it is group or organization, we defer to og.
+        return NODE_ACCESS_IGNORE;
+      }
+      // If we are in a weird state, lets be safe and deny.
+      else {
+        return NODE_ACCESS_DENY;
+      }
+    }
+    // About pages are completly public to all users.
+    elseif ($node->type == 'about_page') {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+/**
+ * Implements hook_node_grants().
+ */
+function gn2_simple_access_node_grants($account, $op) {
+  if ($op != 'view') {
+    return;
+  }
+
+  $grants = array();
+
+  if ($account->uid != 0) {
+    $grants["GN2SIMPLEACCESSSITEWIDE"][] = 0;
+  }
+  $grants["GN2SIMPLEACCESSPUBLIC"][] = 0;
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function gn2_simple_access_node_access_records($node) {
+  if (empty($node->status)) {
+    return array();
+  }
+
+  $grants = array();
+
+  $items = field_get_items("node", $node, "field_gn2_simple_access");
+
+  if (is_string($items)) {
+    return $grants;
+  }
+
+  if (!empty($items) && is_array($items)) {
+    foreach ($items as $item) {
+      if ($item['value'] == "sitewide") {
+        $grants[] = array(
+          'realm' => "GN2SIMPLEACCESSSITEWIDE",
+          'gid' => 0,
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => 1,
+        );
+      }
+      elseif ($item['value'] == "public") {
+        $grants[] = array(
+          'realm' => "GN2SIMPLEACCESSPUBLIC",
+          'gid' => 0,
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => 1,
+        );
+      }
+    }
+  }
+
+  return $grants;
+}

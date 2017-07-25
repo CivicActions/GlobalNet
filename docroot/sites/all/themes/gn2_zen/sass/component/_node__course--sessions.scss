@@ -1,0 +1,600 @@
+/*
+ * Styling Course sessions
+ */
+ 
+.not-group-admin h2 {
+  display: none;
+}
+
+.entityform-session .content {
+  .week-title {
+    display: none;
+  }
+}
+
+
+#gn2-sessions-fc-add-form {
+  a.button {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
+
+  a.browse {
+    @include large-callout-button;
+    display: inline-block;
+    margin-bottom: 0;
+    border: none;
+  }
+}
+
+.entitytype-session-form {
+  .form-item-field-event-date-und-0-show-todate,
+  .form-item-field-event-date-und-0-show-repeat-settings {
+    display: none;
+  }
+}
+
+.sessions-bold {
+  font-weight: bold;
+}
+
+.pane-session-entityform-results {
+
+  //General Styles
+  .panel-pane {
+    h2 {
+      margin: 0 0 .5em 0;
+      @include display_font;
+    }
+
+    // Syllabus and Schedule Fields
+    &.pane-node-field-course-schedule,
+    &.pane-node-field-course-syllabus {
+      border-bottom: none;
+      display: inline-block;
+      width: 40%;
+      min-width: 222px;
+      vertical-align: top;
+      .field {
+        @include display_font;
+        font-size: 125%;
+      }
+      span.file-size {
+        line-height: 1.5em;
+      }
+      img.file-icon {
+        vertical-align: middle;
+        width: 40px;
+      }
+    }
+  }
+
+  fieldset {
+    border: none;
+  }
+
+  .description {
+    padding: .4em 0 .6em 0;
+  }
+
+  .form-submit {
+    @include button;
+    margin: 0;
+  }
+
+  // Week Session without any child days/unit
+  .session-description {
+    padding: 0.5em 0;
+    width: 93%;
+  }
+  .session-date-week {
+    font-style: italic;
+    display: none;
+  }
+
+  // Week Sessions with children
+  .view-sessions-created {
+  
+    //Highlight the current day
+    .today {
+      &.Day {
+        background: image-url('bg-diagonal-tile-grey.png');
+        a {
+          color: red;
+        }
+      }
+    }
+
+    .field-name-field-title {
+      @include display_font;
+      font-size: 1.5em;
+      line-height: $tighter-line-height;
+      color: $medium-gray;
+      border-bottom: 1px solid white;
+      margin-bottom: .25em;
+      display: block;
+      padding-bottom: .4em;
+      padding-right: 30px;
+      .views-row-first & {
+        border: none;
+        @include body_font;
+        font-size: 1em;
+      }
+    }
+
+  } //End .pane-session-entityform-results
+
+  // Add Sessions Form
+  fieldset.group-add-a-session {
+    display: inline-block;
+    width: 100%;
+    min-width: 0;
+    > div {
+      width: 90%;
+    }
+  }
+
+  .fieldset-wrapper {
+    display: block;
+  }
+
+  #edit-field-node-association,
+  #edit-field-shared-entity-ref {
+    visibility: hidden;
+    height: 0;
+  }
+
+  input,
+  textarea {
+    @include input-field;
+  }
+
+  select {
+    @include select-field-style;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+    appearance: checkbox;
+  }
+
+  input[type="checkbox"] {
+    box-shadow: none;
+  }
+
+  .form-item {
+    margin: 0.4em 0.5em 0 0;
+  }
+
+  .field-type-text {
+    vertical-align: top;
+  }
+
+  .container-inline-date .form-item input {
+    width: 110px;
+  }
+
+  //Date
+  .field-name-field-event-date {
+    margin-top: 1.5em;
+
+    input[type = "checkbox"] {
+      float: left;
+      margin-right: 0.5em;
+      margin-top: 0.3em;
+    }
+
+    .fieldset-legend {
+      padding-bottom: 0!important;
+    }
+
+    .description {
+      @include description-text;
+    }
+
+    label[for="edit-field-event-date-und-0-value2"] {
+      margin-top: 2em !important;
+    }
+
+    .fieldset-wrapper > div {
+      padding-bottom: 0.4em;
+    }
+
+    div.fieldset-description {
+      padding-bottom: 0;
+    }
+  }
+
+  // Table styles
+  table.tabledrag-processed {
+    width: 100%;
+    margin: 0.4em 0; //was 1em 0;
+
+    tbody {
+      border-top: 1px solid $light-gray;
+      border-bottom: 1px solid $light-gray;
+    }
+
+    th {
+      border: none;
+      text-align: left;
+      padding: 0 0 5px 0;
+    }
+
+    td {
+      text-align: left;
+      vertical-align: middle; //top
+      padding: 10px;
+
+      .media-item {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        background: transparent;
+
+        img {
+          display: inline;
+        }
+
+        label.media-filename {
+          line-height: 1em;
+          padding: 5px 3px;
+          margin: 0;
+          display: none;
+        }
+      }
+    }
+
+    tr.odd,
+    tr.even {
+      border-bottom: none;
+    }
+
+    tr.odd {
+      background-color: $white;
+    }
+
+    tr.even {
+      background-image: url("../images/table_row_background_even.png");
+    }
+
+    a.button.edit {
+      @include large-callout-button;
+      display: inline-block;
+      margin-bottom: 0;
+      border: none;
+    }
+  } // table.tabledrag-processed
+
+  //======= Styling table for Session Presenter field=====
+  table.field-multiple-table {
+    display: block;
+    tbody { display: block; }
+    tr.draggable {
+      display: inline-block;
+      width: 98%;
+    }
+    td {
+      display: inline-block;
+      @include breakpoint($small-screen-and-up){
+        width:80%;
+      }
+      &.field-multiple-drag {
+        width: auto;
+        @include breakpoint($xs-screen-only){
+          display:none;
+        }
+      }
+    }
+  }
+  @include breakpoint($xs-screen-only){
+    a.tabledrag-toggle-weight { display: none; }
+  }
+
+}
+
+.group-add-a-session {
+  a.button {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
+  .fieldset-wrapper {
+    background-color: $very-light-gray; 
+    padding: 1em;
+    border: 1px solid $lighter-blue-gray;
+  }
+}
+
+/*==== Merged from _sessions.scss ===========*/
+.view-sessions-created {
+  fieldset {
+    border: none;
+    padding: 0.2em 0;
+    margin: .75em 0 0 0;
+    //Collapsed fieldsets should have no margin to tighten up lists
+    &.collapsed {
+      background: transparent;
+      .fieldset-legend {
+        margin-bottom: 0;
+      }
+    }
+    .fieldset-legend {
+      color: $blue-gray;
+      font-weight: bold;
+      padding: 0px !important;
+    }
+  }
+}
+
+.entityform-session {
+  & > h2 {
+    background: image-url('gn-icons/icon-edit.png') no-repeat;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 1.2em;
+    .views-row-first & {
+      right: .75em;
+    }
+    .views-row.Week & {
+      right: .75em;
+      position: absolute;
+      margin-top: -22px;
+    }
+    margin: 0;
+    a {
+      position: relative;
+      display: block;
+      text-indent: -99999px;
+    }
+  }
+}
+
+.pane-sessions-created-panel-pane-1 {
+  .Week {
+    .field-name-field-title.field-type-text.field-label-hidden {
+      display: none;
+    }
+  }
+
+  // overrides for course session collapsible fieldsets
+  .view-sessions-created {
+    fieldset.collapsible {
+      > legend {
+        > span.fieldset-legend {
+          a.fieldset-title {
+            height: auto;
+          }
+        }
+      }
+    }
+  }
+
+  .week-info {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: $blue-gray;
+    line-height: $tighter-line-height;
+    display: block;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    margin-top: -2px;
+  }
+
+  .views-row.Week .content {
+    padding-top: .1em;    
+  }
+
+  .views-row.Week,
+  .views-row.Day {
+    padding: 0 0 1.25em 0;
+  }
+
+  .views-row.Day { 
+    .field-name-field-title {
+      padding-bottom: .1em;
+      font-size: 1.4em;
+      border: none;
+      padding-right: 60px;
+    }
+
+    .content {
+      font-size: .9em;
+    }
+  }
+} // pane-sessions-created-panel-pane-1
+
+//Specific styles for unit sessions panes
+.units-content-pane {
+  border: none;
+  
+  fieldset {
+    margin: 0.1em;
+    legend {
+      display: none;
+    }
+  }
+  
+  .session-header-wrapper {
+    margin-bottom: 0;
+    .session-header-top {
+      border-bottom: 1px solid $light-gray;
+      padding-bottom: .45em;
+      margin-bottom: .75em;
+    }
+    .session-header-bottom {
+      display: table-row;
+      line-height: 1.25em;
+      font-size: 0.9em;
+    }
+  }
+  
+  h4.session-title {
+    @include display_font;
+    font-size: 1.25em;
+    color: $medium-gray;
+    line-height: $tighter-line-height;
+    margin: 0;
+    padding-right: 30px;
+  }
+  
+  .session-header-date {
+    display: table-cell;
+    vertical-align: top;
+    width: 100%;
+    font-weight: normal;
+    font-style: italic;
+    color: $medium-gray;
+  }
+
+  .session-return-to-weekly {
+    float: none;
+    width: auto;
+    display: table-cell;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  
+  .field-name-field-description {
+    padding: 0 0 1.5em 0;
+  }
+  
+  .view-content {
+    border: none;
+    background-color: white;
+    padding: 1em;
+    
+    > .views-row {
+      border: none;
+      margin: 0 0 1em 0;
+      padding: 1em;
+      background: url(../images/bg-diagonal-tile-grey.png);
+      
+      &.views-row-first {
+      	margin: 0;
+      	padding: 0;
+      	background: white;
+      }
+      
+      &.views-row-last {
+      	margin: 0;
+      }
+      
+      &.today {
+      	border: none;
+      	padding-left: 10px;
+      }
+            
+      br {
+        display: none;
+      }
+      
+      .file-download {
+        margin: .75em 0 1.75em 0;
+        padding: 0;
+        .gn2_file_download_link-wrap {
+        	width: 100%;
+        	background: none;
+        	white-space: normal;
+        	padding: 0 0 .25em 0;
+          margin: 0;
+          .gn2_file_download_link {
+          	vertical-align: top;
+          	text-align: right;
+          	padding-top: 4px;
+          }
+        	.form-checkbox {
+            display: inline;
+          }
+        }
+        .form-submit {
+          background: none;
+          color: black;
+          border: none;
+          text-transform: none;
+          -webkit-box-shadow: none;
+          box-shadow: none;
+          font-family: arial;
+          color: $blue-gray;
+          font-size: .9em;
+          fon-weight: normal;
+          margin: .5em 0 0 0;
+          position: relative;
+          padding: 0;
+          line-height: 1;
+          z-index: 9;
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    
+    }
+  }
+      
+} // .units-content-pane
+
+//Applying zengrids to the presenter bio
+@import "zen";
+$zen-gutter-width: 0px;
+$zen-auto-include-item-base: false;
+$zen-column-count: 6 !global; // Set the total number of columns in the grid.
+
+.field-presenter-wrap,
+.field-presenter-column-left,
+.field-presenter-column-right {
+  @include zen-grid-item-base();
+}
+
+.field-presenter-column-left {
+  @include zen-clear(both);
+  .field-presenter-image-wrap {
+  	width: auto;
+  	margin: 0;
+  	padding-right: 1.25em;
+    img {
+      border: 5px solid $bali_hai;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.field-presenter-wrap {
+  @include zen-grid-container();
+}
+
+.field-presenter-column-left {
+  @include zen-grid-item(1, 1);
+}
+
+.field-presenter-column-right {
+  @include zen-grid-item(5, 2);
+  clear: none;
+}
+
+.session-presenter-label {
+  display: none;
+}
+
+.field-presenter-name-country-wrap {
+	width: auto;
+  margin: 0 0 .5em;
+	padding: 0;
+  font-size: 0.9em;
+}
+
+.field-presenter-name-wrap {
+  font-weight: bold;
+}
+
+.field-presenter-country-wrap {
+  font-size: 0.9em;
+}
+
+.field-presenter-bio-wrap {
+  display: block;
+  font-size: 85%;
+}

@@ -1,0 +1,23 @@
+.block-recent-activity {
+  h2.pane-title {
+    margin-top: 0;
+    border-bottom: 1px solid $light-blue-gray;
+    color: $medium-gray;
+    font-size: 1.8em;
+    line-height: .7;
+    padding-bottom: 0.05em;
+    border-bottom: 3px solid $botticelli;
+    margin-bottom: .5em;
+    @include display_font;
+    display: block;
+  }
+  .activity-date {
+    color: $mountain_mist;
+    font-size: 13px;
+    font-style: italic;
+    display: block;
+    .placeholder {
+      color: $mountain_mist;
+    }
+  }
+}

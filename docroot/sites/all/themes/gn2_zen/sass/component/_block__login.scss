@@ -1,0 +1,92 @@
+/**
+ *@file
+ *This partial is for theming the user login block
+ */
+ 
+@mixin login-form-inputs {
+  padding: 3px 4px;
+  margin: 0;
+  line-height: 1;
+  font-size: 15px;
+  font-weight: normal;
+  height: 22px;
+  overflow: hidden;
+}
+ 
+#block-user-login {
+  @include breakpoint($medium-screen-and-up) {
+    width: 360px;
+  }
+  display: inline-block;
+  position: relative;
+  padding-top: .75em;
+}
+
+#user-login-form {
+  
+  text-align: right;
+
+  @include breakpoint($xxs-screen-only) {
+    text-align: left;
+  }
+  
+  input[type="text"], 
+  input[type="password"] {
+    background-color: $very-light-gray;
+    box-shadow: none;
+    border: 0;
+    @include login-form-inputs;
+    width: 115px;
+    @include breakpoint($xxs-screen-only) {
+      width: 180px;
+    }
+    @include breakpoint($medium-screen-and-up) {
+      width: 135px;
+    }
+  }
+
+  label.in-field-labels-processed {
+    color: gray;  
+    @include login-form-inputs;
+  }
+
+  .form-type-textfield, 
+  .form-type-password {
+    display: inline-block;
+    margin-top: 0px;
+    float: left;
+    @include breakpoint($xxs-screen-only) {
+      float: none;
+      margin: 0 0 8px 0 !important;
+      clear: both;
+      display: block;
+    }
+  }
+
+  .form-type-password {
+    margin-left: .5em;
+    margin-right: .5em;
+  }
+
+  .item-list {
+    display:none;
+  }
+
+  .form-submit {
+    @include small-header-button($font-size: 17px);
+    @include login-form-inputs;
+    margin: 0;
+    border: 0;
+    line-height: 19px;
+    background-image: url('/sites/all/themes/gn2_zen/images/whitearrow.png');
+    background-repeat: no-repeat;
+    background-position: right 7px top 5px;
+    padding-right: 22px;
+    padding-left: 8px;
+  }
+
+  .form-actions.form-wrapper{
+    display: inline-block;
+  }
+
+}

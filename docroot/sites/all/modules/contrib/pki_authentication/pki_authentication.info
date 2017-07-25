@@ -1,0 +1,4 @@
+name = PKI Authentication
+description = Authentication using PKI
+package = PKI Authentication
+core = 7.x

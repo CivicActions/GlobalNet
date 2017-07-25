@@ -1,0 +1,115 @@
+
+/*======== Styling the Favorites Tab==========*/
+.user__tab--favorites{
+  .views-field{
+    margin-left:1em;
+  }
+
+  .views-exposed-form{
+    .views-widget-filter-type{
+    float: right;
+    }
+  /*Turning checkboxes into links because BEF module links doesn't work with AJAX. See
+   *issue queue https://www.drupal.org/node/1268150#comment-7632997
+   */
+  .bef-select-as-radios {
+    .form-radio {
+      display: none;
+    }
+    .form-item {
+      display: inline-block;
+      color: $blue-gray;
+      padding: 0 0.5em;
+      border-right: 1px solid $gray-c6;
+      font-size: 0.9em;
+      margin-top: 7px;
+      &:last-child{border-right: none;}
+    }
+    .form-item:hover{
+      color: $dark-blue-gray;
+      cursor: pointer;
+    }
+    .form-item:focus{
+      color: $gray-3;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
+  input[type="radio"]:checked+label{
+    color: $very-dark-gray;
+  }
+  label[for="edit-type"]{
+    @include element-invisible;
+  }
+
+}
+  .view-filters{
+    margin-bottom: 3em;
+  }
+
+  .views-row{
+    background: $white;
+    padding: 1em;
+    border-bottom: 1px solid $light-gray;
+  }
+  .flag-favorite {
+
+   .unflag-action {
+    font-size: 0;
+    background-position: bottom center;
+    display: block;
+  }
+    .flag-message{
+      width: 13em;
+    }
+  }
+
+ // ===== Styling the layout =======
+  $zen-column-count: 12 !global;
+  .gn2-3col {
+    .gn2-3col--col1 {
+      display: none;
+      @include breakpoint($medium-screen-and-up) {
+        @include zen-grid-item(3, 1);
+        display: block;
+      }
+      @include breakpoint($large-screen-and-up) {
+        @include zen-grid-item(2, 1);
+        display: block;
+        .inner {
+          padding-right: 0.6em;
+        }
+      }
+    }
+    .gn2-3col--col2 {
+      .inner {  padding-right: 0;  }
+      @include zen-grid-item(10, 1);
+
+      @include breakpoint($medium-screen-and-up) {
+        @include zen-grid-item(9, 4);
+      }
+
+      @include breakpoint($large-screen-and-up) {
+        clear: none;
+        @include zen-grid-item(8, 3);
+        .inner {
+          padding-right: 1em;
+        }
+      }
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(2, 11);
+
+      @include breakpoint($medium-screen-and-up) {
+        @include zen-grid-item(12, 1);
+        clear: both;
+      }
+
+      @include breakpoint($large-screen-and-up) {
+        clear: none;
+        @include zen-grid-item(2, 11);
+      }
+    }
+  }
+
+}// end user__tab--favorites

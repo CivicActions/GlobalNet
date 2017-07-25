@@ -1,0 +1,19 @@
+diff --git uif/uif.admin.inc uif/uif.admin.inc
+index ef75edf..4ab59f3 100755
+--- uif/uif.admin.inc
++++ uif/uif.admin.inc
+@@ -841,12 +841,9 @@ function uif_get_field_info($header) {
+         );
+       }
+     }
+-    
+-    if (!$supported) {
+-      drupal_set_message(t('Unknown column @field in the import file. Data in this column will be ignored.', array('@field' => $label)), 'warning');
+-    }
++
+   }
+-  
++
+   return $field_info;
+ }
+ 

@@ -1,0 +1,16 @@
+.view-registrants {
+  .field-name-field-user-organization {
+    color: $medium-gray;
+    @include display_font;
+    font-size: 17px;
+  }
+  .panelizer-view-mode.user.user-user-info-block {
+    .panel-pane {
+      margin-bottom: 0.3em;
+      margin-left: 0;
+       img {
+        max-width: 120px;
+      }
+    }
+  }
+}

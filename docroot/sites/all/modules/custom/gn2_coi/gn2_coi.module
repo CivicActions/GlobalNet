@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_coi feature.
+ */
+
+include_once 'gn2_coi.features.inc';

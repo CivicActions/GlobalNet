@@ -1,0 +1,127 @@
+div.panelizer-view-mode.file.file-downloadable-file {
+  .panel-pane {
+    margin: 0;
+    padding: 15px;
+    font-size: 1.1em;
+  }
+  .last .panel-pane {
+    padding-left: 0;
+  }
+  .file-icon {
+    display: none;
+  }
+}
+
+.file-title {
+  .file-size {
+    display: none;
+  }
+  .file {
+    display: block;
+    line-height: 25px;
+  }
+}
+
+.pane-node-media-gallery-description {
+  margin-bottom: 1em !important;
+}
+
+@mixin downloadable-file--column {
+  padding-bottom: .7em;
+}
+
+@mixin downloadable-file--left-column {
+  // background-color: orange;
+  clear: both;
+  @include downloadable-file--column;
+  @include zen-grid-item(16, 1);
+  @include breakpoint($small-screen-and-up) {
+    @include zen-grid-item(11, 1);
+  }
+  @include breakpoint($larger-screen) {
+    @include zen-grid-item(11, 1);
+  }
+}
+
+@mixin downloadable-file--right-column {
+  // background-color: pink;
+  clear: both;
+  @include downloadable-file--column;
+  @include zen-grid-item(16, 1);
+  @include breakpoint($small-screen-and-up) {
+    @include zen-grid-item(5, 12);
+    clear: none;
+    padding-right: 0.3em;
+  }
+  @include breakpoint($larger-screen) {
+    @include zen-grid-item(5, 12);
+  }
+}
+
+div.file-download.pane-gn2-file-download-gallery-media {
+  .form-item {
+    margin: 0;
+  }
+  form {
+    .gn2-2col-v2 {
+      .gn2-2col-v2--col1 {
+        @include downloadable-file--left-column;
+      }
+      .gn2-2col-v2--col2 {
+        @include downloadable-file--right-column;
+      }
+    }
+    div.gn2_file_download_link-wrap {
+      background-color: white;
+      font-size: .9em;
+      &:nth-child(even) {
+        background-repeat: repeat;
+        background-image: image-url("table_row_background_even.png");
+      }
+      padding: 0.7em 0.7em 0;
+      overflow: hidden;
+      div.form-item.form-type-checkbox {
+        @include downloadable-file--left-column;
+        padding-bottom: 0;
+      }
+      div.gn2_file_download_link.file {
+        @include downloadable-file--right-column;
+      }
+    }
+  }
+
+  .form-submit {
+    @include general-content-button;
+    display: block;
+    clear: both;
+  }
+  .gn2_file_download_link.sorter {
+    padding: 0;
+  }
+}
+
+div.gn2_file_download_link.file {
+  white-space: nowrap;
+  @include display_font;
+  color: $medium-gray;
+  font-size: 1.3em;
+  background-position: .6em 0px;
+  a {
+    background-image: url("../images/download_link.png");
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    background-position: 0px 2px;
+    padding-right: 3px;
+    display: inline;
+  }
+  .file-size {
+    font-size: 80%;
+    color: $medium-gray;
+  }
+}
+
+#views-exposed-form-resource-folders-panel-pane-3 {
+  #edit-submit-resource-folders {
+    margin: 0 0 15px 0;
+  }
+}

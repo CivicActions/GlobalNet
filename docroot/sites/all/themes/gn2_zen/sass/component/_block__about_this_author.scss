@@ -1,0 +1,44 @@
+/**
+ * Theming the About This Author block found on post pages.
+ */
+
+$zen-column-count: 20 !global;
+
+.about-this-author--item {
+  .view-footer {
+    font-size: .9em;
+  }
+}
+
+.about-this-author--country {
+  font-size: .85em;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: $medium-gray;
+  padding-bottom: 8px;
+}
+
+.about-this-author--disclaimer {
+  font-size: .9em;
+  font-style: italic;
+}
+
+
+/**
+ * Theming the Other posts by this Author block found on post pages.
+ */
+
+.view-other-posts-by-this-author {
+  .fancy-bullets {
+    li {
+      padding:0;
+      background: none;
+    }
+  }
+  span.readmore {
+    position: relative;
+    float: right;
+    margin-top: -36px;
+    font-size: .9em;
+  }
+}

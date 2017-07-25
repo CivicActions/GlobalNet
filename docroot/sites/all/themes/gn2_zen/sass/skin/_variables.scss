@@ -1,0 +1,32 @@
+/**
+ * Variables for node entry form elements.
+ */
+
+$form-gap-base: 2.6em;
+$fieldset-padding-bottom: $form-gap-base * .667;
+
+$form-item-gap-xlarge: $form-gap-base;
+$form-item-gap-large: $form-gap-base * .75;
+$form-item-gap-medium: $form-gap-base * .5;
+$form-item-gap-small: $form-gap-base * .25;
+$form-item-gap-xsmall: $form-gap-base * .125;
+
+$gap-sizes: (
+  xlarge: $form-item-gap-xlarge,
+  large: $form-item-gap-large,
+  medium: $form-item-gap-medium,
+  small: $form-item-gap-small,
+  xsmall: $form-item-gap-xsmall
+);
+
+$form-item-gap-top: $form-gap-base * .5;
+$form-item-gap-bottom: $form-gap-base * .5;
+
+$form-element-gap-bottom: $form-item-gap-top * .75;
+$radio-checkbox-gap-bottom: $form-element-gap-bottom * .5;
+
+$form-label-gap-bottom: $form-element-gap-bottom * .25;
+
+$form-fieldset-indent: 25px;
+
+$form-element-lineheight: 1.4;

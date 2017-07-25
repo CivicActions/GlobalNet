@@ -1,0 +1,115 @@
+/*
+ * Styling the Messages links Block
+ */
+
+.inbox-menu {
+  ul {
+    list-style: none;
+    text-align: center;
+    li {
+      margin: 0.2em;
+      display: inline-block;
+      @include breakpoint($large-screen-and-up){
+        min-width: 200px;
+        text-align: left;
+      }
+    }
+    .first {
+      margin-bottom: 0.4em;
+      @include breakpoint($medium-screen-and-down){
+        display: block;
+      }
+      @include breakpoint($xs-screen-only){
+        a {
+          width: 94%;
+        }
+      }
+    }
+  }
+  .inbox-new-message {
+    @include admin-button($bgcolor: $blue-gray);
+  }
+}
+  .inbox-menu-item {
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    display: block;
+    line-height: 1.5em;
+    min-width: 120px;
+    padding: 0.3em 0.1em 0.3em 40px;
+    width: auto;
+
+    &.inbox-messages-link {
+      background-image: url(../images/gn-icons/icon-mail.png);
+    }
+    &.inbox-notifications-link {
+      background-image: url(../images/gn-icons/icon-account-inbox-bell.png);
+    }
+    &.inbox-sent-link {
+      background-image: url(../images/gn-icons/icon-account-inbox-check.png);
+    }
+    &.inbox-trash-link {
+      background-image: url(../images/gn-icons/icon-account-inbox-trash.png);
+    }
+  }
+
+
+// Applying gray background to current link
+
+.page-inbox-messages,
+.page-inbox-message,
+.page-messages{
+  .inbox-menu-item.inbox-messages-link{
+    background-image: url(../images/gn-icons/icon-mail.png),
+                      url(../images/bg-diagonal-tile-grey.png);
+    background-repeat: no-repeat, repeat;
+    background-color: transparent, transparent;
+    font-weight: bold;
+  }
+}
+.all-messages{font-weight: bold;}
+
+// Unread Messages link goes bold when unread messages are opened
+.page-inbox-messages-unread{
+  .unread-messages{font-weight: bold;}
+  .all-messages{font-weight: normal;}
+}
+// The same applies to read messages
+.page-inbox-messages-read{
+  .read-messages{font-weight: bold;}
+  .all-messages{font-weight: normal;}
+}
+
+// Apply grey background to notifications link
+.page-inbox-notifications{
+  .inbox-menu-item.inbox-notifications-link{
+    background-image: url(../images/gn-icons/icon-account-inbox-bell.png),
+                      url(../images/bg-diagonal-tile-grey.png);
+    background-repeat: no-repeat, repeat;
+    background-color: transparent, transparent;
+    font-weight: bold;
+  }
+}
+
+// To the sent link
+.page-inbox-sent{
+  .inbox-menu-item.inbox-sent-link{
+    background-image: url(../images/gn-icons/icon-account-inbox-check.png),
+                      url(../images/bg-diagonal-tile-grey.png);
+    background-repeat: no-repeat, repeat;
+    background-color: transparent, transparent;
+    font-weight: bold;
+  }
+}
+
+// To the trash link
+.page-inbox-trash{
+  .inbox-menu-item.inbox-trash-link{
+    background-image: url(../images/gn-icons/icon-account-inbox-trash.png),
+                      url(../images/bg-diagonal-tile-grey.png);
+    background-repeat: no-repeat, repeat;
+    background-color: transparent, transparent;
+    font-weight: bold;
+  }
+}

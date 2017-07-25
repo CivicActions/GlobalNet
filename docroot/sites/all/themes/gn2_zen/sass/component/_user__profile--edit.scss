@@ -1,0 +1,208 @@
+/*
+ * Styles for the user edit page
+ */
+
+/*======= Field Sections and groups ======*/
+.group-username-section {
+  .user-picture {
+  float: left;
+  margin-right: 1.5em;
+  }
+  .description {
+    margin-left: 0.5em;
+  }
+  .field-name-field-name-last {
+    margin-right: 3em;
+    display: inline-block;
+  }
+  .form-type-checkbox label,
+  .form-type-radio label,
+  .form-type-checkbox input,
+  .form-type-radio input {
+    vertical-align: middle;
+  }
+}
+
+.group-interests-tab {
+  #edit-field-countries-of-interest,
+  #edit-field-topics-of-interest {
+    margin: 1em 0;
+  .form-type-checkbox-tree{width: 100%;}
+  .form-type-checkbox{
+    margin-bottom: 5px;
+    @include breakpoint($small-screen-and-up){
+      float: left;
+      margin-right: 3%;
+      width: 45%;
+    }
+    input, label {
+      display: inline-block;
+    }
+    input {
+      margin-left: -2em;
+    }
+  }
+  }
+}
+
+.page-user-edit {
+  
+  .field-name-field-countries-of-interest,
+  .field-name-field-topics-of-interest {
+    label {
+      display: none;
+    }
+  }
+  
+  .text-format-wrapper {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
+  div.horizontal-tabs {
+    margin-bottom: 0;
+  }
+  
+  fieldset#edit-og-user-node-und,
+  fieldset#edit-picture,
+  fieldset#edit-masquerade {
+    @include form--item--gap--bottom-only(medium);
+    .fieldset-legend {
+      @include form--item--label;
+    }
+  }
+  
+  .user-picture {
+    @include form--item--gap--top-only(xsmall);    
+  }
+  
+  fieldset#edit-redirect {
+    display: none;
+  }
+  fieldset#edit-locale {
+    legend {
+      display: none;
+    }
+  }
+  div.horizontal-tabs {
+    border:none;
+  }
+  .group-section {
+    padding: 0;
+    margin: 0;
+  }
+  label[for = "edit-field-employers-und-0-field-employment-dates-und-0-value2"] {
+    display: inline-block;
+    margin: 2em 1.5em 0 2em;
+  }
+  #edit-field-employers {
+    .end-date-wrapper .form-item.form-type-date-popup {
+      > label {
+        display: inline-block;
+        margin: 2em 1.5em 0 2em;
+        vertical-align: top;
+      }
+      .date-padding {
+        float: none;
+        display: inline-block;
+      }
+    }
+  }
+  label[for = "edit-field-countries-of-interest-und"],
+  label[for = "edit-field-topics-of-interest-und"] {
+    margin-left: -2em;
+  }
+  form.not-admin {
+    fieldset.group-admin-settings {
+      display: none;
+    }
+  }
+  fieldset fieldset#edit-timezone {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    legend {
+      display: none;
+    }
+    .fieldset-wrapper {
+      margin-left: 0;
+    }
+  }
+    
+  .field__privacy-settings {
+  //Styling the User Privacy Fieldset.
+    padding-bottom: 1em;
+    h4 {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+    }
+  }
+  // Hiding "show row weights link"
+  a.tabledrag-toggle-weight { display: none; }
+  
+  // Password link
+  a.password-link {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+  }
+} // end page-user-edit
+
+/*======== Responsive Styles ====== */
+@include breakpoint($small-screen-and-down){
+    // Fix for input field that extends outside its container
+  .form-autocomplete,
+  .form-select,
+  input[type='text'],
+  textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+
+  // Fixes for password fields that overflow the container
+  .password-strength {
+    display: block;
+    float: none;
+    margin: 1em 0;
+  }
+  .confirm-parent,
+  .password-parent {
+    width: 100%;
+  }
+  .form-item.form-type-password {
+    margin-bottom: 0;
+  }
+  div.password-confirm {
+    float: none;
+    margin-top: 0;
+  }
+  div.form-item div.password-suggestions {
+    width: 90%;
+  }
+
+  // Fieldset overflowing container width;
+  .gn2_accordion-fieldset legend.gn2_accordion-fieldset-legend {
+    width: 90%;
+  }
+
+  // Fixing Social media and Website links
+  .page-user-edit{
+    .group-section {
+      padding: 1em 0;
+    }
+  }
+
+  .group-interests-tab {
+    #edit-field-countries-of-interest,
+    #edit-field-topics-of-interest {
+      .form-type-checkbox {
+        input,
+        label {
+          display: inline;
+        }
+      }
+    }
+  }
+}

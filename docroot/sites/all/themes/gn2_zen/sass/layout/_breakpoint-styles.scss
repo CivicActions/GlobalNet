@@ -1,0 +1,33 @@
+/**
+ * Partial for adding standard breakpoint variables
+ */
+@import "breakpoint";
+// Breakpoint control variables
+$breakpoint-to-ems: true; // converts percentage-based media queries to em's
+
+$breakpoint0: 330px;
+$breakpoint1: 480px;
+$breakpoint2: 768px;
+$breakpoint3: 960px;
+$breakpoint4: 1200px;
+
+//Breakpoint variables
+$xxs-screen-only: 0px ($breakpoint0);
+$xs-screen-only: 0px ($breakpoint1);
+
+$small-screen: $breakpoint1 ($breakpoint2 - 1);
+$small-screen-and-up: $breakpoint1;
+$small-screen-and-down: 0px ($breakpoint2 - 1);
+
+$medium-screen: $breakpoint2 ($breakpoint3 - 1);
+$medium-screen-and-up: $breakpoint2; 
+$medium-screen-and-down: 0px ($breakpoint3 - 1);
+
+$large-screen: $breakpoint3 ($breakpoint4 - 1);
+$large-screen-and-up: $breakpoint3; 
+$large-screen-and-down: 0px ($breakpoint4 - 1);
+
+$larger-screen: $breakpoint4;
+
+$admin-menu-narrow: 1083px 1290px;
+$admin-menu-very-narrow: 0px 1082px;

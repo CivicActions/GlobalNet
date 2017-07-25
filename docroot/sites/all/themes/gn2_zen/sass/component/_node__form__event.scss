@@ -1,0 +1,58 @@
+/*
+ * Styling the Events Add/Edit Form
+ */
+
+/* Styling the Basic Information tab in the Event Create Form */
+
+.group-event-type {
+  display: table-row;
+  .form-field-name-field-event-location,
+  .form-field-name-field-event-type,
+  .form-field-name-field-language {
+    display: block;
+    float: none;
+    @include breakpoint($medium-screen-and-up) {
+      display: table-cell;
+      padding-right: 1em;
+    }
+  }
+}
+
+.group-basic-information{
+  .group_dependents{
+    //Styling the Event location options
+   // background: url(../images/bg-diagonal-tile-grey.png);
+    padding: 0;
+  }
+}
+.group-event-type{
+  &.group-section{
+    border-bottom: 0;
+    padding-top: 0.4em;
+  }
+}
+.group-image-section.group-section{
+  // padding: 0.4em 2em;
+}
+.group-event-contact-person .tabledrag-toggle-weight-wrapper{
+  display: none;
+}
+
+/*======== Repeat Settings Block =============*/
+#repeat-settings-fieldset{
+  background: url(../images/bg-diagonal-tile-grey.png);
+  padding: 1em;
+}
+.weekly .form-type-checkboxes .form-type-checkbox{
+  margin: 0 0.5em;
+}
+
+body.page-node-add-event, body.page-node-edit.node-type-event {
+  .form-type-select.form-item-gn2-og-form-options > .description {
+    color: transparent;
+    &:before{
+      content: "Is Event Open, Moderated, or Closed?";
+      color: $gray-86;
+    }
+  }
+}

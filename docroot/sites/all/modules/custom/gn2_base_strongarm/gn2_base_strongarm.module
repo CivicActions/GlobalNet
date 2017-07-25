@@ -1,0 +1,90 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_base_strongarm feature.
+ */
+
+include_once 'gn2_base_strongarm.features.inc';
+
+
+/**
+ * Implements hook_date_formats().
+ */
+function gn2_base_strongarm_date_formats() {
+  return array(
+    array(
+      'type' => 'date_format_globalnet_date',
+      'format' => 'd F, Y',
+      'locales' => array(),
+    ),
+    array(
+      'type' => 'date_format_globalnet_date_time',
+      'format' => 'd F, Y O',
+      'locales' => array(),
+    ),
+    array(
+      'type' => 'date_format_military_without_time',
+      'format' => 'd M Y',
+      'locales' => array(),
+    ),
+    array(
+      'type' => 'date_format_military_with_time',
+      'format' => 'd M Y - H:i',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
+ * Implements hook_date_format_types().
+ */
+function gn2_base_strongarm_date_format_types() {
+  return array(
+    'date_format_globalnet_date' => t('GlobalNET date'),
+    'date_format_globalnet_date_time' => t('GlobalNET date-time'),
+    'date_format_military_without_time' => t('Military without time'),
+    'date_format_military_with_time' => t('Military with time'),
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_base_strongarm_init() {
+
+  // JS for User account page - Event tab.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/events.js');
+
+  // Topic JS.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/topics.js');
+
+  // Accordions JS for search.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/gn2_accordions_search.js');
+
+  // Hide primary tabs based on content JS (RD-1558).
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/hide_links.js');
+
+  // Hide panels tabs based on content JS (RD-1282).
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/hide_empty_tabs.js');
+
+  // Hide panels tabs based on content JS (RD-1282).
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/gn2_media_gallery.js');
+
+  // RD-1242 Posts sorting functionality on Group Landing page.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/post_filters.js');
+
+  // RD-2026 jQuery to support links in footer communities menu.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/footer_communities_links.js');
+
+  // RD-1690 JS to update links in comments to open in a new tab.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_strongarm') . '/js/comments.js');
+
+  // RD-2191 JS to fix the contacts url.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_strongarm') . '/js/contacts.js');
+
+  // RD-2244 theme admin files page.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/admin_files.js');
+
+  // RD-2185 fixing media icons
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/media_icon.js');
+}

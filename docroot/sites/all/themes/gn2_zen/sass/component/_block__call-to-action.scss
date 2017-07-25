@@ -1,0 +1,33 @@
+.block--call-to-action {
+  h3, h4, p {
+    margin-bottom: .25em;
+  }
+  div.pane-inner {
+    border: none;
+    padding: 0;
+  }
+  div.pane-content {
+    @include darkbg;
+    border: none;
+    padding: 0;
+    .field-name-field-call-to-action {
+      color: $oyster_bay;
+      padding: 2em;
+      p {
+        margin: 0 0 1em;
+        &:last-child {
+          margin: 0;
+        }
+      }
+      a {
+        @include large-callout-button($font-size: 1.3em);
+        margin-top: .5em;
+        margin-right: 0.25em;
+        margin-bottom: .5em;
+        margin-left: 0em;
+        clear: both;
+        display: block;
+      }
+    }
+  }
+}

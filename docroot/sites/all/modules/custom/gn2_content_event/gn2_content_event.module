@@ -1,0 +1,164 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_content_event feature.
+ */
+
+include_once 'gn2_content_event.features.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_content_event_block_info() {
+  $blocks = array();
+  $blocks['upcoming-events'] = array(
+    'info' => t('Upcoming Events'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_content_event_theme(&$existing, $type, $theme, $path) {
+  $hook_theme = array();
+  $hook_theme['gn2_upcoming_events'] = array(
+    'path' => "{$path}/tpl",
+    'template' => 'gn2-upcoming-events',
+    'variables' => array(
+      'results' => '',
+      'toggler' => '',
+    ),
+  );
+
+  return $hook_theme;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_content_event_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'upcoming-events':
+      $block['subject'] = NULL;
+      $block['content'] = _gn2_content_event_get_upcoming_events();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Helper function, returns upcoming events list. 
+ * See: RD-3567, RD-3517.
+ */
+function _gn2_content_event_get_upcoming_events() {
+  global $user;
+
+  $is_admin = (in_array('administrator', $user->roles));
+  if (is_numeric(arg(1))) {
+    $group_roles = og_get_user_roles('node', arg(1));
+    $toggler = FALSE;
+    if (in_array('group_manager', $group_roles) || in_array('org_manager', $group_roles) || $is_admin) {
+      $toggler = TRUE;
+    }
+  }
+
+  $query = new EntityFieldQuery();
+
+  $results = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'event')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->fieldCondition('field_event_date', 'value', date('Y-m-d H:i:s', time()), '>=')
+    ->fieldCondition('og_group_ref', 'target_id', arg(1), '=')
+    ->execute();
+
+  if (!$results) {
+    return;
+  }
+  $nids = array_keys($results['node']);
+
+  if (is_array($nids)) {
+    $nodes = node_load_multiple($nids);
+    $output = array();
+
+    foreach ($nodes as $node) {
+      $temp = array();
+
+      // Is membership for this event open?
+      $group_type = gn2_og_get_membership_type($node->nid);
+
+      // Get count of registered event members.
+      $group_members = _gn2_base_config_get_users_in_group($node->nid);
+      $number_of_registrants = count($group_members);
+
+      // Check if registration for this event open.
+      $reg = field_get_items('node', $node, 'field_registration');
+      $registration = $reg[0]['value'];
+      
+      // Check if the Registration Limit is enabled.
+      $reg_limit = field_get_items('node', $node, 'field_registration_limit');
+      $registration_limit = ($reg_limit) ? $reg_limit[0]['value'] : NULL;
+      
+      // Get the Registration Limit.
+      $reg_limit_number = field_get_items('node', $node, 'field_registration_limit_number');
+      $registration_limit_number = ($reg_limit_number) ? $reg_limit_number[0]['value'] : NULL;
+      $is_full = ($registration_limit && $registration_limit_number <= $number_of_registrants) ? TRUE : FALSE;
+
+      // Check if the user has already enrolled.
+      $is_enrolled = og_is_member('node', $node->nid, 'user', $user);
+      
+      // Check to see if the user is pending.
+      $is_pending = og_is_member('node', $node->nid, 'user', $user, array(OG_STATE_PENDING));
+
+      // If event has unlimited seats or available seats - show as open.
+      if ($registration_limit == NULL || !$is_full) {
+        $temp['grouptype'] = 'open';
+      }
+      // If user is registered or pending for event - show as open.
+      elseif ($is_enrolled || $is_pending) {
+        $temp['grouptype'] = 'open';
+      }
+      // User, event is full.
+      elseif ($is_full) {
+        $temp['grouptype'] = 'closed';
+      }
+      else {
+        $temp['grouptype'] = $group_type;
+      }
+      
+      $open_events = ($temp['grouptype'] === 'open') ? TRUE : FALSE;
+
+      $node = entity_metadata_wrapper('node', $node);
+      $temp['title'] = l(t($node->title->value()), 'node/' . $node->nid->value());
+
+      // Fixes Event Date for Sidebar. See RD-3567.
+      $date = $node->field_event_date->value();
+      $date = _gn2_content_event_convert_date_to_user_timezone($date[0]['value'], 'd M Y - H:i');
+
+      $temp['date'] = $date;
+      $temp['registration'] = $node->field_registration->value();
+      $output[] = $temp;
+    }
+  }
+  // JS for Events.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/events.js');
+  
+  // Only return the output if the user is admin, group_manager, org_manager or
+  // if there is at least one open event for the current user to view.
+  if (!$toggler && !$open_events) {
+    return;
+  } 
+  
+  return theme('gn2_upcoming_events', array('results' => $output, 'toggler' => $toggler));
+}
+
+/**
+ * Converts the given datetime to current user timezone.
+ */
+function _gn2_content_event_convert_date_to_user_timezone($date, $format = 'd M Y') {
+  $dateObj = new DateObject($date, new DateTimeZone('UTC'));
+  $dateObj->setTimezone(new DateTimeZone(drupal_get_user_timezone()));
+  return date_format_date($dateObj, 'custom', $format);
+}

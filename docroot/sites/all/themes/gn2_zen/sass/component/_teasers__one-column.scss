@@ -1,0 +1,87 @@
+$zen-column-count: 12;
+$zen-gutter-width: 0px;
+
+.teaser-minimal {
+  
+  /**
+   * Layout-specific styles
+   */
+
+  /* Apply the shared properties of grid items in a single, efficient ruleset. */
+  .gn2-3col,
+  .gn2-3col--header,
+  .gn2-3col--col1,
+  .gn2-3col--col2,
+  .gn2-3col--col3,
+  .gn2-3col--footer {
+    @include zen-grid-item-base();
+  }
+  
+  .gn2-3col {
+    @include zen-grid-container();
+  }
+  
+  .gn2-3col--footer {
+    @include zen-clear();
+  }
+  
+  /**
+   * Use 3 grid columns for larger screens.
+   */
+  @media all and (min-width: 400px) {
+    $zen-column-count: 1;
+    .gn2-3col--col1 {
+      @include zen-grid-item(0, 0);
+      display: none;
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(12, 1);
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(0, 0);
+      display: none;
+    }
+  }
+  
+  /**
+   * Content-specific styles
+   */
+  
+  .author-image-name {
+    display: block;
+    .author-image {
+      @include author-image;
+      img {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: auto;
+      }
+    }
+    .author-name {
+      text-align: center;
+      border-bottom: 4px solid $light-gray;
+      line-height: 1;
+      margin: 0 0 10px 0;
+      padding: 0 0 9px 0;
+      a {
+        color: $blue-gray;
+        font-size: .85em;
+        line-height: 1;
+      }
+    }
+  } /* .author-image-name */
+  
+  .pane-node-field-main-image.thumbnail {
+    display: none;
+  }
+  
+  .download-pdf.icon-link {
+    display: none;
+  }
+  
+  .teaser-text {
+    @include teaser--text;
+  } /* .teaser-text */
+
+} /* .teaser-minimal */

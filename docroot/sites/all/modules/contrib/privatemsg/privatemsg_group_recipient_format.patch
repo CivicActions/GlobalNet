@@ -1,0 +1,14 @@
+diff --git a/privatemsg_groups/privatemsg_groups.module b/privatemsg_groups/privatemsg_groups.module
+index 59f2525..687da0e 100644
+--- a/privatemsg_groups/privatemsg_groups.module
++++ b/privatemsg_groups/privatemsg_groups.module
+@@ -131,7 +131,8 @@ function theme_privatemsg_groups_format($variables) {
+     }
+     return $name;
+   }
+-  return t('%group (group)', array('%group' => $name));
++  $group_name = strip_tags(t('%group (group)', array('%group' => $name)));
++  return l($group_name, 'node/' . $gid);
+ }
+ 
+ /**

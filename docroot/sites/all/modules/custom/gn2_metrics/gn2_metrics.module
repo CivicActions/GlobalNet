@@ -1,0 +1,745 @@
+<?php
+/**
+ * @file
+ * Code for the GlobalNET Metrics feature.
+ */
+
+include_once 'gn2_metrics.features.inc';
+/**
+ * @file
+ * Provides reporting and metrics functions for GlobalNET.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_metrics_block_info() {
+  // Group chart.
+  $blocks['group_metrics_chart'] = array(
+    'info' => t('Group chart'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_metrics_block_view($delta = '') {
+  switch ($delta) {
+    case 'group_metrics_chart':
+      $block['content'] = gn2_metrics_group_chart_block();
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_metrics_menu() {
+  $items = array();
+
+  $items['node/%node/metrics'] = array(
+    'title' => 'Metrics',
+    'page callback' => 'gn2_metrics_tab',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_metrics_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['node/%node/metrics/main'] = array(
+    'title' => 'Main',
+    'page callback' => 'gn2_metrics_tab',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_metrics_access',
+    'access arguments' => array(1),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  $items['node/%node/metrics/analytics'] = array(
+    'title' => 'Analytics',
+    'page callback' => '_gn2_metrics_group_access_by_country',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_metrics_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+
+  $items['node/%node/file-metrics'] = array(
+    'title' => 'Metrics',
+    'page callback' => 'gn2_file_metrics_tab',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_file_metrics_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu access callback.
+ *
+ * @param object $node
+ *   The page node.
+ *
+ * @return bool
+ *   Returns TRUE for access.
+ */
+function gn2_metrics_access($node) {
+  global $user;
+  if ($user->uid <= 0) {
+    return FALSE;
+  }
+  $access = FALSE;
+  if (function_exists('og_is_group_type') && og_is_group_type('node', $node->type)) {
+    // Check Drupal permission.
+    if (user_access('access metrics')) {
+      $access = TRUE;
+    }
+    // If we are on an Org, check if the user is an Org Manager.
+    elseif ($node->type == 'organization' && in_array('org_manager', og_get_user_roles('node', $node->nid))) {
+      $access = TRUE;
+    }
+    // On a non-Org page, check if the user is an Org manager for the paerent Org.
+    elseif (isset($node->field_parent_organization)) {
+      $parent = field_get_items('node', $node, 'field_parent_organization');
+      $access = ($parent && in_array('org_manager', og_get_user_roles('node', $parent[0]['target_id']))) ? TRUE : $access;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Menu access callback for file metrics.
+ *
+ * @param object $node
+ *   Node to check access for.
+ *
+ * @return bool
+ *   Indicates user has access or not.
+ */
+function gn2_file_metrics_access($node) {
+  if ($node->type == 'media_gallery') {
+    return user_access('access metrics');
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function gn2_metrics_permission() {
+  return array(
+    'access metrics' => array(
+      'title' => t('Access metrics'),
+      'description' => t('Access the Group page metrics tab.'),
+    ),
+  );
+}
+
+/**
+ * Creates the Group/Page metrics page.
+ */
+function gn2_metrics_tab($node) {
+  drupal_set_title(t('Metrics for !title', array('!title' => $node->title)));
+
+  $delta = 'metrics';
+  $panel_mini = panels_mini_load($delta);
+
+  ctools_include('context');
+  $context = ctools_context_create('entity:node', $node);
+  $contexts = ctools_context_match_required_contexts($panel_mini->requiredcontexts, array($context));
+  $panel_mini->context = $panel_mini->display->context = ctools_context_load_contexts($panel_mini, FALSE, $contexts);
+  $panel_mini->display->css_id = panels_mini_get_id($panel_mini->name);
+
+  // Here is the markup, to with with whatever you wish.
+  $markup = panels_render_display($panel_mini->display);
+
+  return $markup;
+
+}
+
+/**
+ * Creates a chart showing the number of nodes for a given Group.
+ *
+ * @return string
+ *   Returns a renderd chart.
+ */
+function gn2_metrics_group_chart_block() {
+  $types = NULL;
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'metrics') {
+    $types = gn2_metrics_get_group_nodes(arg(1));
+  }
+
+  if ($types) {
+    $chart = gn2_metrics_create_chart($types);
+    return $chart;
+  }
+}
+
+/**
+ * Get all of the content created for a given Group.
+ *
+ * @param int $gid
+ *   The Group node ID.
+ *
+ * @return array
+ *   Returns an array of node data; content type, created date and nid
+ */
+function gn2_metrics_get_group_nodes($gid) {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('type', 'created', 'nid'));
+  $query->join('og_membership', 'g', 'g.etid = n.nid');
+  $query->condition('g.gid', $gid);
+  $query->condition('n.status', 1);
+  $query->condition('g.entity_type', 'node');
+  $query->condition('n.created', time() - 2592000, '>');
+  $query->orderBy('n.created', 'ASC');
+
+  $results = $query->execute()->fetchAll();
+
+  return $results;
+}
+
+/**
+ * Creates the rendered chart to display.
+ *
+ * @param array $types
+ *   An an array of node data; content type, created date and nid.
+ *
+ * @return string
+ *   Returns the rendered chart
+ */
+function gn2_metrics_create_chart(array $types) {
+  $node_data = array();
+  foreach ($types as $nodes) {
+    $month = date('M Y', $nodes->created);
+    $node_data['nodes'][$month][$nodes->type][] = $nodes->nid;
+    $node_data['types'][$nodes->type] = $nodes->type;
+  }
+
+  reset($node_data['nodes']);
+  $start = strtotime(key($node_data['nodes']));
+  $end = strtotime(date('M Y'));
+
+  while ($start < $end) {
+    $labels[] = date('M Y', $start);
+    $start = strtotime('+1 month', $start);
+  }
+
+  $chart = array(
+    '#type' => 'chart',
+    '#chart_type' => 'column',
+    '#chart_library' => 'google',
+    '#title' => '',
+    '#legend' => TRUE,
+  );
+
+  $chart['xaxis'] = array(
+    '#type' => 'chart_xaxis',
+    '#labels' => $labels,
+  );
+
+  $data = array();
+
+  foreach ($labels as $month) {
+    foreach ($node_data['types'] as $type) {
+      $count = (isset($node_data['nodes'][$month][$type])) ? count($node_data['nodes'][$month][$type]) : 0;
+      $data[$type][] = $count;
+    }
+  }
+
+  foreach ($data as $type => $columns) {
+    $title = ucwords(str_replace('_', ' ', $type));
+    $chart[$type] = array(
+      '#type' => 'chart_data',
+      '#title' => t('!title', array('!title' => $title)),
+      '#data' => $columns,
+    );
+  }
+
+  $display['chart'] = $chart;
+
+  return drupal_render($display);
+}
+
+/**
+ * Helper function to track events.
+ */
+function gn2_metrics_track_event($event = NULL, $category = NULL, $label = NULL) {
+
+  $events = &drupal_static(__FUNCTION__);
+
+  // Initializes if not defined.
+  if (!$events) {
+    if (session_id() && isset($_SESSION['gn2_metrics_to_track'])) {
+      $events = &$_SESSION['gn2_metrics_to_track'];
+    }
+    else {
+      $events = array();
+      $_SESSION['gn2_metrics_to_track'] = &$events;
+    }
+  }
+
+  if ($category && $action && $event) {
+    $events[] = array(
+      'action' => $action,
+      'category' => $category,
+      'label' => $label,
+    );
+  }
+
+  return $events;
+
+}
+
+/**
+ * Generates the reporting page to list logins by country.
+ */
+function _gn2_metrics_group_access_by_country($node) {
+  // Gets country data for login events.
+  $params = array(
+    'dimensions' => array('ga:country'),
+    'metrics' => array('ga:pageviews'),
+    'sort_metric' => array('-ga:pageviews'),
+    'filters' => 'ga:pagePath==' . url("node/{$node->nid}"),
+    'start_date' => strtotime('today'),
+    'end_date' => strtotime('tomorrow'),
+  );
+
+  // Periods to generate data tables for.
+  $periods = array(
+    'last_month' => array(
+      'start_date' => strtotime('-1 month'),
+    ),
+    'last_quarter' => array(
+      'start_date' => strtotime('-3 month'),
+    ),
+    'last_year' => array(
+      'start_date' => strtotime('-1 year'),
+    ),
+  );
+
+  $new_data = [];
+  // Generates each data table.
+  foreach ($periods as $period_id => $period) {
+    $params['start_date'] = $period['start_date'];
+
+    // Queries data.
+    $feed = google_analytics_reports_api_report_data($params);
+    if ($feed->error) {
+      continue;
+    }
+
+    // Sets data.
+    if (!empty($feed->results->rows)) {
+      foreach ($feed->results->rows as $row) {
+        $new_data[$row['country']][$period_id] = $row['pageviews'];
+      }
+    }
+  }
+
+  // Default empty message.
+  if (empty($new_data)) {
+    $result_data = array(
+      array('data' => t('There is no data for this period.'), 'colspan' => 4),
+    );
+  }
+  else {
+    foreach ($new_data as $country => $value) {
+      $result_data[] = [
+        ['data' => $country, 'style' => 'text-align: left'],
+        (isset($value['last_month'])) ? $value['last_month'] : '0',
+        (isset($value['last_quarter'])) ? $value['last_quarter'] : '0',
+        (isset($value['last_year'])) ? $value['last_year'] : '0',
+      ];
+    }
+  }
+
+  // Sets rendereable structure.
+  $content = array(
+    'data' => array(
+      '#theme' => 'table',
+      '#attributes' => array(
+        'class' => array(
+          'table',
+          'logins-by-country-table',
+          'logins-by-country-table--' . str_replace('_', '-', $period_id),
+        ),
+      ),
+      '#header' => [
+        'Country',
+        'Last 30 days',
+        'Last 90 days',
+        'Last 12 months',
+      ],
+      '#rows' => $result_data,
+      '#caption' => t('Page views by country'),
+    ),
+  );
+
+  return $content;
+
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function gn2_metrics_cron_queue_info() {
+
+  $queues = array();
+
+  $queues['gn2_metrics_group_access_queue'] = array(
+    'time' => 10,
+    'worker callback' => '_gn2_metrics_group_access_queue_worker',
+  );
+
+  return $queues;
+
+}
+
+/**
+ * Implements hook_cron().
+ */
+function gn2_metrics_cron() {
+
+  // Builds stats queue.
+  _gn2_metrics_build_group_access_stats_queue();
+
+}
+
+/**
+ * Builds the gn2_metrics_group_access_queue for later processsing.
+ */
+function _gn2_metrics_build_group_access_stats_queue($force_rebuild = FALSE) {
+
+  // Gets last build time.
+  $last_build = variable_get('gn2_metrics_last_build', strtotime('today') - 1);
+  $today = strtotime('today');
+
+  // If last time it was build is today and there is no force rebuild, stops.
+  if ($last_build == $today && !$force_rebuild) {
+    return;
+  }
+
+  // Sets last build time.
+  variable_set('gn2_metrics_last_build', $today);
+
+  // Queue that will store the items for later processing.
+  $queue = DrupalQueue::get('gn2_metrics_group_access_queue');
+
+  // Node types we will include in statistics.
+  $group_types = array(
+    'alumni_group',
+    'coi',
+    'course',
+    'course-group',
+    'event',
+    'group',
+    'organization',
+    'program',
+  );
+
+  // Gets all nodes.
+  $group_query = db_select('node', 'N');
+  $group_query->join('url_alias', 'U', "U.source = CONCAT('node/', N.nid)");
+  $group_query
+    ->fields('N', array('nid'))
+    ->fields('U', array('alias'))
+    ->condition('N.type', $group_types, 'IN')
+    ->orderBy('N.title', 'ASC');
+  $result = array_chunk($group_query->execute()->fetchAllAssoc('nid', PDO::FETCH_ASSOC), 10, TRUE);
+  foreach ($result as $groups_group) {
+    $queue->createItem($groups_group);
+  }
+}
+
+/**
+ * Queue processing for the gn2_metrics_group_access_queue queue.
+ */
+function _gn2_metrics_group_access_queue_worker($data) {
+
+  // Filters based on path.
+  $paths = array();
+
+  // Results.
+  $final_results = array();
+
+  // Builds the filters based on node paths.
+  foreach ($data as $node_data) {
+    $paths[] = 'ga:pagePath==/' . $node_data['alias'];
+    $final_results[$node_data['alias']] = array(
+      'nid' => $node_data['nid'],
+      'last_year' => array(),
+      'last_quarter' => array(),
+      'last_month' => array(),
+    );
+  }
+
+  // Gets country data for login events.
+  $start_of_day = strtotime('today');
+  $params = array(
+    'dimensions' => array('ga:country', 'ga:pagePath'),
+    'metrics' => array('ga:pageviews'),
+    'sort_metric' => array('ga:pagePath', '-ga:pageviews'),
+    'filters' => implode(',', $paths),
+    'start_date' => NULL,
+    'end_date' => $start_of_day - 1,
+  );
+
+  // Periods.
+  $periods = array(
+    'last_month' => '-1 month',
+    'last_quarter' => '-3 month',
+    'last_year' => '-1 year',
+  );
+
+  // For each period...
+  foreach ($periods as $period_id => $period_date) {
+
+    // Sets start date and executes query.
+    $params['start_date'] = strtotime($period_date, $start_of_day);
+    $feed = google_analytics_reports_api_report_data($params);
+
+    // If there was en error, continues.
+    if ($feed->error) {
+      watchdog('gn2_metrics', 'Cannot get analytics metrics for !filters.', array('!filters' => $params['filters']), WATCHDOG_WARNING);
+      continue;
+    }
+
+    // Sets data.
+    if (!empty($feed->results->rows)) {
+      foreach ($feed->results->rows as $row) {
+        $page_path = substr($row['pagePath'], 1);
+        $final_results[$page_path][$period_id][$row['country']] = $row['pageviews'];
+      }
+    }
+
+  }
+
+  // Stores appropiate results in cache.
+  foreach ($final_results as $result) {
+    $nid = $result['nid'];
+    unset($result['nid']);
+    cache_set("gn2_metrics_group_access_stats_{$nid}", $result);
+  }
+
+}
+
+/**
+ * Page callback for the file metrics menu entry.
+ *
+ * @param object $node
+ *   Node to fetch file metrics for. Should be of type media-gallery.
+ */
+function gn2_file_metrics_tab($node) {
+  drupal_set_title(t('File metrics for !title', array('!title' => $node->title)));
+
+  $content = array();
+
+  // Gets country data for login events.
+  $params = array(
+    'dimensions' => array('ga:eventLabel'),
+    'metrics' => array('ga:totalEvents'),
+    'sort_metric' => array('ga:totalEvents'),
+    'filters' => "ga:eventCategory==gallery-{$node->nid};ga:eventAction==download-file",
+    'start_date' => strtotime('today'),
+    'end_date' => strtotime('tomorrow'),
+  );
+
+  // Current list of files.
+  $files = array();
+  foreach ($node->media_gallery_file[LANGUAGE_NONE] as $file) {
+    $files[$file['filename']] = $file['fid'];
+  }
+  ksort($files);
+
+  // Table header.
+  $table_header = array(
+    array('data' => t('File')),
+    array('data' => t('Downloads')),
+  );
+
+  // Periods to generate data tables for.
+  $periods = array(
+    'last_month' => array(
+      'caption' => 'Last Month',
+      'start_date' => strtotime('-1 month'),
+    ),
+    'last_quarter' => array(
+      'caption' => 'Last Quarter',
+      'start_date' => strtotime('-3 month'),
+    ),
+    'last_year' => array(
+      'caption' => 'Last Year',
+      'start_date' => strtotime('-1 year'),
+    ),
+  );
+
+  // Generates each data table.
+  foreach ($periods as $period_id => $period) {
+
+    // Changes caption to include start and end dates.
+    $period['caption'] = $period['caption'] . ' (' . format_date($period['start_date'], 'medium') . ' - ' . format_date($params['end_date'], 'medium') . ')';
+    $params['start_date'] = $period['start_date'];
+
+    // Queries data.
+    $feed = google_analytics_reports_api_report_data($params);
+    if ($feed->error) {
+      continue;
+    }
+
+    // Converts analytics results.
+    $analytics_data = array();
+    if (!empty($feed->results->rows)) {
+      foreach ($feed->results->rows as $row) {
+        $analytics_data[$row['eventLabel']] = $row['totalEvents'];
+      }
+    }
+
+    // Builds data in a table.
+    $rows = array();
+    foreach ($files as $file_name => $fid) {
+      $rows[] = array(
+        array(
+          'data' => $file_name,
+        ),
+        array(
+          'data' => isset($analytics_data[$fid]) ? $analytics_data[$fid] : 0,
+        ),
+      );
+    }
+
+    // Sets rendereable structure.
+    $content[$period_id] = array(
+      'data' => array(
+        '#theme' => 'table',
+        '#attributes' => array(
+          'class' => array(
+            'table',
+            'file-metrics-table',
+            'file-metrics-table--' . str_replace('_', '-', $period_id),
+          ),
+        ),
+        '#header' => $table_header,
+        '#rows' => $rows,
+        '#caption' => $period['caption'],
+      ),
+    );
+
+  }
+
+  return $content;
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_metrics_views_pre_render(&$view) {
+  if ($view->name === 'google_analytics_organization_report' && isset($view->result)) {
+    foreach ($view->result as $key => $result) {
+      if (isset($result->dimension6)) {
+        switch ($result->dimension6) {
+          // Change Media_gallery to Folder.
+          case 'Media_gallery':
+            $view->result[$key]->dimension6 = 'Folder';
+            break;
+          // Add asterisk to Non-node.
+          case 'Non-node':
+            $view->result[$key]->dimension6 = $result->dimension6 . '*';
+            break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Create the data layer array.
+ *
+ * @param array $variables
+ *   The page variables to act upon.
+ *
+ * @return
+ *   Returns an array of data layer variables.
+ */
+function gn2_metrics_set_datalayer($variables) {
+  // Add GA Tag Manager variables.
+  $data_layer_variables = [];
+
+  // Get the node type.
+  if (isset($variables['node'])) {
+    $type = $variables['node']->type;
+    $data_layer_variables['isNode'] = TRUE;
+  }
+  elseif (arg(0) === 'course-session-form' && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    $type = $node->type;
+  }
+  // If we are on a non-node page, check if it is a search page.
+  else {
+    $type = (arg(0) === 'search') ? 'search' : 'non-node';
+  }
+  $data_layer_variables['contentType'] = ucwords($type);
+
+  // Get current node information.
+  if ($type !== 'search' && $type !== 'non-node') {
+    $page_node = (isset($node)) ? $node : $variables['node'];
+    $data_layer_variables['nodeId'] = $page_node->nid;
+    $data_layer_variables['nodeTitle'] = $page_node->title;
+    $data_layer_variables['isGroup'] = og_is_group('node', $page_node->nid);
+  }
+
+  // Get Organization information.
+  $oid = gn2_context_get_org_id();
+  if ($oid) {
+    $data_layer_variables['parentOrgName'] = db_query('SELECT title FROM {node} WHERE nid = :oid',
+      array(':oid' => $oid))->fetchField();
+    $data_layer_variables['parentOrgID'] = $oid;
+  }
+  else {
+    $data_layer_variables['parentOrgName'] = 'GlobalNET Platform';
+    $data_layer_variables['parentOrgID'] = db_query('SELECT nid FROM {node} WHERE title = :title',
+      array(':title' => 'GlobalNET Platform'))->fetchField();
+  }
+
+  // Get parent group ID if not an Organization.
+  if (isset($variables['node']) && $type !== 'organization') {
+    $groups = og_get_entity_groups('node', $variables['node']);
+    if(isset($groups['node'])) {
+      $parent_gid = reset($groups['node']);
+    }
+    else {
+      $parent_gid = gn2_context_get_group_id();
+    }
+
+    // Set Parent Group ID and Name.
+    if (isset($parent_gid)) {
+      $data_layer_variables['parentGroupID'] = $parent_gid;
+      $data_layer_variables['parentGroupName'] = db_query('SELECT title FROM {node} WHERE nid = :parent_gid',
+        array(':parent_gid' => $parent_gid))->fetchField();
+    }
+  }
+
+  // Check if user is authenticated.
+  $data_layer_variables['userStatus'] = (user_is_logged_in()) ? 'authenticated' : 'unauthenticated';
+
+  return $data_layer_variables;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_metrics_form_gn2_file_download_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['gn2_file_download']['submit'])) {
+    $form['gn2_file_download']['submit']['#attributes'] = [
+      'class' => ['file-download-submit'],
+    ];
+  }
+}

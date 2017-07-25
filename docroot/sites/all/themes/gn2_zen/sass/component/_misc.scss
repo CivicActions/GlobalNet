@@ -1,0 +1,875 @@
+/**
+ * @file
+ * SMACSS Modules
+ *
+ * Adds modular sets of styles.
+ *
+ * Additional useful selectors can be found in Zen's online documentation.
+ * https://drupal.org/node/1707736
+ */
+
+/**
+ * Commonly used classes
+ */
+.larger-text {
+  font-size: 1.2em;
+}
+
+.smaller-text {
+  font-size: 0.9em;
+}
+
+.float-right {
+  float: right;
+}
+
+.hide,
+.group-hidden-section,
+.element-invisible {
+  @include element-invisible;
+}
+
+/**
+ * Wireframes.
+ */
+.with-wireframes {
+  #header,
+  #main,
+  #content,
+  #navigation,
+  .region-sidebar-first,
+  .region-sidebar-second,
+  #footer,
+  .region-bottom {
+    outline: 1px solid $gray-c;
+
+    @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+      .lt-ie8 & {
+        /* IE6/7 do not support the outline property. */
+        border: 1px solid $gray-c;
+      }
+    }
+  }
+}
+
+/**
+ * Accessibility features.
+ */
+
+/* element-invisible as defined by http://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
+.element-invisible,
+%element-invisible {
+  @include element-invisible;
+}
+
+/* Turns off the element-invisible effect. */
+%element-invisible-off {
+  @include element-invisible-off;
+}
+
+.element-focusable,
+%element-focusable {
+  @extend %element-invisible;
+
+  &:active,
+  &:focus {
+    @extend %element-invisible-off;
+  }
+}
+
+/*
+ * The skip-link link will be completely hidden until a user tabs to the link.
+ */
+#skip-link {
+  margin: 0;
+
+  a,
+  a:visited {
+    display: block;
+    width: 100%;
+    padding: 2px 0 3px 0;
+    text-align: center;
+    background-color: $gray-6;
+    color: $white;
+  }
+}
+
+/**
+ * Branding header.
+ */
+
+/* Wrapping link for logo. */
+.header__logo {
+  //float: left; /* LTR */
+  margin: 0;
+  padding: 0;
+}
+
+/* Logo image. */
+.header__logo-image {
+  vertical-align: bottom;
+}
+
+/* Wrapper for website name and slogan. */
+.header__name-and-slogan {
+  float: left;
+}
+
+/* The name of the website. */
+.header__site-name {
+  margin: 0;
+  @include adjust-font-size-to( $h1-font-size );
+}
+
+/* The link around the name of the website. */
+/*.header__site-link {
+  &:link,
+  &:visited {
+    color: $black;
+    text-decoration: none;
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}*/
+
+/* The slogan (or tagline) of a website. */
+.header__site-slogan {
+  margin: 0;
+}
+
+/* The secondary menu (login, etc.) */
+.header__secondary-menu {
+  float: right; /* LTR */
+}
+
+/* Wrapper for any blocks placed in the header region. */
+.header__region {
+  /* Clear the logo. */
+  clear: both;
+}
+
+/**
+ * Navigation bar.
+ */
+.navigation {
+  /* Sometimes you want to prevent overlapping with main div. */
+  /* overflow: hidden; */
+
+  .block {
+    margin-bottom: 0;
+  }
+
+  .block-menu .block__title,
+  .block-menu-block .block__title {
+    @extend %element-invisible;
+  }
+
+  /* Main menu and secondary menu links and menu block links. */
+  .links,
+  .menu {
+    margin: 0;
+    padding: 0;
+    text-align: left; /* LTR */
+
+    li {
+      /* A simple method to get navigation links to appear in one line. */
+      float: left; /* LTR */
+      padding: 0 10px 0 0; /* LTR */
+      list-style-type: none;
+      list-style-image: none;
+    }
+  }
+}
+
+/**
+ * Breadcrumb navigation.
+ */
+.breadcrumb {
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: inline;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/**
+ * Titles.
+ */
+.node__title,          /* Title of a piece of content when it is given in a list of content. */
+.block__title,         /* Block title. */
+.comments__title,      /* Comment section heading. */
+.comments__form-title, /* Comment form heading. */
+.comment__title {      /* Comment title. */
+  margin: 0;
+}
+
+.hidecontent,
+.titleonly {
+  .pane-content {
+    display: none;
+  }
+}
+
+/**
+ * Tabs.
+ */
+
+/* Basic positioning styles shared by primary and secondary tabs. */
+%tabs {
+  @include clearfix;
+  
+  /**
+   * TODO: This is left out  because current display shows only a 1px line at
+   * the bottom which can be done using a border instead.
+   * If for some reason we need to revert we can reinclude this line.
+   * If on a few more pushes this works without gradient, please remove line 
+   * and comment block entirely.
+  @include background-image(linear-gradient(bottom, $tabs-border 1px, transparent 1px));
+   */
+  /* IE 9 and earlier don't understand gradients. */
+  
+  list-style: none;
+  border-bottom: 1px solid $tabs-border \0/ie;
+  margin: rhythm(1) 0;
+  padding: 0 2px;
+  white-space: nowrap;
+}
+%tabs__tab {
+  float: left; /* LTR */
+  margin: 0 3px;
+}
+%tabs__tab-link {
+  border: 1px solid $gray-e9;
+  border-right: 0;
+  border-bottom: 0;
+  display: block;
+  @include adjust-leading-to(1);
+  text-decoration: none;
+}
+
+/* Primary tabs. */
+.tabs-primary {
+  @extend %tabs;
+}
+.tabs-primary__tab {
+  @extend %tabs__tab;
+  @include border-top-radius(4px);
+  @include single-text-shadow($white, 1px, 1px, 0);
+  border: 1px solid $tabs-border;
+  border-bottom-color: transparent;
+  /* IE 9 and earlier don't understand gradients. */
+  border-bottom: 0 \0/ie;
+
+  /*
+  a {
+    background: pink !important;
+    &:contains('Forms') {
+      background: orange !important;
+    }
+  }
+  */
+
+}
+.tabs-primary__tab.is-active {
+  @extend .tabs-primary__tab;
+  border-bottom-color: $tabs-container-bg;
+}
+
+// We use 3 placeholder styles to prevent @extend from going selector crazy.
+%tabs-primary__tab-link {
+  @extend %tabs__tab-link;
+  @include border-top-radius(4px);
+  @include transition(background-color 0.3s);
+  color: $gray-3;
+  background-color: $gray-de;
+  padding: 0 1em;
+  text-align: center;
+}
+%tabs-primary__tab-link-is-hover {
+  background-color: $gray-e9;
+  border-color: $gray-f2;
+}
+%tabs-primary__tab-link-is-active {
+  background-color: transparent;
+  @include filter-gradient(rgba($gray-e9, 1), rgba($gray-e9, 0));
+  @include background-image(linear-gradient(rgba($gray-e9, 1), rgba($gray-e9, 0)));
+  border-color: $white;
+}
+
+a.tabs-primary__tab-link {
+  @extend %tabs-primary__tab-link;
+
+  &:hover,
+  &:focus {
+    @extend %tabs-primary__tab-link-is-hover;
+  }
+  &:active {
+    @extend %tabs-primary__tab-link-is-active;
+  }
+}
+a.tabs-primary__tab-link.is-active {
+  @extend %tabs-primary__tab-link;
+  @extend %tabs-primary__tab-link-is-active;
+}
+
+/* Secondary tabs. */
+.tabs-secondary {
+  @extend %tabs;
+  font-size: .9em;
+  /* Collapse bottom margin of ul.primary. */
+  margin-top: -(rhythm(1));
+}
+.tabs-secondary__tab,
+.tabs-secondary__tab.is-active {
+  @extend %tabs__tab;
+  margin: rhythm(1)/2 3px;
+}
+
+// We use 3 placeholder styles to prevent @extend from going selector crazy.
+%tabs-secondary__tab-link {
+  @extend %tabs__tab-link;
+  @include border-radius(.75em);
+  @include transition(background-color 0.3s);
+  @include single-text-shadow($white, 1px, 1px, 0);
+  background-color: $gray-f2;
+  color: $gray-6;
+  padding: 0 .5em;
+}
+%tabs-secondary__tab-link-is-focus {
+  background-color: $gray-de;
+  border-color: $gray-9;
+  color: $gray-3;
+}
+%tabs-secondary__tab-link-is-active {
+  @include single-text-shadow($gray-3, 1px, 1px, 0);
+  background-color: $gray-6;
+  border-color: $black;
+  color: $white;
+}
+
+a.tabs-secondary__tab-link {
+  @extend %tabs-secondary__tab-link;
+
+  &:hover,
+  &:focus {
+    @extend %tabs-secondary__tab-link-is-focus;
+  }
+  &:active {
+    @extend %tabs-secondary__tab-link-is-active;
+  }
+}
+a.tabs-secondary__tab-link.is-active {
+  @extend %tabs-secondary__tab-link;
+  @extend %tabs-secondary__tab-link-is-active;
+}
+
+/**
+ * Inline styles.
+ */
+
+/* List of links generated by theme_links(). */
+.inline {
+  display: inline;
+  padding: 0;
+
+  li {
+    display: inline;
+    list-style-type: none;
+    padding: 0 1em 0 0; /* LTR */
+  }
+}
+
+/* The inline field label used by the Fences module. */
+span.field-label {
+  padding: 0 1em 0 0; /* LTR */
+}
+
+/**
+ * "More" links.
+ */
+.more-link {
+  margin-top: 1em;
+  text-align: left; /* LTR */
+}
+.more-help-link {
+  text-align: right; /* LTR */
+}
+.more-help-link a {
+  background-image: inline-image("help.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *background-image: image-url("help.png");
+  }
+  background-position: 0 50%; /* LTR */
+  background-repeat: no-repeat;
+  padding: 1px 0 1px 20px; /* LTR */
+}
+
+/**
+ * Blocks.
+ */
+
+/* Block wrapper. */
+.block {
+  margin-bottom: rhythm(1);
+}
+
+/**
+ * Menus.
+ */
+.menu__item.is-leaf {
+  list-style-image: inline-image("menu-leaf.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *list-style-image: image-url("menu-leaf.png");
+  }
+  list-style-type: square;
+}
+.menu__item.is-expanded {
+  list-style-image: inline-image("menu-expanded.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *list-style-image: image-url("menu-expanded.png");
+  }
+  list-style-type: circle;
+}
+.menu__item.is-collapsed {
+  list-style-image: inline-image("menu-collapsed.png"); /* LTR */
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *list-style-image: image-url("menu-collapsed.png"); /* LTR */
+  }
+  list-style-type: disc;
+}
+
+/* The active item in a Drupal menu. */
+.menu a.active {
+  color: $black;
+}
+
+/**
+ * Marker.
+ */
+
+/* The "new" or "updated" marker. */
+.new,
+.update {
+  color: $free_speech_red;
+  /* Remove background highlighting from <mark> in normalize. */
+  background-color: transparent;
+}
+
+/**
+ * Unpublished note.
+ */
+
+/* The word "Unpublished" displayed underneath the content. */
+.unpublished {
+  height: 0;
+  overflow: visible;
+  /* Remove background highlighting from <mark> in normalize. */
+  background-color: transparent;
+  color: $gray-d8;
+  font-size: 75px;
+  line-height: 1;
+  font-family: Impact, "Arial Narrow", Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  /* A very nice CSS3 property. */
+  word-wrap: break-word;
+}
+@if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+  .lt-ie8 .node-unpublished>*,
+  .lt-ie8 .comment-unpublished>* {
+    /* Otherwise these elements will appear below the "Unpublished" text. */
+    position: relative;
+  }
+}
+
+/**
+ * Comments.
+ */
+
+/* Wrapper for the list of comments and its title. */
+.comments {
+  margin: rhythm(1) 0;
+}
+
+/* Preview of the comment before submitting new or updated comment. */
+.comment-preview {
+  background-color: $ivory;
+}
+
+/* Wrapper for a single comment. */
+.comment {
+
+  /* Comment's permalink wrapper. */
+  .permalink {
+    text-transform: uppercase;
+    font-size: 75%;
+  }
+}
+
+/* Nested comments are indented. */
+.indented {
+  /* Drupal core uses a 25px left margin. */
+  margin-left: $indent-amount; /* LTR */
+}
+
+/**
+ * Forms.
+ */
+
+/* Wrapper for a form element (or group of form elements) and its label. */
+.form-item {
+  margin: rhythm(1) 0;
+
+  /* Pack groups of checkboxes and radio buttons closer together. */
+  .form-checkboxes & ,
+  .form-radios & {
+    /* Drupal core uses "0.4em 0". */
+    // margin: 0;
+  }
+
+  /* Form items in a table. */
+  tr.odd &,
+  tr.even & {
+    margin: 0;
+  }
+
+  /* Highlight the form elements that caused a form submission error. */
+  input.error,
+  textarea.error,
+  select.error {
+    border: 1px solid $free_speech_red;
+  }
+
+  /* The descriptive help text (separate from the label). */
+  .description {
+    font-size: 0.85em;
+  }
+}
+
+/* The part of the label that indicates a required field. */
+.form-required {
+  color: $free_speech_red;
+}
+
+/* Labels for radios and checkboxes. */
+label.option {
+  display: inline;
+  font-weight: normal;
+}
+
+/* Buttons used by contrib modules like Media. */
+a.button {
+  @include appearance(button);
+}
+
+/* Password confirmation. */
+.password-parent,
+.confirm-parent {
+  margin: 0;
+}
+
+/* Drupal's default login form block. */
+#user-login-form {
+  text-align: left; /* LTR */
+}
+
+/**
+ * OpenID
+ *
+ * The default styling for the OpenID login link seems to assume Garland's
+ * styling of list items.
+ */
+
+/* OpenID creates a new ul above the login form's links. */
+.openid-links {
+  /* Position OpenID's ul next to the rest of the links. */
+  margin-bottom: 0;
+}
+
+/* The "Log in using OpenID" and "Cancel OpenID login" links. */
+.openid-link,
+.user-link {
+  margin-top: rhythm(1);
+}
+html.js #user-login-form li.openid-link,
+#user-login-form li.openid-link {
+  /* Un-do some of the padding on the ul list. */
+  margin-left: -20px; /* LTR */
+}
+#user-login ul {
+  margin: rhythm(1) 0;
+}
+
+/**
+ * Drupal admin tables.
+ */
+form {
+  th {
+    text-align: left; /* LTR */
+    padding-right: 1em; /* LTR */
+    border-bottom: 3px solid $gray-c;
+  }
+  tbody {
+    border-top: 1px solid $gray-c;
+  }
+  table ul {
+    margin: 0;
+  }
+}
+tr.even,
+tr.odd {
+  background-color: $gray-e;
+  border-bottom: 1px solid $gray-c;
+  padding: 0.1em 0.6em;
+}
+tr.even {
+  background-color: $white;
+}
+@if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+  .lt-ie8 tr.even,
+  .lt-ie8 tr.odd {
+    th,
+    td {
+      /* IE doesn't display borders on table rows. */
+      border-bottom: 1px solid $gray-c;
+    }
+  }
+}
+
+/* Markup generated by theme_tablesort_indicator(). */
+td.active {
+  background-color: $gray-d;
+}
+
+/* Center checkboxes inside table cell. */
+td.checkbox,
+th.checkbox {
+  text-align: center;
+}
+
+/* Drupal core wrongly puts this in system.menus.css. Since we override that, add it back. */
+td.menu-disabled {
+  background: $gray-c;
+}
+
+/**
+ * Autocomplete.
+ *
+ * @see autocomplete.js
+ */
+
+/* Suggestion list. */
+#autocomplete .selected {
+  background: $cerulean;
+  color: $white;
+}
+
+/**
+ * Collapsible fieldsets.
+ *
+ * @see collapse.js
+ */
+.fieldset-legend {
+  html.js .collapsible & {
+    background-image: inline-image("menu-expanded.png");
+    @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+      *background-image: image-url("menu-expanded.png");
+    }
+    background-position: 5px 65%; /* LTR */
+    background-repeat: no-repeat;
+    padding-left: 15px; /* LTR */
+  }
+  html.js .collapsed & {
+    background-image: inline-image("menu-collapsed.png"); /* LTR */
+    @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+      *background-image: image-url("menu-collapsed.png"); /* LTR */
+    }
+    background-position: 5px 50%; /* LTR */
+  }
+  .summary {
+    color: $gray-9;
+    font-size: 0.9em;
+    margin-left: 0.5em;
+  }
+}
+
+/**
+ * TableDrag behavior.
+ *
+ * @see tabledrag.js
+ */
+tr.drag {
+  background-color: $ivory;
+}
+tr.drag-previous {
+  background-color: $light_yellow;
+}
+.tabledrag-toggle-weight {
+  font-size: 0.9em;
+}
+
+/**
+ * TableSelect behavior.
+ *
+ * @see tableselect.js
+ */
+tr.selected td {
+  background: $cream;
+}
+
+/**
+ * Progress bar.
+ *
+ * @see progress.js
+ */
+.progress {
+  font-weight: bold;
+
+  .bar {
+    background: $gray-c;
+    border-color: $gray-6;
+    margin: 0 0.2em;
+    @include border-radius(3px);
+  }
+  .filled {
+    background-color: $cerulean;
+    background-image: image-url("progress.gif");
+  }
+}
+
+ul.fancy-bullets-no {
+  @include bulleted_list;
+  padding-left: 10px;
+  margin-top: 5px;
+  li {
+    @include bulleted_list_item;
+    list-style-type: none;
+  }
+}
+
+#tabs-0-main_bottom {
+  .view-footer {
+    clear: both;
+    text-align: center;
+  }
+}
+
+h3 {
+  &.left {
+    display: inline-block;
+    float: left;
+  }
+}
+
+h4 {
+  &.right {
+    display: inline-block;
+    text-align: right;
+    float: right
+  }
+}
+
+.view-registration-rules-links {
+  a {
+    color: $white;
+  }
+  .views-row-1 {
+    div.admin-button-blue {
+      display: inline-block;
+      margin-right: 20px;
+      width: 90px;
+      text-align: center;
+    }
+  }
+}
+
+.form--without-wysiwyg-toggle {
+  .wysiwyg-toggle-wrapper {
+    display: none;
+  }
+}
+
+ul.nobullet {
+  padding-left: 0;
+  li {
+    list-style-type: none;
+    list-style-image: none;
+    margin-left: 0;
+  }
+}
+
+/* User Revisions tables */
+#gn2-user-table {
+  width: 100%;
+  caption {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    span.label {
+      font-weight: bold;
+    }
+  }
+  thead {
+    background-color: $gray-d1;
+    tr {
+      th {
+        text-align: left;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+  }
+  tbody {
+    tr {
+      td:first-child,
+      td:nth-child(2) {
+        white-space: nowrap;
+      }
+      td {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+.page-cac-login {
+  header {
+    font-weight: bold;
+    margin: 5px 0 10px;
+  }
+  a.large-callout-button {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  article {
+    h4 {
+      font-style: normal;
+    }
+  }
+}
+
+/***************************************************
+* RD-3506 IE 11 themeing layout issues across site *
+***************************************************/
+.mobile-show {
+  display: none;
+  @include breakpoint($small-screen-and-down) {
+    display: block;
+  }
+}
+.mobile-hide {
+  display: block;
+  @include breakpoint($small-screen-and-down) {
+    display: none;
+  }
+}

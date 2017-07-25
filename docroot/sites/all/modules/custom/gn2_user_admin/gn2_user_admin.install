@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Gn2_user_admin module installation.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_user_admin_schema() {
+
+  $schema['gn2_user_admin_access'] = array(
+    'fields' => array(
+      'delta' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Field Delta',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'title' => 'uid',
+        'description' => 'User id',
+      ),
+
+      'field_name' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => '',
+        'title' => 'field_name',
+        'description' => 'Field Name',
+      ),
+      'level' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => 'everyone',
+        'title' => 'privacy_level',
+        'description' => 'Privacy Level',
+      ),
+
+    ),
+    'primary key' => array('delta'),
+  );
+
+  return $schema;
+}

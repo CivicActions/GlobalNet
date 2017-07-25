@@ -1,0 +1,22 @@
+/* line 1, ../../sass/component/block_sidebar_node_list.scss */
+.sidebar-node-list--item {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #D6D6D6;
+}
+/* line 5, ../../sass/component/block_sidebar_node_list.scss */
+.sidebar-node-list--item.views-row-last {
+  border: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+/* line 10, ../../sass/component/block_sidebar_node_list.scss */
+.sidebar-node-list--item .sidebar-node-list--item--title {
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 3px;
+}
+/* line 15, ../../sass/component/block_sidebar_node_list.scss */
+.sidebar-node-list--item .sidebar-node-list--item--text {
+  font-size: .9em;
+}

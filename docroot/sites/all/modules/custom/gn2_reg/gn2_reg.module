@@ -1,0 +1,729 @@
+<?php
+/**
+ * @file
+ * A module that provides a multi-step user registration form.
+ *
+ * @todo
+ * Update form default values for all fields on each step.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_reg_menu() {
+
+  $items = array();
+
+  $items['node/%node/registration'] = array(
+    'page callback' => 'gn2_reg_form_page',
+    'page arguments' => array('userreg'),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'entityform_access',
+    'access arguments' => array('submit', 'userreg'),
+  );
+
+  $items['node/%node/join'] = array(
+    'page callback' => 'gn2_reg_form_page',
+    'page arguments' => array('join_org'),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'entityform_access',
+    'access arguments' => array('submit', 'join_org'),
+  );
+
+  $items['admin/config/content/gn2_reg'] = array(
+    'title' => 'GN2 Registration Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_reg_admin'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
+    'file' => 'gn2_reg.admin.inc',
+  );
+
+  return $items;
+
+} // function gn2_reg_menu()
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_reg_block_info() {
+
+  $blocks['gn2_reg_header'] = array(
+    'info' => t('Header registration links'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  return $blocks;
+
+} // function gn2_reg_block_info()
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_reg_block_view($delta = '') {
+
+  $block = array();
+
+  switch ($delta) {
+    case 'gn2_reg_header':
+      $block['subject'] = '';
+      $block['content'] = gn2_reg_header_links();
+      break;
+  }
+
+  return $block;
+
+} // function gn2_reg_block_view()
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_reg_theme($existing, $type, $theme, $path) {
+
+  return array(
+    'gn2_reg_header' => array(
+      'variables' => array(
+        'help' => NULL,
+        'reg' => NULL,
+        'auth' => NULL,
+        'cac' => NULL,
+      ),
+      'template' => 'gn2_reg-header',
+    ),
+  );
+
+} // function gn2_reg_theme()
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_reg_module_implements_alter(&$implementations, $hook) {
+
+  if ($hook == 'form_alter' && isset($implementations['gn2_reg'])) {
+    $group = $implementations['gn2_reg'];
+    unset($implementations['gn2_reg']);
+    $implementations['gn2_reg'] = $group;
+  }
+
+} // function gn2_og_module_implements_alter()
+
+/**
+ * Imlements hook_form_FORM_ID_alter().
+ */
+function gn2_reg_form_entityform_edit_form_alter(&$form, &$form_state, $form_id) {
+
+  // Only display the 2 page registration on the node/[nid]/registration page.
+  if (arg(2) == 'registration') {
+    if ($form_id == 'userreg_entityform_edit_form' && array_key_exists('step', $form_state)) {
+      switch ($form_state['step']) {
+        case 3:
+          gn2_reg_register_alter_page_three($form, $form_state);
+          break;
+
+        case 2:
+          gn2_reg_register_alter_page_two($form, $form_state);
+          break;
+
+        default:
+          gn2_reg_register_alter_page_one($form, $form_state);
+      }
+    }
+    elseif ($form_id == 'userreg_entityform_edit_form') {
+      gn2_reg_register_alter_page_one($form, $form_state);
+    }
+  }
+  elseif ($form_id == 'join_org_entityform_edit_form') {
+    // Hide Group Ref field.
+    $form['og_entityform_group_ref']['#access'] = FALSE;
+    $form['field_status']['#access'] = FALSE;
+    $org = arg(1);
+    $form['field_organization'][LANGUAGE_NONE]['#default_value'] = ($org) ? $org : '';
+    $form['field_organization'][LANGUAGE_NONE]['#attributes']['disabled'] = 'disabled';
+  }
+
+} // function gn2_reg_form_entityform_edit_form_alter()
+
+/**
+ * Form alter - Step 1 of user registration.
+ */
+function gn2_reg_register_alter_page_one(&$form, &$form_state) {
+  // Set the step.
+  $form_state['step'] = 1;
+
+  // Removes captcha in the first step.
+  unset($form['og_entityform_group_ref']);
+
+  // Get the Privacy Statement text.
+  $text = variable_get('gn2_reg_tou', NULL);
+
+  $form['disclosuer'] = array(
+    '#markup' => $text['value'],
+    '#prefix' => '<div id="privacy-statement">',
+    '#suffix' => '</div>',
+  );
+
+  // Update the form values.
+  $form = gn2_reg_set_values($form, $form_state, 1);
+
+  // Hide Group Ref field.
+  $form['og_entityform_group_ref']['#access'] = FALSE;
+  $form['field_status']['#access'] = FALSE;
+
+  // Add a next button.
+  $form['actions']['accept'] = array(
+    '#type' => 'submit',
+    '#value' => 'Accept',
+    '#submit' => array('gn2_reg_register_accept'),
+  );
+
+  // Remove the 'Create new account' button from step 1.
+  unset($form['actions']['submit']);
+}
+
+/**
+ * Form alter - page 2.
+ */
+function gn2_reg_register_alter_page_two(&$form, &$form_state) {
+  // Set the step.
+  $form_state['step'] = 2;
+
+  // Removes captcha in the first step.
+  unset($form['og_entityform_group_ref']);
+  // Add text for step 1.
+  $form['step'] = array(
+    '#markup' => '<h3 class="left">' . t('Enter Basic Account Information') . '</h3><h4 class="right">' . t('Step 1 of 2') . '</h4>',
+    '#weight' => -10,
+    '#suffix' => '<div class="clearfix"></div>',
+  );
+
+  // Update the form values.
+  $form = gn2_reg_set_values($form, $form_state, 2);
+
+  // Hide Group Ref field.
+  $form['og_entityform_group_ref']['#access'] = FALSE;
+  $form['field_status']['#access'] = FALSE;
+
+  // Add a next button.
+  $form['actions']['next'] = array(
+    '#type' => 'submit',
+    '#value' => 'Next',
+    '#submit' => array('gn2_reg_register_next'),
+  );
+
+  // Remove the 'Create new account' button from step 1.
+  unset($form['actions']['submit']);
+
+} // function gn2_reg_register_alter_page_one()
+
+/**
+ * Form alter - Step 2 of user registration.
+ */
+function gn2_reg_register_alter_page_three(&$form, &$form_state) {
+
+  // Set the step.
+  $form_state['step'] = 3;
+
+  // Add text for step 2.
+  $form['step'] = array(
+    '#markup' => '<h3 class="left">' . t('Additional Account Options') . '</h3><h4 class="right">' . t('Step 2 of 2') . '</h4>',
+    '#weight' => -10,
+    '#suffix' => '<div class="clearfix"></div>',
+  );
+
+  // Update the form values.
+  $form = gn2_reg_set_values($form, $form_state, 3);
+
+  // Add a back button.
+  $form['actions']['back'] = array(
+    '#type' => 'submit',
+    '#value' => t('Back'),
+    '#submit' => array('gn2_reg_register_back'),
+    '#limit_validation_errors' => array(),
+  );
+
+  // Hide Group Ref field.
+  $form['field_status']['#access'] = FALSE;
+
+  // Adjust the submit button to come last.
+  $form['actions']['submit']['#weight'] = 100;
+  // Add our own validation handler.
+  $form['actions']['submit']['#validate'] = array('gn2_reg_register_validate');
+  // Replace default submit value.
+  $form['actions']['submit']['#value'] = t('Submit');
+  // Add an additional submit handler to the whole form.
+  $form['actions']['submit']['#submit'][] = 'gn2_reg_register_submit';
+
+} // function gn2_reg_register_alter_page_two()
+
+/**
+ * Validation handler for user registration form.
+ *
+ * @see gn2_reg_register_submit()
+ */
+function gn2_reg_register_validate(&$form, &$form_state) {
+
+  if (!valid_email_address($form_state['values']['field_email'][LANGUAGE_NONE][0]['email'])) {
+    form_set_error('field_email', t('Please enter a valid email address'));
+  }
+  else {
+    $existing = gn2_reg_check_email($form_state['values']['field_email'][LANGUAGE_NONE][0]['email']);
+    if ($existing) {
+      $login = l(t('login'), 'user');
+      $pwhelp = l(t('request a new password'), 'user/password');
+      form_set_error('field_email', t('A user already exists with this email address. Either !login or !pwhelp', array('!login' => $login, '!pwhelp' => $pwhelp)));
+    }
+  }
+
+} // function gn2_reg_register_validate()
+
+/**
+ * Submit handler for user registration form.
+ *
+ * @see gn2_reg_register_validate
+ */
+function gn2_reg_register_submit(&$form, &$form_state) {
+  // Adds group to redirect url in order to identify group for theming purposes.
+  $form_state['redirect'][1]['query']['gid']
+    = $form_state['values']['field_organization'][LANGUAGE_NONE][0]['target_id'];
+}
+
+/**
+ * Submit handler for next button.
+ *
+ * Capture the values from page one and store them away so they can be used
+ * at final submit time.
+ */
+function gn2_reg_register_next($form, &$form_state) {
+
+  $existing = gn2_reg_check_email($form_state['values']['field_email'][LANGUAGE_NONE][0]['email']);
+  if ($existing) {
+    $login = l(t('login'), 'user');
+    $pwhelp = l(t('request a new password'), 'user/password');
+    form_set_error('field_email', t('A user already exists with this email address. Either !login or !pwhelp', array('!login' => $login, '!pwhelp' => $pwhelp)));
+  }
+
+  // Set the step.
+  $step = $form_state['step'];
+  $form_state['page_values'][$step] = $form_state['values'];
+
+  $step++;
+  if (array_key_exists($step, $form_state['page_values'])) {
+    $form_state['values'] = $form_state['page_values'][$step];
+  }
+
+  $form_state['step'] = $step;
+  // Rebuild the form.
+  $form_state['rebuild'] = TRUE;
+
+} // function gn2_reg_register_next()
+
+/**
+ * Submit handler for back button.
+ *
+ * Since #limit_validation_errors = array() is set, values from page 2
+ * will be discarded.
+ */
+function gn2_reg_register_back($form, &$form_state) {
+
+  // Set the step.
+  $step = $form_state['step'];
+  $all_fields = gn2_reg_get_fields();
+
+  foreach ($all_fields as $page) {
+    foreach ($page as $name => $type) {
+      switch ($type) {
+        case 'mail':
+          $form_state['storage'][$name]
+            = (!empty($form['account'][$name]['#default_value'])) ?
+            $form['account'][$name]['#default_value'] : '';
+          break;
+
+        case 'text':
+          $form_state['storage'][$name]
+            = (!empty($form[$name][LANGUAGE_NONE][0]['value']['#default_value'])) ?
+            $form[$name][LANGUAGE_NONE][0]['value']['#default_value'] : '';
+          break;
+
+        case 'list':
+          $form_state['storage'][$name]
+            = (!empty($form[$name][LANGUAGE_NONE]['#default_value'])) ?
+            $form[$name][LANGUAGE_NONE]['#default_value'] : '';
+          break;
+      }
+    }
+  }
+
+  $step--;
+  $form_state['values'] = $form_state['page_values'][$step];
+
+  // Set the step.
+  $form_state['step'] = $step;
+
+  // Rebuild the form.
+  $form_state['rebuild'] = TRUE;
+
+} // function gn2_reg_register_back()
+
+/**
+ * Privacy Statement submission handler.
+ */
+function gn2_reg_register_accept($form, &$form_state) {
+  // Set the step.
+  $step = $form_state['step'];
+  $form_state['page_values'][$step] = $form_state['values'];
+
+  $step++;
+  if (array_key_exists($step, $form_state['page_values'])) {
+    $form_state['values'] = $form_state['page_values'][$step];
+  }
+
+  $form_state['step'] = $step;
+  // Rebuild the form.
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Set the values for the form.
+ *
+ * @param array $form
+ *   The form builder array.
+ * @param array $form_state
+ *   The form state array.
+ * @param int $step
+ *   The step that form is on.
+ *
+ * @return array
+ *   Returns the form builder array with our new values.
+ */
+function gn2_reg_set_values(array $form, array &$form_state, $step) {
+
+  $all_fields = gn2_reg_get_fields();
+  $weight = 0;
+  $require_nationality = array('field_nationality', 'field_country_of_representation');
+
+  foreach ($all_fields as $page => $fields) {
+    $show = ($page === $step) ? TRUE : FALSE;
+    foreach ($fields as $name => $type) {
+      $weight++;
+      switch ($type) {
+        case 'list':
+          $form[$name][LANGUAGE_NONE]['#default_value']
+            = (!empty($form_state['values'][$name][LANGUAGE_NONE][0]['value'])) ?
+            $form_state['values'][$name][LANGUAGE_NONE][0]['value'] : '';
+          $form[$name]['#access'] = $show;
+          $form[$name]['#weight'] = $weight;
+          if (in_array($name, $require_nationality)) {
+            $required = gn2_reg_check_required();
+            if ($required && $show) {
+              $form[$name]['#access'] = TRUE;
+              $form[$name][LANGUAGE_NONE]['#required'] = TRUE;
+            }
+            else {
+              $form[$name]['#access'] = FALSE;
+            }
+          }
+          break;
+
+        case 'text':
+          if ($name == 'field_email') {
+            $form[$name][LANGUAGE_NONE][0]['email']['#default_value']
+              = (empty($form_state['values'][$name][LANGUAGE_NONE][0]['email'])) ?
+              NULL : $form_state['values'][$name][LANGUAGE_NONE][0]['email'];
+          }
+          else {
+            $form[$name][LANGUAGE_NONE][0]['value']['#default_value']
+              = (empty($form_state['values'][$name][LANGUAGE_NONE][0]['value'])) ?
+              NULL : $form_state['values'][$name][LANGUAGE_NONE][0]['value'];
+          }
+          $form[$name]['#access'] = $show;
+          $form[$name]['#weight'] = $weight;
+          break;
+
+        case 'hidden':
+          $nid = ($name == 'field_organization') ? arg(1) : NULL;
+          $form[$name][LANGUAGE_NONE]['#type'] = 'hidden';
+          $form[$name][LANGUAGE_NONE]['#value'] = $nid;
+          $form[$name]['#access'] = $show;
+      }
+    }
+  }
+
+  return $form;
+
+} // function gn2_reg_set_values()
+
+/**
+ * Returns an array of form fields.
+ */
+function gn2_reg_get_fields() {
+
+  return array(
+    2 => array(
+      'field_name_first' => 'text',
+      'field_name_last' => 'text',
+      'field_email' => 'text',
+      'field_country_of_residence' => 'list',
+      'field_nationality' => 'list',
+      'field_country_of_representation' => 'list',
+      'field_preferred_language' => 'list',
+    ),
+    3 => array(
+      'field_why_do_you_want' => 'list',
+      'field_which_course' => 'text',
+      'field_who_teaches' => 'text',
+      'field_which_course_teach' => 'text',
+      'field_which_event_attend' => 'text',
+      'field_which_course_did_you' => 'text',
+      'field_where_do_you_work' => 'list',
+      'field_anything_else' => 'text',
+      'field_organization' => 'hidden',
+    ),
+  );
+
+} // function gn2_reg_get_fields()
+
+/**
+ * Create a page on which to display the form.
+ *
+ * @param string $type
+ *   The entityform type.
+ */
+function gn2_reg_form_page($type) {
+
+  $form = NULL;
+  if ($type) {
+    module_load_include('inc', 'entityform', 'entityform.admin');
+    $form = entityform_form_wrapper(entityform_empty_load($type), 'submit', 'embedded');
+  }
+
+  return $form;
+
+} // function gn2_reg_form_page()
+
+/**
+ * Creates the header links to the registration page.
+ */
+function gn2_reg_header_links() {
+
+  global $user;
+
+  $node = menu_get_object();
+  $org = (is_object($node) && $node->type == 'organization') ? TRUE : FALSE;
+  $auth = ($user->uid >= 1) ? TRUE : FALSE;
+  $path = ($auth) ? 'join' : 'registration';
+  $groupie = ($org && og_is_member('node', $node->nid)) ? TRUE : FALSE;
+  $help = NULL;
+  $reg = NULL;
+  $fpass = (!$auth) ? l(t('Forgot Password?'), 'user/password') : NULL;
+
+  if ($org) {
+    $allow_reg = field_get_items('node', $node, 'field_allow_account_request');
+    $allowed = (is_array($allow_reg) && $allow_reg[0]['value'] == 1) ? TRUE : FALSE;
+  }
+
+  if ($org && $allowed && !$groupie) {
+    $text = ($auth) ? t('Join organization') : t('Request an account');
+    $reg = l($text, 'node/' . $node->nid . '/' . $path);
+  }
+
+  // Show CAC link for unauthenticated users.
+  if (module_exists('gn2_cac')) {
+    $cac = ($auth || arg(1) == 'cac') ? NULL : l(t('Log in with CAC'), 'user/cac', array(
+      'query' => array('destination' => current_path()),
+    ));
+  }
+
+  return theme('gn2_reg_header', array(
+    'help' => $help,
+    'reg' => $reg,
+    'auth' => $auth,
+    'fpass' => $fpass,
+    'cac' => (isset($cac)) ? $cac : NULL,
+  ));
+} // function gn2_reg_header_links()
+
+/**
+ * Create a new user base on the entity form values.
+ *
+ * @param array $form_values
+ *   The form values that were submitted.
+ *
+ * @return object
+ *   Returns the new user object.
+ */
+function gn2_reg_create_user(array $form_values) {
+
+  $first = $form_values['field_name_first'][LANGUAGE_NONE][0]['value'];
+  $last = $form_values['field_name_last'][LANGUAGE_NONE][0]['value'];
+  $name = gn2_reg_check_username(check_plain($first), check_plain($last));
+  $new_user = array(
+    'name' => $name,
+    'mail' => $form_values['field_email'][LANGUAGE_NONE][0]['email'],
+    'status' => 0,
+    'field_name_first' => array(LANGUAGE_NONE => array(array('value' => check_plain($first)))),
+    'field_name_last' => array(LANGUAGE_NONE => array(array('value' => check_plain($last)))),
+    'field_country_of_residence' => array(LANGUAGE_NONE => array(array('value' => $form_values['field_country_of_residence'][LANGUAGE_NONE][0]['value']))),
+    'field_nationality' => array(LANGUAGE_NONE => array(array('value' => $form_values['field_nationality'][LANGUAGE_NONE][0]['value']))),
+    'field_country_of_representation' => array(LANGUAGE_NONE => array(array('value' => $form_values['field_country_of_representation'][LANGUAGE_NONE][0]['value']))),
+  );
+
+  user_save(NULL, $new_user);
+
+  return $new_user;
+
+} // function gn2_reg_create_user()
+
+/**
+ * Look up username.
+ *
+ * @param string $first_name
+ *   The users first name.
+ * @param string $last_name
+ *   The users last name.
+ *
+ * @return string
+ *   Returns a username.
+ */
+function gn2_reg_check_username($first_name, $last_name, $count = NULL) {
+
+  // Check if a user already exists with the same first and last name.
+  // If one does, add an integer.
+  while (is_object(user_load_by_name($first_name . '.' . $last_name . $count))) {
+    $count++;
+  }
+
+  return $first_name . '.' . $last_name . $count;
+
+} // function gn2_reg_check_username()
+
+/**
+ * Look up email address.
+ *
+ * @param string $email
+ *   The submitted email address.
+ *
+ * @return bool
+ *   Return TRUE if a user exists with this email address.
+ */
+function gn2_reg_check_email($email) {
+
+  $existing = user_load_by_mail($email);
+  return (is_object($existing)) ? TRUE : FALSE;
+
+} // function gn2_reg_check_email()
+
+/**
+ * Subscribe a user to an organization.
+ *
+ * @param object $user
+ *   The user object.
+ * @param int $group
+ *   The node ID for the organization.
+ */
+function gn2_reg_subscribe_user($user, $group) {
+
+  if (!is_object($user)) {
+    $user = user_load_by_mail($user['mail']);
+  }
+
+  $values = array(
+    'entity_type' => 'user',
+    'entity' => $user,
+    'field_name' => FALSE,
+    'state' => 1,
+  );
+
+  return og_group('node', $group, $values);
+
+} // function gn2_reg_subscribe_user()
+
+/**
+ * Check to see if nationality fields are required.
+ */
+function gn2_reg_check_required() {
+
+  $org_id = arg(1);
+  if (!$org_id) {
+    return NULL;
+  }
+  $org = node_load($org_id);
+  $req = field_get_items('node', $org, 'field_require_nationality');
+
+  return $req[0]['value'];
+
+} // function gn2_reg_check_required()
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function gn2_reg_entity_view_alter(&$build, $type) {
+  // Check to see if the current user is an Org or HR Manager.
+  $is_manager = (function_exists('gn2_manager_is_manager')) ?
+      gn2_manager_is_manager(array('org_manager', 'hr_manager')) : FALSE;
+  if ($type == 'entityform' && $build['#bundle'] == 'userreg' &&
+      (user_access('administer users') || $is_manager)) {
+    $build['#prefix'] = views_embed_view('registration_rules_links', 'anonymous_links', arg(1));
+  }
+  elseif ($type == 'entityform' && $build['#bundle'] == 'join_org' &&
+      (user_access('administer users') || $is_manager)) {
+    $build['#prefix'] = views_embed_view('registration_rules_links', 'member_links', arg(1));
+  }
+
+} // function gn2_reg_entity_view_alter()
+
+/**
+ * Check if the user is blocked. If so, add form to unblock the user.
+ *
+ * @param object $new_user
+ *   The user object.
+ *
+ * @return string
+ *   Return either the form on NULL.
+ */
+function gn2_reg_confirm_user($new_user) {
+
+  if ($new_user->status == 0) {
+    $form = drupal_get_form('gn2_reg_confirm_user_form', $new_user->uid);
+    return render($form);
+  }
+
+} // function gn2_reg_confirm_user()
+
+/**
+ * Form constructor for the user confirmation form.
+ *
+ * @see gn2_reg_confirm_user_validate()
+ * @see gn2_reg_confirm_user_submit()
+ *
+ * @ingroup forms
+ */
+function gn2_reg_confirm_user_form($form, &$form_state, $uid) {
+
+  $form['user'] = array(
+    '#type' => 'hidden',
+    '#value' => $uid,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Confirm user'),
+  );
+
+  return $form;
+
+} // function gn2_reg_confirm_user_form()
+
+/**
+ * Form validation handler for user confirmation form.
+ *
+ * @see gn2_reg_confirm_user_submit()
+ */
+function gn2_reg_confirm_user_form_validate($form, &$form_state) {
+
+  $user = user_load($form_state['values']['user']);
+  $user->status = 1;
+  user_save($user);
+
+  drupal_set_message(t('!user has been activated.', array('!user' => $user->name)), 'status', FALSE);
+
+} // function gn2_reg_confirm_user_form_validate()

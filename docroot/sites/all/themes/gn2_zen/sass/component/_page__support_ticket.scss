@@ -1,0 +1,112 @@
+#support-ticket {
+
+  @include breakpoint($small-screen-and-up) {
+    .gn2-3col--col1 {
+      @include zen-grid-item(3, 1);
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(10, 4);
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(3, 14);
+      .teaser__news--meta {
+        text-align: left !important;
+        > .panel-pane {
+          display: block !important;
+        }
+      }
+      clear: none;
+    }
+  }
+
+  .pane-title {
+    font-size: medium;
+  }
+
+  .views-label {
+    font-weight: bold;
+  }
+
+  .field-content {
+    display: inline;
+  }
+  .form-item-anonymous-publishing-options {
+    display: none;
+  }
+
+  .pane-support-details {
+    font-size: .9em;
+    border: 1pt blue;
+    .pane-title {
+      text-align: center;
+    }
+
+  }
+
+  .problem-detail {
+    .views-label {
+      text-transform: uppercase;
+    }
+    .views-field {
+      margin-bottom: 1em;
+    }
+  }
+
+  .support-detail {
+    .views-field {
+      margin-bottom: 1em;
+    }
+    .views-field-field-support-priority {
+      font-weight: bold;
+      color: blue;
+      text-transform: uppercase;
+    }
+  }
+
+  .panel-pane.request-detail {
+    background: rgba(228, 228, 228, 0.88);
+    padding: 1em;
+  }
+
+  .panel-pane.reporter-detail {
+    background: rgba(228, 228, 228, 0.88);
+    padding: 1em;
+    font-size: .9em;
+  }
+}
+
+.node-type-support {
+  .file-icon {
+    height: 40px;
+    width: 40px;
+  }
+
+  .page-node-add-support {
+
+    .form-item-title {
+      display: none;
+    }
+
+    .fieldset-legend {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .fieldset-description {
+      margin-top: 0em !important;
+    }
+  }
+}
+
+#jira-title {
+  font-weight: bold;
+
+}
+
+#jira-status {
+  display: block;
+  float: right;
+  padding: 5px 15px;
+  border: thin solid #999;
+  background: #ccc;
+}

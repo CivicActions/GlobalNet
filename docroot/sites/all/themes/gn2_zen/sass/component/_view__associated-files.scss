@@ -1,0 +1,179 @@
+/*
+ * Styles for the mobile-only version of the Associated Files block.
+ * Reusing this code for the Folders files list Mobile list view.
+ */
+
+$icon-width: 3.75em;
+
+.associated-file--row,
+.files--list--row {
+  margin: 0.3em 0;
+  background: $white;
+  font-size: 0.9em;
+  &:nth-child(even) {
+    background-image: url(../images/table_row_background_even.png);
+  }
+  img.file-icon {
+    width: $icon-width;
+    vertical-align: middle;
+    @include breakpoint($xs-screen-only){
+      display: none;
+    }
+  }
+}
+
+.associated-file--extension {
+  text-transform: uppercase;
+}
+
+.associated-file--title {
+  @include breakpoint($xs-screen-only){
+    padding-left: 0.6em;
+    display: block;
+    vertical-align: middle;
+  }
+}
+
+.associated-file--size,
+.files__list--size,
+.files__list--edit {
+  // @include display_font;
+  // font-size: 1.3em;
+  vertical-align: bottom;
+  margin: 0 1em .5em 0;
+  display: block;
+  text-align: right;
+  color: $medium-gray;
+  @include breakpoint($xs-screen-only){
+    margin: 0;
+    font-size: 1.1em;
+  }
+}
+
+.files__list--date {
+  display: block;
+  margin-top: 0;
+}
+
+//====== Layout Styles =======
+.associated-file--left-col,
+.associated-file--right-col,
+.files__list--left-col,
+.files__list--middle-col,
+.files__list--right-col{
+  @include breakpoint($xs-screen-only){
+    padding: .2em .4em !important;
+  }
+  display: block;
+}
+
+@include breakpoint($xs-screen-only) {
+  .files__list--left-col   {padding: .2em .4em .2em .4em !important;}
+  .files__list--middle-col {padding: 0    0    .2em .4em !important;}
+  .files__list--right-col  {padding: .2em .4em .2em .4em !important;}  
+  .files__list--left-col a {font-size: 1.2em;}
+}
+
+$zen-gutter-width: 0px;
+$zen-column-count: 4 !global;
+
+.associated-file--row,
+.associated-file--left-col,
+.associated-file--right-col,
+.files--list--row,
+.files__list--right-col,
+.files__list--middle-col,
+.files__list--left-col {
+  @include zen-grid-item-base;
+}
+
+.associated-file--row,
+.files--list--row {
+  @include zen-grid-container();
+}
+
+.associated-file--left-col {
+  @include zen-grid-item(3, 1);
+}
+
+.associated-file--right-col {
+  @include zen-grid-item(1, 4);
+}
+
+/* ======== Layout for files downloads list in folders === */
+.files__list--left-col {
+  @include zen-grid-item(4, 1);
+}
+
+.files__list--middle-col {
+  @include zen-grid-item(2, 1);
+  @include zen-clear();
+  padding-left: 1em;
+  @include breakpoint($small-screen) {
+    padding-left: 4em;
+  }
+}
+
+.files__list--right-col {
+  @include zen-grid-item(2, 3);
+}
+
+$zen-gutter-width: 0px;
+$zen-column-count: 24 !global;
+
+.files-list--mobile--row {
+  padding-top: .75em;
+  border-top: 1px solid $light-blue-gray;
+  margin-top: .75em;
+}
+
+@include breakpoint($small-screen-and-up) {
+  .files-list--mobile {
+    .files-list--mobile--row {
+      @include zen-grid-container();
+      .files-list--mobile--col-1 {
+        @include zen-grid-item(3, 1);
+        // background-color: peachpuff;
+      }
+      .files-list--mobile--col-2 {
+        @include zen-grid-item(14, 4);
+        // background-color: paleturquoise;
+      }
+      .files-list--mobile--col-3 {
+        @include zen-grid-item(7, 18);
+        // background-color: powderblue;
+        text-align: right;
+      }
+    }
+  }
+}
+
+.files-list--mobile--field-icon {
+  display: none;
+  @include breakpoint($small-screen-and-up) {
+    display: block;
+    padding-right: .25em;
+  }
+}
+
+.files-list--mobile--field-title {
+  font-weight: bold;
+  font-size: 1.125em;
+  margin-bottom: .125em;
+}
+
+.files-list--mobile--field-date {
+}
+
+.files-list--mobile--field-size {
+}
+
+.files-list--mobile--field-edit {
+  a {
+    @include button;
+    margin-bottom: 0;
+    @include breakpoint($xs-screen-only) {
+      margin-top: .375em;
+    }
+  }
+}

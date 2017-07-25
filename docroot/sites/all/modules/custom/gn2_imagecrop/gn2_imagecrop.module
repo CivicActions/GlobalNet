@@ -1,0 +1,85 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_imagecrop module.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function gn2_imagecrop_init() {
+  // If we are on a node, and user has perms, load the cropping js.
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) != 'edit') {
+    global $user;
+    $roles = array();
+    $node = node_load(arg(1));
+    if (!empty($node->og_group_ref[LANGUAGE_NONE][0]['target_id'])) {
+      $roles = og_get_user_roles('node', $node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
+    }
+
+    if (in_array('org_manager', $roles) || in_array('group_manager', $roles) || $user->uid == $node->uid) {
+      drupal_add_js(drupal_get_path('module', 'gn2_imagecrop') . '/js/cropper.min.js');
+      drupal_add_js(drupal_get_path('module', 'gn2_imagecrop') . '/gn2_imagecrop.js');
+      drupal_add_js(array(
+        'gn2_imagecrop' => array(
+          'nid' => arg(1),
+          'token' => drupal_get_token(),
+        ),
+      ), 'setting');
+    }
+  }
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_imagecrop_menu() {
+
+  $items['gn2-imagecrop/imagecrop/%'] = array(
+    'page callback' => 'gn2_imagecrop_image_process',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Saves our cropped image to server.
+ */
+function gn2_imagecrop_image_process() {
+  // Make sure our token is good.
+  if (drupal_valid_token($_POST['token'])) {
+
+    // Grab our file and extract the name.
+    $filename = $_POST['filename'];
+    $file_clean = explode('.', $filename);
+
+    // Give it a new timestamped name so we know it is cropped.
+    $file_full = $file_clean[0] . '-cropped-' . time() . '.png';
+
+    // Process our binary image data.
+    $img = $_POST['pngimageData'];
+    $img = str_replace('data:image/png;base64,', '', $img);
+    $img = str_replace(' ', '+', $img);
+    $data = base64_decode($img);
+
+    // Save our file and add it to drupal file management.
+    global $placed_file;
+    $placed_file = file_save_data($data, 'private://' . $file_full);
+
+    // Grab our node and body field.
+    $node = node_load($_POST['node']);
+
+    // Replace fid with cropped fid.
+    $node->body[LANGUAGE_NONE][0]['value'] = preg_replace_callback('/"fid":".+?","view_mode"/', function ($matches) use (&$placed_file) {
+      $fid = $placed_file->fid;
+
+      return '"fid":"' . $fid . '","view_mode"';
+
+    }, $node->body[LANGUAGE_NONE][0]['value']);
+
+    node_save($node);
+  }
+}

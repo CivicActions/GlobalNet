@@ -1,0 +1,40 @@
+
+/* ===== Theming the Posts Tab=======*/
+  //Override the fieldset style for collapsible fieldsets
+.user__tab--posts{
+  .fieldset-title > h4{
+    display: inline-block;
+    margin: 0;
+  }
+
+  .views-field,.field{
+    padding-bottom: 1em;
+  }
+  p{margin: 0;}
+  span.views-field{
+    font-size: 0.9em;
+  }
+
+ img{
+  border: 4px solid $light-blue-gray;
+ }
+ .views-content{
+  background: $white;
+ }
+ .views-row{
+  padding: 1em 1em 0;
+  background: $white;
+  .panel-display{
+    border-bottom: 1px solid $light-gray;
+    padding-bottom:1em;
+    
+  }
+ }
+
+}
+.user-account__view-header{
+  background: $white;
+  margin-bottom: 0;
+  padding: 1.5em 1em 1em;
+  border-bottom: 1px solid $gray-c6;
+}

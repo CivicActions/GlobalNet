@@ -1,0 +1,9 @@
+name = "GN2 Context"
+description = "Provides definitive API functions and plugins to identify the group and organization context and hierarchy for a page."
+core = 7.x
+package = GlobalNET
+dependencies[] = og
+files[] = includes/GN2GroupIDExtractor.php
+files[] = includes/GN2PathToOrganization.php
+files[] = views/gn2_context_handler_organization.inc
+files[] = views/gn2_context_handler_organization_short.inc

@@ -1,0 +1,336 @@
+// @file
+// Custom sass mixins
+//
+// Define the custom mixins for your project here.
+// http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#defining_a_mixin
+
+//==== Mixins for general use===
+//1. Text-related mixins
+
+@mixin light-text {
+  color: $gray-fc;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  a{
+    color: $gray-fc;
+  }
+}
+
+.light-text {
+  @include light-text;
+}
+
+@mixin small-text {
+  font-size: 0.875em;
+}
+
+.small-text {
+  @include small-text;
+}
+
+//=====Mixins for font styles=============
+$arial: Arial, Helvetica, 'Nimbus Sans L', sans-serif;
+$display-fallback: "Abadi MT Condensed Light", Calibri, Corbel, "Franklin Gothic", "Franklin Gothic Medium", "News Gothic MT", "Arial Narrow", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+$display-font-light: 'Teko-Light', $display-fallback;
+$display-font-regular: 'Teko-Regular', $display-fallback;
+$body-font: $arial;
+
+@mixin display_font($font-face: $display-font-regular) {
+  font-family: $font-face;
+  text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+@mixin body_font {
+  font-family: $body-font;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+@mixin page_title_wrapper {
+  margin-bottom: 0;
+  font-weight: normal;
+  font-size: 1.6em;
+  line-height: 2.7;
+  border-top: 1px solid $lighter-blue-gray;
+  border-bottom: 1px solid $lighter-blue-gray;
+  position: relative;
+}
+
+@mixin page_title {
+  @include body_font;
+  display: block;
+  font-size: 1.875em; /*30px*/
+  &.page-title,
+  &.page__title {
+    font-weight: normal;
+    margin: 0 0 0.5em;
+  }
+}
+
+@mixin all_caps {
+  text-transform: uppercase;
+}
+
+@mixin caption_text {
+  @include small-text;
+  color: $medium-gray;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.caption_text {
+  @include caption_text;
+}
+
+// Makes an element visually hidden, but accessible.
+// @see http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+@mixin element-invisible {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    clip: rect(1px 1px 1px 1px); // IE6 and IE7 use the wrong syntax.
+  }
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+// Turns off the element-invisible effect.
+@mixin element-invisible-off {
+  position: static !important;
+  clip: auto;
+  height: auto;
+  width: auto;
+  overflow: auto;
+}
+
+// Makes an element visually hidden by default, but visible when focused.
+@mixin element-focusable {
+  @include element-invisible;
+  &:active,
+  &:focus {
+    @include element-invisible-off;
+  }
+}
+
+/*=============== MIXINS FOR ICONS ================*/
+/* Mixins for adding an icon to a link or text.
+ * The variables are:
+ * 1) Left-padding - This is usually the width of the icon + 6px. We use this
+ *    to create some space for the icon to display before the accompanying text.
+ * 2) Icon-url -- This is the path to the icon image. The icons are originally stored in the images folder.
+ *    However, I created a folder (gn-icons) for storing the icons to make it easier to pick the icon
+ *    we want to add.
+ * NOTE: When adding this mixin to an element, please make sure to include it last
+ * so that the icon left-padding overrides any other padding values being added.
+ * For eg. The 'display-font' mixin has a padding value set in it.
+ */
+
+@mixin gn-icon($left-padding, $icon-url) {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color: transparent;
+  font-size: 1.2em;
+  line-height: 1.2;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 22px;
+  margin-right: 15px;
+  color: $medium-gray;
+  background-image: $icon-url;
+  padding-left: $left-padding;
+}
+
+@mixin bulleted_list {
+   padding: 0;
+   // list-style-image: url('../images/crosshairs_bullet.png');
+   list-style-type: none;
+}
+
+@mixin bulleted_list_item {
+  padding: 0 0 0 21px;
+  margin: 0 0 .5em 0;
+  background: url("../images/crosshairs_bullet.png") no-repeat 0px 4px rgba(0, 0, 0, 0);
+  font-size: .9em;
+  line-height: inherit;
+  margin-bottom: .1em;
+}
+
+@mixin subheading {
+  padding-bottom: .25em;
+  margin-top: 0;
+  margin-bottom: .3em;
+  border-bottom: 1px solid $light-blue-gray;
+  line-height: 0.9;
+  color: $grey-h3;
+}
+
+@mixin subheading_full {
+  @include subheading;
+  line-height: 1;
+  padding-bottom: 0.025em;
+  border-bottom: 3px solid $light-blue-gray;
+  margin-bottom: .5em;
+}
+
+@mixin subheading_short {
+  @include subheading;
+  padding-bottom: .25em;
+  margin-bottom: .15em;
+}
+
+@mixin panel-margin-bottom {
+  margin-bottom: 2em;
+}
+
+@mixin nobottommargin {
+  margin-bottom: 0;
+}
+
+@mixin full_width_image {
+  width: 100%;
+  height: auto;
+}
+
+@mixin author-image {
+  background: $bali_hai;
+  padding: 5px 5px 3px 5px;
+  margin: 0 0 9px 0;
+  line-height: 1;
+}
+
+/*========= Form elements===========*/
+  @mixin input-field{
+    display: block;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.3em 0.5em;
+    border: solid 1px $white;
+    -webkit-box-shadow: inset 1px 1px 2px 0 $light-gray;
+    -moz-box-shadow: inset 1px 1px 2px 0 $light-gray;
+    box-shadow: inset 1px 1px 2px 0 $light-gray;
+    -webkit-transition: box-shadow 0.3s;
+    -moz-transition: box-shadow 0.3s;
+    -o-transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s;
+    &:focus {
+      outline: none;
+      -webkit-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+      -moz-box-shadow: inset 1px 1px 2px 0 $gray-c9;
+      box-shadow: inset 1px 1px 2px 0 $gray-c9;
+    }
+  }
+
+  @mixin select-field-style{
+    padding: 0.3em 0.5em;
+    border: solid 1px $white;
+    -webkit-box-shadow: inset 1px 1px 2px 0 $light-gray;
+    -moz-box-shadow: inset 1px 1px 2px 0 $light-gray;
+    box-shadow: inset 1px 1px 2px 0 $light-gray;
+    -webkit-transition: box-shadow 0.3s;
+    -moz-transition: box-shadow 0.3s;
+    -o-transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s;
+  }
+
+@mixin teaser-body-cleanse {
+  img {
+    height: 0px !important;
+    width: 0px !important;
+    display: none !important;
+    visibility: hidden !important;
+  }
+  p {
+    display: inline;
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+// Mixins for use in teaser headlines, e.g. h2.teaser-title elements.
+
+@mixin teaser--headline--font {
+  font-size: 1.15em;
+  font-weight: normal;
+  line-height: 1.25;
+  padding: 0;
+  margin: 0;
+}
+
+@mixin teaser--headline {
+  @include teaser--headline--font;
+  padding: 0 0 .25em 0;
+  margin: 0;
+  a {
+    // @include teaser--headline--font;
+  }
+}
+
+// Mixins for use in teaser subheadlines, e.g. .teaser-author-postdate elements.
+
+@mixin teaser--subhead--font {
+  font-size: 1.0em;
+  font-weight: normal;
+  line-height: 1.25;
+  padding: 0;
+  margin: 0;
+}
+
+@mixin teaser--subhead {
+  @include teaser--subhead--font;
+  padding: 0 0 .3em 0;
+  margin: 0;
+  a {
+    @include teaser--subhead--font;
+  }
+}
+
+// Mixins for use in teaser default text.
+
+@mixin teaser--text--font {
+  font-size: 1.07em;
+  font-weight: normal;
+  line-height: 1.3375;
+  padding: 0;
+  margin: 0;
+}
+
+@mixin teaser--text {
+  @include teaser--text--font;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: .75em;
+  padding-left: 0;
+  a {
+    // color: $blue-gray;
+  }
+}
+
+/**
+* RD-3036 mixin for descriptions
+*/
+ @mixin description-text {
+   font-size: 0.9em;
+   font-style: italic;
+   color: lighten($medium-gray, 10%);
+ }
+
+// mixin for background opacity (stackoverflow.com/questions/10929458/sass-converting-hex-to-rgba-for-background-opacity)
+@mixin background-opacity($color, $opacity: 0.3) {
+  background: $color; /* The Fallback */
+  background: rgba($color, $opacity);
+}

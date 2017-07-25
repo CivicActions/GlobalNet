@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Organic Groups (OG) SimpleStats install file.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function og_simplestats_install() {
+  og_simplestats_update_7000();
+}
+
+/**
+ * Add an index to improve og_simplestats query performance.
+ */
+function og_simplestats_update_7000(&$sandbox) {
+  if (!db_index_exists('og_membership', 'type_entity_type_state_gid')) {
+    db_add_index('og_membership', 'type_entity_type_state_gid', array('type', 'entity_type', 'state', 'gid'));
+  }  
+}

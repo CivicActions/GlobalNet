@@ -1,0 +1,15 @@
+/*
+ * Styling the Favorites Flag
+ */
+
+.flag-favorite{
+  .flag-message{
+    background: $ivory;
+    display: block;
+    padding: 0.4em;
+    border: 1px solid $sulu;
+    z-index:100;
+    width: 200px;
+    white-space: normal;
+  }
+}

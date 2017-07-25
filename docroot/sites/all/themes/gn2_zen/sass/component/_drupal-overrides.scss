@@ -1,0 +1,25 @@
+/**
+ *@file
+ *This partial is for adding CSS overrides for drupal-specific elements.
+ */
+
+/*Panels IPE margin-bottom breaks site layout. Setting its bottom margin to match site's
+ *bottom margin.
+ */
+body.panels-ipe {
+  // margin-bottom: 740px !important;
+  // This is now applied to #page in the regions partial.
+}
+
+/*The group admin user can currently save group layout changes for all group entities on the site.
+ *This code will hide the save as default button with css as a temporary fix for the problem.
+ */
+#panels-ipe-edit-control-form #panelizer-save-default {
+    display: none;
+}
+
+/*Specifying body background for wysiwyg iframes*/
+body.cke_editable {
+  background: $white;//Overriding the background for WYSIWYG editable content area.
+  margin-bottom: 0;
+}

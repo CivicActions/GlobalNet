@@ -1,0 +1,82 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_tech_support feature.
+ */
+
+include_once 'gn2_tech_support.features.inc';
+include_once 'includes/gn2_tech_support_technical_support.inc';
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_tech_support_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'tech_support_entityform_edit_form') {
+    $form['field_notified_to']['#access'] = FALSE;
+    if (!empty($form['#entity']->is_new)) {
+      // Set the e-mail addresses to notify and hide the status field.
+      $gid = gn2_context_get_org_id();
+      $form['field_notified_to'][LANGUAGE_NONE][0]['value']['#default_value'] = _gn2_tech_support_get_org_members_email_address($gid);
+      $form['field_status']['#access'] = FALSE;
+      // Set the organization in Technical Support form.
+      $form['field_organization'][LANGUAGE_NONE]['#default_value'][0] = intval($gid);
+      $form['field_organization']['#access'] = FALSE;
+    }
+    else {
+      // For edit, disabled all fields except status.
+      _gn2_tech_support_form_readonly($form);
+    }
+  }
+}
+
+/**
+ * Recursively set the disabled attribute of selected form fields.
+ */
+function _gn2_tech_support_form_readonly(&$elements) {
+  foreach (element_children($elements) as $key) {
+    if (isset($elements[$key]) && $elements[$key]) {
+      // Recurse through all children elements.
+      _gn2_tech_support_form_readonly($elements[$key]);
+    }
+  }
+  if (!empty($elements['#type']) && in_array($elements['#type'], array('textfield', 'textarea', 'radios'))) {
+    $elements['#disabled'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function gn2_tech_support_mail($key, &$message, $params) {
+  switch ($key) {
+    case "technical-support":
+      $message['subject'] = $params['subject'];
+      $message['body'] = $params['body'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_tech_support_views_pre_render(&$view) {
+  // The GlobalNET Support block is created using a View displaying a page that 
+  // contains the links list.
+  if ($view->name == 'footer_elements' && $view->current_display == 'panel_pane__special_footer_content') {
+    if (!empty($view->result) && !empty($view->result[0]->field_body)) {
+      $org_id = gn2_context_get_org_id();
+      $current = current_path();
+      $new_path = '/node/add/support?gid=' . $org_id . '&destination=' . $current;
+      $body = $view->result[0]->field_body[0]['rendered']['#markup'];
+      $view->result[0]->field_body[0]['rendered']['#markup'] = str_replace('href="#"', 'href="' . $new_path . '"', $body);
+    }
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_tech_support_init() {
+  // Technical support, alter the link url to specify the Top organization.
+  drupal_add_js(drupal_get_path('module', 'gn2_tech_support') . '/js/tech_support.js');
+}

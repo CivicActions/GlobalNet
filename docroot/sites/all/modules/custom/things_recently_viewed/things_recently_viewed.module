@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Module file for recently_viewed.
+ */
+ 
+/**
+ * Implements hook_form_alter().
+ */
+function things_recently_viewed_form_alter(&$form, &$form_state, $form_id) {
+  // Loads custom select modifying js.
+  drupal_add_js(drupal_get_path('module', 'things_recently_viewed') . '/assets/gn_select_to_ulli.js');
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function things_recently_viewed_block_info() {
+
+  $block = array();
+
+  $block['things_recently_viewed'] = array(
+    'info' => t('Shows recently viewed nodes'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $block['things_recently_viewed_header'] = array(
+    'info' => t('Shows recently viewed nodes as jump menu'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function things_recently_viewed_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'things_recently_viewed':
+      $block['subject'] = t('Recently Visited');
+      $block['content'] = things_recently_viewed_efq('sidebar');
+      break;
+
+    case 'things_recently_viewed_header':
+      $block['content'] = things_recently_viewed_efq('header');
+      break;
+
+    default:
+      '';
+  }
+  return $block;
+}
+
+/**
+ * Grab our user activity.
+ */
+function things_recently_viewed_efq($type) {
+  drupal_add_js(drupal_get_path('module', 'things_recently_viewed') . '/assets/quickpager.jquery.js');
+  drupal_add_js(drupal_get_path('module', 'things_recently_viewed') . '/assets/pager.js');
+  drupal_add_css(drupal_get_path('module', 'things_recently_viewed') . '/assets/things_recently_viewed.css');
+
+  global $user;
+
+  $uid = $user->uid;
+  $query = db_select('node', 'n');
+  $query->join('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
+  $query->orderby('timestamp', 'DESC')
+    ->fields('n', array('nid', 'title'))
+    ->fields('h', array('timestamp'))
+    ->range(0, 10);
+  $results = $query->execute()->fetchall();
+
+  $output = '';
+  $ctools_output = array();
+  if (!empty($results)) {
+    $output .= '<ul id="things-recently-viewed-items" class="paging">';
+    foreach ($results as $item) {
+      // Let's just use the existing loop to build our jump menu options.
+      if ($type == 'header') {
+        $alias = url('node/' . $item->nid);
+        $ctools_output[$alias] = t('!title', array('!title' => $item->title));
+      }
+      $output .= '<li class="things-recently-viewed-items-li">' . l($item->title, 'node/' . $item->nid) . '</li>';
+    }
+    $output .= '</ul>';
+  }
+
+  // If we are placing in header render a jump menu.
+  if ($type == 'header') {
+    ctools_include('jump-menu');
+    $form = ctools_jump_menu(array(), $form_state, $ctools_output, array());
+    array_shift($form['jump']['#options']);
+    array_unshift($form['jump']['#options'], 'Recently Visited');
+    return drupal_render($form);
+  }
+  // Otherwise just output links in sidebar.
+  else {
+    return $output;
+  }
+}

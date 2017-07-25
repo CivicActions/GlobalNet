@@ -1,0 +1,107 @@
+$form-item-height: 26px;
+
+.custom-search-default-block {
+  
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  a.contextual-links-trigger {
+    margin-right: 20px;
+  }
+  
+  form {
+    display: table;
+    margin-left: auto;
+    padding-top: 18px;
+    padding-right: 12px;
+    padding-bottom: 0px;
+    @include breakpoint($medium-screen-and-up) {
+      padding-top: 12px;
+      padding-bottom: 10px;
+    }
+    margin-bottom: 0;
+    .form-item,
+    .form-submit,
+    label,
+    select {
+      display: block;
+      height: $form-item-height;
+      margin-left: 0px;
+      float: left;
+      border: none;
+      font-weight: normal;
+      line-height: 1;
+      @include breakpoint($medium-screen-and-up) {
+        margin-bottom: 0;
+      }
+    }
+    
+    label {
+      line-height: $form-item-height;
+    }
+    
+    input.form-text {
+      border: 1px solid $color--gray-form-fields;
+      height: ($form-item-height - 2px);
+      padding: 0 6px;
+      width: 168px !important;
+      &:-moz-placeholder {
+        color: $medium-gray !important;
+      }
+      &:-ms-input-placeholder {
+        color: $medium-gray !important;
+      }
+      &::-webkit-input-placeholder {
+        color: $medium-gray !important;
+      }
+      &::-moz-placeholder {
+        color: $medium-gray !important;
+      }
+    }
+    
+    select,
+    .form-item-type {
+      height: ($form-item-height - 2px);
+      border: 1px solid $color--gray-form-fields;
+      background-color: white;
+    }
+    
+    select {
+      border: none;
+    }
+    
+    .form-item-type {
+      border-left: none;
+    }
+    
+    input, 
+    label, 
+    select {
+      color: $medium-gray;
+    }
+    
+    input.form-submit {
+      background-color: transparent;
+      background-image: url(../images/gn-icons/search_questionmark.png);
+      background-repeat: no-repeat;
+      text-indent: -9999px;
+      width: 26px;
+      margin-left: 10px;
+      border: none;
+    }
+    
+    .form-item-type {
+      display: none;
+    }
+    
+    .form-item-group {
+      display: none;
+    }
+    
+    label {
+      display: none;
+    }
+  }
+}

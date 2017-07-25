@@ -1,0 +1,28 @@
+.view-search-member {
+	background-color: transparent;
+	.user-search-teaser-with-thumb {
+  	.gn2-3col.layout-wrapper.gn2-3col {
+      @media all and (min-width: 400px) {
+        .gn2-3col--col1 {
+          @include zen-grid-item(4, 1);
+          .inner {
+            padding-right: 10%;
+          }
+        }
+        .gn2-3col--col2 {
+          @include zen-grid-item(11, 5);
+          .inner {
+            padding-right: 10%;
+          }
+        }
+        .gn2-3col--col3 {
+          @include zen-grid-item(5, 16);
+          text-align: right;
+          .inner {
+            padding-right: 0%;
+          }
+        }
+      }
+  	}
+	}
+}

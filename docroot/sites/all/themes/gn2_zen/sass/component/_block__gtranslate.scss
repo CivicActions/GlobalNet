@@ -1,0 +1,27 @@
+/**
+ *@file
+ *This partial is for theming the gtranslate block inserted by the Google Translate function
+ */
+
+div#google_translate_element{
+  background: $gray-e !important;
+  width: 120px;
+  height: 23px;
+  img {display: none;}
+}
+.goog-te-gadget-simple {
+      background: $gray-e !important;
+      height: auto;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      border-bottom: none;
+      font-size: .9em !important;
+      height: 20px !important;
+
+      span {padding-left: 6px; color: rgba(44, 44, 44, .9) !important;}
+}
+
+.goog-te-menu2 {
+  background: $gray-e !important;
+}

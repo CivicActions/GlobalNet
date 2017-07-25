@@ -1,0 +1,508 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_admin_dashboard feature.
+ */
+
+include_once 'gn2_admin_dashboard.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_admin_dashboard_menu() {
+  $items = array();
+
+  $items['node/%node/dashboard'] = array(
+    'title' => 'Manage',
+    'page callback' => '_gn2_admin_dashboard_page',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_admin_dashboard_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+  );
+
+  $items['node/%node/dashboard/main'] = array(
+    'title' => 'Main',
+    'page callback' => '_gn2_admin_dashboard_page',
+    'page arguments' => array(1),
+    'access callback' => 'gn2_admin_dashboard_access',
+    'access arguments' => array(1),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  $items['node/%node/dashboard/get-group-info'] = array(
+    'title' => 'Get Group Information',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_admin_dashboard_info_form', 1),
+    'access callback' => 'gn2_admin_dashboard_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+    'file' => 'gn2_admin_dashboard.group.inc',
+  );
+
+  $items['node/%node/dashboard/group-info/%/%'] = array(
+    'title' => 'Group Information',
+    'page callback' => 'gn2_admin_dashboard_group_info',
+    'page arguments' => array(4, 5),
+    'access callback' => 'gn2_admin_dashboard_access',
+    'access arguments' => array(1),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'gn2_admin_dashboard.group.inc',
+  );
+
+  $items['dashboard/group-ajax/%'] = array(
+    'page callback' => '_gn2_admin_dashboard_get_groups',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('administer group'),
+    'type' => MENU_CALLBACK,
+    'file' => 'gn2_admin_dashboard.group.inc',
+  );
+
+  $items['dashboard/ajax'] = array(
+    'page callback' => '_gn2_admin_dashboard_get_term',
+    'page arguments' => array(2),
+    'access arguments' => array('administer group'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback for the dashboard page.
+ *
+ * @param object $org
+ *   The Organization node object.
+ */
+function gn2_admin_dashboard_access($org) {
+  // Don't show the menu item unless we are on an Organization.
+  if ($org->type !== 'organization') {
+    return FALSE;
+  }
+  global $user;
+
+  // Grant access for Administrators.
+  if (in_array('administrator', $user->roles)) {
+    return TRUE;
+  }
+
+  // Check that the user is either an HR Manager or Org Manager for this Org.
+  if (function_exists('og_get_user_roles')) {
+    $manager_roles = array('org_manager', 'hr_manager');
+    $og_roles = og_get_user_roles('node', $org->nid, $user->uid);
+    $is_manager = array_intersect($manager_roles, $og_roles);
+    return (!empty($is_manager)) ? TRUE : FALSE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Page callback for the Organization dashboard.
+ *
+ * @param object $org
+ *   The Organization node object.
+ */
+function _gn2_admin_dashboard_page($org) {
+  drupal_set_title(t("Manager's Dashboard for !title", array('!title' => $org->title)));
+  global $user;
+  $items = array();
+  $short_title = $org->field_org_short_title[LANGUAGE_NONE][0]['safe_value'];
+  $og_roles = og_get_user_roles('node', $org->nid, $user->uid);
+  if (!in_array('faculty', $og_roles)) {
+    $items[] = l(t('Support Desk'), 'node/' . $org->nid . '/dashboard/support');
+    $items[] = l(t('Manage Members'), 'node/' . $org->nid . '/dashboard/bulk-users');
+    $items[] = l(t('Add New User'), 'admin/manage/users/add/user',
+      array(
+        'query' => array(
+          'destination' => 'node/' . $org->nid . '/dashboard',
+          'gid' => $org->nid,
+        ),
+      )
+    );
+    $items[] = l(t('Bulk Import Users'), 'admin/people/uif',
+      array(
+        'query' => array(
+          'oid' => $org->nid,
+        ),
+      )
+    );
+    $items[] = l(t('Bulk Import Report'), 'node/' . $org->nid . '/dashboard/bulk-import-report');
+  }
+
+  if (in_array('org_manager', $og_roles) || in_array('administrator', $user->roles)) {
+    $items[] = l(t('Manage Content'), 'node/' . $org->nid . '/dashboard/content');
+    $items[] = l(t('Organization Hierarchy'), 'node/' . $org->nid . '/dashboard/organization-hierarchy');
+    $items[] = l(t('Get Group Information'), 'node/' . $org->nid . '/dashboard/get-group-info');
+    $items[] = l(t('View Role Grants Report'), 'node/' . $org->nid . '/role_watchdog', array('query' => array('org' => $org->nid)));
+  }
+  if (in_array('hr_manager', $og_roles) || in_array('administrator', $user->roles)) {
+    // View updated user profiles; see RD-1967.
+    $items[] = l(t('View Updated User Profiles'), 'node/' . $org->nid . '/dashboard/user-profile-updates');
+  }
+  if (array_intersect(array('hr_manager', 'org_manager'), $og_roles) || in_array('administrator', $user->roles)) {
+    $items[] = l(t('View Account Requests'), 'node/' . $org->nid . '/dashboard/userforms/submissions/userreg');
+    // View Form Submissions link; see RD-3420.
+    $items[] = l(t('View Form Submissions'), '/admin/manage/forms');
+    // Google analytics report; see RD-3148.
+    $items[] = l(t('Google Analytics Summary'), '/admin/reports/google-analytics-reports/summary');
+  }
+
+  $links = theme_item_list(array(
+    'items' => $items,
+    'title' => NULL,
+    'type' => 'ul',
+    'attributes' => array(
+      'class' => array(
+        'dashboard-link-list',
+      ),
+    ),
+  ));
+
+  // Get the Help links.
+  $help = views_embed_view('guide_terms_for_admin', 'panel_pane_1');
+
+  return theme('gn2_dashboard', array('links' => $links, 'help' => $help));
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_admin_dashboard_theme() {
+  return array(
+    'gn2_dashboard' => array(
+      'variables' => array('links' => NULL, 'help' => NULL),
+      'template' => 'gn2-admin-dashboard',
+    ),
+    'gn2_dashboard_group' => array(
+      'variables' => array(
+        'title' => NULL,
+        'gid' => NULL,
+        'man_title' => NULL,
+        'managers' => NULL,
+        'links' => NULL,
+      ),
+      'template' => 'gn2-admin-dashboard-group-info',
+    ),
+  );
+}
+
+/**
+ * Ajax callback returning a term description.
+ *
+ * @param int $tid
+ *   The taxonomy term ID.
+ */
+function _gn2_admin_dashboard_get_term($tid) {
+  $term = taxonomy_term_load($tid);
+  $path = drupal_get_path_alias("taxonomy/term/{$term->tid}");
+  $arg = substr($path, 5);
+  $contents = views_embed_view('guide_content', 'panel_pane_1', $arg);
+  drupal_json_output($contents);
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_admin_dashboard_init() {
+  // RD-2436 redirect to correct page to manage the New account requests.
+  if (isset($_GET['q']) && $_GET['q'] == 'admin/structure/entityform_types/manage/userreg/submissions') {
+    drupal_goto('admin/manage/userform/submissions/userreg');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_admin_dashboard_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'course_feedback_entityform_edit_form':
+    case 'event_feedback_entityform_edit_form':
+    case 'group_feedback_entityform_edit_form':
+      $gid = filter_input(INPUT_GET, 'gid');
+      if ($gid) {
+        $node = node_load($gid);
+        $org = field_get_items('node', $node, 'field_parent_organization');
+        if ($org) {
+          $form['field_organization'][LANGUAGE_NONE]['#default_value'] = $org[0]['target_id'];
+        }
+      }
+      $form['field_organization']['#access'] = FALSE;
+      break;
+
+    case 'tech_support_entityform_edit_form':
+      $form['field_organization']['#access'] = FALSE;
+      break;
+
+    // If we have an Organization ID, add the user to the Org.
+    case 'gn2_manager_access_user_form':
+      $gid = filter_input(INPUT_GET, 'gid');
+      $org = ($gid) ? node_load($gid) : NULL;
+      if ($org && array_key_exists('og_user_node', $form)) {
+        // Check if the Organization exists in the og_user_node default options.
+        // Org ID can either be a key in the options array or a key in the
+        // Organization array within the options array.
+        $default = $form['og_user_node'][LANGUAGE_NONE][0]['default']['#options'];
+        $use_default = (array_key_exists($gid, $default) || (isset($default['Organization']) && array_key_exists($gid, $default['Organization']))) ? TRUE : FALSE;
+        if ($use_default) {
+          $form['og_user_node']['#access'] = TRUE;
+          $form['og_user_node'][LANGUAGE_NONE][0]['default']['#access'] = TRUE;
+          $form['og_user_node'][LANGUAGE_NONE][0]['default']['#default_value'] = $gid;
+          $form['#submit'][] = 'gn2_admin_dashboard_add_user';
+        }
+        // Otherwise use the Admin field.
+        else {
+          $form['og_user_node'][LANGUAGE_NONE][0]['admin'][0]['target_id']['#default_value'] = $org->title . ' (' . $gid . ')';
+          $form['og_user_node'][LANGUAGE_NONE][0]['admin']['#access'] = TRUE;
+          $form['og_user_node']['#access'] = TRUE;
+        }
+      }
+      $helper_text = array(
+        t('Password must contain at least one punctuation (not whitespace or an alphanumeric) character.'),
+        t('Password must contain at least one number.'),
+        t('Password must be at least 8 characters in length.'),
+        t('Password must not match last 8 passwords.'),
+      );
+      $help = theme_item_list(array(
+        'items' => $helper_text,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array(
+          'class' => array(
+            'nobullet',
+          ),
+        ),
+      ));
+      $form['account']['pass']['#description'] = $help . '<br />' .
+          $form['account']['pass']['#description'];
+      break;
+    case "views_form_user_bulk_block_page":
+      // Fixing form action for Org dashboard exposed filter - RD-3412.
+      if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'dashboard' && arg(3) == 'bulk-users') {
+        $form['#action'] = str_replace('all', arg(1), $form['#action']);
+        $form_state['build_info']['args'][0]->exposed_widgets =
+          str_replace('node/all/', 'node/' . arg(1) . '/', $form_state['build_info']['args'][0]->exposed_widgets);
+      }
+      break;
+    case 'views_exposed_form':
+      // Fixing form action for Org dashboard exposed filter - RD-3412.
+      if ($form['#id'] == 'views-exposed-form-user-bulk-block-page') {
+        if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'dashboard' && arg(3) == 'bulk-users') {
+          $form['#action'] = str_replace('all', arg(1), $form['#action']);
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_og_permission().
+ */
+function gn2_admin_dashboard_og_permission() {
+  return array(
+    'view all voters' => array(
+      'title' => t('View all voters'),
+      'description' => t('Allow users to see who has liked all content.'),
+    ),
+    'view own voters' => array(
+      'title' => t('View own voters'),
+      'description' => t('Allow users to see who has liked their content.'),
+    ),
+  );
+}
+
+/**
+ * Views access handler.
+ */
+function gn2_admin_dashboard_manager_access($account = NULL) {
+  $a = 0;
+  // Check Views override permission.
+  if (user_access('access all views')) {
+    return TRUE;
+  }
+
+  // If account isn't set, uses current user.
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $access = FALSE;
+  // If we have a node ID, check that the user is a Manager for that Org.
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $gid = arg(1);
+    $group_roles = og_get_user_roles('node', $gid, $account->uid);
+    $roles = array('hr_manager', 'org_manager');
+    $manager = array_intersect($roles, $group_roles);
+    $access = (!empty($manager)) ? TRUE : FALSE;
+  }
+  // Try the Org Short Title, to check user status.
+  elseif (arg(1) == 'dashboard' && arg(2) == 'users') {
+    $short_title = arg(0);
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'organization')
+        ->propertyCondition('status', NODE_PUBLISHED)
+        ->fieldCondition('field_org_short_title', 'value', $short_title, '=')
+        ->range(0, 1);
+    $result = $query->execute();
+
+    if (isset($result['node'])) {
+      $org = array_keys($result['node']);
+    }
+    $group_roles = og_get_user_roles('node', $org[0], $account->uid);
+    $roles = array('hr_manager', 'org_manager');
+    $manager = array_intersect($roles, $group_roles);
+    $access = (!empty($manager)) ? TRUE : FALSE;
+  }
+  elseif (isset($_GET['q']) && $_GET['q'] == 'admin/manage/forms') {
+    // Gets it based on login organization if that is set.
+    if (!empty($_SESSION['gn2_context_organization_nid'])) {
+      $gid = $_SESSION['gn2_context_organization_nid'];
+    }
+    elseif (!empty($_SESSION['og_context']['gid'])) {
+      $gid = $_SESSION['og_context']['gid'];
+    }
+    $manager_roles = array('org_manager', 'hr_manager');
+    $og_roles = og_get_user_roles('node', $gid, $account->uid);
+    $is_manager = array_intersect($manager_roles, $og_roles);
+
+    // Check if user is admin.
+    if (in_array('administrator', $account->roles) || $is_manager) {
+      $access = TRUE;
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Additional submit handler for gn2_manager_access_user_form.
+ */
+function gn2_admin_dashboard_add_user($form, &$form_state) {
+  if (!empty($form_state['values']['og_user_node']) && !empty($form_state['user'])) {
+    $gid = $form_state['values']['og_user_node'][LANGUAGE_NONE][0]['target_id'];
+    $org = node_load($gid);
+    $user = $form_state['user'];
+    $is_member = og_is_member('node', $gid, 'user', $user);
+    if (!$is_member) {
+      og_group('node', $gid, array(
+        'entity type' => 'user',
+        'entity' => $user,
+        'membership type' => OG_MEMBERSHIP_TYPE_DEFAULT,
+      ));
+      drupal_set_message(t('%user added to Organization %title',
+          array('%user' => $user->name, '%title' => $org->title)));
+    }
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_admin_dashboard_block_info() {
+  $blocks['gn2_content_rating_users'] = array(
+    'info' => t('Shows users who have liked the active content item.'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_admin_dashboard_block_view($delta = '') {
+  global $user;
+
+  switch ($delta) {
+    case 'gn2_content_rating_users':
+      $node = menu_get_object();
+      if ($node) {
+        $gid = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+        // Check permission to view this block
+        if (og_user_access('node', $gid, 'view all voters') || (og_user_access('node', $gid, 'view own voters') && $node->uid == $user->uid)) {
+          $block['subject'] = t('Users Who Liked This');
+          // Fetch user id and name of everyone who's liked this
+          $query = db_select('votingapi_vote', 'v');
+          $query->join('users', 'u', 'v.uid = u.uid');
+          $query->fields('v', array('uid'))
+            ->fields('u', array('name'))
+            ->condition('entity_id', $node->nid, '=');
+
+          $voters = $query->execute();
+
+          foreach ($voters as $voter) {
+            $block['content'] .= l($voter->name, '/user/' . $voter->uid) . '<br />';
+          }
+
+        }
+        else {
+          $block['content'] = 'There was an error retrieving voting information for this page.';
+        }
+      }
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function gn2_admin_dashboard_js_alter(&$javascript) {
+  $current = current_path();
+  if ($current == 'admin/manage/users/add/user') {
+    unset($javascript[drupal_get_path('module', 'field_group') . '/horizontal-tabs/horizontal-tabs.js']);
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function gn2_admin_dashboard_views_query_alter(&$view, &$query) {
+  if ($view->name == 'user_bulk_block') {
+    $query->where[0]['type'] = 'OR';
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * This function moves our hook to the bottom of the stack so that it fires
+ * last.
+ */
+function gn2_admin_dashboard_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'entity_info_alter') {
+    $group = $implementations['gn2_admin_dashboard'];
+    unset($implementations['gn2_admin_dashboard']);
+    $implementations['gn2_admin_dashboard'] = $group;
+  }
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function gn2_admin_dashboard_entity_info_alter(&$entity_info) {
+  $entity_info['user']['access callback'] = 'gn2_admin_dashboard_entity_metadata_user_access';
+}
+
+/**
+ * Overrides entity_metadata_user_access function.
+ */
+function gn2_admin_dashboard_entity_metadata_user_access($op, $entity = NULL, $account = NULL, $entity_type = NULL) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  // Include Entity API module's logic.
+  $return = entity_metadata_user_access($op, $entity, $account, $entity_type);
+
+  if (!$return && $op == 'update') {
+    $return = gn2_manager_access_account($account, $entity);
+  }
+
+  return $return;
+}

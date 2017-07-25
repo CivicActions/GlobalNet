@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install file for the GN2 Bulk Delete module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_bulk_delete_schema() {
+  $schema['bulk_delete'] = array(
+    'description' => 'The base table for Bulk Delete',
+    'fields' => array(
+      'did' => array(
+        'description' => 'The primary identifier for bulk deletes.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that requested the deletions.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.uid for the Folder node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'date' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('did'),
+  );
+
+  $schema['bulk_delete_files'] = array(
+    'description' => 'A table containing the files to be deleted',
+    'fields' => array(
+      'did' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+  );
+
+  return $schema;
+}

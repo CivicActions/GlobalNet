@@ -1,0 +1,6 @@
+name = "GN2 Database"
+description = "This module contains update hooks."
+core = 7.x
+package = GlobalNET
+
+dependencies[] = hook_update_deploy_tools

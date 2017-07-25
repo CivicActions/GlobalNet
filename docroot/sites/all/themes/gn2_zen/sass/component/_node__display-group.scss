@@ -1,0 +1,63 @@
+body.node-type-group h1 {
+  padding-right: .25em;
+}
+
+.group__main--top-right {
+  span.group.closed,
+  span.group.manager {
+    background-color: $very-dark-gray;
+    display: block;
+    border-radius: 4px;
+    color: $white;
+    padding: .5em .75em;
+    font-size: .9em;
+    text-align: center;
+    line-height: 1.3;
+    font-weight: normal;
+  }
+  a.group,
+  a.subscribe,
+  a.request {
+    @include button--dark($font-size: 1.3em);
+  }
+}
+
+.group__main--top-left {
+  #panels-ipe-regionid-group_maintopleft .panels-ipe-sort-container > .panels-ipe-portlet-wrapper.panels-ipe-portlet-marker,
+  #panels-ipe-paneid-109, .acronym-field,
+  #panels-ipe-paneid-97, .title-field{
+    display: inline-flex;
+  }
+  .acronym-field {
+    font-size: 25px;
+    &:after {
+      content: ':';
+      margin-right: 10px;
+    }
+  }
+}
+
+.group__main--top-left,
+.group__main--top-right,
+.group__main--banner {
+  .panels-ipe-portlet-wrapper {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.group__main--top-left {
+  .panel-pane {
+    margin-bottom: .5em;
+  } 
+}
+
+.group__main--top-right {
+  .panel-pane {
+    margin-bottom: 1em;
+  } 
+}
+
+.group--main-image {
+  margin-bottom: 2em;
+}

@@ -1,0 +1,65 @@
+$border--gray: 1px solid $gray-d;
+
+.org__hierarchy {
+  h3 {
+    @include body_font;
+  }
+  ul {
+    margin-left: 1em;
+  }
+  .label--bold {font-weight: bold;}
+}
+
+// Styling the top level Organization Stats
+.group__parent {
+  font-weight: normal;
+  text-align: center;
+}
+.group__parent--org-title,
+.group__parent--members,
+.group__parent--membership-count,
+.group__parent--group-managers {
+
+}
+.group__parent--members {
+  font-size: 0.7em;
+  line-height: 1.2em;
+  padding-top: 0.5em;
+  text-transform: uppercase;
+  font-weight: bold;
+  .label--bold {
+    color: $gray-5;
+    font-weight: normal
+  }
+}
+
+// Styling nested child groups
+
+.org--hierarchy-item,
+.group--hierarchy-one--item,
+.group--hierarchy-two--item {
+    border: $border--gray;
+    padding: 1em;
+    list-style: none;
+}
+
+.org--hierarchy-item{
+  background: url(../images/bg-diagonal-tile-grey.png);
+  margin: 1em;
+}
+
+.group__hierarchy-one--list { margin: 1em 0;}
+.group--hierarchy-one--item {
+  background: $white;
+  border-bottom: none;
+  &:last-child {
+    border-bottom: $border--gray;
+  }
+}
+
+.group--hierarchy-two--item {
+  background: $gray-f9;
+  margin: 1em;
+}
+
+

@@ -1,0 +1,12 @@
+@mixin highlighted-block {
+  border: solid 1px $solitude;
+  padding: 1.3em 1.5em 1.5em;
+}
+
+.view-footer {
+  margin-top: 1em;
+  p:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}

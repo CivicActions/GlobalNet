@@ -1,0 +1,78 @@
+/*
+ * General page styles for the User Account page
+ */
+
+.page-account {
+
+  h2 {
+    font-weight: normal;
+    margin: 0 0 1em;
+    line-height: 1em;
+  }
+
+  .gn2-2colstacked {
+    padding: 0;
+    .sidebar {
+      padding: 0;
+      .panel-pane {
+        margin: 0 1.5em 0 0;
+      }
+    }
+  }
+  
+  .main-bottom {
+    .view {
+      background: url(../images/bg-diagonal-tile-grey.png);
+      padding: 1em;
+    }
+    .view-footer {
+      padding: 1.5em 1em 0;
+    }
+  }
+
+  //Overriding font family set by jQuery ui widgets
+  .ui-widget button {
+    @include display_font;
+    font-size: 1.4em;
+    margin: 0 auto;
+    }
+
+  select {
+    border: 1px solid $light-gray;
+    color: $gray-9;
+    font-size: 1em;
+    option {
+      padding: 0.1em 1.5em;
+    }
+  }
+
+  em.placeholder {
+    color: $medium-gray;
+  }
+
+  td {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .views-field-name {
+    font-size: .8em;
+  }
+
+  .views-label-status-link-1 {
+    font-size: .8em;
+    font-style: italic;
+  }
+
+  .views-field-status-link-1 {
+    font-size: .75em;
+    font-style: italic;
+    a:link {
+      color: red;
+    }
+  }
+
+} //page-account ends
+
+
+

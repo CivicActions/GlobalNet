@@ -1,0 +1,52 @@
+/**
+ * @file
+ * Positioning for a groups custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+
+// Add the Zen Grids responsive layout mixins.
+@import "zen";
+
+$zen-gutter-width: 0px;
+$zen-auto-include-item-base: false;
+
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+.panels-layout.homepage-layout,
+.homepage-layout--top,
+.homepage-layout--top--left,
+.homepage-layout--top--right,
+.homepage-layout--search,
+.homepage-layout--main {
+  @include zen-grid-item-base();
+}
+
+.panels-layout.homepage-layout {
+  @include zen-grid-container();
+}
+
+.homepage-layout--top,
+.homepage-layout--search,
+.homepage-layout--main {
+  @include zen-clear();
+}
+
+@media all and (min-width: 40em)/*640px*/ {
+  $zen-column-count: 20 !global;
+  /*!global is a fix for an issue where zen-grid-item doesn't generate the right CSS when using Compass 1.x
+   * See https://www.drupal.org/node/2346291#comment-9475791
+   */
+
+  .homepage-layout--top,
+  .homepage-layout--search,
+  .homepage-layout--main {
+    @include zen-grid-item (20, 1);
+    @include zen-nested-container();
+  }
+  .homepage-layout--top--left {
+    @include zen-grid-item(12, 1);
+  }
+  .homepage-layout--top--right {
+    @include zen-grid-item(8, 13);
+  }
+}

@@ -1,0 +1,52 @@
+.panels-layout--column-inner,
+.panels-layout--region-inner {
+  padding-right: 0;
+  > .panel-pane,
+  > .div {
+    @include panel-margin-bottom;
+    &.nobottommargin {
+      margin-bottom: 0;
+    }
+    &.pane-node-field-main-image {
+      margin-bottom: .25em;
+    }
+    &.pane-gn2-base-config-course-title-acronym {
+      margin-bottom: .25em;
+    }
+  }
+}
+
+.page-layout {
+  .top {
+    .panel-pane {
+      margin-bottom: 1.25em;
+    }
+  }
+}
+
+.node-header {
+  margin-bottom: 0;
+}
+
+.sidebar-left .sidebar .panels-layout--column-inner,
+.sidebar-right .main .panels-layout--column-inner {
+  @include breakpoint($medium-screen-and-up) {
+    padding-right: 1.25em;
+  }
+  @include breakpoint($large-screen-and-up) {
+    padding-right: 2.5em;
+  }
+  @include breakpoint($larger-screen) {
+    padding-right: 3.5em;
+  }
+}
+
+/**
+ * RD-2061: setting the default bottom margin for panel.
+ * The mixin used here is in the skin/mixins partial.
+ * Please do not remove either class; if necessary, override elsewhere.
+ */
+.panels-ipe-portlet-wrapper, 
+.panel-pane {
+  @include panel-margin-bottom;  
+}

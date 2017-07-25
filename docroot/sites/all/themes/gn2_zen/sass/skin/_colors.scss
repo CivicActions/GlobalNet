@@ -1,0 +1,126 @@
+/*
+ * GlobalNET palette.
+ * Variables.
+ */
+
+$body-color: rgba(44, 44, 44, .9);
+
+$color--gray-form-fields: #e1e3e4;
+
+$very-dark-gray: #2c2c2c;
+$dark-gray: #4b4b4b;
+$medium-gray: #6c6c6c;
+$light-gray: #e5e5e5;
+
+$bookmark-gray: #e2e4e5;
+$very-light-gray:#f1f1f1;
+$site-bg-color: #f7f9fa;
+$blue-gray: #3882a3;
+$dark-blue-gray: darken($blue-gray, 15%);
+$titanium: #dddedf; /* news main image border */
+$light-blue-gray: #91a8b3; //Bottom border for sidebar header
+$lighter-blue-gray: #a4b6bf; //Bottom border for some elements
+$lightest-blue-gray: lighten($lighter-blue-gray, 20%);
+
+$red: #712626; //Red button color for admin-related buttons
+
+/* Grays for course session levels. */
+$level1: pink;
+$level2: orange;
+$level3: yellow;
+
+$level1: lighten($lightest-blue-gray, 4%);
+$level2: lighten($level1, 4%);
+$level3: lighten($level2, 4%);
+
+$link-color: $blue-gray;
+$link-color-hover: $dark-blue-gray;
+
+$grey-h3: #6c6c6c;
+
+/* Gray scale. */
+$black: #000000;
+$gray-3: #333333;
+$gray-4: #444444;
+$gray-5: #555555;
+$gray-51: #515151;
+$gray-6: #666666;
+$gray-7: #777777;
+$gray-70: #707070;
+$gray-80: #808080;
+$gray-86: #868686;
+$gray-8c: #8c8c8c;
+$gray-9: #999999;
+$gray-9c: #9c9c9c;
+$gray-b: #bbbbbb;
+$gray-c: #cccccc;
+$gray-c0: #c0c0c0;
+$gray-c3: #c3c3c3;
+$gray-c6: #c6c6c6;
+$gray-c9: #c9c9c9;
+$gray-ca: #cacaca;
+$gray-d: #dddddd;
+$gray-d1: #d1d1d1;
+$gray-d6: #d6d6d6;
+$gray-d8: #d8d8d8;
+$gray-dc: #dcdcdc;
+$gray-de: #dedede;
+$gray-e: #eeeeee;
+$gray-e7: #e7e7e7;
+$gray-e8: #e8e8e8;
+$gray-e9: #e9e9e9;
+$gray-ec: #ececec;
+$gray-ef: #efefef;
+$gray-f9: #f9f9f9;
+$gray-f2: #f2f2f2;
+$gray-fc: #fcfcfc;
+$gray-fe: #fefefe;
+$white: #ffffff;
+
+/* Mystery colors. */
+$dashboard-links-hover: #24556a;
+$falu_red: #861717;
+$mountain_mist: #9b9a96;
+$lavender: #ddf1fb;
+$maya_blue: #63c4f5;
+$zumthor: #d0d4d6;
+$red_orange: #ff502d;
+$portica: #eedd55;
+$cinnabar: #ed541d;
+$british_racing_green: #234600;
+$olive: #884400;
+$chablis: #fef5f1;
+$saddle_brown: #8c2e0b;
+$jungle_mist: #b7c6cc;
+$calypso: #2c637b;
+$free_speech_red: #c00;
+$cerulean: #0072b9;
+$cream: #ffffcc;
+$yellow: #ffff00;
+$iron: #c7c9c9;
+$botticelli: #90a7b2;
+$light_yellow: #fffce5;
+$venice_blue: #2b647d;
+$sulu: #bbee77;
+
+// $solitude: #e5eaec;
+// $solitude: #e0e6e9;
+$solitude: #e2e8ea; /* interpolated by rg */
+
+// $oyster_bay: #DAE9EF;
+// $oyster_bay: #E7F0F4;
+$oyster_bay: #e0ecf1; /* interpolated by rg */
+
+// $ivory: #ffffea;
+// $ivory: #fffff0;
+// $ivory: #f8fff0;
+$ivory: #fbffef; /* interpolated by rg */ 
+
+// $seagull: #73B7D5;
+// $seagull: #74b8d6;
+$seagull: #74b8d6; /* interpolated by rg */
+
+
+// $bali_hai: #7E98A3;
+// $bali_hai: #839DA9;
+$bali_hai: #809aa6; /* interpolated by rg */

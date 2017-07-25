@@ -1,0 +1,31 @@
+.form-item.form-item-publish-on {
+  margin: 0 0 .75em 0;
+}
+
+.form-item.form-item-unpublish-on {
+  margin: 0;
+}
+
+.form-item.form-item-publish-on-date,
+.form-item.form-item-unpublish-on-date {
+  margin: 0;
+}
+
+.form-item-publish-on-date label,
+.form-item-unpublish-on-date label {
+  display: none;
+}
+
+.form-item-publish-on-time,
+.form-item-unpublish-on-time {
+  display: none;
+}
+
+.form-item-publish-on .description,
+.form-item-unpublish-on .description {
+  display: none;
+}
+
+.date-padding .description {
+  display: block;
+}

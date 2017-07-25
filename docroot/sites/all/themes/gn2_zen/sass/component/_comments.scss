@@ -1,0 +1,393 @@
+$comment-column-spacing: 18px;
+$comment-author-image-width: 50px;
+$comment-author-image-height: $comment-author-image-width;
+$comment-left-column-width: $comment-author-image-width + $comment-column-spacing;
+$comment-right-column-width: 240px;
+
+$comment-form-buttons--left-column--width: 75%;
+$comment-form-buttons--right-column--width: 100% - $comment-form-buttons--left-column--width;
+
+//======== Styling Comments Form=======
+
+.panel-pane.pane-node-comment-form,
+#comment-form {
+  position:relative;
+  margin-bottom: 1.25em;
+  #edit-yandex-language-select--2 {
+    height:35px !important;
+    cursor:pointer;
+  }
+  h3 {
+    color:$grey-h3;
+  }
+  .form-type-checkbox {
+    position:absolute;
+    bottom:50px;
+    color:$grey-h3;
+    font-size:90%;
+  }
+  .form-type-select {
+    position:absolute;
+    bottom:10px;
+    label {
+      font-weight:normal;
+      color:$grey-h3;
+      float:left;
+      font-size:90%;
+      margin-right:10px;
+      margin-top: 5px;
+    }
+  }
+}
+
+form.comment-form {
+  border-bottom: 1px solid $lighter-blue-gray;
+  padding-bottom: 1.25em;
+  margin-bottom: 1.25em;
+
+  .form-item.form-type-item {
+    display: none;
+  }
+  
+  .form-item.form-type-textarea {
+    margin-top: 0px;
+    label {
+      display: none;
+    }
+    .grippie {
+      display: none;
+    }
+    textarea {
+      border: none;
+      box-shadow: 0px 0px 3px $light-gray;
+      height: 181px;
+    }
+  }
+
+  .gn2-comments--file {
+    text-align: left;
+    * {
+      padding: 0;
+      margin: 0;
+      border: none;
+      background-color: transparent;
+      background: none;
+      box-shadow: none;
+    }
+    label {
+      display: none;
+    }
+    a.button.browse {
+      padding: 0;
+      margin: 0;
+      @include button (
+        $color: $link-color,
+        $color-hover: $link-color-hover
+      );
+      @include gn-icon(28px, url(../images/gn-icons/attach_file.png));
+      height: 23px;
+    }
+    .messages {
+      display: block;
+      font-size: .85em;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      padding-right: 10px;
+    }
+    .form-media {
+      display: table;
+      float: right;
+      width: auto;
+      font-size: 1em;
+      line-height: 1;
+      vertical-align: top;
+      .preview {
+        .file-icon {
+          float: left;
+        }
+      }
+      input.remove {
+        @include general-content-button($font-size: 1.2em);
+      }
+      a.button.edit {
+        -webkit-appearance: none;
+        @include general-content-button;
+        font-size: 1.2em;
+      }
+      .preview,
+      input.remove,
+      a.button.edit {
+        display: inline-block;
+        width: auto;
+        float: none;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .gn2-comments--actions {
+    text-align: right;
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    input.form-submit {
+      @include general-content-button($font-size: 1.2em);
+      margin: 0 0 0 5px;
+      display: inline-block;
+    }
+  }
+  
+  .wysiwyg-toggle-wrapper {
+    margin-top: .75em;
+    margin-bottom: .5em;
+  }
+  
+  fieldset.filter-wrapper {
+    display: none;
+  }
+
+}
+
+//============= Styling the Comments ==============
+div.pane-node-comments,
+.pane-node-comments-panel-pane-1 {
+  .flag-outer {
+    display: none;
+  }
+
+  .icon-links {
+    margin-bottom: 20px;
+  }
+
+  .icon-link {
+    font-size: 90%;
+    line-height: 1;
+    padding: 0;
+    text-indent: 28px;
+    text-align: left;
+    background-repeat: no-repeat;
+    min-height: 18px;
+    overflow: hidden;
+    display: block;
+    padding: 4px 0 0 0px;
+    background-color: rgba(0, 0, 0, 0);
+    margin-bottom: 8px;
+    &.send-private-mesage {
+      background-image: url(../images/private_message.png);
+    }
+    &.report-as-inappropriate {
+      background-image: url(../images/report_inappropriate.png);
+    }
+  }
+
+  .indented {
+    margin-left: $comment-left-column-width;
+  }
+
+  ul.links {
+    li {
+      margin: 0;
+      padding: 0;
+    }
+    a {
+      @include admin-button($bgcolor: $gray-6);
+      display: inline-block;
+    }
+    .comment-edit a {
+      @include admin-button($bgcolor: $red);
+      display: inline-block;
+    }
+    .comment-delete a {
+      @include admin-button($bgcolor: $red);
+      display: inline-block;
+    }
+    .comment-reply a {
+      @include admin-button($bgcolor: $blue-gray);
+      display: inline-block;
+    }
+  }
+
+  header.comment-header {
+    margin-bottom: 8px;
+    color: gray;
+    font-size: 90%;
+    font-style: italic;
+
+    a {font-style:normal;}
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
+
+    p.submitted {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+
+    b {
+      font-weight: normal;
+    }
+
+    h4 {
+      margin: 0 0 7px 0;
+      padding: 0;
+      @include body_font;
+      text-transform: none;
+      font-size: 1.15em;
+      line-height: 1.1;
+    }
+
+  }
+  
+  .gn2-3col {
+    .gn2-3col--col1 {
+      display: none;
+      @include breakpoint($large-screen-and-up) {
+        @include zen-grid-item(2, 1);
+        display: block;
+        .inner {
+          padding-right: 0.6em;
+        }
+      }
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(20, 1);
+      clear: both;
+      .inner {
+        padding-right: 0;
+      }
+      @include breakpoint($large-screen-and-up) {
+        clear: none;
+        @include zen-grid-item(12, 3);
+        .inner {
+          padding-right: 1em;
+        }
+      }
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(20, 1);
+      clear: both;
+      @include breakpoint($large-screen-and-up) {
+        clear: none;
+        @include zen-grid-item(6, 15);
+      }
+    }
+  }
+
+  .comment-container {
+    clear: both;
+    @include background-opacity($white, 0.75);
+    padding: 1em;
+    margin-bottom: .5em;
+    border: 1px solid $light-gray;
+  }
+
+  .indented {
+    > .comment-container {
+      background: transparent;
+      border: none;
+    }
+  }
+
+  .comment-left {
+    .comment-author-image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 2px;
+      background-color: transparent;
+      overflow: hidden;
+    }
+    .comment-author-status {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 68%;
+      color: $medium-gray;
+      display: none;
+    }
+  }
+
+  .comment-content {
+    font-size: 1em;
+    .field-label {
+      display: none;
+    }
+    .field-name-comment-body {
+      margin-bottom: .75em;      
+    }
+  }
+
+  .field-type-file {
+    margin-top: 0;
+    margin-bottom: .75em;
+    .field-label {
+      display: none;
+    }
+    .file-icon {
+      display: none;
+    }
+    a {
+      background-image: url(../images/download_link.png);
+      background-repeat: no-repeat;
+      display: block;
+      padding: 3px 0 0 30px;
+    }
+  }
+
+  .comment-clear {
+    clear: both;
+  }
+
+}
+
+fieldset.gn2-comments--attributes {
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  
+  .gn2-3col--col1,
+  .gn2-3col--col2,
+  .gn2-3col--col3 {
+    float: none;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+  }
+
+  @include breakpoint($medium-screen-and-up) {
+    .gn2-3col--col1 {
+      @include zen-grid-item(8, 1);
+      font-size: .9em;
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(4, 9);
+      text-align: right;
+    }
+    .gn2-3col--col3 {
+      @include zen-grid-item(8, 13);
+      text-align: right;
+    }
+  }
+
+  .form-item-anonymous-publishing-options {
+    margin: 0 0 .5em 0;
+  }
+
+}
+
+// ========= Styling the Comment delete page =======
+.page-comment-delete {
+  input[value = "Delete"] {
+    @include admin-button($bgcolor: $red);
+    display: inline-block;
+    margin: 0.5em 0.4em 0 0;
+  }
+}
+
+#comment-body-add-more-wrapper {
+  .filter-wrapper {
+    padding: 0;
+  }
+}

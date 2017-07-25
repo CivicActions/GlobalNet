@@ -1,0 +1,53 @@
+.views-table {
+  margin-top: 0;
+  width: 100%;
+  th.views-field {
+    font-weight: normal;
+    text-align: left;
+    padding-top: 0em;
+    padding-bottom: .25em;
+    font-size: 1em;
+    a {
+      &.active {
+        img {
+          padding-left: 4px;
+        }
+      }
+    }
+    &.views-field-edit-membership:before {
+      content: 'Operations';
+    }
+  }
+  .views-row {
+    border-bottom: 0px;
+    padding: 0;
+    margin-bottom: 6px;
+    &.views-row-even,
+    &.even {
+      background-repeat: repeat;
+      background-image: url(../images/table_row_background_even.png);
+    }
+    &.views-row-odd,
+    &.odd {
+      background-color: $white;
+    }
+    &.views-row-last {
+      margin-bottom: 0;
+    }
+    * {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+  }
+  .views-field {
+    padding: .75em;
+    font-size: .9em;
+    &.active {
+      background-color: transparent;
+    }
+  }
+  td.align-center {
+    text-align: center;
+  }
+}

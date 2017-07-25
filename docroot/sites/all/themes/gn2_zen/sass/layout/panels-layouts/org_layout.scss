@@ -1,0 +1,100 @@
+/**
+ * @file
+ * Positioning for a organization custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+
+// Add the Zen Grids responsive layout mixins.
+@import "../_breakpoint-styles";
+@import "zen";
+
+$zen-gutter-width: 0px;
+$zen-auto-include-item-base: false;
+
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+.panels-layout.org,
+.main,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar,
+.sidebar__top,
+.sidebar__logo,
+.sidebar__title,
+.sidebar__bottom {
+  @include zen-grid-item-base();
+}
+
+.panels-layout.org {
+  @include zen-grid-container();
+}
+
+.sidebar__logo,
+.main__top,
+.main__upper-tabs,
+.main__active-communities,
+.main__lower-tabs,
+.sidebar__top,
+.sidebar__bottom {
+  @include zen-clear();
+}
+
+$zen-column-count: 6 !global;
+
+.panels-layout.org {
+  .main {
+    @include zen-grid-item ($zen-column-count, 1);
+    @include zen-nested-container();
+    clear: both;
+  }
+  .main__top,
+  .main__upper-tabs,
+  .main__active-communities,
+  .main__lower-tabs,
+  .sidebar__top,
+  .sidebar__bottom {
+    @include zen-grid-item ($zen-column-count, 1);
+    clear: both;
+  }
+  .sidebar {
+    @include zen-grid-item ($zen-column-count, 1);
+    @include zen-nested-container();
+    clear: both;
+  }
+  .sidebar__logo {
+    @include zen-grid-item (1, 1);
+  }
+  .sidebar__title {
+    @include zen-grid-item (5, 2);
+  }
+}
+
+@include breakpoint($medium-screen-and-up) {  
+  .panels-layout.org {
+    .main {
+      @include zen-grid-item (4, 1);
+      @include zen-nested-container();
+    }
+    .main__top,
+    .main__upper-tabs,
+    .main__active-communities,
+    .main__lower-tabs,
+    .sidebar__top,
+    .sidebar__bottom {
+      @include zen-grid-item (6, 1);
+    }
+    .sidebar {
+      @include zen-grid-item (2, 5);
+      @include zen-nested-container();
+      clear: none;
+    }
+    .sidebar__logo {
+      @include zen-grid-item (1, 1);
+    }
+    .sidebar__title {
+      @include zen-grid-item (5, 2);
+    }
+  }
+}

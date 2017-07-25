@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Install EZProzy module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function gn2_ezproxy_install() {
+  drupal_set_message(t('EZProxy GlobalNET module installed'));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gn2_ezproxy_uninstall() {
+  variable_del("ezproxy_host");
+  variable_del("ezproxy_password");
+  variable_del("ezproxy_username");
+
+  drupal_set_message(t('EZProxy GlobalNET module uninstalled'));
+}

@@ -1,0 +1,15 @@
+.node-type-news,
+.page-node.node-type-news {
+  .view-news-announcements-posts .view-empty {
+    display: none;
+  }
+
+  .node-header-links {
+    .print,
+    .share,
+    .download_pdf {
+      display: none !important;
+    }
+  }
+
+}

@@ -1,0 +1,75 @@
+/**
+ * @file
+ * Positioning for a 2 col 40:60 custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 15, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked,
+.gn-two-col-stacked > .top,
+.gn-two-col-stacked > .sidebar,
+.gn-two-col-stacked > .main > .main-top,
+.gn-two-col-stacked > .main > .main-bottom,
+.gn-two-col-stacked > .footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 24, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked > .sidebar,
+.gn-two-col-stacked > .main > .main-bottom,
+.gn-two-col-stacked > .footer {
+  clear: both;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stacked:before, .gn-two-col-stacked:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.gn-two-col-stacked:after {
+  clear: both;
+}
+
+/* line 36, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked > .top,
+.gn-two-col-stacked > .footer {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+}
+/* line 40, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked > .sidebar {
+  float: left;
+  width: 31.25%;
+  margin-left: 0%;
+  margin-right: -31.25%;
+}
+/* line 43, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked > .main {
+  float: left;
+  width: 68.75%;
+  margin-left: 31.25%;
+  margin-right: -100%;
+  padding-left: 0;
+  padding-right: 0;
+  clear: none;
+}
+/* line 47, ../../../sass/layout/panels-layouts/gn2_2colstacked.scss */
+.gn-two-col-stacked > .main > .main-top,
+.gn-two-col-stacked > .main > .main-bottom {
+  float: left;
+  width: 100%;
+  margin-left: 0%;
+  margin-right: -100%;
+}
+
+/*# sourceMappingURL=gn2_2colstacked.css.map */

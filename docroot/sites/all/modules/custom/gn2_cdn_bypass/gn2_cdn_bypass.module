@@ -1,0 +1,131 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_cdn_bypass.
+ */
+
+/**
+ * Redirect to the correct host.
+ */
+function gn2_cdn_bypass_init() {
+  $bypass_modifier = 'edit';
+
+  // Check for paths that we should not modify.
+  // These are important for the media browser and the image upload progress bar
+  // to work properly. RD-2007. Add urls here if they are causing issues.
+  if (preg_match('|^/js|', request_uri())
+    || preg_match('|^/\?q=|', request_uri())
+    || preg_match('|^/media/browser|', request_uri())
+    || preg_match('|^/media/ajax|', request_uri())
+    || preg_match('|^/file/ajax/upload|', request_uri())
+    || preg_match('|^/admin|', request_uri())
+    || preg_match('|^/system|', request_uri())) {
+    // No redirect.
+    return;
+  }
+
+  // Check if we should be on bypass host.
+  // Any paths which might involve uploads should be included in this condition
+  // block, such as node edit and add.
+  if (strstr(request_uri(), '/edit')
+    || strstr(request_uri(), '/add')) {
+    // Make sure we are on bypass host.
+    if (strstr($GLOBALS['base_url'], $bypass_modifier)) {
+      // Already redirect to bypass host.
+      return;
+    }
+    else {
+      // Unset the destination variable so that drupal_goto doesn't read it and
+      // use it instead of our specified url. If present in the query string, it
+      // will be preserved anyway from the request_uri() call.
+      unset($_GET['destination']);
+
+      // Redirected to bypass host.
+      drupal_goto(gn2_cdn_bypass_get_bypass_url($GLOBALS['base_url'] . request_uri()));
+    }
+  }
+  else {
+    // Not a content edit page so make sure we are NOT on bypass host.
+    if (strstr($GLOBALS['base_url'], $bypass_modifier)) {
+      // Modify path to non-bypass host.
+      $preg_search = array(
+        '/^' . $bypass_modifier . '\./',
+        '/-' . $bypass_modifier . '/',
+      );
+      $uri = preg_replace($preg_search, '', $GLOBALS['base_url']) . request_uri();
+      drupal_goto($uri);
+      return;
+    }
+    else {
+      // Already redirected.
+      return;
+    }
+  }
+}
+
+/**
+ * Bypass url.
+ *
+ * Change a url to a bypass url.
+ */
+function gn2_cdn_bypass_get_bypass_url($url) {
+  global $is_https;
+  $parsed_url = parse_url($url);
+  $host = empty($parsed_url['host'])
+    ? explode(".", $_SERVER['HTTP_HOST'])
+    : explode(".", $parsed_url['host']);
+  if (!empty($parsed_url['scheme'])) {
+    $scheme = $parsed_url['scheme'] . '://';
+  }
+  else {
+    $scheme = ($is_https ? 'https' : 'http') . '://';
+  }
+
+  if ((count($host) == 2) || ($host[0] == 'www')) {
+    // Production site.
+    ($host[0] == 'www') and array_shift($host);
+    $hostname = sprintf('edit.%s.%s', $host[0], $host[1]);
+  }
+  elseif (count($host) == 3) {
+    // Development servers.
+    $hostname = sprintf('%s-edit.%s.%s', $host[0], $host[1], $host[2]);
+  }
+  else {
+    // Likely an IP address. No redirect.
+    return;
+  }
+
+  $url = preg_replace(',http(s?)://.*?/,', '/', $url);
+  return $scheme . $hostname . $url;
+}
+
+/**
+ * Test the change url function.
+ *
+ * Run tests with the following command:
+ * drush ev "gn2_cdn_bypass_change_url_test();"
+ */
+function gn2_cdn_bypass_change_url_test() {
+  echo "\n";
+
+  // Hard coded urls for now are sufficient for this level of testing.
+  $host = 'http://gn2.localtest.me';
+  $bypass = 'http://gn2-edit.localtest.me';
+
+  assert(
+    (gn2_cdn_bypass_get_bypass_url('/action/path') == $bypass . '/action/path'),
+    'Simple bypass url with hostname');
+  assert(
+    (gn2_cdn_bypass_get_bypass_url($host . '/action/path') ==
+    $bypass . '/action/path'),
+    'Bypass url with hostname');
+
+  assert(
+    (gn2_cdn_bypass_get_bypass_url('https://globalnetplatform.org/path') == 'https://edit.globalnetplatform.org/path'),
+    'Production URL');
+  assert(
+    (gn2_cdn_bypass_get_bypass_url('https://dev.globalnetplatform.org/path') == 'https://dev-edit.globalnetplatform.org/path'),
+    'Development server URL');
+
+  echo "Tests complete\n\n";
+}

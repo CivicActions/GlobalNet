@@ -1,0 +1,31 @@
+$zen-column-count: 16 !global;
+
+body.node-type-group {
+
+  .gn-two-col-stackedflipped {
+    .top, .footer {
+      @include zen-grid-item($zen-column-count, 1);
+    }
+    .main {
+      @include zen-grid-item(11, 1);
+      @include zen-nested-container();
+      // padding-right: $column-gap-each;
+      > .inner {
+        // padding-right: 40px;
+        padding-right: 5%;
+      }
+      .main-top,
+      .main-bottom {
+        @include zen-grid-item($zen-column-count, 1);
+      }
+    }
+    .sidebar {
+      @include zen-grid-item(5, 12);
+      // padding-left: $column-gap-each;
+      img {
+        @include full_width_image;
+      }
+    }
+  }
+
+}

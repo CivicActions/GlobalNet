@@ -1,0 +1,31 @@
+diff --git views/includes/view.inc views/includes/view.inc
+index d082a0b..c913962 100644
+--- views/includes/view.inc
++++ views/includes/view.inc
+@@ -1895,6 +1895,7 @@ function delete($clear = TRUE) {
+   function export($indent = '') {
+     $this->init_display();
+     $this->init_query();
++    $indent .= "/* $this->name */ ";
+     $output = '';
+     $output .= $this->export_row('view', $indent);
+     // Set the API version
+@@ -1903,7 +1904,8 @@ function export($indent = '') {
+ 
+     foreach ($this->display as $id => $display) {
+       $output .= "\n" . $indent . "/* Display: $display->display_title */\n";
+-      $output .= $indent . '$handler = $view->new_display(' . ctools_var_export($display->display_plugin, $indent) . ', ' . ctools_var_export($display->display_title, $indent) . ', \'' . $id . "');\n";
++      $display_indent = $indent . " /* $display->display_title */ ";
++      $output .= $display_indent . '$handler = $view->new_display(' . ctools_var_export($display->display_plugin, $display_indent) . ', ' . ctools_var_export($display->display_title, $display_indent) . ', \'' . $id . "');\n";
+       if (empty($display->handler)) {
+         // @todo -- probably need a method of exporting broken displays as
+         // they may simply be broken because a module is not installed. That
+@@ -1911,7 +1913,7 @@ function export($indent = '') {
+         continue;
+       }
+ 
+-      $output .= $display->handler->export_options($indent, '$handler->options');
++      $output .= $display->handler->export_options($indent . " /* $display->display_title */ ", '$handler->options');
+     }
+ 
+     // Give the localization system a chance to export translatables to code.

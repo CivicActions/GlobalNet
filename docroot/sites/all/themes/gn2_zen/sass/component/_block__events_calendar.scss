@@ -1,0 +1,89 @@
+.page-node-upcoming-events{
+    .view-header{
+        margin: 1em 0 2em;
+        padding: 25px 0;
+        border-bottom: 1px solid $gray-d8;
+        .switch-event-view{
+            font-size: 80%;
+            margin-left: 30px;
+            padding: 1em 0;
+            a {
+              line-height: 25px;
+            }
+            &:before{
+                content: " ";
+                background-image: url("/sites/all/themes/gn2_zen/images/gn-icons/icon-view-schedule.png");
+                background-repeat: no-repeat;
+                height: 25px;
+                width: 25px;
+                display: block;
+                position: absolute;
+                margin-left: -30px;
+            }
+        }
+    }
+    &.view-list-events .view-display-id-upcoming_events_page > .view-content,
+    &.view-list-events .event-toggler,
+    &.view-calendar-events .view-display-id-upcoming_events_page > .view-footer,
+    &.view-calendar-events .view-display-id-upcoming_events_page .date-nav-wrapper .pager {
+        display: block;
+    }
+    &.view-list-events .feed-icon{
+      &.all {
+        display: block;
+      }
+    }
+    &.view-list-events .view-display-id-upcoming_events_page > .view-footer,
+    &.view-calendar-events .event-toggler,
+    &.view-calendar-events .feed-icon,
+    &.view-list-events .feed-icon,
+    &.view-calendar-events .view-display-id-upcoming_events_page > .view-content,
+    &.view-calendar-events .view-display-id-upcoming_events_page .pager {
+        display: none;
+    }
+    .view-display-id-upcoming_events_page .view-content {
+      &.open {
+        .closed {
+          display: none; 
+        }
+      }
+    }
+    .view-display-id-block_events_calendar{
+        .date-nav-wrapper{
+            .pager > li{
+                list-style: none;
+                background: none;
+                color: $blue-gray;
+                font-weight: 100 !important;
+                &.date-prev{
+                    right: inherit;
+                }
+            }
+        }
+        .calendar-calendar {
+            .month-view .full td.single-day div.monthview,
+            td .views-field-title a{
+                font-weight: 100;
+                background: none;
+                line-height: 1.2;
+            }
+            tr td.single-day.today, td.date-box.today{
+                border: none !important;
+                background-color: $lavender !important; 
+            }
+            .month-view .full{
+                thead th{
+                    @include display_font;
+                    display: table-cell;
+                    border: 1px solid $gray-d6;
+                    background-color: $gray-d6;
+                    color: $very-dark-gray;
+                    font-weight: 100;
+                }
+                td .month.day{
+                    @include display_font;
+                }
+            }
+        }
+    }
+}

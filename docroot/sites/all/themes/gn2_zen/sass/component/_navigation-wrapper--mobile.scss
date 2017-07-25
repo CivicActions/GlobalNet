@@ -1,0 +1,43 @@
+/**
+ * Styles for the mobile navigation block
+ */
+
+#mobile-nav-wrapper{
+  .mean-bar,
+  .mean-nav{
+    background: $medium-gray;
+    li{
+      border-bottom: 1px solid $gray-5;
+      border-top: 1px solid $gray-7;
+      a{
+        @include display_font;
+        font-size: 1.5em;
+        padding: 0.4em 5%;
+        border-top: none !important;
+        border-bottom: none !important;
+      }
+    }
+    li{
+      &:first-child{border-top: none;}
+      &:last-child{border-bottom: none;}
+      li, li:first-child{
+        border-bottom: 1px solid $gray-5;
+        border-top: 1px solid $gray-7;
+        background: darken($medium-gray, 15%);
+        a{
+          padding: 0.4em 10%;
+        }
+      }
+    }
+    li:hover{background: darken($medium-gray, 15%);}
+    a.mean-expand {
+      @include gn-icon(25px, url(../images/gn-icons/icon-arrow-right-light-grey.png));
+      border-width: 0 !important;
+      text-indent: 999px;
+      background-position: 40% 40%;
+      &.mean-clicked {
+        @include gn-icon(25px, url(../images/gn-icons/icon-arrow-down-light-grey.png));
+      }    
+    }
+  }
+}

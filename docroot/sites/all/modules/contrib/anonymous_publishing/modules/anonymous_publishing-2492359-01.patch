@@ -1,0 +1,12 @@
+diff --git modules/anonymous_publishing_pet.module modules/anonymous_publishing_pet.module
+index b996e36..f6d4008 100644
+--- modules/anonymous_publishing_pet.module
++++ modules/anonymous_publishing_pet.module
+@@ -334,6 +334,7 @@ function _anonymous_publishing_pet_node_form(array &$form) {
+   $form['anonymous_publishing'] = array(
+     '#type' => 'fieldset',
+     '#collapsible' => TRUE,
++    '#collapsed' => TRUE,
+     '#tree' => TRUE,
+   );
+ 

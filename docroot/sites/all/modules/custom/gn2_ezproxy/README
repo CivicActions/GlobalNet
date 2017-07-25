@@ -1,0 +1,16 @@
+/* $Id: darren.ferguson $ */
+
+This module implements ezproxy authentication for Drupal
+
+INSTALLATION
+------------
+
+Install and enable the ezproxy Drupal module as you would any Drupal module.
+
+Configure the module at Administer > Site Configuration > Ezproxy
+
+CREDITS
+-------
+Developed and maintained by Darren Ferguson <darren.ferguson@openband.net>
+Developed and maintained by Ben Lavender
+Sponsored by OpenBand <http://tech.openband.net/>

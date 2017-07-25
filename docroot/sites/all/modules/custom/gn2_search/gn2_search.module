@@ -1,0 +1,196 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_search.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_search_block_info() {
+  $blocks['search_default'] = array(
+    // info: The name of the block.
+    'info' => t('Custom Search Default block'),
+    'status' => TRUE,
+    'region' => 'header',
+  );
+
+  $blocks['link_to_search'] = array(
+    'info' => t('Link to Search'),
+    'status' => TRUE,
+  );
+
+  $blocks['link_to_member_search'] = array(
+    'info' => t('Link to Member Search'),
+    'status' => TRUE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_search_block_view($delta = '') {
+  // The $delta parameter tells us which block is being requested.
+  $gid = gn2_context_get_org_id();
+  switch ($delta) {
+    case 'search_default':
+      $block['subject'] = t('<none>');
+      $block['content'] = drupal_get_form('gn2_search_default_form');
+      break;
+
+    case 'link_to_search':
+      $block['subject'] = t('<none>');
+      $block['content'] = t('You are searching for GlobalNET members. ') .
+        l(t('Looking for content?'), 'search/org/' . $gid,
+        array(
+          'attributes' => array(
+            'class' => array(
+              'other-search-link',
+            ),
+          ),
+        ));
+      break;
+
+    case 'link_to_member_search':
+      $org = ($gid) ? node_load($gid) : NULL;
+      $title = ($org) ? field_get_items('node', $org, 'field_org_short_title') :
+        NULL;
+      $short_title = (!empty($title)) ? strtolower($title[0]['safe_value']) :
+        NULL;
+      $path = ($short_title) ? 'members/org/' . $short_title : 'members';
+      $block['subject'] = t('<none>');
+      $block['content'] = t('You are searching for content. ') .
+        l(t('Looking for GlobalNET members?'), $path,
+        array(
+          'attributes' => array(
+            'class' => array(
+              'other-search-link',
+            ),
+          ),
+        ));
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Custom search form.
+ */
+function gn2_search_default_form($form, &$form_state) {
+  $form['search'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#size' => 10,
+    '#org' => gn2_context_get_org_id(),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Search',
+    '#action' => 'gn2_search_default_form_submit',
+  );
+  $form['#action'] = url('search/org/' . $form['search']['#org']);
+  return $form;
+}
+
+/**
+ * Custom search form submit.
+ */
+function gn2_search_default_form_submit($form, &$form_state) {
+  drupal_goto('search/org/' . $form['search']['#org'], array('query' => 
+    array(
+      'search_api_views_fulltext' => $form_state['values']['search'],
+    )
+  ));
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function gn2_search_block_view_alter(&$data, $block) {
+
+  // For the "Show results for" block on the search page...
+  if (arg(0) == 'search') {
+    if ($block->module == 'facetapi' && $block->delta == 'djs1o6VrivuNykMYeYyvXVKT480Y01tL') {
+
+      // All ids of all organizations.
+      $organizations = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('status', 1)
+        ->condition('type', 'organization')
+        ->execute()
+        ->fetchAllAssoc('nid');
+      $organizations = array_keys($organizations);
+
+      // List of organizations only.
+      $new_items = array();
+
+      // Verifies which items are organizations and includes them on list.
+      foreach ($data['content']['og_group_ref']['#items'] as $item) {
+        $matches = array();
+        if (preg_match('/group\/(\d+)/', $item['data'], $matches)) {
+          if (in_array($matches[1], $organizations)) {
+            $new_items[] = $item;
+          }
+        }
+      }
+
+      // Replaces list.
+      $data['content']['og_group_ref']['#items'] = $new_items;
+
+    }
+  }
+
+}
+
+/**
+ * Implements hook__facet_items_alter().
+ */
+function gn2_search_facet_items_alter(&$build, &$settings) {
+  if ($settings->facet == 'og_user_node:field_org_short_title') {
+    $result = db_query('SELECT n.title, s.field_org_short_title_value AS short '
+        . 'FROM {node} n '
+        . 'INNER JOIN {field_data_field_org_short_title} s ON s.revision_id = n.vid '
+        . 'WHERE n.type = :type', array(':type' => 'organization'));
+    $orgs = array();
+    while ($row = $result->fetch()) {
+      $orgs[strtolower($row->short)] = $row->title;
+    }
+    foreach ($build as $key => $value) {
+      $build[$key]['#markup'] = (array_key_exists($key, $orgs)) ? $orgs[$key] :
+        $value['#markup'];
+    }
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_search_menu() {
+  $items = array();
+
+  $items['node/%node/members'] = array(
+    'page callback' => 'gn2_search_members_redirect',
+    'access arguments' => array('view own private files'),
+    'type' => MENU_CALLBACK,    
+  );
+
+  return $items;
+}
+
+/**
+ * Redirects users to members search with the org facet appended.
+ */
+function gn2_search_members_redirect() {
+  // Get the Org ID from GN2 Context.
+  $context = gn2_context_get_org_id();
+  $node = ($context) ? node_load($context) : FALSE;
+  if ($node && $node->type == 'organization') {
+    $organization_prefix = $node->field_org_short_title[LANGUAGE_NONE][0]['safe_value'];
+    // Redirect to /members/org/[org short title].
+    drupal_goto('members/org/' . strtolower($organization_prefix));
+  }
+  else {
+    drupal_not_found();
+  }
+}

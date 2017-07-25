@@ -1,0 +1,18 @@
+.rate-thumbs-up-btn-up,
+a.rate-thumbs-up-btn-up,
+span.rate-thumbs-up-btn-up {
+  background-image: url(../images/thumbs.png);
+  background-size: 21px auto;
+  width: 21px;
+  height: 21px;
+}
+
+.rate-info,
+.rate-description {
+  clear: left;
+  font-size: 1em;
+  color: $gray-6;
+  display: inline-block;
+  height: 25px;
+  padding: 0 0 0 5px;
+}

@@ -1,0 +1,74 @@
+/* Moving this from _node__form.scss because there are lot of repeating date fields to style*/
+
+/*======== Styling Date Fields========*/
+/* Add .section-node-add,
+ * .section-node-edit
+ * If having problems with overrides
+ */
+
+.form-field-type-datetime {
+  .fieldset-legend {
+    font-size: .8em;
+    color: black;
+  }
+  .form-wrapper {
+    padding: 0 0 0 0;
+    border: none;
+  }
+}
+
+.container-inline-date .date-padding {
+  padding: 0em;
+}
+
+#edit-og-group-ref-und-0-admin-add-more {
+  margin: .5em 0 0 1em;
+}
+  
+#field-course-dates-add-more-wrapper span.fieldset-legend {
+  display: block;
+}
+
+/* Getting start and end dates inline */
+.date-float {
+  float: none;
+}
+
+.start-date-wrapper,
+.end-date-wrapper {
+  @include breakpoint($small-screen-and-up) {
+    display: table-cell;
+  }
+  width: auto;
+  vertical-align: top;
+}
+
+.date-padding > .form-item {
+  margin-bottom: 0;
+  padding-right: 1em;
+}
+
+.end-date-wrapper {
+  .date-padding {
+    @include breakpoint($small-screen-and-up) {
+      float: right;
+    }
+  }
+}
+  
+/* Making to labels in end dates inline */
+label[for = "edit-field-event-date-und-0-value2"],
+label[for = "edit-field-course-dates-und-0-value2"] {
+  @include breakpoint($small-screen-and-up) {
+    margin-top: 2em !important;
+    display: inline-block;
+    padding: 0 1em;
+  }
+}
+
+/*========= Repeating Fields ========== */
+#repeat-settings-fieldset{
+  input{
+    display: inline-block;
+  }
+}

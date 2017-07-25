@@ -1,0 +1,42 @@
+.event-contacts-block {
+  background-image: url("../images/bg-diagonal-tile-blue.png");
+  * {
+    margin: 0;
+    padding: 0;
+    color: white;
+  }
+  .inner {
+    padding: .9em 1em;
+    line-height: 1.4;
+  }
+  .event-contacts-list--intro-text,
+  .event-contacts-list--addl-info {
+    font-size: .85em;
+  }
+  .event-contacts-list--addl-info {
+    .view-display-id-panel_pane_5 {
+      .views-row {
+        white-space: pre-line;
+        margin-top: 1em;
+      }
+    }
+  }
+  .full-name,
+  .phone-number {
+    font-size: .95em;
+  }
+  .full-name {
+    font-weight: bold;
+    margin-top: 1em;
+  }
+  .email-link {
+    a {
+      @include small-header-button($font-size: 1.3em);
+      margin-top: .3em;
+      margin-bottom: 0em;
+    }
+  }
+}
+.pane-event-contacts-block.block-event-registration {
+  display: none;
+}

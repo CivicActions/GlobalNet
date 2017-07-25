@@ -1,0 +1,26 @@
+
+/*====== Theming the User Account Comments Tab =========*/
+.user__tab--comments{
+  .view-header{
+    p{
+      float: left;
+      width: 70%;
+    }
+  }
+  .view-filters {
+    float: right;
+  }
+  .view-content {
+    clear: both;
+  }
+
+  ul{padding: 0 1em;
+  background: $white;
+    li{
+      list-style: none;
+      border-bottom: 1px solid $light-gray;
+      padding: 1em;
+      background: $white;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+/**
+ * Messages.
+ */
+.messages {
+  margin: rhythm(1) 0;
+  padding: 10px 10px 10px 50px; /* LTR */
+  background-image: inline-image("message-24-ok.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *background-image: image-url("message-24-ok.png");
+  }
+  background-position: 8px 8px; /* LTR */
+  background-repeat: no-repeat;
+  border: 1px solid $sulu;
+}
+
+.messages--status {
+  @extend .messages;
+  @extend %ok;
+}
+
+.messages--warning {
+  @extend .messages;
+  @extend %warning;
+  background-image: inline-image("message-24-warning.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *background-image: image-url("message-24-warning.png");
+  }
+  border-color: $portica;
+}
+
+.messages--error {
+  @extend .messages;
+  @extend %error;
+  background-image: inline-image("message-24-error.png");
+  @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+    *background-image: image-url("message-24-error.png");
+  }
+  border-color: $cinnabar;
+}
+
+.messages__list {
+  margin: 0;
+}
+
+.messages__item {
+  list-style-image: none;
+}
+
+/* Core/module installation error messages. */
+.messages--error p.error {
+  color: $gray-3;
+}
+
+.messages--customerror {
+  background-color: $lightest-blue-gray;
+  background-image: none;
+  border-color: $light-blue-gray;
+  padding: 1em;
+  font-size: 1.1em;
+  font-weight: bold;
+  ul {
+    background-color: white;
+    border: 1px solid $light-blue-gray;
+    padding: 1em;
+    list-style-type: none;
+    li {
+      padding: 0;
+      margin-bottom: .5em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+/* System status report. */
+.ok,
+%ok {
+  background-color: $ivory;
+  color: $british_racing_green;
+}
+.warning,
+%warning {
+  background-color: $light_yellow;
+  color: $olive;
+}
+.error,
+%error {
+  background-color: $chablis;
+  color: $saddle_brown;
+}

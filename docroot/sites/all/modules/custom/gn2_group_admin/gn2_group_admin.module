@@ -1,0 +1,146 @@
+<?php
+/**
+ * @file
+ * Module file for gn2_file_download.
+ */
+
+ctools_include('jump-menu');
+
+/**
+ * Implements hook_init().
+ */
+
+ /**
+ * Permissions for node clone commented out.
+
+function gn2_group_admin_init() {
+  $authenticated_role = user_role_load_by_name('authenticated user');
+  $authenticated_rid = $authenticated_role->rid;
+  $authenticated_permissions = array(
+    'clone own nodes' => TRUE,
+  );
+
+  user_role_change_permissions($authenticated_rid, $authenticated_permissions);
+}
+*/
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_group_admin_block_info() {
+  $blocks['gn2_group_admin_menu'] = array(
+    'info' => t('GN Group Admin Menu'),
+    'status' => TRUE,
+    'region' => 'content',
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_group_admin_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'gn2_group_admin_menu':
+      if (arg(0) == 'node' && is_numeric(arg(1))) {
+        global $user;
+        //$exclude = array('alumni_group', 'course', 'event');
+        $node = node_load(arg(1));
+        $type = str_replace('_', ' ', $node->type);
+        $options = array(
+          'title' => t('ADMIN:'),
+          'choose' => t('Manage this @type', array('@type' => $type)),
+        );
+        $targets = array(
+          url('node/' . arg(1) . '/edit') => 'Edit group',
+
+          //url('node/' . arg(1) . '/clone/confirm') => 'Clone group',
+          //url('gn_url_unpublish/') . arg(1) => 'Archive Group',
+        );
+        //if (!in_array($node->type, $exclude)) {
+          $targets[url('group/node/' . arg(1) . '/admin/people')] = 'Manage members';
+        //}
+        $data = drupal_get_form('ctools_jump_menu', $targets, $options);
+
+        $block['subject'] = '';
+        $block['content'] = $data;
+      }
+
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_group_admin_menu() {
+  $items = array();
+
+  $items['gn_url_unpublish/%node'] = array(
+    'title' => 'Unpublish Node',
+    'description' => 'Unpublish Node by Nid',
+    'page callback' => 'gn2_group_admin_save_destination',
+    'page arguments' => array(1),
+    'access arguments' => array('clone own nodes'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Save our unpublish destination.
+ */
+function gn2_group_admin_save_destination($node) {
+  global $user;
+  if (user_access('clone own nodes') && $user->uid == $node->uid) {
+    $_SESSION['gn_url_unpublish_destination'] = $_SERVER['HTTP_REFERER'];
+    return drupal_get_form('gn2_group_admin_confirm', $node);
+  }
+  else {
+    drupal_access_denied();
+  }
+}
+
+/**
+ * Build our confirmation page.
+ */
+function gn2_group_admin_confirm($form, $form_state, $node) {
+  $form['#node'] = $node;
+  return confirm_form($form, t('Are you sure you want to unpublish %node-title?', array('%node-title' => $node->title)), $_SESSION['gn_url_unpublish_destination'], t('This action cannot be undone.'), t('Unpublish'), t('Cancel'));
+}
+
+/**
+ * Build our submit.
+ */
+function gn2_group_admin_confirm_submit($form, &$form_state) {
+  $node = $form['#node'];
+  if ($form_state['values']['confirm']) {
+    $node->status = 0;
+    node_save($node);
+  }
+
+  drupal_goto('<front>');
+}
+
+/**
+ * Implements hook_admin_paths_alter().
+ */
+function gn2_group_admin_admin_paths_alter(&$paths) {
+
+  // Group creation page should not be admin path.
+  $paths['node/add/group'] = FALSE;
+
+}
+
+/**
+ * Implements hook_init().
+ */
+function gn2_group_admin_init() {
+  // Group Admin Menu.
+  drupal_add_js(drupal_get_path('module', 'gn2_group_admin') . '/group_admin_menu.js');
+  // Accordions JS.
+  drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/gn2_accordions.js');
+}

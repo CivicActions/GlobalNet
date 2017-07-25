@@ -1,0 +1,60 @@
+diff --git a/docroot/sites/all/modules/contrib/user_relationships/user_relationships_ui/user_relationships_ui.pages.inc b/docroot/sites/all/modules/contrib/user_relationships/user_relationships_ui/user_relationships_ui.pages.inc
+index 8a0514e..ff2fd6b 100644
+--- user_relationships/user_relationships_ui/user_relationships_ui.pages.inc
++++ user_relationships/user_relationships_ui/user_relationships_ui.pages.inc
+@@ -42,12 +42,12 @@ function user_relationships_page($account = NULL, $rtid = NULL) {
+   if ($account->uid == $user->uid) {
+     $msg = isset($relationship_type)
+            ? t("My @rel_name_plural", user_relationships_type_translations($relationship_type))
+-           : t("My relationships");
++           : t("My contacts");
+   }
+   else {
+     $msg = isset($relationship_type)
+            ? t("%username's @rel_name", array('%username' => format_username($account)) + user_relationships_type_translations($relationship_type))
+-           : t("%username's relationships", array('%username' => format_username($account)));
++           : t("%username's contacts", array('%username' => format_username($account)));
+   }
+   drupal_set_title($msg, PASS_THROUGH);
+ 
+@@ -66,7 +66,7 @@ function user_relationships_page($account = NULL, $rtid = NULL) {
+     $empty = t('You do not have any @rel_name_plural.', user_relationships_type_translations($relationship_type));
+   }
+   else {
+-    $empty = t('You do not have any relationships with other users.');
++    $empty = t('You do not have any contact with other users.');
+   }
+ 
+   $output = array(
+@@ -102,23 +102,23 @@ function user_relationships_pending_requests_page($column, $account = NULL) {
+   if ($column == 'requester_id') {
+     $permission = 'request';
+     if ($account->uid == $user->uid) {
+-      $msg = t('My relationships (sent requests)');
+-      $empty = t('You have not sent any relationship requests that are currently pending.');
++      $msg = t('My contacts (sent requests)');
++      $empty = t('You have not sent any contact requests that are currently pending.');
+     }
+     else {
+-      $msg = t("%username's relationships (sent requests)", array('%username' => format_username($account)));
+-      $empty = t('%username has not sent any relationship requests that are currently pending.', array('%username' => format_username($account)));
++      $msg = t("%username's contacts (sent requests)", array('%username' => format_username($account)));
++      $empty = t('%username has not sent any contact requests that are currently pending.', array('%username' => format_username($account)));
+     }
+   }
+   else {
+     $permission = 'approve';
+     if ($account->uid == $user->uid) {
+-      $msg = t('My relationships (received requests)');
+-      $empty = t('You have not received any relationship requests that are currently pending.');
++      $msg = t('My contacts (received requests)');
++      $empty = t('You have not received any contact requests that are currently pending.');
+     }
+     else {
+-      $msg = t("%username's relationships (received requests)", array('%username' => format_username($account)));
+-      $empty = t('%username has not received any relationship requests that are currently pending.', array('%username' => format_username($account)));
++      $msg = t("%username's contacts (received requests)", array('%username' => format_username($account)));
++      $empty = t('%username has not received any contact requests that are currently pending.', array('%username' => format_username($account)));
+     }
+   }
+   drupal_set_title($msg, PASS_THROUGH);

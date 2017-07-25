@@ -1,0 +1,26 @@
+diff --git conditional_fields/includes/conditional_fields.features.inc conditional_fields/includes/conditional_fields.features.inc
+index a8504f4..4f3f8c0 100644
+--- conditional_fields/includes/conditional_fields.features.inc
++++ conditional_fields/includes/conditional_fields.features.inc
+@@ -53,14 +53,14 @@ function conditional_fields_features_export_render($module_name, $data, $export
+       foreach ($info['dependents'] as $dependent_field_name => $dependees) {
+         foreach ($dependees as $dependee) {
+           $code[] = '';
+-          $code[] = '  $items[] = array(';
+-          $code[] = "    'entity' => '" . $entity . "',";
+-          $code[] = "    'bundle' => '" . $bundle . "',";
+-          $code[] = "    'dependent' => '" . $dependent_field_name . "',";
+-          $code[] = "    'dependee' => '" . $dependee['dependee'] . "',";
++          $code[] = "  /* $dependent_field_name */ " . '$items[] = array(';
++          $code[] = "  /* $dependent_field_name */   'entity' => '" . $entity . "',";
++          $code[] = "  /* $dependent_field_name */   'bundle' => '" . $bundle . "',";
++          $code[] = "  /* $dependent_field_name */   'dependent' => '" . $dependent_field_name . "',";
++          $code[] = "  /* $dependent_field_name */   'dependee' => '" . $dependee['dependee'] . "',";
+
+-          $code[] = "    'options' => " . features_var_export($dependee['options'], '    ') . ',';
+-          $code[] = '  );';
++          $code[] = "  /* $dependent_field_name */   'options' => " . features_var_export($dependee['options'], "  /* $dependent_field_name */   ") . ',';
++          $code[] = "  /* $dependent_field_name */ );";
+         }
+       }
+     }

@@ -1,0 +1,23 @@
+diff --git a/og_ui/og_ui.module b/og_ui/og_ui.module
+index 0e19e6a..e5b7219 100644
+--- a/og_ui/og_ui.module
++++ b/og_ui/og_ui.module
+@@ -597,7 +597,17 @@ function og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $l
+         return;
+       }
+ 
+-      if (!empty($entity->uid) && ($entity->uid == $account->uid)) {
++      // Any user with group_manager role on current content should see the
++      // message "You are the group manager". See: RD-3021.
++      $is_manager = FALSE;
++      if (function_exists('og_get_user_roles')) {
++        $manager_roles = array('group_manager');
++        $og_roles = og_get_user_roles('node', $entity->nid, $user->uid);
++        $int_roles = array_intersect($manager_roles, $og_roles);
++        $is_manager = (!empty($int_roles)) ? TRUE : FALSE;
++      }
++
++      if (!empty($entity->uid) && (($entity->uid == $account->uid) || $is_manager)) {
+         // User is the group manager.
+         $element[0] = array(
+           '#type' => 'html_tag',

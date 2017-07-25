@@ -1,0 +1,63 @@
+
+/* Styling Admin Group Members View */
+
+.view-admin-group-members{
+  .views-exposed-form #edit-combine-wrapper.views-exposed-widget{
+    padding-top: 2em;
+  }
+}
+
+.view--admin--manage-users {
+  #edit-combine-wrapper {
+    .views-widget {
+      display: block;
+    }
+    input[id=edit-combine] {
+      width: 500px;
+    }
+  }
+  .views-exposed-widget.views-submit-button {
+    input {
+      @include general-content-button;
+    }
+  }
+
+  // Changing exposed form fields layout from floats to inline-blocks
+  .views-exposed-form {
+    .views-exposed-widget {
+      float: none;
+      @include breakpoint($small-screen-and-up) {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+/* Responsive Styles */
+
+.view--admin--manage-users {
+  position: relative;
+  #edit-combine-wrapper {
+    width: auto;
+    margin-bottom: 10em;
+    @include breakpoint($small-screen-and-up) {
+      margin-left: 1.5em;
+      margin-bottom: 8.5em;
+      width: 50%;
+    }
+    @include breakpoint($medium-screen-and-up) {
+      margin-bottom: 6.5em;
+      width: auto;
+    }
+  }
+  .description {
+    margin-top: 10px;
+    position: absolute;
+    left: 0;
+    max-width:725px;
+    @include breakpoint($medium-screen-and-up) {
+      width: 80%;
+    }
+  }
+
+}

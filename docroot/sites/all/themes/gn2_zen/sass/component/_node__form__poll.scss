@@ -1,0 +1,23 @@
+form#poll-node-form {
+  
+  .tabledrag-toggle-weight-wrapper {
+    text-align: left;
+  }
+  
+  div#poll-choice-wrapper {
+    padding-bottom: 1em;
+  }
+  
+  .group-poll-settings.field-group-fieldset {
+    fieldset {
+      border-bottom: none;
+      legend {
+        display: none;
+      }
+      > .fieldset-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+  
+}

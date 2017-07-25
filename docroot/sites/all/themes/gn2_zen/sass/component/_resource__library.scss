@@ -1,0 +1,41 @@
+.view-search-resources {
+  @include breakpoint($medium-screen-and-up) {
+    .views-field-field-file-resource {
+      float: right;
+      margin-bottom: 55px;
+      padding-left: 15px;
+      position: relative;
+      top: -50px;
+    }
+  }
+  .panel-2col {
+    .panel-col-first {
+      width: 100%;
+    }
+  }
+  .inside {
+    position: relative;
+    .views-field-field-file-resource {
+      a {
+        display: none;
+      }
+    }
+  }
+  .views-row {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: dashed thin #3882a3;
+  }
+  .views-exposed-form .views-exposed-widget .form-submit {
+    margin-top: 1em;
+  }
+  .views-widget-filter-field_resource_tags,
+  .views-widget-filter-field_resource_category,
+  .views-widget-filter-field_resource_topic {
+    .views-widget {
+      select {
+        height: 100px;
+      }
+    }
+  }
+}

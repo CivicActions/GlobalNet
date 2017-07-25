@@ -1,0 +1,97 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_feedback feature.
+ */
+
+include_once 'gn2_feedback.features.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_feedback_block_info() {
+  $blocks['gn2_feedback_link'] = array(
+    'info' => t('Feedback link'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_feedback_block_view($delta = '') {
+  switch ($delta) {
+    case 'gn2_feedback_link':
+      $block['subject'] = NULL;
+      $data = gn2_feedback_link();
+      $content = ($data) ? array(
+        '#theme' => 'gn2_feedback_link_block',
+        '#text' => $data['text'],
+        '#link' => $data['link'],
+      ) : NULL;
+      $block['content'] = $content;
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Create the feedback link block.
+ */
+function gn2_feedback_link() {
+  global $user;
+  // Don't show the block for anonymous useres.
+  if ($user->uid <= 0) {
+    return;
+  }
+  // Create the feedback block.
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $gid = arg(1);
+    $node = node_load($gid);
+    switch ($node->type) {
+      case 'course':
+        $pre = 'group';
+        break;
+
+      case 'event':
+        $pre = 'event';
+        break;
+
+      default:
+        $pre = 'groups';
+    }
+    $link = l(t('Send Feedback'), $pre . '-feedback-form', array(
+      'query' =>
+        array(
+          'gid' => $gid,
+          'destination' => 'node/' . $gid,
+        ),
+        'attributes' =>
+          array('class' => array('button')),
+      )
+    );
+    $type = (isset($node->type)) ? $node->type : 'Group';
+    $text = '<p>' . t('Have a question or comment about this !type? Let us know.',
+        array('!type' => ucwords($type))) . '</p>';
+
+    return array('link' => $link, 'text' => $text);
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_feedback_theme() {
+  return array(
+    'gn2_feedback_link_block' => array(
+      'variables' => array(
+        'text' => NULL,
+        'link' => NULL,
+      ),
+      'template' => 'gn2-feedback-link',
+    ),
+  );
+}

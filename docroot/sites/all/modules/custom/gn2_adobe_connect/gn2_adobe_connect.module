@@ -1,0 +1,328 @@
+<?php
+/**
+ * @file
+ * Code for the GN2 Adobe Connect feature.
+ */
+
+include_once 'gn2_adobe_connect.features.inc';
+
+/**
+ * @file
+ * Module file for gn2_adobe_connect.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_adobe_connect_menu() {
+  $items = array();
+  $items['users/admin/adobeconnect'] = array(
+    'title' => 'Adobe Connect Help',
+    'description' => 'Info about meeting types',
+    'access callback' => ('access content'),
+    'page callback' => 'gn2_adobe_connect_help_callback',
+  );
+  return $items;
+}
+
+/**
+ * Page callback for users/admin/adobeconnect.
+ */
+function gn2_adobe_connect_help_callback() {
+  return t('<p>There are two types of meetings a user who has an Adobe Connect account can create: Moderated, or Water Cooler. Moderated meetings will require
+  the creator to be present, and allow people in when they use the Adobe Connect "knock" (an inter-meeting pop-up notice). Water Cooler meetings are open for anyone
+  with the link to join at anytime during the duration of the meeting, without any approval. These meetings are ideal for impromptu discussions, and should be scheduled
+  to span long periods of time (potentially years), whereas moderated meetings will most likely be scheduled in hour increments.</p><p>Adobe connect meetings
+  are created by selecting either <i>Open Adobe Connect</i> for a water cooler meeting or <i>Moderated Adobe Connect</i> from <i>Event Location</i> options for a moderated (knock required) meeting. Water Cooler meetings
+  will appear in a block on the group landing page, and Moderated meetings will appear in the group calendar.</p>');
+}
+
+/**
+ * Parses xml responses into an array.
+ *
+ * @param string $req
+ *   The url request string.
+ *
+ * @return array
+ *   Returns index and vals.
+ */
+function gn2_adobe_connect_parse_xml($req) {
+  // Formats ugly xml response for use.
+  $res = drupal_http_request($req);
+  $p = xml_parser_create();
+  xml_parse_into_struct($p, $res->data, $vals, $index);
+  xml_parser_free($p);
+  return array('index' => $index, 'vals' => $vals);
+}
+
+/**
+ * Our form submit handler.
+ */
+function gn2_adobe_connect_form_submit($form, &$form_state) {
+  global $user;
+  if ($form['#form_id'] == 'user_profile_form') {
+    // Store our adobe creds.
+    $acct = trim($form_state['values']['gn2_adobe_connect_account']);
+    $id = $form_state['values']['gn2_adobe_connect_id'];
+    $pass = $form_state['values']['gn2_adobe_connect_pass'];
+    if (!empty($acct)) {
+      variable_set($user->uid . '-gn2_adobe_connect_acct', $acct);
+    }
+    if (!empty($id)) {
+      variable_set($user->uid . '-gn2_adobe_connect_id', $id);
+    }
+    if (!empty($pass)) {
+      variable_set($user->uid . '-gn2_adobe_connect_pass', $pass);
+    }
+  }
+  elseif ($form['#form_id'] == 'event_node_form') {
+    $status = $form_state['values']['field_event_location'][LANGUAGE_NONE][0]['value'];
+    if ($status == 'adobe_open' || $status == 'adobe_moderated') {
+      // Get our adobe creds.
+      $acct = variable_get($user->uid . '-gn2_adobe_connect_acct');
+      $id = variable_get($user->uid . '-gn2_adobe_connect_id');
+      $pass = variable_get($user->uid . '-gn2_adobe_connect_pass');
+      // Clean up bad characters for our GET requests.
+      $baddies = array(' ', '&', '?', '.', '\'');
+      $name = str_replace($baddies, '_', $form_state['values']['title']);
+      $start = str_replace(' ', 'T', $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value']);
+      $end = str_replace(' ', 'T', $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value2']);
+
+      // Get our session token.
+      $common = drupal_http_request($acct . '/api/xml?action=common-info');
+      preg_match('/\BREEZESESSION=(.*?)\;/', $common->headers['set-cookie'], $match);
+      $session = $match[1];
+      $query_req = 'action=login&login=' . $id . '&password=' . $pass . '&session=' . $session;
+      $response = drupal_http_request($acct . '/api/xml?' . $query_req);
+
+      if ($response->code == '200') {
+        // Response is good, start building.
+        $logged_in_info = gn2_adobe_connect_parse_xml($acct . '/api/xml?action=common-info&session=' . $session);
+        $user_id = '';
+        foreach ($logged_in_info['vals'] as $info_item) {
+          if (!empty($info_item['attributes']['USER-ID'])) {
+            $user_id = $info_item['attributes']['USER-ID'];
+          }
+        }
+        // Need to get id of meetings folder to build meeting query.
+        $query_shortcuts = 'action=sco-shortcuts&session=' . $session;
+        $shortcuts = gn2_adobe_connect_parse_xml($acct . '/api/xml?' . $query_shortcuts);
+        $my_meetings_folder = '';
+        foreach ($shortcuts['vals'] as $item) {
+          if (!empty($item['attributes']['TYPE']) && $item['attributes']['TYPE'] == 'my-meetings') {
+            $my_meetings_folder = $item['attributes']['SCO-ID'];
+          }
+        }
+        // This is where we create the meat of the actual meeting query.
+        $query_new_meeting = 'action=sco-update&type=meeting&name=' . $name . '&folder-id=' . $my_meetings_folder . '&date-begin=' . $start . '&date-end=' . $end . '&url-path=' . $name . '&session=' . $session;
+        $new_meeting = gn2_adobe_connect_parse_xml($acct . '/api/xml?' . $query_new_meeting);
+        $new_id = '';
+        foreach ($new_meeting['vals'] as $new_item) {
+          if (!empty($new_item['attributes']['SCO-ID'])) {
+            $new_id = $new_item['attributes']['SCO-ID'];
+          }
+        }
+        if ($status == 'adobe_open') {
+          $access = 'principal-id=public-access&permission-id=view-hidden';
+        }
+        else {
+          $access = 'principal-id=public-access&permission-id=remove';
+        }
+        // Fully formed request to create.
+        $meeting_init = drupal_http_request($acct . '/api/xml?action=permissions-update&principal-id=' . $user_id . '&acl-id=' . $new_id . '&permission-id=host&' . $access . '&session=' . $session);
+        if ($meeting_init->code == '200') {
+          // Save it to our db.
+          drupal_set_message('New meeting ' . $form_state['values']['title'] . ' created.');
+          db_insert('gn2_adobe_connect_meetings')
+            ->fields(array(
+              'uid' => $user->uid,
+              'timestamp' => REQUEST_TIME,
+              'nid' => $form_state['build_info']['args'][0]->og_group_ref[LANGUAGE_NONE][0]['target_id'],
+              'name' => $form_state['values']['title'],
+              'type' => $status,
+              'start' => $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value'],
+              'end' => $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value2'],
+              'link' => $acct . '/' . $name,
+            ))
+            ->execute();
+        }
+        else {
+          drupal_set_message('Sorry, meeting creation failed.', 'error');
+        }
+      }
+      else {
+        drupal_set_message('Sorry, meeting creation failed.', 'error');
+      }
+    }
+  }
+}
+
+/**
+ * Our form validation function.
+ */
+function gn2_adobe_connect_form_validate($form, &$form_state) {
+  $status = $form_state['values']['field_event_location'][LANGUAGE_NONE][0]['value'];
+  if ($status == 'adobe_open' || $status == 'adobe_moderated') {
+    global $user;
+    // Get our adobe creds.
+    $acct = variable_get($user->uid . '-gn2_adobe_connect_acct');
+    $id = variable_get($user->uid . '-gn2_adobe_connect_id');
+    $pass = variable_get($user->uid . '-gn2_adobe_connect_pass');
+    // Clean up bad characters for our GET requests.
+    $baddies = array(' ', '&', '?', '.', '\'');
+    $name = str_replace($baddies, '_', $form_state['values']['title']);
+    $start = str_replace(' ', 'T', $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value']);
+    $end = str_replace(' ', 'T', $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value2']);
+
+    // Get our session token.
+    $common = drupal_http_request($acct . '/api/xml?action=common-info');
+    $session = '';
+    if (!empty($common->headers['set-cookie'])) {
+      preg_match('/\BREEZESESSION=(.*?)\;/', $common->headers['set-cookie'], $match);
+      $session = !empty($match[1]) ? $match[1] : '';
+    }
+    $query_req = 'action=login&login=' . $id . '&password=' . $pass . '&session=' . $session;
+    $response = drupal_http_request($acct . '/api/xml?' . $query_req);
+    if ($response->code == '200') {
+      if ($status != 'adobe_moderated') {
+        $query = db_select('field_data_field_event_location', 'f');
+        $query->join('og_membership', 'o', 'o.etid = f.entity_id');
+        $query->fields('o', array('gid'));
+        $query->condition('f.field_event_location_value', 'adobe_open', '=');
+        $query->condition('o.entity_type', 'node', '=');
+        $query->condition('o.gid', $_GET['gid'], '=');
+        $watercoolers = $query->execute()->fetchAll();
+        $count = count($watercoolers);
+        // Only allow two watercoolers per group.
+        if ($count >= 2) {
+          form_set_error('field_event_location', t('You already have the max number of watercoolers allowed in this group.'));
+        }
+      }
+      if ($form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value'] == $form_state['values']['field_event_date'][LANGUAGE_NONE][0]['value2']) {
+        form_set_error('field_event_date', t('End date cannot be empty'));
+      }
+    }
+    else {
+      // Either the server's down or we got a bad response.
+      form_set_error('field_event_location', t('Could not connect to Adobe Connect, please check the settings in !url and try again.', array("!url" => l(t("your account"), "/account"))));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_adobe_connect_form_alter(&$form, &$form_state, $form_id) {
+  // Add our cred fields to user form.
+  if ($form_id == 'user_profile_form' && $form['#groups']['group_admin_settings']) {
+    if (isset($form['#user'])) {
+      $user = $form['#user'];
+      $namefirst = $user->field_name_first['und'][0]['value'];
+      $namelast = $user->field_name_last['und'][0]['value'];
+      $username = $user->name;
+      $uid = $user->uid;
+    }
+
+    if (isset($namefirst) && isset($namelast)) {
+      $contact = 'Adobe Connect Account for ' . $namefirst . ' ' . $namelast . ' (' . $uid . ')';
+    }
+    elseif (isset($username) && isset($uid)) {
+      $contact = 'Adobe Connect Account for ' . $username . ' (' . $uid . ')';
+    }
+    else {
+      $contact = 'Adobe Connect Account';
+    }
+    if (isset($uid)) {
+      $form['gn2_adobe_connect_account'] = array(
+        '#description' => l(t('Adobe Connect Meeting Help'), 'users/admin/adobeconnect', array('attributes' => array('target' => '_blank'))),
+        '#type' => 'textfield',
+        '#title' => $contact,
+        '#default_value' => variable_get($uid . '-gn2_adobe_connect_acct'),
+      );
+      $form['gn2_adobe_connect_id'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Adobe Connect Account Username',
+        '#default_value' => variable_get($uid . '-gn2_adobe_connect_id'),
+      );
+      $form['gn2_adobe_connect_pass'] = array(
+        '#type' => 'password',
+        '#title' => 'Adobe Connect Account Password',
+        '#default_value' => variable_get($uid . '-gn2_adobe_connect_pass'),
+      );
+    }
+    if (!isset($uid)) {
+      $form['gn2_adobe_connect_account'] = array(
+        '#description' => l(t('Adobe Connect Meeting Help'), 'users/admin/adobeconnect', array('attributes' => array('target' => '_blank'))),
+        '#type' => 'textfield',
+        '#title' => $contact,
+      );
+      $form['gn2_adobe_connect_id'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Adobe Connect Account Username',
+      );
+      $form['gn2_adobe_connect_pass'] = array(
+        '#type' => 'password',
+        '#title' => 'Adobe Connect Account Password',
+      );
+    }
+    // Plug our fields into admin settings fieldset.
+    $form['#group_children']['gn2_adobe_connect_account'] = 'group_external_accounts';
+    $form['#group_children']['gn2_adobe_connect_id'] = 'group_external_accounts';
+    $form['#group_children']['gn2_adobe_connect_pass'] = 'group_external_accounts';
+
+    // Pass to our submit callback.
+    $form['#submit'][] = 'gn2_adobe_connect_form_submit';
+  }
+
+  if ($form_id == 'event_node_form') {
+    global $user;
+    $uid = $user->uid;
+    $adobe_connect_account = variable_get($uid . '-gn2_adobe_connect_acct');
+    $adobe_connect_user = variable_get($uid . '-gn2_adobe_connect_id');
+    $adobe_connect_pass = variable_get($uid . '-gn2_adobe_connect_pass');
+
+    $node = NULL;
+    if (isset($_GET['gid'])) {
+      $node = node_load($_GET['gid']);
+    }
+    elseif (isset($form['#node']->nid)) {
+      $node = node_load($form['#node']->nid);
+    }
+    // No adobe meetings in orgs.
+    if (!is_null($node) && $node->type == 'organization') {
+      unset($form['field_event_location'][LANGUAGE_NONE]['#options']['adobe_open']);
+      unset($form['field_event_location'][LANGUAGE_NONE]['#options']['adobe_moderated']);
+    }
+    // Also, no adobe meetings if the user isn't set up for it.
+    elseif (isset($uid) && (empty($adobe_connect_account) || empty($adobe_connect_user) || empty($adobe_connect_pass))) {
+      $form['field_event_location'][LANGUAGE_NONE]['#description'] =
+        t("Choose an event location to display additional options.\n To use Adobe Connect, enter the domain, username, and password to use in your !url.", array("!url" => l(t('account settings'), '/account')));
+      unset($form['field_event_location'][LANGUAGE_NONE]['#options']['adobe_open']);
+      unset($form['field_event_location'][LANGUAGE_NONE]['#options']['adobe_moderated']);
+    }
+    else {
+      $form['actions']['submit']['#submit'][] = 'gn2_adobe_connect_form_submit';
+      array_unshift($form['#validate'], 'gn2_adobe_connect_form_validate');
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function gn2_adobe_connect_panels_pane_content_alter($content, $pane, $args, $contexts) {
+  if (!empty($pane->configuration['admin_title']) && $pane->configuration['admin_title'] == 'Where (panel title)') {
+    $type = $contexts['panelizer']->data->field_event_location[LANGUAGE_NONE][0]['value'];
+    if ($type == 'adobe_moderated' || $type == 'adobe_open') {
+      $nid = $contexts['panelizer']->data->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+      $item = db_select('gn2_adobe_connect_meetings', 'link')
+        ->fields('link')
+        ->condition('nid', $nid, '=')
+        ->condition('name', $contexts['panelizer']->title, '=')
+        ->execute()
+        ->fetchAssoc();
+      $content->content = '<h4>Where</h4>';
+      $content->content .= l(t('Adobe Connect Meeting'), $item['link']);
+    }
+  }
+}

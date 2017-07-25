@@ -1,0 +1,43 @@
+diff --git a/privatemsg_groups/privatemsg_groups.module b/privatemsg_groups/privatemsg_groups.module
+index 687da0e..009c8ae 100644
+--- a/privatemsg_groups/privatemsg_groups.module
++++ b/privatemsg_groups/privatemsg_groups.module
+@@ -129,6 +129,10 @@ function theme_privatemsg_groups_format($variables) {
+     if (!empty($options['unique'])) {
+       $name .= ' [group]';
+     }
++    if (isset($group_type) && $group_type == 'node') {
++      $name = str_replace(',', '', $name);
++      return $name . ' [nid:' . $gid . ']';
++    }
+     return $name;
+   }
+   $group_name = strip_tags(t('%group (group)', array('%group' => $name)));
+@@ -213,18 +217,15 @@ function privatemsg_groups_privatemsg_name_lookup($string) {
+ 
+   foreach (og_get_all_group_bundle() as $group_type => $bundles) {
+     $type = _privatemsg_groups_get_group_recipient_type($group_type);
+-    $type_info = privatemsg_recipient_get_type($type);
+-    if ($type_info) {
+-      $gids = og_get_all_group($group_type);
+-      $groups = entity_load($group_type, $gids);
+-      foreach ($groups as $gid => $group) {
+-        $name = entity_label($group_type, $group);
+-        if ($string == $name) {
+-          $recipient = clone $group;
+-          $recipient->type = $type;
+-          $recipient->recipient = $gid;
+-          return array(privatemsg_recipient_key($recipient) => $recipient);
+-        }
++    if ($group_type == 'node') {
++      if (stripos($string, '[nid:') && stripos($string, ']')) {
++        $string = explode('nid:', $string);
++        $gid = trim(str_replace(']', '', $string[1]));
++
++        $recipient = node_load($gid);
++        $recipient->type = $type;
++        $recipient->recipient = $gid;
++        return array(privatemsg_recipient_key($recipient) => $recipient);
+       }
+     }
+   }

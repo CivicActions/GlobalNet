@@ -1,0 +1,269 @@
+GN2 Library 7.x-1.x, 2017-03-30
+------------------------------
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+
+    RD-4122 - Updating features to capture new taxonomy2
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+
+    RD-4122 - Updating features to capture new taxonomy2
+
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+
+    RD-4122 - Updating features to capture new taxonomy2
+
+commit f36ff2e17ea51917a4945f299f447d81d130c80e
+:...skipping...
+commit e59f9cc9d0a05f830363e3e4570ce486baade948
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 11:45:48 2017 -0400
+
+    RD-4122 - Adding behat test for library
+
+commit 11acf1cde28c25c3602f3dca078c0214e6016d4c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:33:47 2017 -0400
+
+    RD-4122 - Updating library view in feature
+
+commit 61f8dbee535e9b367fb1cf63356d8671961eb974
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Thu Mar 30 10:28:15 2017 -0400
+
+    RD-4122 - Adding GET param check
+
+commit 3a3b1ae2ed0d6f6a7eaae4899810436108530deb
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:59:18 2017 -0400
+
+    RD-4122 - Updating features to capture new taxonomy2
+
+commit f36ff2e17ea51917a4945f299f447d81d130c80e
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Wed Mar 29 15:55:24 2017 -0400
+
+    RD-4122 - Updating features to capture new taxonomy
+
+commit b8f0ef15ced98ff9c83d3b579d0fbe6ed3d4ab9d
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 10 17:34:03 2017 -0500
+
+    RD-4122 - Updating features to capture library changes
+
+commit 6870129a9bcfebbea7cfd8641f50b128a59d186c
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 10 16:32:12 2017 -0500
+
+    RD-4122 - Adding search compiled styles
+
+commit c440cdaf2a9881b4e5c59c3317feb4e6301f00d6
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Fri Mar 10 16:31:52 2017 -0500
+
+    RD-4122 - Adding search styles
+
+commit e30a8b397f2f9a5e3ab6e5dfca87b2cad9ba23f2
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Tue Mar 7 15:07:42 2017 -0500
+
+    RD-4122 - Adding compiled styles
+
+commit 9901beccc9c7ece3c387db466d24a295902785c0
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Tue Mar 7 15:07:29 2017 -0500
+
+    RD-4122 - Adding base styles
+
+commit 10dd128c048ede9545847a3a767d98896dd188e6
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Tue Mar 7 15:07:06 2017 -0500
+
+    RD-4122 - Updating view settings
+
+commit aa3dc68c3db6549faa833988933a3447d938aa29
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 21:16:19 2017 -0500
+
+    RD-4122 - Adding compiled styles
+
+commit 9c3405f63eb302d0210e407c3a73a15956634e92
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 21:16:02 2017 -0500
+
+    RD-4122 - Adding base style for resource library
+
+commit 3860da89a03be2f18c4d07a77747cb5733c42d44
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 21:15:33 2017 -0500
+
+    RD-4122 - Adding new search index and view for resources
+
+commit e8c7e3ade483bd22c5f767044c38dee0f0fa316d
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 11:24:05 2017 -0500
+
+    RD-4122 - Removing field dependency
+
+commit 4ba2f2bc787c54a4e4a85a6efcd5d1d6609c5999
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 10:21:26 2017 -0500
+
+    RD-4122 - Adding gn2_library to base config
+
+commit 97413a4e466c5a46ed881033318321ad3fbcc7ee
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sun Mar 5 10:20:03 2017 -0500
+
+    RD-4122 - Updating features to reflect new file field
+
+commit 6616fd4f10ce2ae21fdceb23ceefae740f6e14f0
+Author: Ethan Teague <ethan.teague@civicactions.com>
+Date:   Sat Mar 4 18:00:32 2017 -0500
+
+    RD-4122 - Adding base features for library

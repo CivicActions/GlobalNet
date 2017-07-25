@@ -1,0 +1,26 @@
+diff --git ctools/includes/export.inc ctools/includes/export.inc
+index 0b85c2e..4334f3d 100644
+--- ctools/includes/export.inc
++++ ctools/includes/export.inc
+@@ -894,10 +894,21 @@ function ctools_var_export($var, $prefix = '') {
+  * Export an object into code.
+  */
+ function ctools_export_object($table, $object, $indent = '', $identifier = NULL, $additions = array(), $additions2 = array()) {
++  static $named_parent = '';
+   $schema = ctools_export_get_schema($table);
+   if (!isset($identifier)) {
+     $identifier = $schema['export']['identifier'];
+   }
++  if (!empty($object->name)) {
++    $indent .= ' /* ' . check_plain($object->name) . ' */ ';
++    $named_parent = $object->name;
++  }
++  else if (!empty($object->uuid)) {
++    $indent .= ' /* ' . check_plain($named_parent) . ' ' . check_plain(substr($object->uuid, 0, 8)) . ' */ ';
++  }
++  else if (!empty($object->identifier)) {
++    $indent .= ' /* ' . check_plain($object->identifier) . ' */ ';
++  }
+ 
+   $output = $indent . '$' . $identifier . ' = new ' . get_class($object) . "();\n";
+ 

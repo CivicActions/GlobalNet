@@ -1,0 +1,58 @@
+@mixin accordion-fieldset-legend-adjustments {
+  line-height: 1;
+  padding-left: 25px;
+  height: auto;
+  margin-bottom: 0.25em !important;
+}
+
+.ui-tabs .ui-tabs-panel {
+  padding: 0;
+}
+
+/*
+ * Partial for styling the mobile accordions
+ */
+.gn2_accordion-fieldset {
+  border: none;
+  border-bottom: 1px solid $lighter-blue-gray;
+  padding: 0;
+  margin-bottom: 1em;
+  
+  legend.gn2_accordion-fieldset-legend {
+    @include display_font;
+    @include gn-icon(25px, url(../images/gn-icons/icon-arrow-right-grey.png));
+    background-position: left;
+    padding: 0.3em 22px;
+    margin: 0 !important;
+    @include accordion-fieldset-legend-adjustments;
+    background-position: 0px 7px;
+    &.clicked {
+      @include gn-icon(25px, url(../images/gn-icons/icon-arrow-down-grey.png));
+      @include accordion-fieldset-legend-adjustments;
+      background-position: 0px 9px;
+    }
+  }
+  
+  .ui-tabs-panel {
+    padding-top: 0px !important;
+  }
+}
+
+/* VERY IMPORTANT: This chunk of code is targeting the first fieldset. It is open by default
+ *  so we need to reverse what happens when the toggle class is added.
+ */
+fieldset.gn2_accordion-fieldset:first-of-type {
+  legend.gn2_accordion-fieldset-legend {
+      @include gn-icon(25px, url(../images/gn-icons/icon-arrow-down-grey.png));
+      @include accordion-fieldset-legend-adjustments;
+      background-position: 0px 9px;
+    &.clicked {
+      @include gn-icon(25px, url(../images/gn-icons/icon-arrow-right-grey.png));
+      @include accordion-fieldset-legend-adjustments;
+      background-position: 0px 7px;
+    }
+  }
+}
+
+
+//Add top border to ui-tabs in small screens

@@ -1,0 +1,29 @@
+body.page-admin-manage-users {
+  h3.field-label {
+    margin-bottom: 10px;
+  }
+  .entity-entityform {
+    margin-bottom: 25px;
+  }
+  #edit-approve {
+    @include admin-button($bgcolor: $blue-gray);
+  }
+  #edit-deny {
+    @include admin-button($bgcolor: $red);
+  }
+}
+  
+// styles specific to viewing submissions
+body.page-admin-manage-users-regforms,
+body.page-entityform {
+  h3.field-label {
+    @include body_font;
+    line-height: $tighter-line-height;
+    margin: 1.25em 0 .25em 0;
+    font-size: 1.05em;
+  }
+}
+
+div#privacy-statement {
+  margin-bottom: 1.5em;
+}

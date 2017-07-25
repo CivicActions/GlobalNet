@@ -1,0 +1,143 @@
+.page-guide {
+  
+  .view-header {
+    margin-bottom: 0;
+  }
+  
+  @include breakpoint($medium-screen-and-up) {
+    a.searchterms_link {
+      display: none;
+    }
+  }
+  
+  h1.custom-title {
+    font-weight: 100;
+    border-bottom: 1px solid $lighter-blue-gray;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+  }
+  .top .pane-custom.pane-3 {
+    background-image: url("../images/bg-diagonal-tile-blue.png");
+    margin-bottom: 30px;
+    @include breakpoint($small-screen-and-down) {
+      margin-bottom: 20px;
+    }
+  }
+  #page-title, #pane-search-results-container {
+    display: none;
+  }
+  .results-container {
+    margin: 15px 0;
+    .search-progress {
+      background-image: url("../images/progress.gif");
+      background-size: contain;
+      background-repeat: repeat-x;
+      display: block;
+      height: 20px;
+      width: 200px;
+    }
+  }
+  #-gn2-guide-searcher-form {
+    > div {
+      padding: 10px 20px;
+      @include breakpoint($small-screen-and-down) {
+        padding-top: 0px;
+        padding-bottom: 24px;
+      }
+    }
+    .search-button {
+      @include display_font;
+      display: inline-block;
+      border-radius: 0.25em 0.25em 0.25em 0.25em;
+      -moz-border-radius: 0.25em 0.25em 0.25em 0.25em;
+      -webkit-border-radius: 0.25em 0.25em 0.25em 0.25em;
+      line-height: 0.6em;
+      padding: 0.3em 0.5em 0.2em;
+      font-size: 1.4em;
+      text-align: center;
+      background: $blue-gray;
+      border: 2px solid $calypso;
+      color: $gray-fe;
+      cursor: pointer;
+    }
+    .right-text {
+      width: 190px;
+      display: inline-block;
+      color: $light-gray;
+      font-size: 12px;
+      text-align: left;
+      line-height: 1.4;
+      margin-left: 15px;
+      position: absolute;
+    }
+    .form-item-keyword,
+    .form-item-keyword label,
+    fieldset {
+      border: none;
+      display: inline-block;
+    }
+    .form-item-keyword label {
+      color: $light-gray;
+      font-size: 18px;
+      margin-right: 10px;
+    }
+    fieldset {
+      margin: 0;
+      padding: 0;
+    }
+    input.form-text {
+      // width: 680px;
+      @include breakpoint($medium-screen-and-up) {
+        width: 250px;
+      }
+      @include breakpoint($large-screen-and-up) {
+        width: 450px;
+      }
+      @include breakpoint($larger-screen) {
+        width: 680px;
+      }
+    }
+  }
+  .view-guide-terms {
+
+    &.view-display-id-panel_pane_1 .views-row > .views-field-name {
+      background-color: $gray-e8;
+      display: block;
+      margin-bottom: 3px;
+      padding: 7px 24px 6px 10px;
+      background-image: url("../images/gn-icons/icon-arrow-right-grey.png");
+      background-size: 12px;
+      background-repeat: no-repeat;
+      background-position: right .4em top .5em;
+      a {
+        @include display_font;
+        display: block;
+        font-size: 1.1em;
+        line-height: .9;
+      }
+    }
+    &.view-display-id-panel_pane_2 {
+      .views-field-description {
+        margin: 15px 0;
+      }
+    }
+  }
+  h3, h2 {
+    margin: 0px;
+    border-bottom: 3px solid $lighter-blue-gray;
+    padding-bottom: 10px;
+    color: $gray-80;
+    @include display_font;
+    line-height: 0.7;
+  }
+  .view-guide-content {
+    &.view-display-id-panel_pane_2 .field-type-text-with-summary,
+    &.view-display-id-panel_pane_3 .view-content {
+      margin: 15px 0;
+    }
+  }
+  .guide-action-link {
+    display: inline-block;
+    margin-bottom: 1em;
+  }
+}

@@ -1,0 +1,47 @@
+/**
+ * Theming the generic sidebar image/text block found on many pages.
+ */
+
+$zen-column-count: 20 !global;
+
+.sidebar--image-text-block--item {
+  margin-bottom: 15px;
+  &.views-row-last {
+    margin-bottom: 0px;
+  }
+  .gn2-2col-v2 {
+    > .gn2-2col-v2--col1 {
+      @include zen-grid-item(6, 1);
+      .inner {
+        padding-right: 12%;
+        * {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+    > .gn2-2col-v2--col2 {
+      @include zen-grid-item(14, 7);
+    }
+  }
+}
+
+.sidebar--image-text-block--image {
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.sidebar--image-text-block--title {
+  font-weight: bold;
+  line-height: 1.25;
+}
+
+.sidebar--image-text-block--text {
+  padding-bottom: 8px;
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}

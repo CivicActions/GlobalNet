@@ -1,0 +1,56 @@
+/* @ file
+** For styling site icons
+*/
+
+.icon__pin-to-account, .flag-favorite {
+  .flag-action{
+    @include display_font;
+    @include gn-icon(24px, url(../images/gn-icons/icon-favorite.png));
+    margin-bottom: 1em;
+    background-position: center left;
+  }
+  .unflag-action{
+    @include display_font;
+    @include gn-icon(26px, url(../images/gn-icons/icon-delete.png));
+    background-position: center left;
+  }
+
+}
+.icon-home,
+.icon-linkedin,
+.icon-twitter,
+.icon-facebook,
+.icon-email,
+.icon-youtube,
+.icon-google-plus{
+  display: inline-block;
+  min-height: 25px;
+}
+
+.icon-facebook{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-facebook.png));}
+.icon-linkedin{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-linkedin.png));}
+.icon-twitter{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-twitter.png));}
+.icon-email{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-email.png));}
+.icon-website{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-website.png));}
+
+.icon-mobile{@include gn-icon(28px, url(../images/gn-icons/icon-mobile.png));}
+.icon-youtube{@include gn-icon(29px, url(../images/gn-icons/icon-youtube.png));}
+.icon-google-plus{@include gn-icon(29px, url(../images/gn-icons/icon-google-plus.png));}
+.icon-help{@include gn-icon(23px, url(../images/gn-icons/icon-help-gray.png));}
+.icon-home{@include gn-icon(28px, url(../images/gn-icons/icon-home.png));}
+.icon-group{@include gn-icon(60px, url(../images/gn-icons/icon-groups.png));}
+.icon-arrow-down{@include gn-icon(25px, url(../images/gn-icons/icon-arrow-down-grey.png));}
+.icon-arrow-right{@include gn-icon(25px, url(../images/gn-icons/icon-arrow-right-grey.png));}
+.icon-user{@include gn-icon(30px, url(../images/header__my_account.png)); }
+.icon-schedule{@include gn-icon(28px, url(../images/gn-icons/icon-view-schedule.png));}
+.icon-syllabus{@include gn-icon(28px, url(../images/gn-icons/icon-view-syllabus.png));}
+
+.gn-icon-wrapper{
+  text-align: right;
+  padding-bottom: 0.5em;
+  }
+  
+a.rate-thumbs-up-btn-up {
+  text-indent: 100px;
+  overflow: hidden;
+}

@@ -1,0 +1,74 @@
+/**
+ * @file
+ * Positioning for a groups custom panels layout.
+ *
+ * This layout uses the Zen Grids plugin for Compass: http://zengrids.com
+ */
+/* Apply the shared properties of grid items in a single, efficient ruleset. */
+/* line 15, ../../../sass/layout/panels-layouts/home_layout.scss */
+.panels-layout.homepage-layout,
+.homepage-layout--top,
+.homepage-layout--top--left,
+.homepage-layout--top--right,
+.homepage-layout--search,
+.homepage-layout--main {
+  padding-left: 0px;
+  padding-right: 0px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* line 45, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.homepage-layout:before, .panels-layout.homepage-layout:after {
+  content: "";
+  display: table;
+}
+/* line 50, ../../../sass-extensions/zen-grids/stylesheets/zen/_grids.scss */
+.panels-layout.homepage-layout:after {
+  clear: both;
+}
+
+/* line 28, ../../../sass/layout/panels-layouts/home_layout.scss */
+.homepage-layout--top,
+.homepage-layout--search,
+.homepage-layout--main {
+  clear: left;
+}
+
+@media all and (min-width: 40em) {
+  /*!global is a fix for an issue where zen-grid-item doesn't generate the right CSS when using Compass 1.x
+   * See https://www.drupal.org/node/2346291#comment-9475791
+   */
+  /* line 40, ../../../sass/layout/panels-layouts/home_layout.scss */
+  .homepage-layout--top,
+  .homepage-layout--search,
+  .homepage-layout--main {
+    float: left;
+    width: 100%;
+    margin-left: 0%;
+    margin-right: -100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* line 46, ../../../sass/layout/panels-layouts/home_layout.scss */
+  .homepage-layout--top--left {
+    float: left;
+    width: 60%;
+    margin-left: 0%;
+    margin-right: -60%;
+  }
+
+  /* line 49, ../../../sass/layout/panels-layouts/home_layout.scss */
+  .homepage-layout--top--right {
+    float: left;
+    width: 40%;
+    margin-left: 60%;
+    margin-right: -100%;
+  }
+}
+
+/*# sourceMappingURL=home_layout.css.map */

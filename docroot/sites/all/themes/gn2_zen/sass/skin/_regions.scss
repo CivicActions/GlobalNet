@@ -1,0 +1,79 @@
+/**
+ *@file
+ *styles for skinning page regions
+ *1.Header Region wrapper skin
+ */
+/* A mixin for the light gray gradient on top of the main content region. it can be reused.*/
+@mixin light-gradient{
+  background: rgba(199,201,201,1);/* Old Browsers */
+  background: -moz-linear-gradient(top, rgba(199,201,201,1) 0%, rgba(252,252,252,0) 50px); /* FF3.6+ */
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(199,201,201,1)), color-stop(50px, rgba(252,252,252,0)));/* Chrome, Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(199,201,201,1) 0%, rgba(252,252,252,0) 50px); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(199,201,201,1) 0%, rgba(252,252,252,0) 50px); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(199,201,201,1) 0%, rgba(252,252,252,0) 50px); /* IE 10+ */
+  background: linear-gradient(to bottom, rgba(199,201,201,1) 0%, rgba(252,252,252,0) 50px);/* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$iron', endColorstr='$gray-fc', GradientType=0 );/* IE6-9 */
+}
+
+@mixin small-text {
+  font-size: 0.875em;
+}
+
+.small-text {
+  @include small-text;
+}
+
+body {
+  height: 100%;
+  min-height: 100px;
+  /**
+   *The 'height = 100%' is a browser hack for Chrome and Safari to fix a how they display negative margins.
+   *Without this, the box-model display attaches the bottom margin as an extra space when a negative margin
+   *is added. Reference:http://redwebturtle.blogspot.com/2012/07/css-solution-for-negative-margin-top-in.html
+   */
+}
+
+/*Adding a bottom margin equal to the height of the background image to keep it clear of
+ *body text.This margin should be reduced once it is time to add the footer blocks, or a
+ *negative margin added to the footer region.
+ */
+ 
+#page {
+  background-color: $site-bg-color;
+}
+
+#header-wrapper {
+  background: url("../images/header-pattern.png");
+  position: relative;
+  z-index: 1;
+}
+
+ul.tabs-primary,
+.breadcrumb {
+  margin-bottom: 2em;
+}
+
+.page-header {
+  margin-bottom: 1.8em
+}
+
+div.page-title-wrapper {
+  @include page_title_wrapper;
+}
+
+#main-wrapper {
+  background: url('../images/bg.png') repeat-x top center;
+  position: relative;
+  z-index: 0;
+  border-top: 3px solid $white;
+}
+
+#footer-container {
+  position: relative;
+  z-index: 0;
+}
+
+.footer-left {
+  background: url(../images/footer-logo.png) center no-repeat;
+  height: 140px;
+}

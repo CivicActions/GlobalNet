@@ -1,0 +1,54 @@
+body.page-admin-content-file,
+body.page-media-gallery-detail {
+  @media (min-width: 30em) {
+    #edit-field-topic .form-type-checkbox, #edit-field-country .form-type-checkbox, #edit-field-region .form-type-checkbox {
+      width: 100%;
+      margin-top: 5px;
+    }
+  }
+  .field-type-taxonomy-term-reference li {
+    display: inline-block;
+    min-width: 250px;
+    .no-term-reference-tree-button {
+      display: none;
+    }
+  }
+  form.media-bulk-upload-multiedit-form,
+  form.file-form,
+  form#media-gallery-remove-item-form {
+    input[type="submit"] {
+      @include admin-button($bgcolor: $blue-gray);
+    }
+    & > div > a,
+    #edit-cancel {
+      @include admin-button($bgcolor: $red);
+    }
+  }
+  h2 { 
+    border: 1px solid $lighter-blue-gray;
+    padding: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-image: url("../images/gn-icons/icon-arrow-right-grey.png");
+    background-position: 5px 15px;
+    padding-left: 30px;
+    background-repeat: no-repeat;
+    font-weight: 300;
+    &:hover {
+      color: $venice_blue;
+    }
+    &.active {
+      background-image: url("../images/gn-icons/icon-arrow-down-grey.png");
+    }
+  }
+  .file-form.file-image-form.form-wrapper,
+  .file-form.file-video-form.form-wrapper,
+  .file-form.file-document-form.form-wrapper,
+  .file-form.file-audio-form.form-wrapper {
+    padding: 0 10px;
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+}

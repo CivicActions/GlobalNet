@@ -1,0 +1,85 @@
+/**
+  * Builds upon styles defined in _teasers.scss
+  */
+
+.teasers__two-column,
+.teasers-two-column,
+.panelizer-view-mode.teaser-posts {
+
+  font-size: 100%;
+  
+  /**
+   * Layout-specific styles
+   */
+
+  @include breakpoint($large-screen-and-up) {
+    .gn2-3col--col1 {
+      @include zen-grid-item(4, 1);
+      .inner {
+        padding-right: 9%;
+      }
+    }
+    .gn2-3col--col2 {
+      @include zen-grid-item(8, 5);
+      .inner {
+        padding-right: 0;
+      }
+    }
+    .gn2-3col--col3 {
+      display: none;
+    }
+  }
+  
+  @include breakpoint($larger-screen) {
+    .gn2-3col--col2 {
+      @include zen-grid-item(8, 5);
+      .inner {
+        padding-right: 0;
+      }
+    }
+    .gn2-3col--col3 {
+      display: none;
+    }
+  }
+  
+  /**
+   * Content-specific styles
+   */
+  
+  .author-image-name {
+    display: block;
+    .author-image {
+      @include author-image;
+      img {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: auto;
+      }
+    }
+    .author-name {
+      text-align: center;
+      border-bottom: 4px solid $light-gray;
+      line-height: 1;
+      margin: 0 0 10px 0;
+      padding: 0 0 9px 0;
+      a {
+        color: $blue-gray;
+        font-size: .85em;
+        line-height: 1;
+      }
+    }
+  } /* .author-image-name */
+  
+  .pane-node-field-main-image.thumbnail {
+    display: none;
+  }
+  
+  .download-pdf {
+    display: none;
+    .icon-link {
+      display: none;
+    }
+  }
+
+}

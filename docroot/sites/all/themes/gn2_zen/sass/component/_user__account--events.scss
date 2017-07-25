@@ -1,0 +1,78 @@
+.page-account .user-account--events {
+    .view-id-users_contact_history_info.view-display-id-panel_pane_5{
+        .view-header{
+              margin: 5px 0 25px;
+        }
+    }
+    .view-header .switch-event-view{
+        font-size: 80%;
+        margin-left: 30px;
+        &:before{
+            content: " ";
+            background-image: url("/sites/all/themes/gn2_zen/images/gn-icons/icon-view-schedule.png");
+            background-repeat: no-repeat;
+            height: 25px;
+            width: 25px;
+            display: block;
+            position: absolute;
+        }
+    }
+    .view-content, .view-footer{
+        > .views-row{
+            background: $white; 
+            margin-bottom: -5px;
+            display: inline-block;
+            width: 100%;
+        
+            .views-fieldset.event-date-icon{
+                background-image: url("/sites/all/themes/gn2_zen/images/gn-icons/event_date_large.png");
+                background-repeat: no-repeat;
+                height: 70px;
+                background-position: 10px 10px;
+                min-width: 122px;
+
+                span.date-display-single {
+                    position: absolute;
+                    margin-top: 26px;
+                    margin-left: 90px;
+                    color: $gray-80;
+                }
+                div.date-repeat-rule{
+                    position: absolute;
+                    font-size: 10px;
+                    width: 100px;
+                    margin-top: 47px;
+                    margin-left: 70px;
+                    line-height: 1.2;
+                    color: $gray-80;
+                }
+            }
+            p{
+                margin-top: 5px;
+            }
+        }
+        > .views-row .views-fieldset{ 
+            background: $white; 
+            margin: 0;
+        }
+        p{
+            margin: 20px 0;
+            text-align: left !important;
+        }
+        .link-all-teasers {
+            margin-top: 20px;
+        }
+    } 
+    .view-footer, .view-footer .view-display-id-panel_pane_6{
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        
+        .view-content, .view-empty {
+            display: none;
+        }
+    }
+    .view-empty .view-empty{
+      display: none;
+    }
+}

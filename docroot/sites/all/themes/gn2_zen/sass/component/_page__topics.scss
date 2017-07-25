@@ -1,0 +1,285 @@
+.page-taxonomy-term.section-taxonomy,
+.page-taxonomy-term.section-gn-countries, 
+.page-taxonomy-term.section-gn-regions, 
+.page-taxonomy-term.section-gn-topics, 
+.page-taxonomy-term.section-countries, 
+.page-taxonomy-term.section-regions, 
+.page-taxonomy-term.section-topics,
+.page-taxonomy-term.section-tags,
+.page-gn-regions,
+.page-topics,
+.page-tags,
+.page-countries {
+  
+  #topics-detail-content {
+    
+    .view-empty {
+      margin-bottom: 1em;
+    }
+
+    div.view-resources {
+      margin-top: 1.0em; 
+    }
+
+    .homepage-layout--top,
+    .homepage-layout--search {
+      padding: 0;
+      margin: 0;
+    }
+    
+    .homepage-layout--search {
+      background: none;
+      .panels-layout--region-inner {
+        padding: 0;
+        .view-display-id-panel_pane_2 .views-row {
+          border: none;
+        }
+      }
+    }
+    
+    .ui-tabs .ui-tabs-panel {
+      padding-top: 0;
+    }
+    
+    p:last-child {
+      margin-bottom: 1em;
+    }
+    
+    .view-display-id-panel_pane_5 {
+      span.date-display-single {
+        font-size: 14px;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 600;
+      }
+    }
+
+  }
+  
+  #topics-list-content {
+    .homepage-layout--top, .homepage-layout--search {
+      display: none;
+    }
+  }
+  
+  .view-resources {
+    .views-field-media-gallery-file-1 {
+      margin-bottom: 20px;
+      padding: 0 20px 0 0;
+    }
+    .views-field-media-gallery-file-1, .views-field-media-gallery-file-1 img {
+      height: 145px;
+    }
+    .view-content, view-footer {
+      display: inline-block;
+      width: 100%;
+    }
+    .media-gallery-item {
+      .gallery-thumb-inner {
+        a {
+          &:nth-child(2) {
+            display: none;
+          }
+        }
+      }
+    }
+    .meta-wrapper .media-title {
+      display: none;
+    }
+    .view-header { 
+      margin-bottom: .75em;
+      p {
+        font-weight: 600;
+        font-family: arial;
+        font-size: .95em;
+        font-style: italic;
+        color: grey;
+      }
+    }
+    > .view-footer {
+      padding-top: 1em;
+      margin-top: 0;
+      border-top: 1px solid $lighter-blue-gray;
+      .views-field-rendered {
+        margin-bottom: 20px;
+        padding: 0 20px 0 0;
+        height: 160px;
+        img {
+          height: 160px;
+        }
+        .file {
+          > a {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .view-topics {
+    .view-filters {
+      margin: 1.1em 0 1.1em;
+      padding: 0 0 .45em 0;
+      border-bottom: 1px solid $lighter-blue-gray;
+      .views-exposed-widget {
+        padding: 0;
+          label {
+            @include display_font;
+            font-weight: normal;
+            color: $dark-gray;
+            font-size: 1.4em;
+            padding: 0.3em 0.2em 0 0
+          }
+        .form-submit {
+          margin: 0;
+        }
+        select {
+          margin-right: .7em;
+        }
+      }
+    }
+
+    .view-content {
+      .views-row {
+        display: inline-block;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid $lighter-blue-gray;
+        width: 100%;
+
+        .views-field-nid {
+          font-size: 11px;
+          margin-bottom: 8px;
+          color: $gray-80;
+        }
+
+        .courses-summary-content {
+          //width: 75%;
+          display: inline-block;
+        }
+      }
+    }
+    
+    .comments-votes {
+      @include display_font;
+      font-size: 17px;
+      line-height: 1;
+      background-repeat: no-repeat;
+      display: inline-block;
+      height: 18px;
+      padding: 1px 0px 0px 5px;
+      background-position: left center;
+      > .topics--metadata {
+        background-repeat: no-repeat;
+        padding-left: 30px;
+        background-size: 20px auto;
+        padding-top: 5px;
+        height: 18px;
+
+      }
+      .num-comments {
+        background-image: image-url("teaser-metadata/num_comments.png");
+
+      }
+      .rate-info {
+        background-image: url("../images/thumbs.png");
+      }
+
+    }
+    h5 {
+      margin: -5px 0 5px;
+      font-size: 1em;
+
+    }
+    .gn2-3col--col2 {
+      padding: 0 15px;
+    }
+  }
+  p {
+    font-size: .9em;
+    &.author-date {
+      font-size: .85em;
+    }
+  }
+}
+  
+$teasers--resources-item--gap: 4%;
+$teasers--resources-item--gap-bottom: ($teasers--resources-item--gap * 2);
+$teasers--resources-item--width: 100% - ($teasers--resources-item--gap * 2);
+$teasers--resources-item--link--padding: 4%;
+$teasers--resources-item--link--width: 100% - ($teasers--resources-item--link--padding * 2);
+
+.teasers--resources-item {
+  
+  @include zen-float(left);
+  @include zen-grid-flow-item(1, 1);
+  @include breakpoint($small-screen-and-up) {
+    @include zen-grid-flow-item(1, 1);
+  }
+  @include breakpoint($medium-screen-and-up) {
+    @include zen-grid-flow-item(1, 2);
+  }
+  @include breakpoint($large-screen-and-up) {
+    @include zen-grid-flow-item(1, 4);
+  }
+  @include breakpoint($larger-screen) {
+    @include zen-grid-flow-item(1, 5);
+  }
+  
+  padding: 0; 
+  margin: 0;
+  min-height: 200px;
+  position: relative;
+  
+  .teasers--resources-item--thumbnail,
+  .teasers--resources-item--link {
+    &:before {
+      content: '';
+      padding-top: 100%; /* vertical value as  100% equals width, plus a little more. */
+      float: left;
+    }
+  }
+  
+  .teasers--resources-item--thumbnail {
+    .file a {
+      display: none;
+    }
+    img {
+      width: $teasers--resources-item--width;
+      height: $teasers--resources-item--width;
+      margin-left: $teasers--resources-item--gap;
+      display: block;
+      background-color: $lightest-blue-gray;
+    }
+  }
+
+  .teasers--resources-item--link {
+    position: absolute;
+    bottom: $teasers--resources-item--gap-bottom;
+    left: $teasers--resources-item--gap;
+    width: $teasers--resources-item--width;
+    overflow: hidden;
+    a {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: $teasers--resources-item--link--padding;
+      display: block;
+      width: $teasers--resources-item--link--width;
+      max-height: 50%;
+      overflow: hidden;
+      margin: 0;
+      color: white;
+      background-color: rgba(10, 10, 10, 0.5);
+      &:hover {
+        color: yellow;
+        background-color: rgba(0, 0, 0, 1.0);
+      }
+    }
+  }
+
+}
+
+.page-tags .homepage-layout--search {
+  display: none;
+}

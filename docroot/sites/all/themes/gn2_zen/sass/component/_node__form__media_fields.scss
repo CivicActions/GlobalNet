@@ -1,0 +1,123 @@
+fieldset.group-addl-media,
+fieldset.group-media,
+fieldset.group-ass-media,
+fieldset.group-image-section,
+fieldset.group-event-attach-files,
+fieldset.group-file-attachments {
+  
+  div,
+  fieldset,
+  legend,
+  span,
+  div.fieldset-description {
+    margin: 0;
+  }
+  
+  > div.fieldset-wrapper {
+    > div {
+      margin-top: $form-item-gap-medium;
+      .form-item > label {
+        margin-top: $form-item-gap-small;
+      }
+      .description {
+        margin-top: $form-item-gap-small;        
+      }
+    }   
+  }
+
+  .form-field-type-file {
+    img.file-icon {
+      height: 18px;
+      display: inline;
+    }
+    .label-wrapper {
+      display: none;
+    }
+    .media-item {
+      background: transparent;
+    }
+  }
+  
+  .preview {
+    vertical-align: top;
+    padding: 0 !important;
+    margin: 0 !important;
+    .media-item {
+      margin-right: 10px;
+      background: white;
+      border: 0px solid $gray-c;
+      box-shadow: none;
+      display: inline-block;
+      padding: 2px;
+      .label-wrapper {
+        background: rgba(255, 255, 255, 0.9);
+        bottom: 0;
+        box-shadow: none;
+        left: 0;
+        max-height: 100%;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        word-wrap: break-word;
+        label.media-filename {
+          font-size: 9px;
+          padding: 5px;
+          text-transform: none;
+          margin: 0;
+          line-height: 1.2;
+          font-weight: normal;
+          font-style: normal;
+        }
+      }
+    }
+  }
+  
+  input.remove.form-submit,
+  a.button {
+    margin: 0 !important;
+  }
+  
+  input.remove.form-submit {
+    @include admin-button($bgcolor: $red);
+  }
+  
+  a.button {
+    @include admin-button($bgcolor: $blue-gray);
+  }
+  
+  .tabledrag-toggle-weight-wrapper {
+    text-align: left;
+  }
+  
+  /*
+   * File and image-specific table styles.
+   */
+  table {
+    margin-bottom: 1em !important;
+    thead {
+      tr {
+        th {
+          padding-left: 0 !important;
+        }
+      }
+    }
+    tr {
+      td {
+        vertical-align: top !important;
+        .form-type-checkbox {
+          margin-top: 7px !important;
+        }
+        .media-widget {
+          .form-item.form-type-textfield {
+            padding-top: 10px;
+            input[type="text"] {
+              
+            }
+          }
+        }
+      }
+    }
+  }
+  
+}
