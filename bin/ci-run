@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo -e "\n\nRunning CI script\n\n"
+
+export COMPOSE_PROJECT_NAME="gnt2b${BUILD_NUMBER}"
+export RUN_CONTEXT="CI Server"
+echo using docker project name: $COMPOSE_PROJECT_NAME
+
+cd $WORKSPACE
+
+echo "# Enabling VW test mode"
+cp default.xml logs/xml/batch1
+
+echo "done."

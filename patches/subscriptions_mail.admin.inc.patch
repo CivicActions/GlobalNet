@@ -1,0 +1,19 @@
+diff --git subscriptions/subscriptions_mail.admin.inc subscriptions/subscriptions_mail.admin.inc
+index 41ce144..8ce5acf 100644
+--- subscriptions/subscriptions_mail.admin.inc
++++ subscriptions/subscriptions_mail.admin.inc
+@@ -96,6 +96,14 @@ function _subscriptions_mail_form_subscriptions_settings_form_alter(array &$form
+       '#description'   => t('Appends the key of the <a href="@url">@Mail_Editor template</a> that was used to create each e-mail, to assist with configuration and testing. Default is OFF.', array('@Mail_Editor' => 'Mail Editor', '@url' => url('admin/config/system/mail-edit'))),
+     );
+   }
++  if (module_exists('privatemsg')) {
++    $form['mail_settings']['subscriptions_privatemsg'] = array(
++      '#type'          => 'checkbox',
++      '#title'         => t('Enable Privatemsg integration'),
++      '#default_value' => variable_get('subscriptions_privatemsg', 0),
++      '#description'   => t('Allows subscriptions to send private messages to users.'),
++    );
++  }
+   array_unshift($form['#submit'], '_subscriptions_mail_submit_subscriptions_settings_form');
+ }
+ 

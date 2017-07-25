@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+# Get the current branch from Gitlab or from git.
+BRANCH="$gitlabSourceBranch"
+if [[ "$BRANCH" == "" ]]; then
+  BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
+fi
+# If we are not on develop, get the ticket from either (a) current branch (b) last commit.
+THIS_TICKET=""
+if [[ "$BRANCH" != "develop" ]]; then
+  THIS_TICKET="$(echo $BRANCH | egrep -o '[Rr][Dd]-[[:digit:]]{1,6}' | tr '[:lower:]' '[:upper:]')"
+  if [[ "$THIS_TICKET" == "" ]]; then
+    THIS_TICKET="$(git log -1 --oneline | egrep -o '[Rr][Dd]-[[:digit:]]{1,6}' | head -1 | tr '[:lower:]' '[:upper:]')"
+  fi
+fi
+
+#### The run steps.
+echo -e "\033[32m# RUNNING TESTS\033[m"
+
+echo -e "\033[34mGit branch and revision:"
+git rev-parse --abbrev-ref HEAD
+git rev-parse HEAD
+echo -e "\033[m"
+
+# Check Drush.
+echo -e "\033[34mdrush status:"
+drush st
+echo -e "\033[m"
+
+# Remove jira-tests (they are tested within the jira-tests script)
+rm -rf tests/behat/features/automated-jira/*
+
+# Run tests.
+echo -e "\033[32mRunning tests\033[m"
+echo "Cleaning up previous test results."
+fix-perms
+rm -rfv logs/xml/*/*.xml visual
+enter rm -rfv /var/www/logs/xml/*/*.xml /var/www/visual
+git checkout -- visual
+
+PROGRESS_LOG='logs/progress.log'
+
+EXCLUDE_TAGS='~@wip&&~@WIP&&~@OPEN&&~@ORPHAN&&~@long'
+case "$1" in
+  full)
+    echo "# Running full test suite"
+    behat --tags=$EXCLUDE_TAGS
+    ;;
+  fullsuite)
+    echo "# Running Visual Regression Tests"
+    webdrivercss tests/webdrivercss/test.js
+    if [ "$?" -ne 0 ]; then
+      echo "Visual Tests failed. All stop."
+      exit 1
+    fi
+
+    echo "# Running full test suite: Batch 1/3 - Headless, not Content"
+    behat -f junit --out logs/xml/batch1 --tags="~@javascript&&~@content&&${EXCLUDE_TAGS}" --browser=local
+    echo "# Running full test suite: Batch 2/3 - Headless, Content"
+    behat -f junit --out logs/xml/batch2 --tags="~@javascript&&@content&&${EXCLUDE_TAGS}" --browser=local
+    echo "# Running full test suite: Batch 3/3 - What ever is left"
+    behat -f junit --out logs/xml/batch3 --tags="@javascript&&${EXCLUDE_TAGS}"
+    ;;
+  long)
+    echo "# Running long test suite"
+    behat -f junit --out logs/xml/long --tags="@long"
+    ;;
+  smoke)
+    echo "# Running smoke tests on Jenkins"
+    behat -f junit --out logs/xml/batch1 --tags="@smoke&&${EXCLUDE_TAGS}" --browser=local
+    ;;
+  *)
+    echo "# Running $1 tests"
+    behat --tags="@smoke&&${EXCLUDE_TAGS}" --browser=local
+    ;;
+esac
+
+# Copy test results from container.
+docker cp ${web}:/var/www/logs .
+fix-perms
+
+EXIT=$?
+echo -e "\033[m"
+echo Exit Status: $EXIT
+exit $EXIT

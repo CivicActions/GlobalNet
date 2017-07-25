@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+assert_composer
+
+# Parse options to determine browser and collect remaining Behat arguments.
+BROWSER=""
+BEHAT_ARGS=""
+while [[ $# -gt 0 ]]; do
+    OPT="$1";
+    shift;
+    case "${OPT}" in
+        "--browser="* )
+            BROWSER="${OPT#*=}";;
+        *)
+            BEHAT_ARGS="${BEHAT_ARGS} \"${OPT}\"";;
+   esac
+done
+
+# Start the appropriate browser.
+case ${BROWSER} in
+  firefox|chrome)
+    echo -e "\033[32mStarting ${BROWSER} Docker container"
+    WEBDRIVER_CONTAINER=$(docker run -v /dev/shm:/dev/shm -d selenium/standalone-${BROWSER}-debug:2.50.0)
+    WEBDRIVER_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
+    WEBDRIVER_HOST="${WEBDRIVER_IP}:4444/wd/hub"
+    echo -e "\033[32mTo view browser go to vnc://${WEBDRIVER_IP} with a VNC client and the password 'secret'"
+    ;;
+  local)
+    # Host gateway IP from Docker (172.17.42.1) or VirtualBox (10.0.2.2)
+    WEBDRIVER_IP=$([[ $(type -P "boot2docker") ]] && boot2docker ssh netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}' || ip route | grep docker0 | awk '{print $(NF)}')
+    WEBDRIVER_HOST="${WEBDRIVER_IP}:4444/wd/hub"
+    ;;
+  *)
+    BROWSER=phantomjs
+    echo -e "\033[32mStarting ${BROWSER} Docker container"
+    WEBDRIVER_CONTAINER=$(docker run -d wernight/phantomjs phantomjs --webdriver=8910)
+    WEBDRIVER_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
+    WEBDRIVER_HOST="${WEBDRIVER_IP}:8910"
+    ;;
+esac
+echo -e "\033[m"
+
+# We pass configuration to Behat via a JSON encoded environment variable.
+BEHAT_PARAMS="{\"extensions\":{\"Behat\\\\MinkExtension\":{\"base_url\":\"http://${web_ip}\",\"selenium2\":{\"wd_host\":\"${WEBDRIVER_HOST}\"}}}}"
+COMMAND="cd && export BEHAT_PARAMS='${BEHAT_PARAMS}' && ./vendor/bin/behat -c tests/behat/local.yml ${BEHAT_ARGS}"
+echo -e "\033[32mRunning '${COMMAND}' inside container \033[m"
+if [ -t 1 ]; then
+  EXEC_OPTS='-it'
+else
+  EXEC_OPTS='-i'
+fi
+docker exec --user www-data $EXEC_OPTS ${web}  /bin/bash -c "${COMMAND}"
+EXIT=$?
+
+if [[ -n "${WEBDRIVER_CONTAINER}" ]]; then
+  echo -e "\033[32mStopping ${BROWSER} Docker container \033[m"
+  docker rm -f ${WEBDRIVER_CONTAINER}
+fi
+
+echo Exit Status: $EXIT
+exit $EXIT

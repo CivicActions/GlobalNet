@@ -1,0 +1,42 @@
+diff --git a/og_ui/og_ui.module b/og_ui/og_ui.module
+index b265137..84bbeda 100644
+--- a/og_ui/og_ui.module
++++ b/og_ui/og_ui.module
+@@ -611,8 +611,8 @@ function og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $l
+ 
+       list($id,, $bundle) = entity_extract_ids($entity_type, $entity);
+       if (og_is_member($entity_type, $id, 'user', $account, array(OG_STATE_ACTIVE, OG_STATE_PENDING))) {
+-        if (og_user_access($entity_type, $id, 'unsubscribe', $account)) {
+-          $links['title'] = t('Unsubscribe from group');
++        if (og_user_access($entity_type, $id, 'unsubscribe', $account) && _gn2_og_get_node_membership_setting($entity->nid) != "closed") {
++          $links['title'] = t('Cancel Membership');
+           $links['href'] = "group/$entity_type/$id/unsubscribe";
+           $links['class'] = 'group unsubscribe';
+         }
+@@ -660,7 +660,7 @@ function og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $l
+         }
+ 
+         if (og_user_access($entity_type, $id, 'subscribe without approval', $account)) {
+-          $links['title'] = t('Subscribe to group');
++          $links['title'] = t('Join ' . str_replace('_', ' ', $entity->type));
+           $links['class'] = 'group subscribe';
+           if ($account->uid) {
+             $links['href'] = $url;
+@@ -671,7 +671,7 @@ function og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $l
+           }
+         }
+         elseif (og_user_access($entity_type, $id, 'subscribe')) {
+-          $links['title'] = t('Request group membership');
++          $links['title'] = t('Request Membership');
+           $links['class'] = 'group subscribe request';
+           if ($account->uid) {
+             $links['href'] = $url;
+@@ -686,7 +686,7 @@ function og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $l
+             '#type' => 'html_tag',
+             '#tag' => 'span',
+             '#attributes' => array('title' => t('This is a closed group. Only a group administrator can add you.'), 'class' => 'group closed'),
+-            '#value' => t('This is a closed group. Only a group administrator can add you.'),
++            '#value' => t('This is a closed ' . $entity->type . '. Only a ' . $entity->type . ' administrator can add you.'),
+           );
+ 
+           return $element;

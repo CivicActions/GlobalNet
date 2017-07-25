@@ -1,0 +1,93 @@
+This file should record the version history of the globalNET builds. Use tag-ids to mark build milestones.
+
+v2.35.0 5/9/2017
+----------------------
+RD-4170: updating click to work with AJAX.
+    Pushing a fix to correct jQuery click event that broke with the AJAX changes to Sessions.
+RD-4269 Hotfixes -- Rename Resource tab etc b
+    This HOTFIX addresses the following items:
+        -Change Resources tab to read "Files"
+        -Add Course Groups tab back to course and ensure view loads pertinent items
+        -Move Announcements block from Main Content Area to sidebar
+        -Restore course main image to display correct 810x400 with body text overlay
+        -Padding in a session level where there are a list of files - they have a lot of space in between
+        -Course participant sees the New Session button - need to remove for non admins
+RD-4239: Changing logic to switch sender and receiver in contact request function
+RD-4170: adding Category, Action and Label to datalayer.push.
+RD-4084 Support desk notification modifications
+RD-4182: Updating sessions functionality to accommodate Ajax loading
+Rd-4252: Debug problems viewing PDF with Chrome IE or MS Edge
+RD-4236: Add report to list taxonomy terms and definitions
+RD-4182 Optimize content in Courses to reduce page load times (AJAX tabs) Version J
+RD-4247: Updating GA client ID.
+RD-4117 - Adding publication creation and deletion perms back to group admins via gn2_og feature.
+RD-4170 Course Participation Metrics version:e
+RD-4075: Hiding Weeks of Training field.
+
+
+v2.34.0 4/20/2017
+----------------------
+Small team; focus on session and reporting work.
+
+RD-4230: Setting default tab on groups to show posts 
+RD-4170: Add session js 
+RD-4218: Clean up the Analytics tab on the Metrics page, styles the exposed filter submit and adds User status to the Page views tab. 
+RD-4217: Consolidating organization metrics. 
+RD-4136 Open closed dates support dashboard 
+RD-4193 main menu active state 
+RD-4170: Course metrics 
+RD-4098 Visual regression testing suite without LFS 
+RD-4187 Help text anon comments 
+RD-3535 post prod-update updates; also, documentation-updates section [skip ci] 
+RD-4165: modifications to gn2_support_desk.module file 
+RD-4122 Resources content type 
+
+v2.33.0, 4/6/2017
+-------------------
+This was a code refactoring sprint, with a small team.
+
+- Merge branch 'RD-4165--support-desk-list-of-owners--02' into 'develop'.
+- Merge branch 'RD-4122-et-c' into 'develop'.
+- Update workflow.md to be more explicit about which directories commands should be run in.
+- Update workflow.md to reflect new Prod server update command.
+- Update readme.md with renamed link to code workflow document.
+- Update readme.md.
+- Update readme.md line 134.
+- Update version_history.txt.
+- RD-4122 - Adding readme, changelog.
+- RD-4122 - Adding behat test for library.
+- RD-4122 - Updating library view in feature.
+- RD-4122 - Adding GET param check.
+- RD-4122 - Updating features to capture new taxonomy2.
+- RD-4122 - Updating features to capture new taxonomy.
+- RD-4122 - Updating features to capture library changes.
+- RD-4122 - Adding search compiled styles.
+- RD-4122 - Adding search styles.
+- RD-4122 - Adding compiled styles.
+- RD-4122 - Adding base styles.
+- RD-4122 - Updating view settings.
+- RD-4122 - Adding base style for resource library.
+- RD-4122 - Adding new search index and view for resources.
+- RD-4122 - Removing field dependency.
+- RD-4122 - Adding gn2_library to base config.
+- RD-4122 - Updating features to reflect new file field.
+- RD-4122 - Adding base features for library.
+- RD-4165: modifications to gn2_support_desk.module file.
+- Merge branch 'RD-3890-et-b' into 'develop'.
+- Merge branch 'RD-4050-et' into 'develop'.
+- Merge branch 'RD-4190' into 'develop'.
+- Merge branch 'RD-4189--comments-file-browse-button--01' into 'develop'.
+- Merge branch 'RD-4056-et-c' into 'develop'.
+- RD-3890 - Creating support desk access tests.
+- Merge branch 'ad-hoc-fix-failing-tests' into 'develop'.
+- Ad-hoc - Fixing failing tests associated with user who is no longer site admin.
+- RD-4050 - Removing duplicate custom roles report.
+- RD-4190 - Removing whitespace on end of AC url.
+- RD-4189: reworked some button styling.
+- RD-4056 - Updating strongarm settings to reflect prod db.
+- RD-4056 - Adding menu items to strongarm.
+
+20150-04-16-f
+---------------
+End of Sprint 8b. Replace groups permission structure and widgets. Flesh out events.
+

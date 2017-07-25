@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+
+# Run minimal migrate import
+echo -e "\n\033[32mMigrate Import\033[m"
+LIMIT=${1-10}
+
+# Preparation.
+drush en gn2_migrate -y
+drush migrate-deregister --orphans
+drush migrate-register
+
+# Migrate taxonomies first.
+echo "Migrating 10 regions..."
+drush gn2-migrate-regions
+echo "Migrating 83 topics..."
+drush migrate-import Topic --feedback="20 items"
+echo "Migrating 240 countries..."
+drush migrate-import Country --feedback="20 items"
+
+# Migrate Centers and Groups.
+echo "Migrating 18 centers..."
+drush migrate-import GN2OgGroupCenter
+echo "Migrating $LIMIT groups (not executed)..."
+echo "drush migrate-import GN2OgGroupGroup --limit=$LIMIT"
+# echo "Migrating $LIMIT alumni groups..."
+# drush migrate-import GN2OgGroupAlumni --limit=$LIMIT
+
+# The '--force' should be removed before completion.
+# echo "Migrating $LIMIT of everything else..."
+# drush migrate-import --group=globalnet --limit=$LIMIT
+drush migrate-status
+
+EXIT=$?
+
+echo Exit Status: $EXIT
+exit $EXIT

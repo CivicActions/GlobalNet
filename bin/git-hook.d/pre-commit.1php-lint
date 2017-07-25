@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+/**
+ * .git/hooks/pre-commit
+ *
+ * This pre-commit hook will lint PHP files.
+ */
+exec('git diff --cached --name-status --diff-filter=ACM', $output);
+
+$status = 0;
+
+print "PHP lint linting (from inside container)\n";
+
+foreach ($output as $file) {
+
+  $file_name = trim(substr($file, 1));
+  $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+
+  /**
+  * Hopefully, this is every Drupal extension.
+  */
+  if ($ext == "php" || $ext == "module" || $ext == "install" || $ext == "test"
+      || $ext == "inc" || $ext == "profile" || $ext == "view") {
+    $lint = array();
+    exec("php -l " . escapeshellarg($file_name), $lint, $return);
+
+    if ($return) {
+      $status = 1;
+      print implode("\n", $lint) . "\n";
+    }
+  }
+  else {
+    print "PHP lint is skipping " . $file_name . ".\n";
+  }
+}
+
+print "PHP lint complete\n";
+exit($status);

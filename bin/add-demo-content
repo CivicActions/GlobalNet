@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Set the Site Alias if provided:
+SA=$1
+
+drush $SA pm-disable -y gn2_migrate
+drush $SA migrate-register
+drush $SA migrate-deregister --orphans
+
+# Line 7882 in common.inc is current as found in Drupal 7.41
+sed -i '7882 s|^|//|' docroot/includes/common.inc
+drush $SA migrate-rollback --group=demo
+
+# This is needed until the users are removed cleanly from devtest
+drush $SA sql-query "DELETE FROM url_alias WHERE alias LIKE 'users/u%'"
+
+# Line 7882 in common.inc is current as found in Drupal 7.41
+sed -i '7882 s|^//||' docroot/includes/common.inc
+drush $SA migrate-import --group=demo
+
+# Delete any existing aliases, then recreate them.
+drush $SA pad all
+# The below command can run out of memory, so run it multiple times.
+drush $SA pag all
+drush $SA pag all
+drush $SA pag all
+
+# FIXME:
+# WD rules: The variable or parameter group is empty.
+# WD rules: Unable to evaluate condition og_user_has_role.

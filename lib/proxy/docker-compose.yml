@@ -1,0 +1,8 @@
+dnsmasq:
+  build: dnsmasq
+nginx:
+  build: nginx
+  ports:
+    - 80:80
+  links:
+    - dnsmasq:dnsmasq

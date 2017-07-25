@@ -1,0 +1,13 @@
+diff --git features/includes/features.locale.inc features/includes/features.locale.inc
+index fc27174..36d11d6 100644
+--- features/includes/features.locale.inc
++++ features/includes/features.locale.inc
+@@ -65,7 +65,7 @@ function language_features_export_render($module, $data, $export = NULL) {
+       // Unset javascript hash
+       unset($var['javascript']);
+
+-      $lang_export = features_var_export($var, '  ');
++      $lang_export = features_var_export($var, "  /* $name */ ");
+       $lang_identifier = features_var_export($name);
+       $code[] = "  // Exported language: $name.";
+       $code[] = "  \$languages[{$lang_identifier}] = {$lang_export};";

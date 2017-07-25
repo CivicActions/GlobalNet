@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+SLACK_CHANNEL=${SLACK_CHANNEL-''};
+SLACK_BOTNAME=${SLACK_BOTNAME-$USER};
+SLACK_BOTEMOJI=${SLACK_BOTEMOJI-''}
+SLACK_ATTACHMENTS=${SLACK_ATTACHMENTS-'[]'}
+
+MESSAGE=$@;
+
+PAYLOAD="payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"text\": \"${MESSAGE}\", \"icon_emoji\": \"${SLACK_BOTEMOJI}\", \"attachments\": ${SLACK_ATTACHMENTS}}";
+CURL_RESULT=$(curl -s -S -X POST --data-urlencode "$PAYLOAD" https://hooks.slack.com/services/(INSERT ID);
+
+if [ -z "$CURL_RESULT" ] || [ "$CURL_RESULT" = "ok" ]; then
+  exit 0;
+else
+  echo "Slack error: ${CURL_RESULT}"
+  echo "payload: ${PAYLOAD}"
+  exit 1;
+fi

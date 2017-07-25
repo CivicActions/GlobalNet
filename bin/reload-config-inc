@@ -1,0 +1,21 @@
+# reload config include file
+
+# Use the DRUSH variable command or fall back to 'drush'
+DRUSH=${DRUSH-'drush'}
+
+echo "# RELOADING CONFIG"
+$DRUSH -y updatedb
+
+$DRUSH -y en $(fgrep 'dependencies[]' docroot/sites/all/modules/custom/gn2_base_config/gn2_base_config.info | cut -d' ' -f3)
+
+  echo ""
+  echo "# Reverting. Single Attempt ..."
+  $DRUSH fr-all -y -v
+
+echo "# feature revert complete"
+
+  $DRUSH rules-revert-all -y
+
+echo "# rules revert complete"
+
+$DRUSH cc all

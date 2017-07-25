@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_proxy
+
+$DCOMPOSE rm -f web
+$DCOMPOSE up -d web
+
+EXIT=$?
+echo -e "\033[m Exit Status: $EXIT"
+
+bowline
+exit $EXIT

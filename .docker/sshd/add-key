@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo -e "Adding key to data user authorized keys:\n$@"
+
+mkdir -p /home/data/.ssh
+echo $@ >> /home/data/.ssh/authorized_keys

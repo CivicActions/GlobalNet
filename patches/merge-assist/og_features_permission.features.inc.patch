@@ -1,0 +1,13 @@
+diff --git og/includes/og_features_permission.features.inc og/includes/og_features_permission.features.inc
+index 4fc758f..0f93bd8 100755
+--- og/includes/og_features_permission.features.inc
++++ og/includes/og_features_permission.features.inc
+@@ -94,7 +94,7 @@ function og_features_permission_features_export_render($module, $data) {
+     asort($permission['roles']);
+
+     $perm_identifier = features_var_export($key);
+-    $perm_export = features_var_export($permission, '  ');
++    $perm_export = features_var_export($permission, "  /* $perm_identifier */ ");
+     $code[] = "  // Exported og permission: {$perm_identifier}";
+     $code[] = "  \$permissions[{$perm_identifier}] = {$perm_export};";
+     $code[] = '';

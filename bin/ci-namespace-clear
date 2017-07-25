@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "Clearing out possible containers in the ${1} namespace."
+
+docker ps -a | grep ${1} | awk '{print $NF}' | xargs -r docker rm -f
+
+echo "Done."

@@ -1,0 +1,109 @@
+diff --git a/pki_authentication.module b/pki_authentication.module
+index 3f34662..3ffa471 100644
+--- a/pki_authentication.module
++++ b/pki_authentication.module
+@@ -147,6 +147,7 @@ function pki_authentication_login($token = '') {
+       if ($user_row->status == 1) {
+         $user = user_load($user_row->uid, TRUE);
+         $form_state['uid'] = $user->uid;
++        $form_state['values']['name'] = $user->name;
+         user_login_submit(array(), $form_state);
+         watchdog('pki_authentication', 'User login: @name', array('@name' => $user->name), WATCHDOG_NOTICE);
+       }
+@@ -155,12 +156,14 @@ function pki_authentication_login($token = '') {
+       }
+     }
+     else {
+-      drupal_set_message(t("You do not have an account. Please insert your PKI card into the reader and 'Request New Account'."), 'error');
++      $login = l('log in', 'user');
++      drupal_set_message(t('We could not locate the information from your CAC card. If have a US DoD Common Access Card (CAC) and would like to set up CAC login on your account, please, !login and edit your profile to extract your information.', array('!login' => $login)), 'error');
+     }
+   }
+   else {
+     drupal_set_message(t("System or configuration error. Please try again later."));
+   }
++  $_SESSION['used_cac'] = TRUE;
+   drupal_goto('');
+ }
+ /**
+@@ -247,11 +250,28 @@ function pki_authentication_form_alter(&$form, &$form_state, $form_id) {
+     // Create PKI form data if enabled or if regular logins are disabled.
+     if (variable_get('pki_authentication_enable_regular_login', 1) == FALSE or variable_get('pki_authentication_enable_pki_login', 1)) {
+       $user = user_load($user->uid, TRUE);
+-      $lang = (empty($user->language)) ? 'und' : $user->language;
++      // Translatable user fields caused the PKI field to not be saved.
++      // $lang = (empty($account->language)) ? 'und' : $account->language;
++      $lang = LANGUAGE_NONE;
+       if ($form['#user']->uid == $user->uid and empty($user->pki_authentication_pki_string[$lang][0]['value'])) {
+-        $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
++        // $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
++        global $base_url;
++        $cac_base_root = variable_get('pki_authentication_base_root', $base_url);
++        $url = variable_get('gn2_cac_url', $cac_base_root) . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
+         if (isset($user_data['init'])) {
+-          $markup = t("Your PKI informaiton has been extracted (") . check_plain($user_data['init']) . t(") -- You must save this form below.");
++          $save_link = l('Click here to save', 'javascript:',
++              array(
++                'external' => TRUE,
++                'attributes' => array(
++                  'class' => 'pki_save',
++                ),
++              ));
++          $markup = t('Your PKI information has been extracted (%userdata) but has not yet been saved! -- !save the information to your user profile.',
++              array(
++                '%userdata' => check_plain($user_data['init']),
++                '!save' => $save_link,
++              ));
++          drupal_set_message($markup, 'status');
+           $form['pki_extract_markup'] = array(
+             '#markup' => $markup,
+             '#prefix' => '<hr />',
+@@ -265,7 +285,7 @@ function pki_authentication_form_alter(&$form, &$form_state, $form_id) {
+           );
+         }
+         else {
+-          $markup = t("Your PKI informaiton has not been extracted from your card. Insert the card and click the link below. <br />");
++          $markup = t("Your PKI information has not been extracted from your card. Insert the card and click the link below. <br />");
+           $markup .= l(t('Extract data from your PKI card.'), $url, array('attributes' => array('title' => t('Will allow you to login directly with PKI.'))));
+           $markup .= t("<br />This will enable you to log in directly with your PKI card.");
+           $form['pki_extract_markup'] = array(
+@@ -335,7 +355,7 @@ function pki_authentication_form_alter(&$form, &$form_state, $form_id) {
+         $form['#validate'][] = $final_validator;
+       }
+       if (isset($user_data['init'])) {
+-        $markup = t("Your PKI informaiton has been extracted (") . check_plain($user_data['init']) . t(") -- You must save this form below.");
++        $markup = t("Your PKI information has been extracted (") . check_plain($user_data['init']) . t(") -- You must save this form below.");
+         $form['pki_extract_markup'] = array(
+           '#markup' => $markup,
+           '#prefix' => '<hr />',
+@@ -436,7 +456,7 @@ function pki_authentication_user_regular_login_permission_validate($form, &$form
+ function pki_authentication_user_edit_submit($form, &$form_state) {
+   global $user;
+   $account = user_load($form_state['user']->uid, TRUE);
+-  $lang = (empty($account->language)) ? 'und' : $account->language;
++  $lang = LANGUAGE_NONE;
+   if (isset($account->pki_authentication_pki_string[$lang][0]['value'])) {
+     return;
+   }
+@@ -459,7 +479,9 @@ function pki_authentication_edit_validate($form, &$form_state) {
+   global $user;
+ 
+   $account = user_load($form_state['user']->uid, TRUE);
+-  $lang = (empty($account->language)) ? 'und' : $account->language;
++  // Translatable user fields caused the PKI field to not be saved.
++  // $lang = (empty($account->language)) ? 'und' : $account->language;
++  $lang = LANGUAGE_NONE;
+   if (isset($account->pki_authentication_pki_string[$lang][0]['value'])) {
+     return;
+   }
+@@ -545,7 +567,9 @@ function pki_authentication_user_register_submit($form, &$form_state) {
+         $user_row = pki_authentication_find_pki_string($user_data['init']);
+         if (empty($user_row->uid)) {
+           $account = user_load($form_state['user']->uid, TRUE);
+-          $lang = (empty($account->language)) ? 'und' : $account->language;
++          // Translatable user fields caused the PKI field to not be saved.
++          // $lang = (empty($account->language)) ? 'und' : $account->language;
++          $lang = LANGUAGE_NONE;
+           $account->pki_authentication_pki_string[$lang][0]['value'] = (empty($user_data['init']))? '' : check_plain($user_data['init']);
+           $account = user_save((object) array('uid' => $account->uid), (array) $account);
+         }

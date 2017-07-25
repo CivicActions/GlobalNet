@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# Validate arguments
+if [ $# -eq 0 ]; then
+  echo "Usage: webdrivercss tests/webdrivercss/[testfile].js [...]"
+  exit 1
+fi
+for TEST in "$@"; do
+  if [[ $TEST != tests/webdrivercss/* || ! -f "$TEST" ]]; then
+    echo "${TEST} does not appear to be a file in the tests/webdrivercss directory."
+    exit 1
+  fi
+done
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+assert_composer
+assert_proxy
+
+export SELENIUM_BROWSER="chrome"
+DCOMPOSE="$DCOMPOSE -f .bowline/docker-compose.webdrivercss.yml"
+$DCOMPOSE stop selenium webdrivercssadmin
+$DCOMPOSE rm -f selenium webdrivercssadmin
+$DCOMPOSE up -d selenium webdrivercssadmin
+
+cd $GIT_ROOT
+
+ADMINPANEL_HOST="http://${SLUG}_webdrivercssadmin_1.localtest.me"
+if [ "$RUN_CONTEXT" = "CI Server" ]; then
+  ADMINPANEL_HOST="https://${SLUG}_webdrivercssadmin_1.ci.civicactions.net"
+fi
+ADMINPANEL_URL="${ADMINPANEL_HOST}/regression-tests/visual"
+ADMINPANEL_API_URL="http://adminpanel:9000/api/repositories/"
+
+webdrivercss_run () {
+  $DCOMPOSE run --rm webdrivercss /bin/bash -c "$1"
+}
+
+# Upload reference repository.
+webdrivercss_run "tar czf - visual | curl -o /dev/null -s -F 'gz=@-' ${ADMINPANEL_API_URL}visual.tar.gz"
+
+# Run specified test suites.
+for TEST in "$@"; do
+  COMMAND="node ${TEST}"
+  echo -e "\033[32mRunning '${COMMAND}' inside container \033[m"
+  webdrivercss_run "${COMMAND}"
+done
+
+# Fix permissions for files created by webdrivercss.
+webdrivercss_run "chown -R $(id -u):$(id -g) visual"
+
+# Removing full screenshots (which aren't used for regression).
+# rm visual/*.[0-9]*px.png 2> /dev/null
+echo -e "\033[32mTesting complete \033[m"
+echo
+
+# Upload updated repository.
+webdrivercss_run "tar czf - visual | curl -o /dev/null -s -F 'gz=@-' ${ADMINPANEL_API_URL}visual.tar.gz"
+
+if [ "$RUN_CONTEXT" = "CI Server" ]; then
+  export SLACK_BOTNAME="CI Server"
+  notify-slack "Visual Regression Test results temporarily available for review - ${ADMINPANEL_URL}"
+fi
+
+EXIT=0
+# TODO: xunit XML file generation would go here.
+ls visual/*.regression.png 2> /dev/null
+if [ "$?" -eq 0 ]; then
+  echo -e "\033[31mTest fails detected \033[m"
+  EXIT=1
+  if [ "$RUN_CONTEXT" = "CI Server" ]; then
+    export SLACK_BOTNAME="CI Server FAIL"
+    notify-slack "Visual Regression Test FAIL - ${ADMINPANEL_URL}"
+  else
+    echo -e "\033[32mVisit WebdriverCSS Admin panel started and review results: \033[m"
+    echo -e "${ADMINPANEL_URL}"
+    echo
+    echo -e "\033[32mOnly confirm if result matches expectations. Otherwise: fix code and retest. \033[m"
+    # Open panel in a browser if we can.
+    $(which xdg-open 2> /dev/null || which open 2> /dev/null) "${ADMINPANEL_URL}"
+    read -p "Press [Enter] key when review is complete..."
+    rm visual/*.png visual/diff/*.png
+    # Download updated reference repository.
+    webdrivercss_run "curl -s ${ADMINPANEL_API_URL}visual.tar.gz | tar xz"
+    webdrivercss_run "chown -R $(id -u):$(id -g) visual"
+    echo -e "\033[32mReview results synchronized \033[m"
+  fi
+else
+  echo results: "${ADMINPANEL_URL}"
+  echo -e "\033[32mVisual regression tests all passed! \033[m"
+fi
+exit $EXIT

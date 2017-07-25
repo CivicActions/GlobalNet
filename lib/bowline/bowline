@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+
+# check if we're on the host
+if [ -e "/proc/self/cgroup" ];then
+  if [ "$(grep docker /proc/self/cgroup)" ];then
+    export context="container"
+    # But if there's a docker socket then likely a privileged controller container.
+    [ -e "/var/run/docker.sock" ] && export context="host"
+  fi
+fi
+[ "$context" ] || export context="host"
+
+get_container_name () { echo "${SLUG}_${1}_1"; }
+
+check_build() { unset CONTAINERS_BUILT; [ "$(docker ps -a | grep ${SLUG}_web)" ] && CONTAINERS_BUILT="true"; }
+
+# Set basic env variables.
+bowline_init () {
+  if [ "$GIT_DIR" = ".git" ] && [ "$GIT_AUTHOR_DATE" ];then
+    GIT_ROOT=$PWD
+  else
+    GIT_ROOT=$(git rev-parse --show-toplevel)
+    GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  fi
+  export HOST_UID=$(id -u)
+  export HOST_GID=$(id -g)
+  cd $(dirname $0)
+  if [ -f "${GIT_ROOT}/.bowline/config" ]; then source "${GIT_ROOT}/.bowline/config"; fi
+  BOWLINE=${GIT_ROOT##*/}
+  if [ "${COMPOSE_PROJECT_NAME}" ];then BOWLINE=${COMPOSE_PROJECT_NAME}; fi
+  SLUG=${BOWLINE//-/}  # Fig/Compose doesn't allow the - char.
+  SLUG=${SLUG//_/}  # Fig/Compose doesn't allow the _ char.
+  DCOMPOSE="docker-compose"
+  if [ ! "$(command -v docker-compose)" ];then
+    if [ "$(command -v fig)" ];then
+      echo "Using fig which is deprecated and replaced with docker-compose."
+      echo "https://docs.docker.com/compose/install/"
+      DCOMPOSE="fig -f docker-compose.yml"
+    else
+      echo "Docker Compose is required for using Bowline"
+      echo "https://docs.docker.com/compose/install/"
+      exit 1
+    fi
+  fi
+  DCOMPOSE="$DCOMPOSE -p $SLUG"
+
+  cd $GIT_ROOT
+
+  ### @@ Note, everytime the ip changes the following should run
+  # Add some useful container env
+  check_build
+  list_containers=$(grep '^\S*:' docker-compose.yml)
+  unset containers
+  for c in $list_containers; do
+    name="${c%:}"
+    container_name="$(get_container_name ${name})"
+    # Set variables such as $web and $db from the docker-compose.yml.
+    export "${name}=${container_name}"
+    # Set IP addresses if they are available.
+    if [ "$CONTAINERS_BUILT" ];then
+      local ip="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${container_name})"
+      [ "$ip" ] && export "${name}_ip"=$ip || export "${name}_ip"="not running"
+    else
+      export "${name}_ip"="not built"
+    fi
+    export containers="${containers} ${name}"
+  done
+
+  [ "$CONF_WEB_DOMAIN" ] && WEB_DOMAIN=$CONF_WEB_DOMAIN || WEB_DOMAIN="${SLUG}.localtest.me"
+}
+
+[ $context = "host" ] && bowline_init
+
+
+assert_proxy () {
+  local proxy_image=traefik
+  local proxy_domain=localtest.me
+  # Check if the proxy container is running.
+  if [ ! "$(docker ps -f name=proxy -f ancestor=$proxy_image -q)" ];then
+    # Check if the proxy container stopped.
+    if [ "$(docker ps -f name=proxy -f ancestor=$proxy_image -qa)" ];then
+      echo "Restarting proxy container"
+      docker start proxy
+    else
+      echo "Starting proxy container"
+      docker run -d --privileged \
+        -p 80:80 -p 443:443 -p 8080:8080 \
+        -v /var/run/docker.sock:/var/run/docker.sock -v /dev/null:/etc/traefik/traefik.toml \
+        --name=proxy traefik --web --docker --docker.domain=${proxy_domain} --logLevel=DEBUG
+    fi
+  fi
+
+  # Configure host for proxy.
+  local proxyconf_file=".bowline/docker-compose.proxyconf.yml"
+  echo -e "web:\n  labels:" > $proxyconf_file
+  echo -e "    - traefik.backend=${SLUG}" >> $proxyconf_file
+  echo -e "    - traefik.frontend.rule=Host:${WEB_DOMAIN}" >> $proxyconf_file
+
+  DCOMPOSE="$DCOMPOSE -f docker-compose.yml -f $proxyconf_file"
+}
+
+assert_running () {
+  local cn=$(get_container_name web)
+  RUNNING=$(docker inspect --format="{{ .State.Running }}" ${cn} 2> /dev/null)
+  [ "$RUNNING" = "true" ] || $DCOMPOSE up -d --no-recreate
+}
+
+assert_composer () {
+  if [ ! -d "vendor" ];then
+    echo "Setting up Composer...."
+    docker exec ${web} chown -R www-data:www-data /var/www
+    docker exec ${web} chown www-data:www-data /usr/local/bin/composer.phar
+    docker exec --user www-data ${web} composer --working-dir=/var/www self-update
+    docker exec --user www-data ${web} composer --working-dir=/var/www install
+  fi
+}
+
+enter_container () {
+  if [ $context = "container" ];then
+    cd /var/www
+    return
+  fi
+  assert_running
+  docker exec $(get_container_name web) /var/www/bin/$(basename $0) $@
+  EXIT=$?
+  echo Exit Status: $EXIT
+  exit $EXIT
+}
+
+system-check () {
+  source $GIT_ROOT/lib/bowline/system-check
+}
+
+assert_selenium () {
+  # Parse options to determine browser and collect remaining command arguments.
+  SELENIUM_BROWSER=""
+  COMMAND_ARGS=""
+  while [[ $# -gt 0 ]]; do
+      OPT="$1";
+      shift;
+      echo "${OPT}";
+      case "${OPT}" in
+          "--browser="* )
+              SELENIUM_BROWSER="${OPT#*=}";;
+          *)
+              COMMAND_ARGS="${COMMAND_ARGS} \"${OPT}\"";;
+     esac
+  done
+
+  echo "This is the Selenium Browser: ${SELENIUM_BROWSER}"
+  # Start the appropriate browser.
+  case ${SELENIUM_BROWSER} in
+    firefox|chrome)
+      echo -e "\033[32mStarting ${SELENIUM_BROWSER} Docker container"
+      WEBDRIVER_CONTAINER=$(docker run -v /dev/shm:/dev/shm -d selenium/standalone-${SELENIUM_BROWSER}-debug:2.50.0)
+      WEBDRIVER_HOST=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
+      WEBDRIVER_PORT="4444"
+      WEBDRIVER_PATH="/wd/hub"
+      echo -e "\033[32mTo view browser go to vnc://${WEBDRIVER_IP} with a VNC client and the password 'secret'"
+      ;;
+    local)
+      # Host gateway IP from Docker (172.17.42.1) or VirtualBox (10.0.2.2)
+      WEBDRIVER_HOST=$([[ $(type -P "boot2docker") ]] && boot2docker ssh netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}' || ip route | grep docker0 | awk '{print $(NF)}')
+      WEBDRIVER_PORT="4444"
+      WEBDRIVER_PATH="/wd/hub"
+      ;;
+    *)
+      SELENIUM_BROWSER=phantomjs
+      echo -e "\033[32mStarting ${SELENIUM_BROWSER} Docker container"
+      WEBDRIVER_CONTAINER=$(docker run -d wernight/phantomjs phantomjs --webdriver=8910)
+      WEBDRIVER_HOST=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
+      WEBDRIVER_PORT="8910"
+      WEBDRIVER_PATH=""
+      ;;
+  esac
+  WEBDRIVER_URI="${WEBDRIVER_HOST}:${WEBDRIVER_PORT}${WEBDRIVER_PATH}"
+  echo -e "\033[m"
+  trap assert_selenium_finish EXIT
+}
+assert_selenium_finish () {
+  if [[ -n "${WEBDRIVER_CONTAINER}" ]]; then
+    echo -e "\033[32mStopping ${SELENIUM_BROWSER} Docker container \033[m"
+    docker rm -f ${WEBDRIVER_CONTAINER} > /dev/null
+  fi
+}

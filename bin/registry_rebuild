@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+enter_container $@
+
+drush_cmd="/var/www/vendor/bin/drush --root=/var/www/docroot"
+legacy_path="/var/www/legacy-files"
+mkdir -p $legacy_path
+cd $legacy_path
+
+dummy_path="/var/www/.dummy"
+listing_filename="filepath-listing"
+
+if [ ! -d "/var/www/.drush/registry_rebuild" ];then
+  $drush_cmd dl --destination=/var/www/.drush registry_rebuild
+  $drush_cmd cc drush
+fi
+
+$drush_cmd help rr
+$drush_cmd rr
+

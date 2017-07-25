@@ -1,0 +1,40 @@
+default:
+  suites:
+    default:
+      contexts:
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Api
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Base
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Dom
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Node
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Og
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Panels
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Search
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Specific
+        #- CivicActions\Drupal\Behat\Bootstrap\Context\Utility
+        - CivicActions\Drupal\Behat\Bootstrap\Context\User
+        - CivicActions\Drupal\Behat\Bootstrap\Context\Views
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\MarkupContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2: ~
+      base_url: https://v2-dev.globalnetplatform.org
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: drupal
+      drupal:
+        drupal_root: '/var/www/dev/docroot'
+      region_map:
+        main uppertabs:  "#tabs-0-main_uppertabs"
+        main lowertabs:  "#tabs-0-main_lowertabs"
+        main content:    "#content .main"
+        content:         "#content"
+        sidebar:         "#content .sidebar"
+build:
+  formatters:
+    progress: [logs/progress.log]
+    junit: [logs/xml]

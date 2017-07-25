@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Use the first argument for number of QA sites to keep, or fall back to 10.
+MAX_QA_SITES=${1-10}
+
+container_list=$(docker ps -a | awk '{print $NF}' | grep gn2$ | sort)
+container_count=$(echo "${container_list}" | wc -l)
+echo -e "${container_list} \ncount: ${container_count} \n"
+
+echo "Cleaning up oldest QA sites, if more than $MAX_QA_SITES"
+
+loop_max=30
+while [ ${container_count} -gt ${MAX_QA_SITES} ] && [ ${loop_max} -gt 0 ]; do
+  container_group=$(echo "${container_list}" | head -1)
+  echo "Cleaning up container group: ${container_group} "
+  for c in $(docker ps -a | awk '{print $NF}' | grep ${container_group}); do
+    docker stop ${c}
+    docker rm -f ${c}
+  done
+  ((loop_max--))
+  container_list=$(docker ps -a | awk '{print $NF}' | grep gn2$ | sort)
+  container_count=$(echo "${container_list}" | wc -l)
+done
+echo "Done."

@@ -1,0 +1,70 @@
+diff --git a/google_analytics_reports.install b/google_analytics_reports.install
+index 13ecdf0..a17aef1 100644
+--- a/google_analytics_reports.install
++++ b/google_analytics_reports.install
+@@ -402,6 +402,63 @@ function google_analytics_reports_update_7304(&$sandbox) {
+   );
+   db_create_table('google_analytics_reports_fields', $schema['google_analytics_reports_fields']);
+ 
+-  module_load_include('module', 'google_analytics_reports');
+-  google_analytics_reports_fields_import();
++  //module_load_include('module', 'google_analytics_reports');
++  //google_analytics_reports_fields_import();
++  $response = drupal_http_request('https://www.googleapis.com/analytics/v3/metadata/ga/columns');
++  if ($response->code == '200') {
++    // Remove old fields and clear cache.
++    if (db_table_exists('google_analytics_reports_fields')) {
++      db_truncate('google_analytics_reports_fields')->execute();
++    }
++    cache_clear_all('google_analytics_reports_fields', 'cache');
++
++    $data = drupal_json_decode($response->data);
++    // Save current time as last executed time.
++    variable_set('google_analytics_reports_metadata_last_time', time());
++    // Save etag identifier. It is used to check updates for the fields.
++    // @see https://developers.google.com/analytics/devguides/reporting/metadata/v3/devguide#etag
++    if (!empty($data['etag'])) {
++      variable_set('google_analytics_reports_metadata_etag', $data['etag']);
++    }
++    if (!empty($data['items'])) {
++      $values = array();
++      foreach ($data['items'] as $item) {
++        // Do not import deprecated fields.
++        if ($item['attributes']['status'] == 'PUBLIC') {
++          $attributes = &$item['attributes'];
++          $item['id'] = str_replace('ga:', '', $item['id']);
++          $attributes['type'] = strtolower($attributes['type']);
++          $attributes['dataType'] = strtolower($attributes['dataType']);
++          $attributes['status'] = strtolower($attributes['status']);
++          $attributes['description'] = isset($attributes['description']) ? $attributes['description'] : '';
++          $attributes['calculation'] = isset($attributes['calculation']) ? $attributes['calculation'] : NULL;
++
++          drupal_alter('google_analytics_reports_field_import', $item);
++
++          $values[] = array(
++            'gaid' => str_replace('ga:', '', $item['id']),
++            'type' => $attributes['type'],
++            'data_type' => $attributes['dataType'],
++            'column_group' => $attributes['group'],
++            'ui_name' => $attributes['uiName'],
++            'description' => $attributes['description'],
++            'calculation' => $attributes['calculation'],
++          );
++        }
++      }
++      $query = db_insert('google_analytics_reports_fields')->fields(array(
++        'gaid',
++        'type',
++        'data_type',
++        'column_group',
++        'ui_name',
++        'description',
++        'calculation',
++      ));
++      foreach ($values as $record) {
++        $query->values($record);
++      }
++      $query->execute();
++    }
++  }
+ }

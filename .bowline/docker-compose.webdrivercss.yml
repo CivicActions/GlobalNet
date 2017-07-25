@@ -1,0 +1,25 @@
+selenium:
+  image: selenium/standalone-${SELENIUM_BROWSER}:3
+  expose:
+    - "4444"
+  links:
+    - web:web
+webdrivercssadmin:
+  image: civicactions/webdrivercss-adminpanel
+  expose:
+    - "9000"
+webdrivercss:
+  image: civicactions/webdrivercss
+  environment:
+    - BROWSER=${SELENIUM_BROWSER}
+    - WEBDRIVER_HOST=selenium
+    - WEBDRIVER_PORT=4444
+    - WEBDRIVER_PATH="/wd/hub"
+    - BASE_URL=http://web
+  volumes:
+    - ./tests/webdrivercss:/usr/src/app/tests/webdrivercss
+    - ./visual:/usr/src/app/visual
+  links:
+    - web:web
+    - selenium:selenium
+    - webdrivercssadmin:adminpanel

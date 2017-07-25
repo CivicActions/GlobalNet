@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo "This will destroy your current db, and any unsaved file changes. Are you sure [Y/n]?"
+read answer
+if [ "${answer,,}" = "n" ];then
+  exit
+fi
+
+git reset HEAD --hard && git checkout develop && git pull && drush sql-drop -y && drush sql-drop -y && pull db && pull files && import && reload-config && drush en devel -y && drush uli

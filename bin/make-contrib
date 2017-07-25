@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+enter_container $@
+
+# Rebuilds the patches applied to the repo. Won't build core.
+su www-data -c "cd /var/www/docroot; /var/www/vendor/bin/drush make /var/www/scripts/contrib.make -y --no-core --no-gitinfofile --concurrency=8 $@"
+
+# Some files show up as modified since the have non-standard line endings,
+# even though git automatically fixes these. To streamline this, discard any
+# changes with an empty diff, and report any actual changes.
+for FILE in $(git ls-files -m); do if [[ $(git diff "$FILE") ]]; then echo "Changed: $FILE"; else git checkout -- "$FILE"; fi; done

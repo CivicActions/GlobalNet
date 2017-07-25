@@ -1,0 +1,31 @@
+diff --git a/includes/features.field.inc b/includes/features.field.inc
+index c620274..76895a4 100644
+--- a/includes/features.field.inc
++++ b/includes/features.field.inc
+@@ -165,7 +165,7 @@ function field_base_features_export_render($module, $data, $export = NULL) {
+       }
+ 
+       _field_instance_features_export_sort($field);
+-      $field_export = features_var_export($field, '  ');
++      $field_export = features_var_export($field, "  /* $identifier */ ");
+       $field_prefix = '  // Exported field_base: ';
+       $field_identifier = features_var_export($identifier);
+       if (features_field_export_needs_wrap($field_prefix, $field_identifier)) {
+@@ -196,7 +196,7 @@ function field_instance_features_export_render($module, $data, $export = NULL) {
+   foreach ($data as $identifier) {
+     if ($instance = features_field_instance_load($identifier)) {
+       _field_instance_features_export_sort($instance);
+-      $field_export = features_var_export($instance, '  ');
++      $field_export = features_var_export($instance, "  /* $identifier */ ");
+       $instance_prefix = '  // Exported field_instance: ';
+       $instance_identifier = features_var_export($identifier);
+       if (features_field_export_needs_wrap($instance_prefix, $instance_identifier)) {
+@@ -417,7 +417,7 @@ function field_features_export_render($module, $data, $export = NULL) {
+       }
+ 
+       _field_features_export_sort($field);
+-      $field_export = features_var_export($field, '  ');
++      $field_export = features_var_export($field, "  /* $identifier */ ");
+       $field_identifier = features_var_export($identifier);
+       $code[] = "  // Exported field: {$field_identifier}.";
+       $code[] = "  \$fields[{$field_identifier}] = {$field_export};";

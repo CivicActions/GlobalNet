@@ -1,0 +1,31 @@
+{
+    "name": "civicactions/globalnet",
+
+    "description": "The GlobalNET platform V2.",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/eknapier/DrupalDriver"
+        }
+    ],
+    "require": {
+        "drupal/drupal-extension": "*",
+        "drupal/drupal-driver": "v1.1.5.2",
+        "phploc/phploc": "*",
+        "sebastian/phpcpd": "*",
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "*",
+        "pdepend/pdepend": "*",
+        "phpmd/phpmd": "*",
+        "drush/drush": "^8.1",
+        "behat/behat": "3.1.0rc1",
+        "drupal/coder": "~8.2",
+        "mayflower/php-codebrowser": "^1.1",
+        "emuse/behat-html-formatter": "^0.1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CivicActions\\Drupal\\Behat\\Bootstrap\\": "tests/behat/features/bootstrap/src"
+        }
+    }
+}

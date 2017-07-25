@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+assert_composer
+
+QA="${SLUG}qa"
+AUTHOR="$(git config --get user.name) <$(git config --get user.email)>"
+TAG=$(git rev-parse --short HEAD)
+
+# Commit solr image
+echo "Committing and tagging solr image"
+docker commit -pa "${AUTHOR}" ${solr} ${QA}_solr:latest
+docker tag ${QA}_solr:latest ${QA}_solr:${TAG}
+
+# Commit db image
+echo "Creating a snapshot image of db container"
+sleep 2
+docker export ${db} | docker import -m 'container snapshot' - ${QA}_db
+echo "Preparing db image"
+[ "$(docker ps -a|grep ${QA}_db)" ] && docker rm -f ${QA}_db
+docker run --name=${QA}_db ${QA}_db /bin/true
+docker cp -L ${GIT_ROOT}/.docker/etc/my.cnf ${QA}_db:/etc
+docker cp ${db}:/var/lib/mysql/. - | docker cp - ${QA}_db:/var/lib/mysql
+echo "Committing and tagging db image"
+docker commit -p -a "${AUTHOR}" ${QA}_db ${QA}_db:latest
+docker rm -f ${QA}_db
+docker run --name=${QA}_db ${QA}_db chown -R mysql:mysql /var/lib/mysql
+docker commit -p -a "${AUTHOR}" \
+  --change='ENV MYSQL_DATABASE=drupal MYSQL_PASSWORD=dbpass MYSQL_HOME=/etc MYSQL_USER=dbuser MYSQL_ROOT_PASSWORD=root' \
+  --change='USER mysql' --change='CMD ["/usr/local/mysql/bin/mysqld"]' \
+  ${QA}_db ${QA}_db:latest
+docker tag ${QA}_db:latest ${QA}_db:${TAG}
+docker rm -f ${QA}_db
+
+# Commit web image
+echo "Creating a snapshot image of web container"
+docker export ${web} | docker import -m 'container snapshot' - ${QA}_web
+echo "Preparing web image"
+[ "$(docker ps -a|grep ${QA}_web)" ] && docker rm -f ${QA}_web
+docker run --name=${QA}_web ${QA}_web /bin/true
+docker cp -L ${GIT_ROOT}/. ${QA}_web:/var/www
+echo "Committing and tagging web image"
+docker commit -p -a "${AUTHOR}" ${QA}_web ${QA}_web:latest
+docker rm -f ${QA}_web
+docker run --name=${QA}_web ${QA}_web chown -R www-data:www-data /var/www
+docker commit -p -a "${AUTHOR}" \
+  --change='EXPOSE 80' --change='CMD ["/start.sh"]' \
+  ${QA}_web ${QA}_web:latest
+docker tag ${QA}_web:latest ${QA}_web:${TAG}
+docker rm -f ${QA}_web
+

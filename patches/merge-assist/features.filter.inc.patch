@@ -1,0 +1,13 @@
+diff --git features/includes/features.filter.inc features/includes/features.filter.inc
+index a52927d..aeaee8a 100644
+--- features/includes/features.filter.inc
++++ features/includes/features.filter.inc
+@@ -63,7 +63,7 @@ function filter_features_export_render($module, $data, $export = NULL) {
+
+   foreach ($data as $name) {
+     if ($format = features_filter_format_load($name)) {
+-      $format_export = features_var_export($format, '  ');
++      $format_export = features_var_export($format, "  /* $format->format */ ");
+       $format_identifier = features_var_export($format->format);
+       $code[] = "  // Exported format: {$format->name}.";
+       $code[] = "  \$formats[{$format_identifier}] = {$format_export};";

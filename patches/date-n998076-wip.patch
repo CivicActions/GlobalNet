@@ -1,0 +1,166 @@
+diff --git a/date.install b/date.install
+index 23fb07e..c96e403 100644
+--- a/date.install
++++ b/date.install
+@@ -192,3 +192,111 @@ function date_update_7004() {
+   drupal_set_message(t('Date text widgets have been updated to use an increment of 1.'));
+ }
+ 
++/**
++ * Convert timezone for date fields with setting "date's timezone" 
++ * 
++ * This patch fixes any corrupted data caused by a commit that incorrectly
++ * changed the timezone_db, which should be UTC. Original patch for this commit
++ * referenced below.
++ * 
++ * https://www.drupal.org/files/issues/date-date_get_timezone_db-fix-998076-7.patch
++ */
++function date_update_7200(&$sandbox) {
++  if (!isset($sandbox['total'])) {
++    // Select date fields.
++    $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC));
++    $query->fields('fc');
++    $query->condition(db_or()->condition('fc.type', 'date')->condition('fc.type', 'datetime'));
++    $results = $query->execute();
++    $sandbox['total'] = 0;
++    $sandbox['fields'] = array();
++    $sandbox['local_location'] = 0;
++    $sandbox['current_index'] = 0;
++    $sandbox['global_location'] = 0;
++    $sandbox['field_count_map'] = array();
++    $sandbox['field_granularity'] = array();
++    $sandbox['field_date_format'] = array();
++    // Find the ones that have tz_handling = date.
++    foreach ($results as $record) {
++      $config = unserialize($record['data']);
++      if ($config['settings']['tz_handling'] == 'date') {
++        $field_name = $record['field_name'];
++        $date_format = '';
++        switch ($record['type']) {
++          case 'datetime':
++            $sandbox['field_date_format'][] = DATE_FORMAT_DATETIME;
++           break;
++          case 'date':
++            $sandbox['field_date_format'][] = DATE_FORMAT_ISO;
++            break;
++        }
++        $field_count = db_select('field_data_' . $field_name)
++          ->fields(NULL, array('entity_id'))
++          ->countQuery()
++          ->execute()
++          ->fetchField();
++        $sandbox['total'] += $field_count;
++        $sandbox['fields'][] = $field_name;
++        $sandbox['field_count_map'][] = $field_count;
++        $sandbox['field_granularity'][] = $config['settings']['granularity'];
++      }
++    }
++  }
++
++  // Fail early if there's nothing to do.
++  if (empty($sandbox['total'])) {
++    return t('No date fields needed to have their timezone data fixed.');
++  }
++
++  $records_per_iteration = 100;
++
++  if (!empty($sandbox['fields'])) {
++    $field_name = $sandbox['fields'][$sandbox['current_index']];
++    $query2 = db_select('field_data_' . $field_name, 'fd', array('fetch' => PDO::FETCH_ASSOC));
++    $query2->fields('fd');
++    $query2->range($sandbox['local_location'], $records_per_iteration);
++    $results2 = $query2->execute();
++    foreach ($results2 as $record2) {
++      $timezone = $record2[$field_name . '_timezone'];
++      $utc_timezone = new DateTimeZone('UTC');
++      $value = new DateObject($record2[$field_name . '_value'], $timezone);
++      $value->limitGranularity($sandbox['field_granularity'][$sandbox['current_index']]);
++      date_timezone_set($value, $utc_timezone);
++      $fields[$field_name . '_value'] = $value->format($sandbox['field_date_format'][$sandbox['current_index']]);
++      
++      if (isset($record2[$field_name . '_value2'])) {
++        $value2 = new DateObject($record2[$field_name . '_value2'], $timezone);
++        $value2->limitGranularity($sandbox['field_granularity'][$sandbox['current_index']]);
++        date_timezone_set($value2, $utc_timezone);
++        $fields[$field_name . '_value2'] = $value2->format($sandbox['field_date_format'][$sandbox['current_index']]);
++      }
++      db_update('field_data_' . $field_name)
++        ->fields($fields)
++        ->condition('entity_id', $record2['entity_id'])
++        ->condition('revision_id', $record2['revision_id'])
++        ->condition('delta', $record2['delta'])
++        ->execute();
++      db_update('field_revision_' . $field_name)
++        ->fields($fields)
++        ->condition('entity_id', $record2['entity_id'])
++        ->condition('revision_id', $record2['revision_id'])
++        ->condition('delta', $record2['delta'])
++        ->execute();
++      $sandbox['local_location']++;
++      $sandbox['global_location']++;
++    }
++    if ($sandbox['local_location'] == $sandbox['field_count_map'][$sandbox['current_index']]) {
++      $sandbox['current_index']++;
++      $sandbox['local_location'] = 0;
++    }
++    $sandbox['#finished'] = ($sandbox['global_location'] / $sandbox['total']);
++  }
++  else {
++    $sandbox['#finished'] = 1;
++  }
++
++  if ($sandbox['#finished'] === 1) {
++    field_cache_clear();
++    drupal_set_message(t('Processed @fields date field entries', array('@fields' => $sandbox['total'])));
++  }
++}
+diff --git a/date_api/date_api.module b/date_api/date_api.module
+index b1be6e5..9439a0c 100644
+--- a/date_api/date_api.module
++++ b/date_api/date_api.module
+@@ -2385,38 +2385,26 @@ function date_get_timezone($handling, $timezone = '') {
+ }
+ 
+ /**
+- * Function to figure out which db timezone applies to a date.
++ * Function to figure out which db timezone applies to a date and select it.
+  *
+  * @param string $handling
+  *   The timezone handling.
+  * @param string $timezone
+- *   (optional) When $handling is 'date', date_get_timezone_db() returns this
+- *   value.
++ *   (optional) A timezone string. Defaults to an empty string.
+  *
+  * @return string
+  *   The timezone string.
+  */
+-function date_get_timezone_db($handling, $timezone = NULL) {
++function date_get_timezone_db($handling, $timezone = '') {
+   switch ($handling) {
+-    case ('utc'):
+-    case ('site'):
+-    case ('user'):
+-      // These handling modes all convert to UTC before storing in the DB.
+-      $timezone = 'UTC';
+-      break;
+-    case ('date'):
+-      if ($timezone == NULL) {
+-        // This shouldn't happen, since it's meaning is undefined. But we need
+-        // to fall back to *something* that's a legal timezone.
+-        $timezone = date_default_timezone();
+-      }
++    case 'none':
++      $timezone = date_default_timezone();
+       break;
+-    case ('none'):
+     default:
+-      $timezone = date_default_timezone();
++      $timezone = 'UTC';
+       break;
+   }
+-  return $timezone;
++  return $timezone > '' ? $timezone : 'UTC';
+ }
+ 
+ /**

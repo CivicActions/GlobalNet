@@ -1,0 +1,13 @@
+diff --git a/privatemsg_filter/privatemsg_filter.module b/privatemsg_filter/privatemsg_filter.module
+index 20a423e..f81ef6d 100644
+--- a/privatemsg_filter/privatemsg_filter.module
++++ b/privatemsg_filter/privatemsg_filter.module
+@@ -739,7 +739,7 @@ function privatemsg_filter_query_privatemsg_list_alter($query) {
+  */
+ function privatemsg_filter_privatemsg_view_alter(&$content) {
+   if (privatemsg_user_access('tag private messages')) {
+-    $content['tags'] = privatemsg_filter_show_tags($content['#thread']['thread_id'], !empty($_GET['show_tags_form']));
++    //$content['tags'] = privatemsg_filter_show_tags($content['#thread']['thread_id'], !empty($_GET['show_tags_form']));
+   }
+ }
+ 

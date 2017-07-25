@@ -1,0 +1,22 @@
+# Shared script to setup environment.
+# $1 is an optional Drush site alias to test against (without an @). Default is "self".
+# $2 is the optional number of users to test with, max 100. Default is 8.
+
+# Set defaults
+ALIAS=self
+PORT=80
+PROTO=http
+USERS=8
+
+if [[ "$1" -ne "" ]]; then
+  ALIAS=$1
+fi
+URI=$(drush @$ALIAS status uri --format=list | grep -v 'inside container, using')
+HOST=$(echo $URI | cut -d/ -f3)
+if [[ $HOST == *".globalnetplatform.org"* ]]; then
+  PORT=443
+  PROTO=https
+fi
+if [[ "$2" -ne "" ]]; then
+  USERS=$2
+fi

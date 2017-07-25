@@ -1,0 +1,96 @@
+diff --git a/google_analytics_reports.module b/google_analytics_reports.module
+index 58d596a..d1436b5 100644
+--- a/google_analytics_reports.module
++++ b/google_analytics_reports.module
+@@ -98,22 +98,44 @@ function google_analytics_reports_fields_import() {
+       variable_set('google_analytics_reports_metadata_etag', $data['etag']);
+     }
+     if (!empty($data['items'])) {
+-      $operations = array();
++      $values = array();
+       foreach ($data['items'] as $item) {
+         // Do not import deprecated fields.
+         if ($item['attributes']['status'] == 'PUBLIC') {
+-          $operations[] = array(
+-            'google_analytics_reports_fields_save',
+-            array($item),
++          $attributes = &$item['attributes'];
++          $item['id'] = str_replace('ga:', '', $item['id']);
++          $attributes['type'] = strtolower($attributes['type']);
++          $attributes['dataType'] = strtolower($attributes['dataType']);
++          $attributes['status'] = strtolower($attributes['status']);
++          $attributes['description'] = isset($attributes['description']) ? $attributes['description'] : '';
++          $attributes['calculation'] = isset($attributes['calculation']) ? $attributes['calculation'] : NULL;
++
++          drupal_alter('google_analytics_reports_field_import', $item);
++
++          $values[] = array(
++            'gaid' => str_replace('ga:', '', $item['id']),
++            'type' => $attributes['type'],
++            'data_type' => $attributes['dataType'],
++            'column_group' => $attributes['group'],
++            'ui_name' => $attributes['uiName'],
++            'description' => $attributes['description'],
++            'calculation' => $attributes['calculation'],
+           );
+         }
+       }
+-      $batch = array(
+-        'operations' => $operations,
+-        'title' => t('Importing Google Analytics fields'),
+-        'finished' => 'google_analytics_reports_import_fields_finished',
+-      );
+-      batch_set($batch);
++      $query = db_insert('google_analytics_reports_fields')->fields(array(
++        'gaid',
++        'type',
++        'data_type',
++        'column_group',
++        'ui_name',
++        'description',
++        'calculation',
++      ));
++      foreach ($values as $record) {
++        $query->values($record);
++      }
++      $query->execute();
+     }
+   }
+   else {
+@@ -122,36 +144,6 @@ function google_analytics_reports_fields_import() {
+ }
+ 
+ /**
+- * Save Google Analytics fields from Metadata API to database.
+- */
+-function google_analytics_reports_fields_save($field, &$context) {
+-  $attributes = &$field['attributes'];
+-  $field['id'] = str_replace('ga:', '', $field['id']);
+-  $attributes['type'] = strtolower($attributes['type']);
+-  $attributes['dataType'] = strtolower($attributes['dataType']);
+-  $attributes['status'] = strtolower($attributes['status']);
+-  $attributes['description'] = isset($attributes['description']) ? $attributes['description'] : '';
+-  $attributes['calculation'] = isset($attributes['calculation']) ? $attributes['calculation'] : NULL;
+-
+-  // Allow other modules to alter Google Analytics fields before saving
+-  // in database.
+-  drupal_alter('google_analytics_reports_field_import', $field);
+-
+-  db_insert('google_analytics_reports_fields')
+-    ->fields(array(
+-      'gaid' => $field['id'],
+-      'type' => $attributes['type'],
+-      'data_type' => $attributes['dataType'],
+-      'column_group' => $attributes['group'],
+-      'ui_name' => $attributes['uiName'],
+-      'description' => $attributes['description'],
+-      'calculation' => $attributes['calculation'],
+-    ))
+-    ->execute();
+-  $context['results'][] = $field['id'];
+-}
+-
+-/**
+  * Implements hook_google_analytics_reports_field_import_alter().
+  */
+ function google_analytics_reports_google_analytics_reports_field_import_alter(&$field) {

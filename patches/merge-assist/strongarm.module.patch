@@ -1,0 +1,13 @@
+diff --git strongarm/strongarm.module strongarm/strongarm.module
+index 8b69697..d8af844 100644
+--- strongarm/strongarm.module
++++ strongarm/strongarm.module
+@@ -179,7 +179,7 @@ function variable_features_export_render($module, $data) {
+     ->execute();
+   foreach ($result as $object) {
+     $object = _ctools_export_unpack_object($schema, $object);
+-    $code .= _ctools_features_export_crud_export('variable', $object, '  ');
++    $code .= _ctools_features_export_crud_export('variable', $object, "  /* $object->name */ ");
+     $code .= "  \$export[" . ctools_var_export($object->name) . "] = \${$identifier};\n\n";
+   }
+   $code .= '  return $export;';

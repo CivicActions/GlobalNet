@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+case "$1" in
+  files)
+    echo "# Syncing files"
+    rsync -e "ssh -q" -rvu --max-size=5m --exclude=files/js --exclude=files/css --exclude=files/styles --exclude=files/ctools \
+      user@example.org/path/to/files docroot/sites/default
+    rsync -e "ssh -q" -rvu --max-size=5m user@example.org/path/to/files .
+    exit 0;
+    ;;
+  db)
+    DB_FILE="devtest_drupal.sql.gz"
+    echo "# Syncing ${DB_FILE} (not imported to container)"
+    rsync -e "ssh -q" -P user@example.org/path/to/database-snapshot .snapshot.sql.gz
+    file-copy .snapshot.sql.gz
+    exit 0;
+    ;;
+  full)
+    DB_FILE="sanitized-daily_globalnet2_drupal.sql.gz"
+    echo "# Syncing ${DB_FILE} (not imported to container)"
+    rsync -e "ssh -q" -P user@example.org/path/to/database-snapshot .snapshot.sql.gz
+    file-copy .snapshot.sql.gz
+    exit 0;
+    ;;
+  legacy-db)
+    echo "# Syncing legacy db sanitized-daily_prod_drupal.sql.gz (not imported to container)"
+    echo "This will likely take at least 2 minutes."
+    rsync -e "ssh -q" -P user@example.org/path/to/database-snapshot .legacy-snapshot.sql.gz
+    exit 0;
+    ;;
+  *)
+    echo "Usage: $(basename $0) [files|db|full|legacy-db]"
+    ;;
+esac

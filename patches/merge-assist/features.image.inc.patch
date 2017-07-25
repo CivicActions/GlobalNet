@@ -1,0 +1,13 @@
+diff --git features/includes/features.image.inc features/includes/features.image.inc
+index 2b5eb27..25ce415 100644
+--- features/includes/features.image.inc
++++ features/includes/features.image.inc
+@@ -56,7 +56,7 @@ function image_features_export_render($module_name, $data, $export = NULL) {
+   foreach ($data as $name) {
+     if ($style = image_style_load($name)) {
+       _image_features_style_sanitize($style);
+-      $style_export = features_var_export($style, '  ');
++      $style_export = features_var_export($style, "  /* $name */ ");
+       $style_identifier = features_var_export($name);
+       $code[] = "  // Exported image style: {$name}.";
+       $code[] = "  \$styles[{$style_identifier}] = {$style_export};";

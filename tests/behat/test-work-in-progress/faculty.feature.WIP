@@ -1,0 +1,29 @@
+  @RD-3202 @WIP
+  Scenario: Faculty can see all course and course groups on a page
+
+    Given I am logged in as "uadmin" with password "civicactions"
+    And I visit the system path "admin/manage/users/add/user"
+    And I fill in the following:
+      | edit-mail            | kenneth@jellobrain.com|
+      | edit-pass-pass1 | dripp                 |
+      | edit-pass-pass2 | dripp                 |
+      | edit-field-name-first-und-0-value            | kenneth               |
+      | edit-field-name-last-und-0-value            | kenneth               |
+    And I click the element with CSS selector "#edit-submit"
+    And I visit the add people form for node with title "A Course with Folders"
+    And I fill in "edit-name" with "kenneth.kenneth"
+    And I check the box "faculty"
+    And I click the element with CSS selector "#edit-submit"
+    And I visit the edit form for node with title "Global Warming"
+    And I select the radio button "Group - Can be viewed only by members of the group." with the id "edit-field-gn2-simple-access-und-group"
+    Then I click the element with CSS selector "#edit-submit"
+    Then I am logged out
+    Then I am logged in as "kenneth.kenneth" with password "dripp"
+    And I visit the system path "search?search_api_views_fulltext=Global"
+    Then I should see the text "Global Warming"
+    Then I am logged out
+    Then I am logged in as "uadmin" with password "civicactions"
+    And I visit the edit form for node with title "Global Warming"
+    And I select the radio button "Sitewide - Can be viewed by anyone with a GlobalNET account." with the id "edit-field-gn2-simple-access-und-sitewide"
+    Then I click the element with CSS selector "#edit-submit"
+

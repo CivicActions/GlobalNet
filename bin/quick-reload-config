@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+
+source reload-config-inc
+
+# Change some settings for nicer sandbox environment:
+drush vset autologout_enforce_admin 0
+drush vset autologout_timeout 86400

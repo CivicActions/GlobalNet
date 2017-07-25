@@ -1,0 +1,38 @@
+diff --git a/modules/media_bulk_upload/includes/media_bulk_upload.pages.inc b/modules/media_bulk_upload/includes/media_bulk_upload.pages.inc
+index 41287eb..e37a43b 100644
+--- a/modules/media_bulk_upload/includes/media_bulk_upload.pages.inc
++++ b/modules/media_bulk_upload/includes/media_bulk_upload.pages.inc
+@@ -36,33 +36,9 @@ function media_bulk_upload_file_page_edit_multiple($files) {
+     $title = t('<em>Edit @type</em> @title', array('@type' => $file->type, '@title' => $file->filename));
+     $form['multiform'][$key]['#prefix'] = '<h2>' . $title . '</h2>';
+ 
+-    // Remove the 'replace file' functionality.
+-    $form['multiform'][$key]['replace_upload']['#access'] = FALSE;
+-
+     // Remove any actions.
+     $form['multiform'][$key]['actions']['#access'] = FALSE;
+ 
+-    // Hide additional settings under a collapsible fieldset.
+-    $form['multiform'][$key]['settings'] = array(
+-      '#type' => 'fieldset',
+-      '#title' => t('Additional settings'),
+-      '#weight' => 99,
+-      '#collapsible' => TRUE,
+-      '#collapsed' => TRUE,
+-      // FAPI #collapsed and #collapsible not available in a render array.
+-      '#attached' => array(
+-        'js' => array(
+-          'misc/form.js',
+-          'misc/collapse.js',
+-        ),
+-      ),
+-      '#attributes' => array(
+-        'class' => array('collapsible', 'collapsed'),
+-      ),
+-    );
+-
+-    $form['multiform'][$key]['settings']['additional_settings'] = $form['multiform'][$key]['additional_settings'];
+-    unset($form['multiform'][$key]['additional_settings']);
+   }
+ 
+   if (isset($form['buttons']['Delete'])) {

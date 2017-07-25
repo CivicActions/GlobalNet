@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_proxy
+
+if [ "$($DCOMPOSE ps | grep -c filestore)" -eq "0" ];then
+  echo "# Initial copy to container volume. This can take a long time, especially on non-linux systems."
+  $DCOMPOSE up -d --no-recreate filestore
+  file-copy .
+fi
+
+echo "# STARTING CONTAINERS"
+$DCOMPOSE stop web
+$DCOMPOSE rm -f web
+$DCOMPOSE build
+$DCOMPOSE up -d --no-recreate
+
+## GlobalNet specific items below.
+
+if [ "$1" = "rebuild-web" ];then
+  echo "Rebuild web container. This action doesn't impact the db containers and should be harmless."
+  echo "This might take a few minutes."
+  $DCOMPOSE stop web php
+  $DCOMPOSE rm --force web php
+  docker rmi --force --no-prune=true ${SLUG}_web_1 ${SLUG}_php_1
+  $DCOMPOSE up -d --no-recreate
+elif [ "$1" = "rebuild-all" ];then
+  echo "Rebuilding containers. This action will wipe out all your sandbox."
+  echo "This might take a few minutes."
+  echo "Are you sure you want to stop and rebuild the containers for ${SLUG} [Y/n]?"
+  read confirm;
+  [[ $confirm == 'n' ]] && exit 1;
+  $DCOMPOSE stop
+  $DCOMPOSE rm --force
+  docker rmi --force --no-prune=true ${SLUG}_web
+  $DCOMPOSE build
+  $DCOMPOSE up -d
+fi
+
+
+# Check that git hooks are installed.
+if [ ! -d .git/hooks/.git ]; then
+  echo "Installing git hooks..."
+  mv .git/hooks /tmp/git-hooks-${SLUG}
+  echo "git hooks moved to /tmp/git-hooks-${SLUG} but you can probably delete them there."
+  git clone git@git.civicactions.net:dsca/githooks.git .git/hooks
+else
+  echo "Checking for git hook updates..."
+  git --git-dir=.git/hooks/.git --work-tree=.git/hooks pull --no-rebase
+fi
+
+assert_composer
+enter sudo composer self-update
+composer install
+sync-wait vendor
+
+if [ "$(git tag -l | grep ^2015-07-15-j)" ]; then
+  echo "Removing old git tags..."
+  git tag -d $(git tag -l)
+  git fetch --tags
+fi
+
+# SSH key setup
+mkdir -p .ssh
+cp ~/.ssh/id_rsa.pub .ssh/authorized_keys
+chmod 700 .ssh
+chmod 600 .ssh/authorized_keys
+
+# Drush symlink
+echo Creating drush symlink
+enter sudo ln -s /var/www/vendor/bin/drush /usr/local/bin/drush
+
+EXIT=$?
+echo -e "\033[m Exit Status: $EXIT"
+
+bowline
+exit $EXIT

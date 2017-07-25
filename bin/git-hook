@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Allows us to sudo as apache
+exec < /dev/tty
+
+# Make sure codesniffer is configured for Drupal
+if [ ! "$(enter /var/www/vendor/bin/phpcs --config-show)" ];then
+  enter /var/www/vendor/bin/phpcs \
+    --config-set installed_paths /var/www/vendor/drupal/coder/coder_sniffer
+fi
+
+# Exit here if no parameters
+[ "${1}" ] || exit 1
+
+# Make sure Drupal sniffer is installed
+if [ ! "$(enter ./vendor/bin/phpcs --config-show)" ];then
+  echo "Setting Drupal sniffer path"
+  enter ./vendor/bin/phpcs \
+    --config-set installed_paths /var/www/vendor/drupal/coder/coder_sniffer -v
+fi
+
+# Run git hook in docker
+echo Running $1
+enter /var/www/bin/git-hook.d/${1}
+
+EXIT=$?
+echo Exit Status: $EXIT
+exit $EXIT

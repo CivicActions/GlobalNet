@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+enter_container $@
+
+[ "$(command -v pv)" ] || apt-get install pv
+drush_cmd="/var/www/vendor/bin/drush --root=/var/www/docroot"
+legacy_path="/var/www/legacy-files"
+mkdir -p $legacy_path
+cd $legacy_path
+
+dummy_path="/var/www/.dummy"
+listing_filename="filepath-listing"
+
+if [ ! -d $dummy_path ];then
+  echo "First create the ${dummy_path} dir with various dummy files"
+  exit 1
+fi
+
+if [ "${1}" = "clean" ]; then
+  echo "Removing files ..."
+  rm -rfv $legacy_path
+  exit 0
+fi
+
+echo -e "Linking new files (this could take a little while) ...\n"
+i=1
+oldpath="/mnt/files/dscadev/sites/dscadev.prod.acquia-sites.com/files-private/"
+query="SELECT REPLACE(filepath, '${oldpath}', '') AS filepath FROM files"
+if [ "${1}" = "full" ]; then
+  count=$($drush_cmd sqlq --extra=--skip-column-names --database=legacy "SELECT count(filepath) FROM files")
+else
+  count=5000
+  query="${query} LIMIT ${count}"
+  echo -e "Testing run. Execute '${0} full' to create all files.\n"
+fi
+
+echo "Creating ${count} files..."
+$drush_cmd sqlq --database=legacy "${query}"|pv -l -s $count|sed -e '/^M/d'| while read dest
+do
+  dest=${dest/%$'\r'/}
+  extension="${dest##*.}"
+  for check in ${dummy_path}/*.${extension,,};do
+    # Fall-back to png if extension not available.
+    [ ! -e "$check" ] && extension='png'
+    break
+  done
+  # Select the $i row from list of available sources.
+  src="$(ls ${dummy_path}/*.${extension,,} |sed "${i}q;d")"
+  if [ ! "$src" ];then
+    # Nothing in src, then i is passed last row. Reset.
+    i=1
+    src="$(ls ${dummy_path}/*.${extension,,} |sed "${i}q;d")"
+  fi
+  ((i++))
+  # Double check and fall-back to png
+  [ -f "$src" ] || src="${dummy_path}/300.png" # Uhmmm, impossible?
+  dest_path="./$dest"
+  # Remove dest if requested.
+  [ "$1" = "recreate" ] && [ -e "$dest_path" ] && rm -rfv "$dest_path"
+  # Check if dest already exists first.
+  if [ ! -f "$dest_path" ];then
+    # Make the sub-directories if they don't exist.
+    mkdir -p "${dest_path%/*}"
+    # Link the file.
+    cp -l "$src" "$dest_path"
+  fi
+  #echo "$src" "$dest_path" |cat -A
+done
+
+chown -R www-data:www-data /var/www
+
+echo -e "\ndone."
