@@ -3,7 +3,7 @@
 Table of Contents
 =================
 
-* [GitHub Version-READ ME BEFORE DOWNLOADING](#GitHub Version Notes)
+* [GitHub Version-READ ME BEFORE DOWNLOADING](#github-version-notes)
 * [Security Prologue](#security-prologue)
     * [Security Requirements of GlobalNET](#security-requirements-of-globalnet)
 * External Links
