@@ -102,7 +102,7 @@ function gn2_guide_default_page_manager_pages() {
    /* globalnet_guide 4e1f9ba4 */   'admin_title' => 'Search Results',
    /* globalnet_guide 4e1f9ba4 */   'title' => 'Search Results',
    /* globalnet_guide 4e1f9ba4 */   'body' => '<div class="results-container"></div>',
-   /* globalnet_guide 4e1f9ba4 */   'format' => 'php_code',
+   /* globalnet_guide 4e1f9ba4 */   'format' => 'full_html',
    /* globalnet_guide 4e1f9ba4 */   'substitute' => 1,
    /* globalnet_guide 4e1f9ba4 */ );
    /* globalnet_guide 4e1f9ba4 */ $pane->cache = array();

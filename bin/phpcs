@@ -10,4 +10,4 @@ if [ ! "$(enter ./vendor/bin/phpcs --config-show)" ];then
     --config-set installed_paths /var/www/vendor/drupal/coder/coder_sniffer -v
 fi
 
-docker exec --user www-data ${web} /var/www/vendor/bin/phpcs --standard=Drupal "$@"
+docker exec --user apache ${web} /var/www/vendor/bin/phpcs --standard=Drupal "$@"

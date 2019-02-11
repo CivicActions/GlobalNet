@@ -6,7 +6,6 @@ version = 7.x-1.0
 dependencies[] = ctools
 dependencies[] = fe_block
 dependencies[] = features
-dependencies[] = gn2_og
 dependencies[] = pki_authentication
 dependencies[] = pki_authentication_null
 dependencies[] = strongarm

@@ -1,9 +1,7 @@
-
 /**
  * @file
  * CSS for indenting/highlighting fields in Views UI.
  */
-
 .views-ui-display-tab-bucket > .views-display-setting.views-fieldset {
   font-weight: bold;
 }

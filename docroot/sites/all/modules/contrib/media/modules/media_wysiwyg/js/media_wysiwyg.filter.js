@@ -13,7 +13,7 @@
      * Replaces media tokens with the placeholders for html editing.
      * @param content
      */
-    replaceTokenWithPlaceholder: function(content) {
+    replaceTokenWithPlaceholder: function (content) {
       Drupal.media.filter.ensure_tagmap();
       var matches = content.match(/\[\[.*?\]\]/g);
 
@@ -58,7 +58,7 @@
 
           // Apply attributes.
           var element = Drupal.media.filter.create_element(media, media_definition);
-          var markup  = Drupal.media.filter.outerHTML(element);
+          var markup = Drupal.media.filter.outerHTML(element);
 
           // Use split and join to replace all instances of macro with markup.
           content = content.split(match).join(markup);
@@ -91,7 +91,7 @@
      *   - title: The value of the title field.
      *   - titleField: The id of the title field.
      */
-    parseAttributeFields: function(options, includeFieldID) {
+    parseAttributeFields: function (options, includeFieldID) {
       var attributes = {};
 
       for (var field in options) {
@@ -138,7 +138,7 @@
      * @param file_info (object)
      *   A JSON decoded object of the file being inserted/updated.
      */
-    syncAttributesToFields: function(file_info) {
+    syncAttributesToFields: function (file_info) {
       if (!file_info) {
         file_info = {};
       }
@@ -171,11 +171,12 @@
      * @param content (string)
      *   The markup within the wysiwyg instance.
      */
-    replacePlaceholderWithToken: function(content) {
+    replacePlaceholderWithToken: function (content) {
       Drupal.media.filter.ensure_tagmap();
 
       // Locate and process all the media placeholders in the WYSIWYG content.
-      var contentElements = $('<div/>').html(content);  // TODO: once baseline jQuery is 1.8+, switch to using $.parseHTML(content)
+      var contentElements = $('<div/>');  // TODO: once baseline jQuery is 1.8+, switch to using $.parseHTML(content)
+      contentElements.get(0).innerHTML = content;
       var mediaElements = contentElements.find('.media-element');
       if (mediaElements) {
         $(mediaElements).each(function (i) {
@@ -214,6 +215,7 @@
      *    A object containing the media file information (fid, view_mode, etc).
      */
     create_element: function (html, info) {
+      // Let's have a fallback if no image is passed to ensure operation completes.
       if (html == undefined) {
         html = '<span class="file"><img class="file-icon" alt="" title="application/octet-stream" src="/sites/all/themes/gn2_zen/images/gn2_file_icons/video-x-generic.svg" /></span>';
       }
@@ -238,9 +240,14 @@
 
       // Move attributes from the file info array to the placeholder element.
       if (info.attributes) {
-        $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function(i, a) {
+        $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function (i, a) {
           if (info.attributes[a]) {
-            element.attr(a, $('<textarea />').html(info.attributes[a]).text());
+            element.attr(a, info.attributes[a]);
+          }
+          else if (element.attr(a)) {
+            // If the element has the attribute, but the value is empty, be
+            // sure to clear it.
+            element.removeAttr(a);
           }
         });
         delete(info.attributes);
@@ -281,15 +288,24 @@
       var classes = ['media-element'];
       if (info.view_mode) {
         // Remove any existing view mode classes.
-        element.removeClass (function (index, css) {
-          return (css.match (/\bfile-\S+/g) || []).join(' ');
+        element.removeClass(function (index, css) {
+          return (css.match(/\bfile-\S+/g) || []).join(' ');
         });
         classes.push('file-' + info.view_mode.replace(/_/g, '-'));
       }
+      // Check for alignment info, after removing any existing alignment class.
+      element.removeClass(function (index, css) {
+        return (css.match(/\bmedia-wysiwyg-align-\S+/g) || []).join(' ');
+      });
+      if (info.fields && info.fields.alignment) {
+        classes.push('media-wysiwyg-align-' + info.fields.alignment);
+      }
       element.addClass(classes.join(' '));
 
+      // Attempt to override the link_title if the user has chosen to do this.
+      info.link_text = this.overrideLinkTitle(info);
       // Apply link_text if present.
-      if (info.link_text) {
+      if ((info.link_text) && (!info.fields || !info.fields.external_url || info.fields.external_url.length === 0)) {
         $('a', element).html(info.link_text);
       }
 
@@ -306,6 +322,7 @@
       var file_info = Drupal.media.filter.extract_file_info(element);
       if (file_info) {
         if (typeof file_info.link_text == 'string') {
+          file_info.link_text = this.overrideLinkTitle(file_info);
           // Make sure the link_text-html-tags are properly escaped.
           file_info.link_text = file_info.link_text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
@@ -329,7 +346,7 @@
         if (file_info = Drupal.settings.mediaDataMap[fid]) {
           file_info.attributes = {};
 
-          $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function(i, a) {
+          $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function (i, a) {
             if (value = element.attr(a)) {
               // Replace &quot; by \" to avoid error with JSON format.
               if (typeof value == 'string') {
@@ -340,8 +357,7 @@
           });
 
           // Extract the link text, if there is any.
-          file_info.link_text = (Drupal.settings.mediaDoLinkText) ? element.find('a').html() : false;
-
+          file_info.link_text = (Drupal.settings.mediaDoLinkText) ? element.find('a:not(:has(img))').html() : false;
           // When a file is embedded, its fields can be overridden. To allow for
           // the edge case where the same file is embedded multiple times with
           // different field overrides, we look for a data-delta attribute on
@@ -359,6 +375,12 @@
             }
           }
         }
+        else {
+          return false;
+        }
+      }
+      else {
+        return false;
       }
 
       return Drupal.media.filter.syncAttributesToFields(file_info);
@@ -400,7 +422,7 @@
     /**
      * Ensures the src tracking has been initialized and returns it.
      */
-    ensureSourceMap: function() {
+    ensureSourceMap: function () {
       Drupal.settings.mediaSourceMap = Drupal.settings.mediaSourceMap || {};
       return Drupal.settings.mediaSourceMap;
     },
@@ -408,7 +430,7 @@
     /**
      * Ensures the data tracking has been initialized and returns it.
      */
-    ensureDataMap: function() {
+    ensureDataMap: function () {
       Drupal.settings.mediaDataMap = Drupal.settings.mediaDataMap || {};
       return Drupal.settings.mediaDataMap;
     },
@@ -422,28 +444,59 @@
     },
 
     /**
+     * Return the overridden link title based on the file_entity title field
+     * set.
+     * @param file the file object.
+     * @returns the overridden link_title or the existing link text if no
+     * overridden.
+     */
+    overrideLinkTitle: function (file) {
+      var file_title_field = Drupal.settings.media.img_title_field.replace('field_', '');
+      var file_title_field_machine_name = '';
+      if (typeof(file.fields) != 'undefined') {
+        jQuery.each(file.fields, function (field, fieldValue) {
+          if (field.indexOf(file_title_field) != -1) {
+            file_title_field_machine_name = field;
+          }
+        });
+
+        if (typeof(file.fields[file_title_field_machine_name]) != 'undefined' && file.fields[file_title_field_machine_name] != '') {
+          return file.fields[file_title_field_machine_name];
+        }
+        else {
+          return file.link_text;
+        }
+      }
+      else {
+        return file.link_text;
+      }
+    },
+
+    /**
      * Generates a unique "delta" for each embedding of a particular file.
      */
-    fileEmbedDelta: function(fid, element) {
+    fileEmbedDelta: function (fid, element) {
       // Ensure we have an object to track our deltas.
       Drupal.settings.mediaDeltas = Drupal.settings.mediaDeltas || {};
+      Drupal.settings.maxMediaDelta = Drupal.settings.maxMediaDelta || 0;
 
       // Check to see if the element already has one.
       if (element && element.data('delta')) {
         var existingDelta = element.data('delta');
-        // If so, make sure that it is being tracked in mediaDeltas.
-        if (!Drupal.settings.mediaDeltas[fid]) {
-          Drupal.settings.mediaDeltas[fid] = existingDelta;
+        // If so, make sure that it is being tracked in mediaDeltas. If we're
+        // going to create new deltas later on, make sure they do not overwrite
+        // other mediaDeltas.
+        if (!Drupal.settings.mediaDeltas[existingDelta]) {
+          Drupal.settings.mediaDeltas[existingDelta] = fid;
+          Drupal.settings.maxMediaDelta = Math.max(Drupal.settings.maxMediaDelta, existingDelta);
         }
         return existingDelta;
       }
-      // Otherwise, generate a new one. Arbitrarily start with 1.
-      var delta = 1;
-      if (Drupal.settings.mediaDeltas[fid]) {
-        delta = Drupal.settings.mediaDeltas[fid] + 1;
-      }
-      Drupal.settings.mediaDeltas[fid] = delta;
-      return delta;
+      // Otherwise, generate a new one.
+      var newDelta = Drupal.settings.maxMediaDelta + 1;
+      Drupal.settings.mediaDeltas[newDelta] = fid;
+      Drupal.settings.maxMediaDelta = newDelta;
+      return newDelta;
     }
   }
 

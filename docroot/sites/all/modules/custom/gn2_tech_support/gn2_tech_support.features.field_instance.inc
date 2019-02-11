@@ -43,7 +43,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_anything_else */       'allowed_formats' => array(
   /* entityform-tech_support-field_anything_else */         'filtered_html' => 'filtered_html',
   /* entityform-tech_support-field_anything_else */         'full_html' => 'full_html',
-  /* entityform-tech_support-field_anything_else */         'php_code' => 'php_code',
   /* entityform-tech_support-field_anything_else */         'plain_text' => 'plain_text',
   /* entityform-tech_support-field_anything_else */       ),
   /* entityform-tech_support-field_anything_else */       'allowed_formats_toggle' => 0,
@@ -55,9 +54,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_anything_else */           ),
   /* entityform-tech_support-field_anything_else */           'full_html' => array(
   /* entityform-tech_support-field_anything_else */             'weight' => -8,
-  /* entityform-tech_support-field_anything_else */           ),
-  /* entityform-tech_support-field_anything_else */           'php_code' => array(
-  /* entityform-tech_support-field_anything_else */             'weight' => -7,
   /* entityform-tech_support-field_anything_else */           ),
   /* entityform-tech_support-field_anything_else */           'plain_text' => array(
   /* entityform-tech_support-field_anything_else */             'weight' => -9,
@@ -202,7 +198,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_name_first */       'allowed_formats' => array(
   /* entityform-tech_support-field_name_first */         'filtered_html' => 'filtered_html',
   /* entityform-tech_support-field_name_first */         'full_html' => 'full_html',
-  /* entityform-tech_support-field_name_first */         'php_code' => 'php_code',
   /* entityform-tech_support-field_name_first */         'plain_text' => 'plain_text',
   /* entityform-tech_support-field_name_first */       ),
   /* entityform-tech_support-field_name_first */       'allowed_formats_toggle' => 0,
@@ -214,9 +209,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_name_first */           ),
   /* entityform-tech_support-field_name_first */           'full_html' => array(
   /* entityform-tech_support-field_name_first */             'weight' => -8,
-  /* entityform-tech_support-field_name_first */           ),
-  /* entityform-tech_support-field_name_first */           'php_code' => array(
-  /* entityform-tech_support-field_name_first */             'weight' => -7,
   /* entityform-tech_support-field_name_first */           ),
   /* entityform-tech_support-field_name_first */           'plain_text' => array(
   /* entityform-tech_support-field_name_first */             'weight' => -9,
@@ -272,7 +264,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_name_last */       'allowed_formats' => array(
   /* entityform-tech_support-field_name_last */         'filtered_html' => 'filtered_html',
   /* entityform-tech_support-field_name_last */         'full_html' => 'full_html',
-  /* entityform-tech_support-field_name_last */         'php_code' => 'php_code',
   /* entityform-tech_support-field_name_last */         'plain_text' => 'plain_text',
   /* entityform-tech_support-field_name_last */       ),
   /* entityform-tech_support-field_name_last */       'allowed_formats_toggle' => 0,
@@ -284,9 +275,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_name_last */           ),
   /* entityform-tech_support-field_name_last */           'full_html' => array(
   /* entityform-tech_support-field_name_last */             'weight' => -8,
-  /* entityform-tech_support-field_name_last */           ),
-  /* entityform-tech_support-field_name_last */           'php_code' => array(
-  /* entityform-tech_support-field_name_last */             'weight' => -7,
   /* entityform-tech_support-field_name_last */           ),
   /* entityform-tech_support-field_name_last */           'plain_text' => array(
   /* entityform-tech_support-field_name_last */             'weight' => -9,
@@ -342,7 +330,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_notified_to */       'allowed_formats' => array(
   /* entityform-tech_support-field_notified_to */         'filtered_html' => 'filtered_html',
   /* entityform-tech_support-field_notified_to */         'full_html' => 'full_html',
-  /* entityform-tech_support-field_notified_to */         'php_code' => 'php_code',
   /* entityform-tech_support-field_notified_to */         'plain_text' => 'plain_text',
   /* entityform-tech_support-field_notified_to */       ),
   /* entityform-tech_support-field_notified_to */       'allowed_formats_toggle' => 0,
@@ -354,9 +341,6 @@ function gn2_tech_support_field_default_field_instances() {
   /* entityform-tech_support-field_notified_to */           ),
   /* entityform-tech_support-field_notified_to */           'full_html' => array(
   /* entityform-tech_support-field_notified_to */             'weight' => -8,
-  /* entityform-tech_support-field_notified_to */           ),
-  /* entityform-tech_support-field_notified_to */           'php_code' => array(
-  /* entityform-tech_support-field_notified_to */             'weight' => -7,
   /* entityform-tech_support-field_notified_to */           ),
   /* entityform-tech_support-field_notified_to */           'plain_text' => array(
   /* entityform-tech_support-field_notified_to */             'weight' => -9,

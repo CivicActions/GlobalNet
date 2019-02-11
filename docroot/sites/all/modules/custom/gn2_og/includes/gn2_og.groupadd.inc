@@ -115,8 +115,6 @@ function gn2_og_multi_user_multi_group_form_submit($form, $form_state) {
  */
 function gn2_og_add_user_to_groups(array $values, array $groups) {
   $types = array(
-    'alumni_group',
-    'coi',
     'course',
     'course_group',
     'event',
@@ -172,15 +170,17 @@ function _users_autocomplete($string = '') {
 function _groups_autocomplete($string = '') {
   $matches = array();
   $groups = array(
-    'alumni_group',
-    'coi',
     'course',
     'course_group',
     'event',
     'group',
     'organization',
   );
+
   if ($string) {
+    // Get manager's Organization.
+    $org_id = gn2_context_get_org_id();
+
     $items = array_map('trim', explode(',', $string));
     $last_item = array_pop($items);
     $prefix = count($items) ? implode(', ', $items) . ', ' : '';
@@ -190,6 +190,11 @@ function _groups_autocomplete($string = '') {
     $query = db_select('node', 'n');
     $query->fields('n', array('title', 'nid'));
     $query->join('node_revision', 'nr', 'nr.vid = n.vid');
+    // If we have an Org ID, only return groups associated with that Org.
+    if (isset($org_id)) {
+      $query->join('field_data_field_parent_organization', 'p', 'p.revision_id = n.vid');
+      $query->condition('p.field_parent_organization_target_id', $org_id);
+    }
     $query->condition('n.title', '%' . db_like($last_item) . '%', 'LIKE');
     $query->condition('n.type', $groups, 'IN');
     $query->range(0, 10);

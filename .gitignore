@@ -1,0 +1,80 @@
+# see also docroot/.gitignore
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+# Packages #
+############
+# It's better to unpack these files and commit the raw source, git has its own
+# built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.sq3
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+# Other #
+#########
+# SASS
+*.sass-cache
+*.css.map
+.drush
+_rest_managed.json
+# Composer
+/vendor
+.composer
+# Vagrant
+.vagrant
+nbproject
+.idea/
+.idea/*
+vagrant.yml
+# Misc
+docroot/sites/all/modules/local/*
+local
+legacy-files
+._*
+docroot/sites/all/modules/contrib/devel
+docroot/sites/all/libraries/dompdf/www/test/images/unknown_extension.foo
+docroot/sites/all/libraries/dompdf/www/test/images/no_extension
+docroot/sites/all/libraries/dompdf/lib/fonts/log.htm
+drush-backups
+.bash_history
+.mysql_history
+.ssh
+tests/behat/features/automated-jira
+tests/behat/features/jira
+tests/behat/features/test1.feature
+tests/behat/features/test2.feature
+*.swp
+# Grunt #
+#########
+Gruntfile.js
+node_modules/
+package.json
+*.unison.tmp
+
+# Bowline
+.docker-sync
+docker-sync.yml
+env.local
+
+.codeclimate

@@ -186,9 +186,6 @@ function gn2_user_admin_form($form, $form_state) {
   $fields_raw = variable_get('gn2_user_admin_fields_form_fields');
   $fields     = preg_split('/[\s]+/', $fields_raw);
   foreach ($fields as $field) {
-    $entity_type = 'user';
-    $bundle_name = 'user';
-
     $info = field_info_instance('user', $field, 'user');
 
     // Make sure we have a value to prevent warnings.
@@ -200,11 +197,12 @@ function gn2_user_admin_form($form, $form_state) {
         $title = $info['label'];
       }
 
+      $privacy = gn2_user_admin_priv_fetch($uid, $field);
       $form[$field] = array(
         '#type'          => 'select',
         '#title'         => $title,
         '#options'       => $options,
-        '#default_value' => array(gn2_user_admin_priv_fetch($uid, $field)),
+        '#default_value' => (isset($privacy[$uid][$field])) ? $privacy[$uid][$field] : NULL,
       );
     }
   }
@@ -440,6 +438,7 @@ function gn2_user_admin_form_submit($form, &$form_state) {
       ))->execute();
     }
   }
+  cache_clear_all('gn2_user_priv', 'cache', TRUE);
 }
 
 /**
@@ -477,7 +476,8 @@ function gn2_user_admin_field_access($op, $field, $entity_type, $entity, $accoun
     // or user has elevated perms.
     if (!in_array('administrator', $user->roles)) {
       if (empty($is_hr)) {
-        if (($priv == 'me' && $user->uid != arg(1)) || ($priv == 'contacts' && $friend != 1 && $user->uid != arg(1))) {
+        $privacy = $priv[arg(1)][$field['field_name']];
+        if (isset($privacy) && ($privacy == 'me' && $user->uid != arg(1)) || ($privacy == 'contacts' && $friend != 1 && $user->uid != arg(1))) {
           return FALSE;
         }
       }
@@ -489,15 +489,23 @@ function gn2_user_admin_field_access($op, $field, $entity_type, $entity, $accoun
  * Reusable privacy value function.
  */
 function gn2_user_admin_priv_fetch($uid, $field_name) {
-  /*
-   * @TODO make this query more performant.
-   * Attempted to use &drupal_static, but form results became unpredicatable.
-   */
-
-  return db_query('SELECT level FROM gn2_user_admin_access WHERE uid = :uid AND field_name = :field_name', array(
-    ':uid'        => $uid,
-    ':field_name' => $field_name,
-  ))->fetchField();
+  // We use a static cache, since this function may be called several times.
+  $priv = &drupal_static(__FUNCTION__, array());
+  if (!isset($priv[$uid][$field_name])) {
+    $cache = cache_get('gn2_user_priv');
+    if ($cache && isset($cache->data[$uid][$field_name])) {
+      $priv = $cache->data;
+    }
+    else {
+      $privacy = db_query('SELECT level FROM gn2_user_admin_access WHERE uid = :uid AND field_name = :field_name', array(
+        ':uid'        => $uid,
+        ':field_name' => $field_name,
+      ))->fetchField();
+      $priv[$uid][$field_name] = $privacy;
+      cache_set('gn2_user_priv', $priv, 'cache');
+    }
+  }
+  return $priv;
 }
 
 /**
@@ -601,7 +609,10 @@ function gn2_user_admin_user_update(&$edit, $account, $category) {
  * Implements hook_module_implements_alter().
  */
 function gn2_user_admin_module_implements_alter(&$implementations, $hook) {
-  $hooks = array('form_alter');
+  $hooks = [
+    'form_alter',
+    'update_path',
+  ];
   if (in_array($hook, $hooks)) {
     // Move our hook implementation to the bottom.
     // We want to expand upon the entity api's access implementation for nodes,
@@ -700,4 +711,21 @@ function _gn2_user_admin_user_delete($account) {
     throw $e;
   }
   entity_get_controller('user')->resetCache();
+}
+
+/**
+ * Implements hook_path_update().
+ */
+function gn2_user_admin_path_update($path) {
+  if (!empty($path['original']['pid']) && $path['original']['pid'] == $path['pid'] && module_exists('redirect')) {
+    // Check for a redirect from the alias to the source.
+    $redirect_id = db_query('SELECT rid FROM {redirect} WHERE source = :alias AND redirect = :source', [
+      ':alias' => $path['alias'],
+      ':source' => $path['source'],
+    ])->fetchField();
+    // If there is redirect causing a redirect loop, delete it.
+    if ($redirect_id) {
+      redirect_delete($redirect_id);
+    }
+  }
 }

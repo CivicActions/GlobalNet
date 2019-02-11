@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the gn2_support_desk feature.
@@ -21,7 +22,6 @@ function gn2_support_desk_node_access($node, $op, $account) {
   }
 }
 
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -39,8 +39,8 @@ function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $fo
   // Hide fields in the group_admin fieldgroup from non-admins.
   // Check to see if user is admin, org_manager or hr_manager.
   $admin = (in_array('administrator', $user->roles)) ? TRUE : FALSE;
-  $hr_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 35', array(':uid' => $user->uid))->fetchField();
-  $org_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} ' . 'WHERE uid = :uid AND rid = 17', array(':uid' => $user->uid))->fetchField();
+  $hr_manager = _gn2_support_desk_is_user_a_manager(35, $user->uid);
+  $org_manager = _gn2_support_desk_is_user_a_manager(17, $user->uid);
 
   // Check to see if the user is an org_manager, hr_manager, or admin,
   // and if they are not, then hide the group-admin fieldgroup.
@@ -49,6 +49,17 @@ function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $fo
     // Hide org field from non-admin users.
     $form['field_parent_organization']['#access'] = FALSE;
   }
+
+  // Hide IP whitelist field from non-admin/org manager users.
+  if (!($org_manager || $admin)) {
+    unset($form['field_support_category'][LANGUAGE_NONE]['#options'][7]);
+  }
+
+  // Add validation for IP field.
+  if (isset($form['field_ip_address_range'])) {
+    $form['field_ip_address_range']['#element_validate'][] = '_gn2_support_desk_validate_ip_field';
+  }
+
   // We don't need anyone to see the json response from jira.
   $form['field_json_capture']['#access'] = FALSE;
 
@@ -63,7 +74,7 @@ function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $fo
     $gid = gn2_context_get_org_id();
   }
 
-  // Getting and setting the parent  org id using our gn2_context_get_org_id function
+  // Getting and setting the parent organization id.
   $org_id = gn2_context_get_org_id();
 
   // Limit options in owner field to admins and group admins.
@@ -71,52 +82,13 @@ function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $fo
   $form['field_support_owner'][LANGUAGE_NONE]['#options'] = array();
   $form['field_support_owner'][LANGUAGE_NONE]['#options']['_none'] = "-None-";
 
-  // First, if we have a group ID, add org managers (role id = 17)
+  // First, if we have a group ID, add org managers (role id = 17).
   if (isset($gid)) {
-    $qry__org_managers = db_select('og_users_roles', 'r');
-    $qry__org_managers->join('users', 'u', 'r.uid = u.uid');
-    $qry__org_managers->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
-    $qry__org_managers->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
-    $qry__org_managers->fields('u', array('uid', 'name'));
-    $qry__org_managers->fields('fn', array('field_name_first_value'));
-    $qry__org_managers->fields('ln', array('field_name_last_value'));
-    $qry__org_managers->condition('u.status', '1');
-    $qry__org_managers->condition('r.rid', '17');
-    $qry__org_managers->condition('r.gid', $org_id);
-    $qry__org_managers->orderBy('ln.field_name_last_value', 'ASC');
-    $qry__org_managers->orderBy('fn.field_name_first_value', 'ASC');
-    $results__org_managers = $qry__org_managers->execute()->fetchAll();
-    foreach ($results__org_managers as $org_manager) {
-      $this_uid = $org_manager->uid;
-      $first_name = $org_manager->field_name_first_value;
-      $last_name = $org_manager->field_name_last_value;
-      $this_name = $first_name . ' ' . $last_name . ' (' . $org_manager->name . ')';
-      $form['field_support_owner'][LANGUAGE_NONE]['#options'][$this_uid] = $this_name;
-    }
+    _gn2_support_desk_add_og_managers($form, $org_id, 17);
   }
+  _gn2_support_desk_add_admin_options($form, 9);
 
-  // Next, global administrators (role id = 9)
-  $qry__global_admins = db_select('users_roles', 'r');
-  $qry__global_admins->join('users', 'u', 'r.uid = u.uid');
-  $qry__global_admins->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
-  $qry__global_admins->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
-  $qry__global_admins->fields('u', array('uid', 'name'));
-  $qry__global_admins->fields('fn', array('field_name_first_value'));
-  $qry__global_admins->fields('ln', array('field_name_last_value'));
-  $qry__global_admins->condition('u.status', '1');
-  $qry__global_admins->condition('r.rid', '9');
-  $qry__global_admins->orderBy('ln.field_name_last_value', 'ASC');
-  $qry__global_admins->orderBy('fn.field_name_first_value', 'ASC');
-  $results__global_admins = $qry__global_admins->execute()->fetchAll();
-  foreach ($results__global_admins as $global_admin) {
-    $this_uid = $global_admin->uid;
-    $first_name = $global_admin->field_name_first_value;
-    $last_name = $global_admin->field_name_last_value;
-    $this_name = $first_name . ' ' . $last_name . ' (' . $global_admin->name . ')';
-    $form['field_support_owner'][LANGUAGE_NONE]['#options'][$this_uid] = $this_name;
-  }
-
-  // Set default parent org value
+  // Set default parent org value.
   if (arg(2) != 'edit') {
     $form['field_parent_organization'][LANGUAGE_NONE]['#default_value'] = $gid;
   }
@@ -135,7 +107,7 @@ function gn2_support_desk_form_support_node_form_alter(&$form, &$form_state, $fo
 JOIN {node} n ON n.vid = sh.revision_id
 WHERE sh.entity_id = :nid', array(':nid' => $pid))->fetchField();
 
-  $userip = $_SERVER['REMOTE_ADDR'];
+  $userip = ip_address();
   $ip = str_replace('.', '', $userip);
 
   $identifier = ($short_title) ? '-' . $short_title : '-0-' . $ip;
@@ -166,6 +138,11 @@ function gn2_support_desk_form_alter_submit(&$form, &$form_state) {
   if (!empty($form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['value'])) {
     $form_state['values']['field_actual_functionality'][LANGUAGE_NONE][0]['value'] = $form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['value'];
     $form_state['values']['field_actual_functionality'][LANGUAGE_NONE][0]['format'] = $form_state['input']['field_actual_functionality'][LANGUAGE_NONE][0]['format'];
+  }
+
+  // If field_support_category is 7, add IP information to database.
+  if ($form_state['values']['field_support_category'][LANGUAGE_NONE][0]['value'] === '7') {
+    _gn2_support_desk_prepare_ip_values($form_state['values']);
   }
 }
 
@@ -217,7 +194,8 @@ function gn2_support_desk_block_view($delta = '') {
       $tickets = gn2_support_desk_ticket();
       $block['content'] = $tickets;
       if (empty($tickets)) {
-        $block['content'] .= drupal_render(drupal_get_form('gn2_support_desk_form'));
+        $form = drupal_get_form('gn2_support_desk_form');
+        $block['content'] .= drupal_render($form);
       }
       break;
   }
@@ -239,8 +217,8 @@ function gn2_support_desk_ticket() {
     $ticket .= '<h4>' . t('Related Jira Ticket') . '</h4><hr />';
     $ticket .= '<span id="jira-status">' . $json_str->issue->fields->status->statusCategory->name . '</span>';
     $ticket .= '<span id="jira-issue">' . l($json_str->issue->key, 'https://globalnet.atlassian.net/browse/' . $json_str->issue->key, array(
-        'attributes' => array('target' => '_blank'),
-      )) . ' - </span>';
+      'attributes' => array('target' => '_blank'),
+    )) . ' - </span>';
 
     $ticket .= '<span id="jira-title">' . $json_str->issue->fields->summary . '</span>';
     if ($json_str->issue->fields->assignee->displayName) {
@@ -273,11 +251,13 @@ function gn2_support_desk_menu() {
  */
 function gn2_support_desk_jira_callback() {
   $json_str = file_get_contents('php://input');
-  $post = json_decode($json_str);
-  watchdog('gn2_support_desk', $post->issue->fields->customfield_11401);
-  $node = node_load($post->issue->fields->customfield_11401);
-  $node->field_json_capture[LANGUAGE_NONE][0]['value'] = $json_str;
-  node_save($node);
+  if ($json_str) {
+    $post = json_decode($json_str);
+    watchdog('gn2_support_desk', $post->issue->fields->customfield_11401);
+    $node = node_load($post->issue->fields->customfield_11401);
+    $node->field_json_capture[LANGUAGE_NONE][0]['value'] = $json_str;
+    node_save($node);
+  }
 }
 
 /**
@@ -335,10 +315,8 @@ function gn2_support_desk_form($form, &$form_state) {
 
     global $user;
     $role = $user->roles;
-    $account = user_load($user->uid);
-    $roles = og_get_user_roles('node', $node->field_parent_organization[LANGUAGE_NONE][0]['target_id']);
 
-    if (in_array('org_manager', $roles) || in_array('administrator', $role)) {
+    if (in_array('administrator', $role)) {
       $form['gn2_support_desk_jira_submit'] = array(
         '#type' => 'submit',
         '#value' => t('Add New Jira Ticket'),
@@ -365,4 +343,194 @@ function gn2_support_desk_form_submit($form, &$form_state) {
   );
 
   jira_rest_issue_create($issue_data);
+}
+
+/**
+ * Validation handler for the IP Address/Range field.
+ */
+function _gn2_support_desk_validate_ip_field($element, &$form_state) {
+  if ($form_state['values']['field_support_category'][LANGUAGE_NONE][0]['value'] === '7') {
+    $ipaddress = trim($form_state['values']['field_ip_address_range'][LANGUAGE_NONE][0]['value']);
+    if (!empty($ipaddress)) {
+      $is_valid_ip = _gn2_support_desk_validate_ip_address($ipaddress);
+      if (!$is_valid_ip) {
+        form_set_error('field_ip_address_range', t('Invalid IP range or address.'));
+      }
+    }
+
+    $valid_user = _gn2_support_desk_validate_user($form_state['values']['uid']);
+    if (!$valid_user) {
+      $link = l(t('contact an administrator'), 'node/add/support', [
+        'query' => [
+          'gid' => $form_state['values']['field_parent_organization'][LANGUAGE_NONE][0]['target_id'],
+        ],
+      ]);
+      form_set_error('field_ip_address_range', t('An error occurred. Please !link to whitelist the IP address(s).', ['!link' => $link]));
+    }
+  }
+}
+
+/**
+ * Check if the form field value is a valid IP address.
+ *
+ * @param string $ip
+ *   The IP Address to check.
+ *
+ * @return bool
+ *   Returns true if the IP address is valid.
+ */
+function _gn2_support_desk_validate_ip_address($ip) {
+  $ip_parts = explode('/', $ip);
+  $ip_address = $ip_parts[0];
+  $is_valid_ip = filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+
+  if (!$is_valid_ip) {
+    $is_valid_ip = filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+  }
+
+  return $is_valid_ip;
+}
+
+/**
+ * Add the manger user to the "Owner" options.
+ *
+ * @param array $form
+ *   The Support Desk form array.
+ * @param int $org_id
+ *   The Organization ID.
+ * @param int $role_id
+ *   The OG Role ID for the manager user.
+ */
+function _gn2_support_desk_add_og_managers(&$form, $org_id, $role_id) {
+  $query = db_select('og_users_roles', 'r');
+  $query->join('users', 'u', 'r.uid = u.uid');
+  $query->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
+  $query->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
+  $query->fields('u', array('uid', 'name'));
+  $query->fields('fn', array('field_name_first_value'));
+  $query->fields('ln', array('field_name_last_value'));
+  $query->condition('u.status', '1');
+  $query->condition('r.rid', $role_id);
+  $query->condition('r.gid', $org_id);
+  $query->orderBy('ln.field_name_last_value', 'ASC');
+  $query->orderBy('fn.field_name_first_value', 'ASC');
+  $results = $query->execute()->fetchAll();
+
+  foreach ($results as $user) {
+    $first_name = $user->field_name_first_value;
+    $last_name = $user->field_name_last_value;
+    $this_name = $first_name . ' ' . $last_name . ' (' . $user->name . ')';
+    $form['field_support_owner'][LANGUAGE_NONE]['#options'][$user->uid] = $this_name;
+  }
+}
+
+/**
+ * Add admin user to the "Owner" options.
+ *
+ * @param array $form
+ *   The Support Desk form array.
+ * @param int $role_id
+ *   The OG Role ID for the manager user.
+ */
+function _gn2_support_desk_add_admin_options(&$form, $role_id) {
+  $query = db_select('users_roles', 'r');
+  $query->join('users', 'u', 'r.uid = u.uid');
+  $query->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
+  $query->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
+  $query->fields('u', array('uid', 'name'));
+  $query->fields('fn', array('field_name_first_value'));
+  $query->fields('ln', array('field_name_last_value'));
+  $query->condition('u.status', '1');
+  $query->condition('r.rid', $role_id);
+  $query->orderBy('ln.field_name_last_value', 'ASC');
+  $query->orderBy('fn.field_name_first_value', 'ASC');
+  $admin_results = $query->execute()->fetchAll();
+  foreach ($admin_results as $admin) {
+    $this_uid = $admin->uid;
+    $first_name = $admin->field_name_first_value;
+    $last_name = $admin->field_name_last_value;
+    $this_name = $first_name . ' ' . $last_name . ' (' . $admin->name . ')';
+    $form['field_support_owner'][LANGUAGE_NONE]['#options'][$this_uid] = $this_name;
+  }
+
+}
+
+/**
+ * Check if a given user ID is a manager for the given OG role ID.
+ *
+ * @param int $rid
+ *   The OG role ID.
+ * @param int $uid
+ *   The user's ID.
+ *
+ * @return int
+ *   Returns a greater than 0 integer if the user is a manager.
+ */
+function _gn2_support_desk_is_user_a_manager($rid, $uid) {
+  $is_manager = db_query('SELECT COUNT(gid) FROM {og_users_roles} WHERE uid = :uid AND rid = :rid', [':uid' => $uid, ':rid' => $rid])->fetchField();
+  return $is_manager;
+}
+
+/**
+ * Prepare the IP values to be inserted into the DB.
+ *
+ * @param array $values
+ *   The submitted form values.
+ */
+function _gn2_support_desk_prepare_ip_values($values) {
+  // Convert user's time to GMT.
+  $gmt_start = gmdate('F d, Y H:i:s', $values['field_whitelist_dates'][LANGUAGE_NONE][0]['value']);
+  $gmt_end = gmdate('F d, Y H:i:s', $values['field_whitelist_dates'][LANGUAGE_NONE][0]['value2']);
+  $insert_values = [
+    'created' => $values['created'],
+    'updated' => $values['created'],
+    'uid' => $values['uid'],
+    'ip_address' => $values['field_ip_address_range'][LANGUAGE_NONE][0]['value'],
+    'start_date' => strtotime($gmt_start),
+    'end_date' => strtotime($gmt_end),
+    'status' => 1,
+  ];
+  $valid_user = _gn2_support_desk_validate_user($insert_values['uid']);
+
+  if ($valid_user) {
+    _gn2_support_desk_insert_ip_values($insert_values);
+  }
+}
+
+/**
+ * Insert the IP values into the gn2_support_whitelist db table.
+ *
+ * @param array $values
+ *   An array containing the values to insert into the database.
+ */
+function _gn2_support_desk_insert_ip_values($values) {
+  try {
+    $wid = db_insert('gn2_support_whitelist')->fields($values)->execute();
+    watchdog('GN2 Support Desk', 'Whitelist request queued to be processed. Whitelist ID: %wid', ['%wid' => $wid], WATCHDOG_INFO);
+  }
+  catch (Exception $e) {
+    watchdog_exception('GN2 Support Desk Exception', $e);
+  }
+}
+
+/**
+ * Confirm that the user submitting the form is allowed to whitelist IPs.
+ *
+ * @param int $user_id
+ *   The user ID to check.
+ *
+ * @return bool
+ *   Return TRUE if the user is allowed to whitelist IP addresses.
+ */
+function _gn2_support_desk_validate_user($user_id) {
+  if ($user_id) {
+    $user = user_load($user_id);
+    $admin = in_array('administrator', $user->roles);
+    $org_manager = _gn2_support_desk_is_user_a_manager(17, $user_id);
+    $valid_user = ($admin || $org_manager) ? TRUE : FALSE;
+  }
+  else {
+    $valid_user = FALSE;
+  }
+  return $valid_user;
 }

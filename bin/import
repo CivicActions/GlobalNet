@@ -1,9 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bowline-shell
 
-source $(dirname $0)/../lib/bowline/bowline
-enter_container $@
-
-[ "$(command -v pv)" ] || apt-get install pv
+#[ "$(command -v pv)" ] || apt-get install pv
 
 # Wait for mysql connection.
 echo "NOTE: Please ignore any warnings about 'Connection refused' while waiting for the db service to start"
@@ -28,9 +25,9 @@ if [ "$1" = "legacy" ];then
   $MYSQL -ss -e 'SELECT concat("DROP TABLE `", TABLE_NAME, "`;") FROM information_schema.tables WHERE table_schema="legacy_drupal"'|$MYSQL
 
   # Import.
-  pv .legacy-snapshot.sql.gz | gunzip | $MYSQL
+  cat .legacy-snapshot.sql.gz | gunzip | $MYSQL
 else
-  if [[ "$1" != "--nobackup" ]]; then
+  if [[ "$1" == "--backup" ]]; then
     echo "# Backing up current database before importing."
     FILENAME=.pre-import.sql
     mysqldump $MY_ARGS > $FILENAME
@@ -43,5 +40,5 @@ else
 
   # Import.
   # @TODO: check for the file first.
-  pv .snapshot.sql.gz | gunzip | $MYSQL
+  cat /var/www/.snapshot.sql.gz | gunzip | $MYSQL
 fi

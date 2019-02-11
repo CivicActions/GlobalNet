@@ -1,14 +1,14 @@
 # Installation Notes
 
-GlobalNET v2.35.0 Reference Build
+For GlobalNET v2.58.1 Build
 
 
 
 ## Introduction
 
-GlobalNET v2.35.0 requires configuration of proprietary settings to take advantage of all of its features. What follows is a listing of the services currently integrated with GlobalNET along with information on where to locate/plug in the relevant system variables that link the external services with this particular GlobalNET instance.
+GlobalNET v2.58.1 requires configuration of proprietary settings to take advantage of all of its features. What follows is a listing of the services currently integrated with GlobalNET along with information on where to locate/plug in the relevant system variables that link the external services with this particular GlobalNET instance.
 
-A full instance of GlobalNET needs to include a separate installation of an Apache Solr instance with indexes of Nodes and Users. A fully-configured GlobalNET v2 instance will be provided with the complete Dockerized version of GlobalNET
+A full instance of GlobalNET needs to include a separate installation of an Apache Solr instance with indexes of Nodes and Users. A fully-configured GlobalNET instance will be provided with the complete Dockerized version of GlobalNET
 
 ## Installation overview
 
@@ -51,159 +51,159 @@ The table below each service provide details about which feature or module "cont
 
 ## Adobe Connect
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
-| **File**             |                                          |
-| **UI**               | users/{USER-ID}/edit -> External accounts fieldset |
-| **Module**           | gn2_adobe_connect                        |
-| **Service provider** | Adobe Connect                            |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             |                                                              |
+| **UI**               | users/{USER-ID}/edit -> External accounts fieldset           |
+| **Module**           | gn2_adobe_connect                                            |
+| **Service provider** | Adobe Connect                                                |
 | **Notes**            | Nothing in code, credentials are in user account settings on GlobalNET. |
 
 
 
 ## CAC
 
-| **Variable name**    | pki_authentication_base_root             |
-| -------------------- | ---------------------------------------- |
-| **File**             | gn2_cac.strongarm.inc                    |
-| **UI**               | /admin/config/people/pki_authentication  |
-| **Module**           | PKI Authentication                       |
-| **Service provider** |                                          |
+| **Variable name**    | pki_authentication_base_root                            |
+| -------------------- | ------------------------------------------------------- |
+| **File**             | gn2_cac.strongarm.inc ; line 47 & line 54               |
+| **UI**               | /admin/config/people/pki_authentication                 |
+| **Module**           | PKI Authentication                                      |
+| **Service provider** |                                                         |
 | **NOTES**            | This can only be tested with a valid CAC setup and CAC. |
 
 
 
 ## Captcha
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
 | **File**             | gn2_captcha.strongarm.inc line 162  = captcha token that we need to remove |
-| **UI**               |                                          |
-| **Module**           |                                          |
-| **Service provider** |                                          |
+| **UI**               |                                                              |
+| **Module**           |                                                              |
+| **Service provider** |                                                              |
 
 
 
 ## Clickatell
 
-| **Variable name**    |                                         |
-| -------------------- | --------------------------------------- |
-| **File**             | Gn2_sms_gateway.strongarm.inc           |
-| **UI**               | /admin/smsframework/gateways/clickatell |
-| **Module**           | gn2_sms_gateway                         |
-| **Service provider** | clickatell                              |
+| **Variable name**    | sms_clickatell_api_id, sms_clickatell_user,sms_clickatell_password, sms_enabled_carriers |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             | gn2_sms_gateway.strongarm.inc; 33, 34, 36, 53                |
+| **UI**               | /admin/smsframework/gateways/clickatell                      |
+| **Module**           | gn2_sms_gateway                                              |
+| **Service provider** | clickatell                                                   |
 
 
 
 ## Cron key
 
-| **Variable name**    | cron_key                           |
-| -------------------- | ---------------------------------- |
-| **File**             | gn2_base_strongarm.strongarm.inc   |
-| **UI**               | /admin/config/system/cron/settings |
-| **Module**           |                                    |
-| **Service provider** |                                    |
+| **Variable name**    | cron_key                               |
+| -------------------- | -------------------------------------- |
+| **File**             | gn2_base_strongarm.strongarm.inc; 1226 |
+| **UI**               | /admin/config/system/cron/settings     |
+| **Module**           | gn2_base_strongarm                     |
+| **Service provider** |                                        |
 
 
 
 ## Email confirmation, email author
 
-| **Variable name**    | email_confirm_confirmation_email_author  |
-| -------------------- | ---------------------------------------- |
-| **File**             | gn2_base_strongarm.strongarm.inc         |
+| **Variable name**    | email_confirm_confirmation_email_author                      |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             | gn2_base_strongarm.strongarm.inc; 1868                       |
 | **UI**               | /admin/config/people/email_confirm  /admin/config/system/site-information |
-| **Module**           |                                          |
-| **Service provider** |                                          |
+| **Module**           | gn2_base_strongarm                                           |
+| **Service provider** |                                                              |
 
 
 
 ## EZProxy
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
-| **File**             | Gn2_exproxy.module  gn2_exproxy_authentication() |
-| **UI**               |                                          |
-| **Module**           | gn2_proxy                                |
-| **Service provider** | EZproxy.                                 |
+| **Variable name**    | gn2_exproxy_authentication(), ezproxy_username, ezproxy_host |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             | Gn2_exproxy.module; 139, 141,                                |
+| **UI**               |                                                              |
+| **Module**           | gn2_proxy                                                    |
+| **Service provider** | EZproxy.                                                     |
 | **NOTES**            | EZProxy credentials are in line 139-141 of the gn2_proxy module |
 
 
 
 ## Google Analytics
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
-| **File**             | gn2_base_strongarm.strongarm.inc         |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             | gn2_base_strongarm.strongarm.inc                             |
 | **UI**               | /admin/config/system/google-analytics-reports-api  /admin/config/system/usfedgov_google_analytics |
-| **Module**           | US Government Google Analytics           |
-| **Service provider** | Google Analytics                         |
+| **Module**           | US Government Google Analytics                               |
+| **Service provider** | Google Analytics                                             |
 | **NOTES**            | Credentials are entered in the GA module  configuration./admin/config/system/usfedgov_google_analytics |
 
 
 
 ## Ilias Shibboleth settings
 
-| **Variable name**    |      |
-| -------------------- | ---- |
-| **File**             |      |
-| **UI**               |      |
-| **Module**           |      |
-| **Service provider** |      |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             | gn2_base_strongarm.strongarm.inc; 5751, 5752; shib13-sp-remote.php; 7, 8, 9; shib13-idp-hosted.php; 22, 25 |
+| **UI**               |                                                              |
+| **Module**           | gn2_base_strongarm                                           |
+| **Service provider** |                                                              |
 
 
 
 ## Jira REST
 
-| **Variable name**    | jira_rest_password                       |
-| -------------------- | ---------------------------------------- |
-| **File**             | gn2_support_desk.strongarm.inc           |
-| **UI**               | /admin/config/services/jira_rest         |
-| **Module**           | Jira REST                                |
-| **Service provider** | Atlassian                                |
+| **Variable name**    | jira_rest_password, jira_rest_username         |
+| -------------------- | ---------------------------------------------- |
+| **File**             | gn2_support_desk.strongarm.inc; 162, 176       |
+| **UI**               | /admin/config/services/jira_rest               |
+| **Module**           | Jira REST                                      |
+| **Service provider** | Atlassian                                      |
 | **NOTES**            | Configured at /admin/config/services/jira_rest |
 
  
 
-| **Variable name**    | jira_rest_jirainstanceurl        |
-| -------------------- | -------------------------------- |
-| **File**             | gn2_support_desk.strongarm.inc   |
-| **UI**               | /admin/config/services/jira_rest |
-| **Module**           | Jira REST                        |
-| **Service provider** |                                  |
+| **Variable name**    | jira_rest_jirainstanceurl           |
+| -------------------- | ----------------------------------- |
+| **File**             | gn2_support_desk.strongarm.inc; 155 |
+| **UI**               | /admin/config/services/jira_rest    |
+| **Module**           | Jira REST                           |
+| **Service provider** |                                     |
 
 
 
 ## Organization node settings (logo, contact info,main image)
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
-| **File**             |                                          |
-| **UI**               |                                          |
-| **Module**           |                                          |
-| **Service provider** |                                          |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
+| **File**             |                                                              |
+| **UI**               |                                                              |
+| **Module**           |                                                              |
+| **Service provider** |                                                              |
 | **NOTES**            | Organization variables (names, short titles, theme settings) for  organizations are set in organization landing page nodes. |
 
 
 
 ## OpenID
 
-| **Variable name**    | openid_provider_whitelist              |
-| -------------------- | -------------------------------------- |
-| **File**             | gn2_base_strongarm.strongarm.inc       |
-| **UI**               | /admin/config/services/openid-provider |
-| **Module**           | OpenID Provider                        |
-| **Service provider** |                                        |
-| **NOTES**            | This is a deprecated function          |
+| **Variable name**    | openid_provider_whitelist                    |
+| -------------------- | -------------------------------------------- |
+| **File**             | gn2_base_strongarm.strongarm.inc; 5751, 5752 |
+| **UI**               | /admin/config/services/openid-provider       |
+| **Module**           | OpenID Provider                              |
+| **Service provider** |                                              |
+| **NOTES**            | This is a deprecated function                |
 
 
 
 ## Site Information
 
-| **Variable name**    |                                          |
-| -------------------- | ---------------------------------------- |
+| **Variable name**    |                                                              |
+| -------------------- | ------------------------------------------------------------ |
 | **File**             | gn2_tech_support/includes/gn2_tech_support_technical_support.inc: line  66 |
-| **UI**               | /admin/config/system/site-information    |
-| **Module**           |                                          |
-| **Service provider** |                                          |
+| **UI**               | /admin/config/system/site-information                        |
+| **Module**           |                                                              |
+| **Service provider** |                                                              |
 
  

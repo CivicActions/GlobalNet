@@ -62,18 +62,18 @@ class gn2_notifications_handler_notification extends views_handler_field {
       case GN2_NOTIFICATIONS_NODE_CREATED:
         $text = '@name created a @node_type in @node_link.';
         $parameters = array(
-          '@name' => $user_link,
-          '@node_type' => $node_type,
-          '@node_link' => $parent_link,
+          '@name' => !empty($user_link) ? $user_link : '',
+          '@node_type' => !empty($node_type) ? $node_type : '',
+          '@node_link' => !empty($parent_link) ? $parent_link : '',
         );
         break;
 
       case GN2_NOTIFICATIONS_NODE_UPDATED:
         $text = '@name updated a @node_type in @node_link.';
         $parameters = array(
-          '@name' => $user_link,
-          '@node_type' => $node_type,
-          '@node_link' => $parent_link,
+          '@name' => !empty($user_link) ? $user_link : '',
+          '@node_type' => !empty($node_type) ? $node_type : '',
+          '@node_link' => !empty($parent_link) ? $parent_link : '',
         );
         break;
 
@@ -103,10 +103,10 @@ class gn2_notifications_handler_notification extends views_handler_field {
         );
         break;
 
-      case GN2_NOTIFICATIONS_OG_EVENT_JOIN:
+      case 'Registered for':
         $user_link = !empty($initiator->uid) ? l($name, 'user/' . $initiator->uid) : 'A user';
         $node = node_load($values->subscriptions_notifications_messages_nid);
-        $text = '@name registered for @node_link.';
+        $text = 'You registered for @node_link.';
         $parameters = array(
           '@name' => $user_link,
           '@node_link' => l($node->title, 'group/node/' . $node->nid . '/admin/people'),
@@ -197,6 +197,7 @@ class gn2_notifications_handler_notification extends views_handler_field {
     }
 
     $message = t($text, $parameters);
+
     return html_entity_decode($message);
   }
 

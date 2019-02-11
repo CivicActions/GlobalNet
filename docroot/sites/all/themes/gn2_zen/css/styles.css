@@ -108,21 +108,20 @@ body {
 #header-wrapper {
   background: url("../images/header-pattern.png");
   position: relative;
-  z-index: 1;
 }
 
-/* line 51, ../sass/skin/_regions.scss */
+/* line 50, ../sass/skin/_regions.scss */
 ul.tabs-primary,
 .breadcrumb {
   margin-bottom: 2em;
 }
 
-/* line 56, ../sass/skin/_regions.scss */
+/* line 55, ../sass/skin/_regions.scss */
 .page-header {
   margin-bottom: 1.8em;
 }
 
-/* line 60, ../sass/skin/_regions.scss */
+/* line 59, ../sass/skin/_regions.scss */
 div.page-title-wrapper {
   margin-bottom: 0;
   font-weight: normal;
@@ -133,7 +132,7 @@ div.page-title-wrapper {
   position: relative;
 }
 
-/* line 64, ../sass/skin/_regions.scss */
+/* line 63, ../sass/skin/_regions.scss */
 #main-wrapper {
   background: url("../images/bg.png") repeat-x top center;
   position: relative;
@@ -141,13 +140,13 @@ div.page-title-wrapper {
   border-top: 3px solid #ffffff;
 }
 
-/* line 71, ../sass/skin/_regions.scss */
+/* line 70, ../sass/skin/_regions.scss */
 #footer-container {
   position: relative;
   z-index: 0;
 }
 
-/* line 76, ../sass/skin/_regions.scss */
+/* line 75, ../sass/skin/_regions.scss */
 .footer-left {
   background: url(../images/footer-logo.png) center no-repeat;
   height: 140px;
@@ -1198,12 +1197,12 @@ a:hover, a:focus {
 
 /* line 61, ../sass/base/_base.scss */
 .customSelect {
-  background: #dfdfdf url('../images/menu-expanded.png?1470584745') no-repeat 90%;
+  background: #dfdfdf url('../images/menu-expanded.png?1538748391') no-repeat 90%;
   width: 120px !important;
 }
 /* line 64, ../sass/base/_base.scss */
 .customSelect.ctools-jump-menu-select {
-  background: #dfdfdf url('../images/menu-expanded.png?1470584745') no-repeat 95%;
+  background: #dfdfdf url('../images/menu-expanded.png?1538748391') no-repeat 95%;
   width: 200px !important;
 }
 
@@ -3356,7 +3355,7 @@ tr.selected td {
 /* line 743, ../sass/component/_misc.scss */
 .progress .filled {
   background-color: #0072b9;
-  background-image: url('../images/progress.gif?1470584745');
+  background-image: url('../images/progress.gif?1538748391');
 }
 
 /* line 749, ../sass/component/_misc.scss */
@@ -3475,26 +3474,31 @@ ul.nobullet li {
   font-style: normal;
 }
 
+/* line 862, ../sass/component/_misc.scss */
+#userreg-entityform-edit-form .form-item-og-entityform-group-ref-und-0-default {
+  display: none;
+}
+
 /***************************************************
 * RD-3506 IE 11 themeing layout issues across site *
 ***************************************************/
-/* line 864, ../sass/component/_misc.scss */
+/* line 870, ../sass/component/_misc.scss */
 .mobile-show {
   display: none;
 }
 @media (min-width: 0em) and (max-width: 47.9375em) {
-  /* line 864, ../sass/component/_misc.scss */
+  /* line 870, ../sass/component/_misc.scss */
   .mobile-show {
     display: block;
   }
 }
 
-/* line 870, ../sass/component/_misc.scss */
+/* line 876, ../sass/component/_misc.scss */
 .mobile-hide {
   display: block;
 }
 @media (min-width: 0em) and (max-width: 47.9375em) {
-  /* line 870, ../sass/component/_misc.scss */
+  /* line 876, ../sass/component/_misc.scss */
   .mobile-hide {
     display: none;
   }
@@ -9517,7 +9521,7 @@ div.privatemsg-message-information {
  */
 /* line 6, ../sass/component/_block__announcements.scss */
 .bg-diagonal .views-row {
-  background: url('../images/bg-diagonal-tile-blue.png?1470584745');
+  background: url('../images/bg-diagonal-tile-blue.png?1538749196');
   display: block;
   clear: both;
   height: 200px;
@@ -10233,6 +10237,33 @@ div#google_translate_element img {
   background: #eeeeee !important;
 }
 
+/* line 2, ../sass/component/_block__users_liked.scss */
+.pane-gn2-admin-dashboard-gn2-content-rating-users h2 {
+  font-family: "Teko-Regular", "Abadi MT Condensed Light", Calibri, Corbel, "Franklin Gothic", "Franklin Gothic Medium", "News Gothic MT", "Arial Narrow", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+  text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: .02em;
+  line-height: 1;
+  font-weight: bold;
+  display: block;
+  font-size: 1.45em;
+  /*24px*/
+  padding-bottom: .25em;
+  margin-top: 0;
+  margin-bottom: .3em;
+  border-bottom: 1px solid #91a8b3;
+  line-height: 0.9;
+  color: #6c6c6c;
+  line-height: 1;
+  padding-bottom: 0.025em;
+  border-bottom: 3px solid #91a8b3;
+  margin-bottom: .5em;
+}
+/* line 6, ../sass/component/_block__users_liked.scss */
+.pane-gn2-admin-dashboard-gn2-content-rating-users a {
+  font-weight: bold;
+}
+
 /* line 1, ../sass/component/_block__latest_activity.scss */
 .latest-activity--item {
   border-bottom: 1px solid #dddedf;
@@ -10262,7 +10293,7 @@ div#google_translate_element img {
   margin-bottom: 0;
 }
 
-/* line 72, ../sass/component/_block__sessions_fc.scss */
+/* line 71, ../sass/component/_block__sessions_fc.scss */
 .loader {
   background: rgba(0, 0, 0, 0.6);
   position: fixed;
@@ -10280,39 +10311,39 @@ div#google_translate_element img {
     Set the color of the icon
   */
 }
-/* line 85, ../sass/component/_block__sessions_fc.scss */
+/* line 84, ../sass/component/_block__sessions_fc.scss */
 .loader.loader-hidden {
   display: none;
 }
-/* line 91, ../sass/component/_block__sessions_fc.scss */
+/* line 90, ../sass/component/_block__sessions_fc.scss */
 .loader svg path,
 .loader svg rect {
   fill: #FF6700;
 }
 
-/* line 98, ../sass/component/_block__sessions_fc.scss */
+/* line 97, ../sass/component/_block__sessions_fc.scss */
 .loader-ajax .loader {
   background: none;
   position: absolute;
 }
-/* line 101, ../sass/component/_block__sessions_fc.scss */
+/* line 100, ../sass/component/_block__sessions_fc.scss */
 .loader-ajax .loader.loader-hidden {
   display: block;
 }
 
-/* line 107, ../sass/component/_block__sessions_fc.scss */
+/* line 106, ../sass/component/_block__sessions_fc.scss */
 .special-ajax-link {
   display: block;
   position: relative;
 }
-/* line 110, ../sass/component/_block__sessions_fc.scss */
+/* line 109, ../sass/component/_block__sessions_fc.scss */
 .special-ajax-link .handle-group-level1 {
   position: absolute;
   right: 0;
   top: 0;
 }
 
-/* line 118, ../sass/component/_block__sessions_fc.scss */
+/* line 117, ../sass/component/_block__sessions_fc.scss */
 .sessions-buttons-wrap {
   width: 108px;
   height: 36px;
@@ -10324,7 +10355,7 @@ div#google_translate_element img {
   margin-bottom: 6px;
   z-index: 999;
 }
-/* line 130, ../sass/component/_block__sessions_fc.scss */
+/* line 129, ../sass/component/_block__sessions_fc.scss */
 .sessions-buttons-wrap span {
   background-color: #e0e6e9;
   display: block;
@@ -10347,23 +10378,23 @@ div#google_translate_element img {
   background-size: contain;
   background-origin: content-box;
 }
-/* line 151, ../sass/component/_block__sessions_fc.scss */
+/* line 150, ../sass/component/_block__sessions_fc.scss */
 .sessions-buttons-wrap span.handle-group-level1, .sessions-buttons-wrap span.handle-group-ind-items-level2, .sessions-buttons-wrap span.handle-group-ind-items-level3 {
   background-image: url("../images/gn-icons/move.png");
   float: right;
   cursor: move;
 }
-/* line 158, ../sass/component/_block__sessions_fc.scss */
+/* line 157, ../sass/component/_block__sessions_fc.scss */
 .sessions-buttons-wrap span.editatron {
   background-image: url("../images/gn-icons/icon-edit.png");
 }
-/* line 161, ../sass/component/_block__sessions_fc.scss */
+/* line 160, ../sass/component/_block__sessions_fc.scss */
 .sessions-buttons-wrap span.deleteatron {
   background-image: url("../images/gn-icons/icon-delete.png");
   cursor: pointer;
 }
 
-/* line 168, ../sass/component/_block__sessions_fc.scss */
+/* line 167, ../sass/component/_block__sessions_fc.scss */
 .pane-gn2-sessions-fc fieldset.group-level1,
 #block-gn2-sessions-fc-session-form fieldset.group-level1,
 .group-ind-items-level2,
@@ -10372,16 +10403,16 @@ div#google_translate_element img {
   margin: 0;
 }
 
-/* line 176, ../sass/component/_block__sessions_fc.scss */
+/* line 175, ../sass/component/_block__sessions_fc.scss */
 .ui-dialog.ui-widget-content.media-wrapper {
   z-index: 99999;
 }
-/* line 178, ../sass/component/_block__sessions_fc.scss */
+/* line 177, ../sass/component/_block__sessions_fc.scss */
 .ui-dialog.ui-widget-content.media-wrapper .ui-dialog-buttonpane {
   display: none;
 }
 
-/* line 184, ../sass/component/_block__sessions_fc.scss */
+/* line 183, ../sass/component/_block__sessions_fc.scss */
 #erroratron-holder {
   background: rgba(0, 0, 0, 0.6);
   display: block;
@@ -10398,7 +10429,7 @@ div#google_translate_element img {
   font-size: 18px;
 }
 
-/* line 201, ../sass/component/_block__sessions_fc.scss */
+/* line 200, ../sass/component/_block__sessions_fc.scss */
 #gn2-session-alert {
   display: block;
   color: white;
@@ -10413,18 +10444,18 @@ div#google_translate_element img {
   text-align: center;
 }
 
-/* line 216, ../sass/component/_block__sessions_fc.scss */
+/* line 215, ../sass/component/_block__sessions_fc.scss */
 .logged-in #gn2-session-alert {
   top: 35px;
 }
 
-/* line 221, ../sass/component/_block__sessions_fc.scss */
+/* line 220, ../sass/component/_block__sessions_fc.scss */
 .not-logged-in .pane-gn2-sessions .updateatron,
 .not-logged-in #block-gn2-sessions-fc-session-form .updateatron {
   top: 0;
 }
 
-/* line 227, ../sass/component/_block__sessions_fc.scss */
+/* line 226, ../sass/component/_block__sessions_fc.scss */
 .field-name-field-description,
 .field-name-field-session-presenter,
 .pane-gn2-sessions-fc .fieldset-wrapper form,
@@ -10433,7 +10464,7 @@ div#google_translate_element img {
   padding: 0px;
   margin: 0 0 1.5em 0;
 }
-/* line 233, ../sass/component/_block__sessions_fc.scss */
+/* line 232, ../sass/component/_block__sessions_fc.scss */
 .field-name-field-description .form-item,
 .field-name-field-session-presenter .form-item,
 .pane-gn2-sessions-fc .fieldset-wrapper form .form-item,
@@ -10441,7 +10472,7 @@ div#google_translate_element img {
 .ajaxatron-wrapper .form-item {
   position: relative;
 }
-/* line 235, ../sass/component/_block__sessions_fc.scss */
+/* line 234, ../sass/component/_block__sessions_fc.scss */
 .field-name-field-description .form-item .tabledrag-toggle-weight-wrapper,
 .field-name-field-session-presenter .form-item .tabledrag-toggle-weight-wrapper,
 .pane-gn2-sessions-fc .fieldset-wrapper form .form-item .tabledrag-toggle-weight-wrapper,
@@ -10454,7 +10485,7 @@ div#google_translate_element img {
   right: 0;
 }
 
-/* line 249, ../sass/component/_block__sessions_fc.scss */
+/* line 248, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .fieldset-wrapper,
 html.js .page-course-session-form #content .fieldset-wrapper,
 #mini-panel-session_entityform_results .fieldset-wrapper {
@@ -10464,7 +10495,7 @@ html.js .page-course-session-form #content .fieldset-wrapper,
   padding-left: 12px;
   padding-right: 12px;
 }
-/* line 255, ../sass/component/_block__sessions_fc.scss */
+/* line 254, ../sass/component/_block__sessions_fc.scss */
 .group-level1 html.js .pane-gn2-sessions-fc .fieldset-wrapper, .group-level1
 html.js .page-course-session-form #content .fieldset-wrapper, .group-level1
 #mini-panel-session_entityform_results .fieldset-wrapper {
@@ -10474,14 +10505,14 @@ html.js .page-course-session-form #content .fieldset-wrapper, .group-level1
   padding-left: 12px;
   margin-top: -24px;
 }
-/* line 262, ../sass/component/_block__sessions_fc.scss */
+/* line 261, ../sass/component/_block__sessions_fc.scss */
 .group-ind-items-level2 html.js .pane-gn2-sessions-fc .fieldset-wrapper, .group-ind-items-level2
 html.js .page-course-session-form #content .fieldset-wrapper, .group-ind-items-level2
 #mini-panel-session_entityform_results .fieldset-wrapper {
   padding-top: 24px;
   padding-left: 36px;
 }
-/* line 268, ../sass/component/_block__sessions_fc.scss */
+/* line 267, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc legend,
 html.js .page-course-session-form #content legend,
 #mini-panel-session_entityform_results legend {
@@ -10502,7 +10533,6 @@ html.js .page-course-session-form #content legend *,
 #mini-panel-session_entityform_results legend * {
   line-height: inherit;
   font-size: inherit;
-  font-weight: inherit;
   text-transform: inherit;
   padding-top: 0;
   padding-right: 0;
@@ -10510,13 +10540,13 @@ html.js .page-course-session-form #content legend *,
   padding-left: 0;
   margin: 0;
 }
-/* line 52, ../sass/component/_block__sessions_fc.scss */
+/* line 51, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc legend .fieldset-title,
 html.js .page-course-session-form #content legend .fieldset-title,
 #mini-panel-session_entityform_results legend .fieldset-title {
   padding-left: 24px;
 }
-/* line 272, ../sass/component/_block__sessions_fc.scss */
+/* line 271, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc h3.field-label,
 html.js .page-course-session-form #content h3.field-label,
 #mini-panel-session_entityform_results h3.field-label {
@@ -10529,20 +10559,20 @@ html.js .page-course-session-form #content h3.field-label,
   font-size: 14px;
   font-weight: bold;
 }
-/* line 283, ../sass/component/_block__sessions_fc.scss */
+/* line 282, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc input[type=number],
 html.js .page-course-session-form #content input[type=number],
 #mini-panel-session_entityform_results input[type=number] {
   width: 50px;
 }
-/* line 286, ../sass/component/_block__sessions_fc.scss */
+/* line 285, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #gn2-sessions-fc-toggle,
 html.js .page-course-session-form #content #gn2-sessions-fc-toggle,
 #mini-panel-session_entityform_results #gn2-sessions-fc-toggle {
   cursor: pointer;
   padding-bottom: 1em;
 }
-/* line 290, ../sass/component/_block__sessions_fc.scss */
+/* line 289, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .weight-input-toggle-item,
 html.js .page-course-session-form #content .weight-input-toggle-item,
 #mini-panel-session_entityform_results .weight-input-toggle-item {
@@ -10551,31 +10581,31 @@ html.js .page-course-session-form #content .weight-input-toggle-item,
   margin-left: .5em;
   display: none;
 }
-/* line 295, ../sass/component/_block__sessions_fc.scss */
+/* line 294, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .weight-input-toggle-item.clicked,
 html.js .page-course-session-form #content .weight-input-toggle-item.clicked,
 #mini-panel-session_entityform_results .weight-input-toggle-item.clicked {
   display: inline-block;
 }
-/* line 304, ../sass/component/_block__sessions_fc.scss */
+/* line 303, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-presenter-wrap,
 html.js .page-course-session-form #content .field-presenter-wrap,
 #mini-panel-session_entityform_results .field-presenter-wrap {
   padding-bottom: .5em;
 }
-/* line 308, ../sass/component/_block__sessions_fc.scss */
+/* line 307, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media,
 html.js .page-course-session-form #content .field-name-field-media,
 #mini-panel-session_entityform_results .field-name-field-media {
   display: table;
 }
-/* line 310, ../sass/component/_block__sessions_fc.scss */
+/* line 309, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media .file,
 html.js .page-course-session-form #content .field-name-field-media .file,
 #mini-panel-session_entityform_results .field-name-field-media .file {
   display: table-row;
 }
-/* line 312, ../sass/component/_block__sessions_fc.scss */
+/* line 311, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media .file img.file-icon,
 html.js .pane-gn2-sessions-fc .field-name-field-media .file a,
 html.js .pane-gn2-sessions-fc .field-name-field-media .file span.file-size,
@@ -10588,13 +10618,13 @@ html.js .page-course-session-form #content .field-name-field-media .file span.fi
   display: table-cell;
   vertical-align: middle;
 }
-/* line 318, ../sass/component/_block__sessions_fc.scss */
+/* line 317, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media .file img.file-icon,
 html.js .page-course-session-form #content .field-name-field-media .file img.file-icon,
 #mini-panel-session_entityform_results .field-name-field-media .file img.file-icon {
   width: 50px;
 }
-/* line 321, ../sass/component/_block__sessions_fc.scss */
+/* line 320, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media .file a,
 html.js .pane-gn2-sessions-fc .field-name-field-media .file span.file-size,
 html.js .page-course-session-form #content .field-name-field-media .file a,
@@ -10603,19 +10633,19 @@ html.js .page-course-session-form #content .field-name-field-media .file span.fi
 #mini-panel-session_entityform_results .field-name-field-media .file span.file-size {
   padding-left: .5em;
 }
-/* line 326, ../sass/component/_block__sessions_fc.scss */
+/* line 325, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media fieldset#edit-field-media-und,
 html.js .page-course-session-form #content .field-name-field-media fieldset#edit-field-media-und,
 #mini-panel-session_entityform_results .field-name-field-media fieldset#edit-field-media-und {
   padding: 0;
 }
-/* line 328, ../sass/component/_block__sessions_fc.scss */
+/* line 327, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media fieldset#edit-field-media-und legend,
 html.js .page-course-session-form #content .field-name-field-media fieldset#edit-field-media-und legend,
 #mini-panel-session_entityform_results .field-name-field-media fieldset#edit-field-media-und legend {
   padding: 0;
 }
-/* line 331, ../sass/component/_block__sessions_fc.scss */
+/* line 330, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media fieldset#edit-field-media-und .fieldset-legend,
 html.js .page-course-session-form #content .field-name-field-media fieldset#edit-field-media-und .fieldset-legend,
 #mini-panel-session_entityform_results .field-name-field-media fieldset#edit-field-media-und .fieldset-legend {
@@ -10623,13 +10653,13 @@ html.js .page-course-session-form #content .field-name-field-media fieldset#edit
   padding: 0;
   font-weight: bold;
 }
-/* line 336, ../sass/component/_block__sessions_fc.scss */
+/* line 335, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-media fieldset#edit-field-media-und .fieldset-wrapper,
 html.js .page-course-session-form #content .field-name-field-media fieldset#edit-field-media-und .fieldset-wrapper,
 #mini-panel-session_entityform_results .field-name-field-media fieldset#edit-field-media-und .fieldset-wrapper {
   padding: 0;
 }
-/* line 342, ../sass/component/_block__sessions_fc.scss */
+/* line 341, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset,
 html.js .pane-gn2-sessions-fc fieldset.collapsible,
 html.js .pane-gn2-sessions-fc fieldset.collapsed,
@@ -10644,7 +10674,7 @@ html.js .page-course-session-form #content fieldset.collapsed,
   padding-bottom: 0;
   min-height: 48px;
 }
-/* line 350, ../sass/component/_block__sessions_fc.scss */
+/* line 349, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset legend,
 html.js .pane-gn2-sessions-fc fieldset.collapsible legend,
 html.js .pane-gn2-sessions-fc fieldset.collapsed legend,
@@ -10656,7 +10686,7 @@ html.js .page-course-session-form #content fieldset.collapsed legend,
 #mini-panel-session_entityform_results fieldset.collapsed legend {
   display: inline-block !important;
 }
-/* line 360, ../sass/component/_block__sessions_fc.scss */
+/* line 359, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset.group-level2 legend, html.js .pane-gn2-sessions-fc fieldset.group-level3 legend,
 html.js .pane-gn2-sessions-fc fieldset.collapsible.group-level2 legend,
 html.js .pane-gn2-sessions-fc fieldset.collapsible.group-level3 legend,
@@ -10676,7 +10706,7 @@ html.js .page-course-session-form #content fieldset.collapsed.group-level3 legen
 #mini-panel-session_entityform_results fieldset.collapsed.group-level3 legend {
   display: inline-block;
 }
-/* line 363, ../sass/component/_block__sessions_fc.scss */
+/* line 362, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset.group-level2 .sessions-buttons-wrap, html.js .pane-gn2-sessions-fc fieldset.group-level3 .sessions-buttons-wrap,
 html.js .pane-gn2-sessions-fc fieldset.collapsible.group-level2 .sessions-buttons-wrap,
 html.js .pane-gn2-sessions-fc fieldset.collapsible.group-level3 .sessions-buttons-wrap,
@@ -10697,7 +10727,7 @@ html.js .page-course-session-form #content fieldset.collapsed.group-level3 .sess
   position: relative !important;
   top: 0 !important;
 }
-/* line 368, ../sass/component/_block__sessions_fc.scss */
+/* line 367, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset > .fieldset-wrapper,
 html.js .pane-gn2-sessions-fc fieldset.collapsible > .fieldset-wrapper,
 html.js .pane-gn2-sessions-fc fieldset.collapsed > .fieldset-wrapper,
@@ -10709,7 +10739,7 @@ html.js .page-course-session-form #content fieldset.collapsed > .fieldset-wrappe
 #mini-panel-session_entityform_results fieldset.collapsed > .fieldset-wrapper {
   position: relative;
 }
-/* line 370, ../sass/component/_block__sessions_fc.scss */
+/* line 369, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc fieldset > .fieldset-wrapper > .field-name-field-title,
 html.js .pane-gn2-sessions-fc fieldset.collapsible > .fieldset-wrapper > .field-name-field-title,
 html.js .pane-gn2-sessions-fc fieldset.collapsed > .fieldset-wrapper > .field-name-field-title,
@@ -10721,19 +10751,19 @@ html.js .page-course-session-form #content fieldset.collapsed > .fieldset-wrappe
 #mini-panel-session_entityform_results fieldset.collapsed > .fieldset-wrapper > .field-name-field-title {
   display: none;
 }
-/* line 377, ../sass/component/_block__sessions_fc.scss */
+/* line 376, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.group-level1,
 html.js .page-course-session-form #content .collapse-processed.group-level1,
 #mini-panel-session_entityform_results .collapse-processed.group-level1 {
   padding-top: 6px;
 }
-/* line 379, ../sass/component/_block__sessions_fc.scss */
+/* line 378, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.group-level1 .field-name-field-description,
 html.js .page-course-session-form #content .collapse-processed.group-level1 .field-name-field-description,
 #mini-panel-session_entityform_results .collapse-processed.group-level1 .field-name-field-description {
   margin-top: 12px;
 }
-/* line 382, ../sass/component/_block__sessions_fc.scss */
+/* line 381, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.group-level1 legend,
 html.js .page-course-session-form #content .collapse-processed.group-level1 legend,
 #mini-panel-session_entityform_results .collapse-processed.group-level1 legend {
@@ -10741,14 +10771,14 @@ html.js .page-course-session-form #content .collapse-processed.group-level1 lege
   padding-left: 12px;
 }
 @supports (-moz-appearance: none) and (display: contents) {
-  /* line 387, ../sass/component/_block__sessions_fc.scss */
+  /* line 386, ../sass/component/_block__sessions_fc.scss */
   html.js .pane-gn2-sessions-fc .collapse-processed.group-level1 .sessions-buttons-wrap.level1Buttons,
   html.js .page-course-session-form #content .collapse-processed.group-level1 .sessions-buttons-wrap.level1Buttons,
   #mini-panel-session_entityform_results .collapse-processed.group-level1 .sessions-buttons-wrap.level1Buttons {
     top: -70px;
   }
 }
-/* line 393, ../sass/component/_block__sessions_fc.scss */
+/* line 392, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.collapsed.group-level1,
 html.js .page-course-session-form #content .collapse-processed.collapsed.group-level1,
 #mini-panel-session_entityform_results .collapse-processed.collapsed.group-level1 {
@@ -10756,26 +10786,26 @@ html.js .page-course-session-form #content .collapse-processed.collapsed.group-l
   padding-top: 6px;
   padding-bottom: 0;
 }
-/* line 397, ../sass/component/_block__sessions_fc.scss */
+/* line 396, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.collapsed.group-level1 .sessions-buttons-wrap.level1Buttons,
 html.js .page-course-session-form #content .collapse-processed.collapsed.group-level1 .sessions-buttons-wrap.level1Buttons,
 #mini-panel-session_entityform_results .collapse-processed.collapsed.group-level1 .sessions-buttons-wrap.level1Buttons {
   top: 0;
 }
-/* line 401, ../sass/component/_block__sessions_fc.scss */
+/* line 400, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .collapse-processed.collapsed legend,
 html.js .page-course-session-form #content .collapse-processed.collapsed legend,
 #mini-panel-session_entityform_results .collapse-processed.collapsed legend {
   margin-bottom: 0 !important;
   position: absolute;
 }
-/* line 408, ../sass/component/_block__sessions_fc.scss */
+/* line 407, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc form#gn2-sessions-update-form,
 html.js .page-course-session-form #content form#gn2-sessions-update-form,
 #mini-panel-session_entityform_results form#gn2-sessions-update-form {
   display: inline-block;
 }
-/* line 431, ../sass/component/_block__sessions_fc.scss */
+/* line 430, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron,
 html.js .page-course-session-form #content a.ajaxatron,
 #mini-panel-session_entityform_results a.ajaxatron {
@@ -10827,7 +10857,7 @@ html.js .page-course-session-form #content a.ajaxatron a:hover,
 #mini-panel-session_entityform_results a.ajaxatron a:hover {
   color: white;
 }
-/* line 439, ../sass/component/_block__sessions_fc.scss */
+/* line 438, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level1,
 html.js .page-course-session-form #content a.ajaxatron.level1,
 #mini-panel-session_entityform_results a.ajaxatron.level1 {
@@ -10837,42 +10867,42 @@ html.js .page-course-session-form #content a.ajaxatron.level1,
   background-color: #24556a;
   border-color: #0a181e;
 }
-/* line 445, ../sass/component/_block__sessions_fc.scss */
+/* line 444, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level1:hover,
 html.js .page-course-session-form #content a.ajaxatron.level1:hover,
 #mini-panel-session_entityform_results a.ajaxatron.level1:hover {
   background-color: #15303d;
   border-color: #0a181e;
 }
-/* line 450, ../sass/component/_block__sessions_fc.scss */
+/* line 449, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level2,
 html.js .page-course-session-form #content a.ajaxatron.level2,
 #mini-panel-session_entityform_results a.ajaxatron.level2 {
   background-color: #377f9f;
   border-color: #1b3f4f;
 }
-/* line 453, ../sass/component/_block__sessions_fc.scss */
+/* line 452, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level2:hover,
 html.js .page-course-session-form #content a.ajaxatron.level2:hover,
 #mini-panel-session_entityform_results a.ajaxatron.level2:hover {
   background-color: #275b72;
   border-color: #1b3f4f;
 }
-/* line 458, ../sass/component/_block__sessions_fc.scss */
+/* line 457, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level3,
 html.js .page-course-session-form #content a.ajaxatron.level3,
 #mini-panel-session_entityform_results a.ajaxatron.level3 {
   background-color: #58a4c6;
   border-color: #2c6781;
 }
-/* line 461, ../sass/component/_block__sessions_fc.scss */
+/* line 460, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc a.ajaxatron.level3:hover,
 html.js .page-course-session-form #content a.ajaxatron.level3:hover,
 #mini-panel-session_entityform_results a.ajaxatron.level3:hover {
   background-color: #3985a7;
   border-color: #2c6781;
 }
-/* line 468, ../sass/component/_block__sessions_fc.scss */
+/* line 467, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #updateatron-holder,
 html.js .page-course-session-form #content #updateatron-holder,
 #mini-panel-session_entityform_results #updateatron-holder {
@@ -10885,34 +10915,34 @@ html.js .page-course-session-form #content #updateatron-holder,
   height: 7.6em;
   z-index: 1001;
 }
-/* line 477, ../sass/component/_block__sessions_fc.scss */
+/* line 476, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #updateatron-holder.show-updateatron,
 html.js .page-course-session-form #content #updateatron-holder.show-updateatron,
 #mini-panel-session_entityform_results #updateatron-holder.show-updateatron {
   display: block;
   text-align: center;
 }
-/* line 483, ../sass/component/_block__sessions_fc.scss */
+/* line 482, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #cancelatron-holder,
 html.js .page-course-session-form #content #cancelatron-holder,
 #mini-panel-session_entityform_results #cancelatron-holder {
   display: none;
   z-index: 99999;
 }
-/* line 486, ../sass/component/_block__sessions_fc.scss */
+/* line 485, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #cancelatron-holder a,
 html.js .page-course-session-form #content #cancelatron-holder a,
 #mini-panel-session_entityform_results #cancelatron-holder a {
   background: rgba(255, 0, 0, 0.8);
 }
-/* line 489, ../sass/component/_block__sessions_fc.scss */
+/* line 488, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc #cancelatron-holder.show-updateatron,
 html.js .page-course-session-form #content #cancelatron-holder.show-updateatron,
 #mini-panel-session_entityform_results #cancelatron-holder.show-updateatron {
   display: inline-block;
   margin-left: 10px;
 }
-/* line 495, ../sass/component/_block__sessions_fc.scss */
+/* line 494, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc input.updateatron.form-submit,
 html.js .page-course-session-form #content input.updateatron.form-submit,
 #mini-panel-session_entityform_results input.updateatron.form-submit {
@@ -10962,7 +10992,7 @@ html.js .page-course-session-form #content input.updateatron.form-submit a:hover
 #mini-panel-session_entityform_results input.updateatron.form-submit a:hover {
   color: white;
 }
-/* line 501, ../sass/component/_block__sessions_fc.scss */
+/* line 500, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc input.updateatron.form-submit.show-updateatron,
 html.js .page-course-session-form #content input.updateatron.form-submit.show-updateatron,
 #mini-panel-session_entityform_results input.updateatron.form-submit.show-updateatron {
@@ -10971,7 +11001,7 @@ html.js .page-course-session-form #content input.updateatron.form-submit.show-up
   margin: auto;
   margin-top: 1.8em;
 }
-/* line 509, ../sass/component/_block__sessions_fc.scss */
+/* line 508, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .group-level1,
 html.js .page-course-session-form #content .group-level1,
 #mini-panel-session_entityform_results .group-level1 {
@@ -10979,19 +11009,19 @@ html.js .page-course-session-form #content .group-level1,
   border-radius: 6px;
   margin-bottom: .5em !important;
 }
-/* line 513, ../sass/component/_block__sessions_fc.scss */
+/* line 512, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .group-level1 > legend,
 html.js .page-course-session-form #content .group-level1 > legend,
 #mini-panel-session_entityform_results .group-level1 > legend {
   position: relative;
 }
-/* line 515, ../sass/component/_block__sessions_fc.scss */
+/* line 514, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .group-level1 > legend .fieldset-legend,
 html.js .page-course-session-form #content .group-level1 > legend .fieldset-legend,
 #mini-panel-session_entityform_results .group-level1 > legend .fieldset-legend {
   position: relative;
 }
-/* line 521, ../sass/component/_block__sessions_fc.scss */
+/* line 520, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-session-day,
 html.js .page-course-session-form #content .field-name-field-session-day,
 #mini-panel-session_entityform_results .field-name-field-session-day {
@@ -11001,7 +11031,7 @@ html.js .page-course-session-form #content .field-name-field-session-day,
   margin-bottom: 12px;
   border-radius: 6px;
 }
-/* line 529, ../sass/component/_block__sessions_fc.scss */
+/* line 528, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .field-name-field-unit,
 html.js .page-course-session-form #content .field-name-field-unit,
 #mini-panel-session_entityform_results .field-name-field-unit {
@@ -11011,7 +11041,7 @@ html.js .page-course-session-form #content .field-name-field-unit,
   margin-bottom: 12px;
   border-radius: 6px;
 }
-/* line 537, ../sass/component/_block__sessions_fc.scss */
+/* line 536, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .sessions-ajax-form,
 html.js .page-course-session-form #content .sessions-ajax-form,
 #mini-panel-session_entityform_results .sessions-ajax-form {
@@ -11023,7 +11053,7 @@ html.js .page-course-session-form #content .sessions-ajax-form,
   height: 50px;
   width: 100%;
 }
-/* line 553, ../sass/component/_block__sessions_fc.scss */
+/* line 552, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container,
 html.js .page-course-session-form #content .session-container,
 #mini-panel-session_entityform_results .session-container {
@@ -11032,42 +11062,42 @@ html.js .page-course-session-form #content .session-container,
   border-bottom-width: 1px !important;
   border-bottom-style: solid !important;
 }
-/* line 558, ../sass/component/_block__sessions_fc.scss */
+/* line 557, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level1,
 html.js .page-course-session-form #content .session-container.level1,
 #mini-panel-session_entityform_results .session-container.level1 {
   background-color: #eef0f1;
   border-color: #eef0f1;
 }
-/* line 561, ../sass/component/_block__sessions_fc.scss */
+/* line 560, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level1.ajaxatron-hover,
 html.js .page-course-session-form #content .session-container.level1.ajaxatron-hover,
 #mini-panel-session_entityform_results .session-container.level1.ajaxatron-hover {
   background-color: #e6e9ea;
   border-color: #647177;
 }
-/* line 566, ../sass/component/_block__sessions_fc.scss */
+/* line 565, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level2,
 html.js .page-course-session-form #content .session-container.level2,
 #mini-panel-session_entityform_results .session-container.level2 {
   background-color: #dee1e3;
   border-color: #dee1e3;
 }
-/* line 569, ../sass/component/_block__sessions_fc.scss */
+/* line 568, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level2.ajaxatron-hover,
 html.js .page-course-session-form #content .session-container.level2.ajaxatron-hover,
 #mini-panel-session_entityform_results .session-container.level2.ajaxatron-hover {
   background-color: #d5dadc;
   border-color: #647177;
 }
-/* line 574, ../sass/component/_block__sessions_fc.scss */
+/* line 573, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level3,
 html.js .page-course-session-form #content .session-container.level3,
 #mini-panel-session_entityform_results .session-container.level3 {
   background-color: #cdd3d5;
   border-color: #cdd3d5;
 }
-/* line 577, ../sass/component/_block__sessions_fc.scss */
+/* line 576, ../sass/component/_block__sessions_fc.scss */
 html.js .pane-gn2-sessions-fc .session-container.level3.ajaxatron-hover,
 html.js .page-course-session-form #content .session-container.level3.ajaxatron-hover,
 #mini-panel-session_entityform_results .session-container.level3.ajaxatron-hover {
@@ -11075,20 +11105,20 @@ html.js .page-course-session-form #content .session-container.level3.ajaxatron-h
   border-color: #647177;
 }
 
-/* line 588, ../sass/component/_block__sessions_fc.scss */
+/* line 587, ../sass/component/_block__sessions_fc.scss */
 .gu-transit {
   background-color: #3882a3 !important;
   border: 3px solid #24556a !important;
   height: 2.9em !important;
   overflow: hidden !important;
 }
-/* line 593, ../sass/component/_block__sessions_fc.scss */
+/* line 592, ../sass/component/_block__sessions_fc.scss */
 .gu-transit .weight-input-toggle-item {
   display: none !important;
 }
 
-/* line 599, ../sass/component/_block__sessions_fc.scss */
-.special-ajax-link a {
+/* line 598, ../sass/component/_block__sessions_fc.scss */
+.special-ajax-link > a {
   display: block;
   padding: .3em .6em;
   background: #ecf0f2;
@@ -11096,11 +11126,11 @@ html.js .page-course-session-form #content .session-container.level3.ajaxatron-h
   margin-bottom: .75em;
   border-radius: 6px;
 }
-/* line 606, ../sass/component/_block__sessions_fc.scss */
-.special-ajax-link a:hover {
+/* line 605, ../sass/component/_block__sessions_fc.scss */
+.special-ajax-link > a:hover {
   background: #dde4e7;
 }
-/* line 611, ../sass/component/_block__sessions_fc.scss */
+/* line 610, ../sass/component/_block__sessions_fc.scss */
 .special-ajax-link fieldset a,
 .special-ajax-link fieldset a:hover {
   background: none;
@@ -11109,17 +11139,17 @@ html.js .page-course-session-form #content .session-container.level3.ajaxatron-h
 /*
  * Styling the session add/edit form.  Some inelegant overrides in here.
  */
-/* line 622, ../sass/component/_block__sessions_fc.scss */
+/* line 621, ../sass/component/_block__sessions_fc.scss */
 .session-edit-container,
 .ajaxatron-ajax {
   padding: 0;
 }
-/* line 626, ../sass/component/_block__sessions_fc.scss */
+/* line 625, ../sass/component/_block__sessions_fc.scss */
 .session-edit-container .fieldset-wrapper,
 .ajaxatron-ajax .fieldset-wrapper {
   display: block !important;
 }
-/* line 629, ../sass/component/_block__sessions_fc.scss */
+/* line 628, ../sass/component/_block__sessions_fc.scss */
 .session-edit-container #page,
 .ajaxatron-ajax #page {
   position: fixed;
@@ -11130,7 +11160,7 @@ html.js .page-course-session-form #content .session-container.level3.ajaxatron-h
   top: 0;
   left: 0;
 }
-/* line 637, ../sass/component/_block__sessions_fc.scss */
+/* line 636, ../sass/component/_block__sessions_fc.scss */
 .session-edit-container #page #content,
 .ajaxatron-ajax #page #content {
   position: relative;
@@ -11141,25 +11171,25 @@ html.js .page-course-session-form #content .session-container.level3.ajaxatron-h
   border-radius: 6px;
 }
 
-/* line 648, ../sass/component/_block__sessions_fc.scss */
+/* line 647, ../sass/component/_block__sessions_fc.scss */
 form#gn2-sessions-fc-add-form {
   padding: 24px;
   margin: 0;
 }
-/* line 651, ../sass/component/_block__sessions_fc.scss */
+/* line 650, ../sass/component/_block__sessions_fc.scss */
 form#gn2-sessions-fc-add-form .form-wrapper {
   margin: 0;
   padding: 0;
 }
-/* line 654, ../sass/component/_block__sessions_fc.scss */
+/* line 653, ../sass/component/_block__sessions_fc.scss */
 form#gn2-sessions-fc-add-form .form-wrapper#edit-field-media-und {
   margin-bottom: 0;
 }
-/* line 658, ../sass/component/_block__sessions_fc.scss */
+/* line 657, ../sass/component/_block__sessions_fc.scss */
 form#gn2-sessions-fc-add-form .ctools-modal-media-file-edit.button.edit {
   margin-left: 28px;
 }
-/* line 661, ../sass/component/_block__sessions_fc.scss */
+/* line 660, ../sass/component/_block__sessions_fc.scss */
 form#gn2-sessions-fc-add-form .fieldset-wrapper {
   margin-top: 0 !important;
   padding: 0;
@@ -12016,7 +12046,7 @@ body.adminimal-menu div#admin-menu,
 }
 /* line 100, ../sass/component/_node__course--sessions.scss */
 .pane-session-entityform-results .view-sessions-created .today.Day {
-  background: url('../images/bg-diagonal-tile-grey.png?1470584745');
+  background: url('../images/bg-diagonal-tile-grey.png?1538749196');
 }
 /* line 102, ../sass/component/_node__course--sessions.scss */
 .pane-session-entityform-results .view-sessions-created .today.Day a {
@@ -12329,7 +12359,7 @@ body.adminimal-menu div#admin-menu,
 
 /* line 332, ../sass/component/_node__course--sessions.scss */
 .entityform-session > h2 {
-  background: url('../images/gn-icons/icon-edit.png?1470584745') no-repeat;
+  background: url('../images/gn-icons/icon-edit.png?1538748391') no-repeat;
   width: 20px;
   height: 20px;
   position: absolute;
@@ -13567,7 +13597,7 @@ em.placeholder {
 .page-node.node-type-news .view-news-announcements-posts .view-empty {
   display: none;
 }
-/* line 8, ../sass/component/_node__display-news.scss */
+/* line 7, ../sass/component/_node__display-news.scss */
 .node-type-news .node-header-links .print,
 .node-type-news .node-header-links .share,
 .node-type-news .node-header-links .download_pdf,
@@ -13575,6 +13605,11 @@ em.placeholder {
 .page-node.node-type-news .node-header-links .share,
 .page-node.node-type-news .node-header-links .download_pdf {
   display: none !important;
+}
+
+/* line 17, ../sass/component/_node__display-news.scss */
+.view-news-announcements-posts.view-display-id-panel_pane_1 .view-footer {
+  display: none;
 }
 
 /* line 4, ../sass/component/_node__display-post.scss */
@@ -17101,7 +17136,7 @@ div.file-download.pane-gn2-file-download-gallery-media form div.gn2_file_downloa
 /* line 77, ../sass/component/_downloadable-file.scss */
 div.file-download.pane-gn2-file-download-gallery-media form div.gn2_file_download_link-wrap:nth-child(even) {
   background-repeat: repeat;
-  background-image: url('../images/table_row_background_even.png?1470584745');
+  background-image: url('../images/table_row_background_even.png?1538749196');
 }
 /* line 83, ../sass/component/_downloadable-file.scss */
 div.file-download.pane-gn2-file-download-gallery-media form div.gn2_file_download_link-wrap div.form-item.form-type-checkbox {
@@ -18453,6 +18488,11 @@ div.gn2_file_download_link.file .file-size {
   background: #ccc;
 }
 
+/* line 115, ../sass/component/_page__support_ticket.scss */
+#field-whitelist-dates-add-more-wrapper .end-date-wrapper {
+  display: block;
+}
+
 /* line 24, ../sass/component/_revisions_diff_view.scss */
 .revision-log {
   border: 1px solid rgba(0, 0, 0, 0.125);
@@ -18494,6 +18534,7 @@ table.diff-revisions th input.form-submit {
   text-align: left;
   text-decoration: none;
   font-size: 1em;
+  background-color: rgba(44, 44, 44, 0.9);
 }
 /* line 169, ../sass/component/_buttons.scss */
 table.diff-revisions th input.form-submit:hover {
@@ -18574,6 +18615,7 @@ table.diff th input.form-submit {
   text-align: left;
   text-decoration: none;
   font-size: 1em;
+  background-color: rgba(44, 44, 44, 0.9);
 }
 /* line 169, ../sass/component/_buttons.scss */
 table.diff th input.form-submit:hover {
@@ -19652,6 +19694,24 @@ td.diff-context.diff-addedline div {
   vertical-align: bottom;
 }
 
+/* line 82, ../sass/component/_user__account--contacts.scss */
+form#privatemsg-list {
+  padding-top: 15px;
+}
+/* line 84, ../sass/component/_user__account--contacts.scss */
+form#privatemsg-list #edit-filter,
+form#privatemsg-list #edit-tag-add,
+form#privatemsg-list #edit-tag-add-submit,
+form#privatemsg-list #edit-tag-remove-submit,
+form#privatemsg-list .form-item-operation,
+form#privatemsg-list .form-item-tag-remove {
+  display: none;
+}
+/* line 92, ../sass/component/_user__account--contacts.scss */
+form#privatemsg-list table {
+  width: 100%;
+}
+
 /* Styling the Comments tab in the User Profile page */
 /* line 4, ../sass/component/_user__profile--comments.scss */
 .user-profile--comments .inner, .user-profile--posts .inner, .user-profile--events .inner {
@@ -20490,18 +20550,55 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   }
 }
 
+/* line 36, ../sass/component/_view__admin-content.scss */
+.view-filters {
+  width: 100%;
+  border-bottom: solid 1px #e5e5e5;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+/* line 44, ../sass/component/_view__admin-content.scss */
+.view-filters #views-exposed-form-search-resources-panel-pane-1 .views-exposed-form .views-exposed-widget .form-submit {
+  margin-top: 1.5em;
+}
+/* line 47, ../sass/component/_view__admin-content.scss */
+.view-filters #views-exposed-form-search-resources-panel-pane-1 .views-exposed-form .views-exposed-widget.views-submit-button {
+  clear: left;
+}
+
+/* line 57, ../sass/component/_view__admin-content.scss */
+.inside .views-field-title h3.field-content {
+  margin: 0.5em 0 0.25em;
+}
+
+/* line 64, ../sass/component/_view__admin-content.scss */
+.view-content .inline-thumb {
+  display: inline-block;
+  padding: 10px;
+  margin-right: 10px;
+}
+/* line 69, ../sass/component/_view__admin-content.scss */
+.view-content .inline-description {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 72, ../sass/component/_view__admin-content.scss */
+.view-content .inline-description h3 {
+  margin: 0 0 5px;
+}
+
 /* Responsive Styles */
-/* line 38, ../sass/component/_view__admin-content.scss */
+/* line 80, ../sass/component/_view__admin-content.scss */
 .view--admin--manage-users {
   position: relative;
 }
-/* line 40, ../sass/component/_view__admin-content.scss */
+/* line 82, ../sass/component/_view__admin-content.scss */
 .view--admin--manage-users #edit-combine-wrapper {
   width: auto;
   margin-bottom: 10em;
 }
 @media (min-width: 30em) {
-  /* line 40, ../sass/component/_view__admin-content.scss */
+  /* line 82, ../sass/component/_view__admin-content.scss */
   .view--admin--manage-users #edit-combine-wrapper {
     margin-left: 1.5em;
     margin-bottom: 8.5em;
@@ -20509,13 +20606,13 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   }
 }
 @media (min-width: 48em) {
-  /* line 40, ../sass/component/_view__admin-content.scss */
+  /* line 82, ../sass/component/_view__admin-content.scss */
   .view--admin--manage-users #edit-combine-wrapper {
     margin-bottom: 6.5em;
     width: auto;
   }
 }
-/* line 53, ../sass/component/_view__admin-content.scss */
+/* line 95, ../sass/component/_view__admin-content.scss */
 .view--admin--manage-users .description {
   margin-top: 10px;
   position: absolute;
@@ -20523,7 +20620,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   max-width: 725px;
 }
 @media (min-width: 48em) {
-  /* line 53, ../sass/component/_view__admin-content.scss */
+  /* line 95, ../sass/component/_view__admin-content.scss */
   .view--admin--manage-users .description {
     width: 80%;
   }
@@ -21051,6 +21148,29 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   border-left: none;
 }
 
+/* line 2, ../sass/component/_view__staff-directory.scss */
+.view-staff-directory .views-row {
+  padding-bottom: 1em;
+}
+/* line 5, ../sass/component/_view__staff-directory.scss */
+.view-staff-directory a {
+  font-weight: bold;
+  display: block;
+}
+/* line 9, ../sass/component/_view__staff-directory.scss */
+.view-staff-directory .field-name-field-user-rank-prefix {
+  display: inline;
+}
+/* line 12, ../sass/component/_view__staff-directory.scss */
+.view-staff-directory .field-name-field-user-title {
+  font-style: italic;
+  display: inline;
+}
+/* line 16, ../sass/component/_view__staff-directory.scss */
+.view-staff-directory .field-name-field-user-organization {
+  display: inline;
+}
+
 /* Styles for Support Desk related views */
 /* line 2, ../sass/component/_view__support_desk.scss */
 #views-exposed-form-support-page-1 {
@@ -21111,18 +21231,34 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   margin-left: 0;
   margin-bottom: .6em;
 }
-/* line 28, ../sass/component/_view-mode__user--info-block.scss */
+/* line 27, ../sass/component/_view-mode__user--info-block.scss */
+.user-user-info-block .sidebar,
+.user-participant-teaser .sidebar {
+  float: left;
+  width: 40%;
+  margin-left: 0%;
+  margin-right: -40%;
+}
+/* line 32, ../sass/component/_view-mode__user--info-block.scss */
 .user-user-info-block .sidebar .inner,
 .user-participant-teaser .sidebar .inner {
   padding-right: 10%;
 }
-/* line 36, ../sass/component/_view-mode__user--info-block.scss */
+/* line 37, ../sass/component/_view-mode__user--info-block.scss */
+.user-user-info-block .main-content,
+.user-participant-teaser .main-content {
+  float: left;
+  width: 60%;
+  margin-left: 40%;
+  margin-right: -100%;
+}
+/* line 44, ../sass/component/_view-mode__user--info-block.scss */
 .user-user-info-block .main-content .info-block__full-name,
 .user-participant-teaser .main-content .info-block__full-name {
   font-size: 1.05em;
   margin-bottom: .5em;
 }
-/* line 40, ../sass/component/_view-mode__user--info-block.scss */
+/* line 48, ../sass/component/_view-mode__user--info-block.scss */
 .user-user-info-block .main-content .icon-email,
 .user-participant-teaser .main-content .icon-email {
   font-size: 14px;
@@ -21130,7 +21266,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-top: 2px;
   margin-top: 3px;
 }
-/* line 48, ../sass/component/_view-mode__user--info-block.scss */
+/* line 56, ../sass/component/_view-mode__user--info-block.scss */
 .user-user-info-block .pane-user-field-country-of-residence .pane-title,
 .user-participant-teaser .pane-user-field-country-of-residence .pane-title {
   border: medium none;
@@ -21140,7 +21276,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   letter-spacing: unset;
   text-transform: none;
 }
-/* line 57, ../sass/component/_view-mode__user--info-block.scss */
+/* line 65, ../sass/component/_view-mode__user--info-block.scss */
 .user-user-info-block img,
 .user-participant-teaser img {
   width: 100%;
@@ -21558,12 +21694,13 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
 .icon-facebook,
 .icon-email,
 .icon-youtube,
-.icon-google-plus {
+.icon-google-plus,
+.icon-instagram {
   display: inline-block;
   min-height: 25px;
 }
 
-/* line 30, ../sass/component/_icons.scss */
+/* line 31, ../sass/component/_icons.scss */
 .icon-facebook {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21580,7 +21717,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 31, ../sass/component/_icons.scss */
+/* line 32, ../sass/component/_icons.scss */
 .icon-linkedin {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21597,7 +21734,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 32, ../sass/component/_icons.scss */
+/* line 33, ../sass/component/_icons.scss */
 .icon-twitter {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21614,7 +21751,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 33, ../sass/component/_icons.scss */
+/* line 34, ../sass/component/_icons.scss */
 .icon-email {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21631,7 +21768,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 34, ../sass/component/_icons.scss */
+/* line 35, ../sass/component/_icons.scss */
 .icon-website {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21649,6 +21786,23 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
 }
 
 /* line 36, ../sass/component/_icons.scss */
+.icon-instagram {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color: transparent;
+  font-size: 1.2em;
+  line-height: 1.2;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 22px;
+  margin-right: 15px;
+  color: #6c6c6c;
+  background-image: url(../images/gn-icons/contact-icons/icon-instagram.png);
+  padding-left: 28px;
+}
+
+/* line 38, ../sass/component/_icons.scss */
 .icon-mobile {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21665,7 +21819,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 37, ../sass/component/_icons.scss */
+/* line 39, ../sass/component/_icons.scss */
 .icon-youtube {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21682,7 +21836,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 29px;
 }
 
-/* line 38, ../sass/component/_icons.scss */
+/* line 40, ../sass/component/_icons.scss */
 .icon-google-plus {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21699,7 +21853,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 29px;
 }
 
-/* line 39, ../sass/component/_icons.scss */
+/* line 41, ../sass/component/_icons.scss */
 .icon-help {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21716,7 +21870,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 23px;
 }
 
-/* line 40, ../sass/component/_icons.scss */
+/* line 42, ../sass/component/_icons.scss */
 .icon-home {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21733,7 +21887,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 41, ../sass/component/_icons.scss */
+/* line 43, ../sass/component/_icons.scss */
 .icon-group {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21750,7 +21904,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 60px;
 }
 
-/* line 42, ../sass/component/_icons.scss */
+/* line 44, ../sass/component/_icons.scss */
 .icon-arrow-down {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21767,7 +21921,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 25px;
 }
 
-/* line 43, ../sass/component/_icons.scss */
+/* line 45, ../sass/component/_icons.scss */
 .icon-arrow-right {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21784,7 +21938,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 25px;
 }
 
-/* line 44, ../sass/component/_icons.scss */
+/* line 46, ../sass/component/_icons.scss */
 .icon-user {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21801,7 +21955,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 30px;
 }
 
-/* line 45, ../sass/component/_icons.scss */
+/* line 47, ../sass/component/_icons.scss */
 .icon-schedule {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21818,7 +21972,7 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 46, ../sass/component/_icons.scss */
+/* line 48, ../sass/component/_icons.scss */
 .icon-syllabus {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -21835,13 +21989,13 @@ body.page-user:not(.admin-menu):not(.gn-manager) .panels-layout.sidebar-right.no
   padding-left: 28px;
 }
 
-/* line 48, ../sass/component/_icons.scss */
+/* line 50, ../sass/component/_icons.scss */
 .gn-icon-wrapper {
   text-align: right;
   padding-bottom: 0.5em;
 }
 
-/* line 53, ../sass/component/_icons.scss */
+/* line 55, ../sass/component/_icons.scss */
 a.rate-thumbs-up-btn-up {
   text-indent: 100px;
   overflow: hidden;
@@ -22822,7 +22976,7 @@ a.rate-thumbs-up-btn-up {
 .page-topics .view-topics .comments-votes .num-comments,
 .page-tags .view-topics .comments-votes .num-comments,
 .page-countries .view-topics .comments-votes .num-comments {
-  background-image: url('../images/teaser-metadata/num_comments.png?1470584745');
+  background-image: url('../images/teaser-metadata/num_comments.png?1538749196');
 }
 /* line 184, ../sass/component/_page__topics.scss */
 .page-taxonomy-term.section-taxonomy .view-topics .comments-votes .rate-info,
@@ -23863,8 +24017,11 @@ div#privacy-statement {
 }
 
 @media (min-width: 30em) {
-  /* line 4, ../sass/component/_page__admin_files.scss */
+  /* line 5, ../sass/component/_page__admin_files.scss */
   body.page-admin-content-file #edit-field-topic .form-type-checkbox, body.page-admin-content-file #edit-field-country .form-type-checkbox, body.page-admin-content-file #edit-field-region .form-type-checkbox,
+  .page-file #edit-field-topic .form-type-checkbox,
+  .page-file #edit-field-country .form-type-checkbox,
+  .page-file #edit-field-region .form-type-checkbox,
   body.page-media-gallery-detail #edit-field-topic .form-type-checkbox,
   body.page-media-gallery-detail #edit-field-country .form-type-checkbox,
   body.page-media-gallery-detail #edit-field-region .form-type-checkbox {
@@ -23872,21 +24029,26 @@ div#privacy-statement {
     margin-top: 5px;
   }
 }
-/* line 9, ../sass/component/_page__admin_files.scss */
+/* line 10, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file .field-type-taxonomy-term-reference li,
+.page-file .field-type-taxonomy-term-reference li,
 body.page-media-gallery-detail .field-type-taxonomy-term-reference li {
   display: inline-block;
   min-width: 250px;
 }
-/* line 12, ../sass/component/_page__admin_files.scss */
+/* line 13, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file .field-type-taxonomy-term-reference li .no-term-reference-tree-button,
+.page-file .field-type-taxonomy-term-reference li .no-term-reference-tree-button,
 body.page-media-gallery-detail .field-type-taxonomy-term-reference li .no-term-reference-tree-button {
   display: none;
 }
-/* line 19, ../sass/component/_page__admin_files.scss */
+/* line 20, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file form.media-bulk-upload-multiedit-form input[type="submit"],
 body.page-admin-content-file form.file-form input[type="submit"],
 body.page-admin-content-file form#media-gallery-remove-item-form input[type="submit"],
+.page-file form.media-bulk-upload-multiedit-form input[type="submit"],
+.page-file form.file-form input[type="submit"],
+.page-file form#media-gallery-remove-item-form input[type="submit"],
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form input[type="submit"],
 body.page-media-gallery-detail form.file-form input[type="submit"],
 body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="submit"] {
@@ -23918,6 +24080,9 @@ body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="s
 body.page-admin-content-file form.media-bulk-upload-multiedit-form input[type="submit"]:hover,
 body.page-admin-content-file form.file-form input[type="submit"]:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form input[type="submit"]:hover,
+.page-file form.media-bulk-upload-multiedit-form input[type="submit"]:hover,
+.page-file form.file-form input[type="submit"]:hover,
+.page-file form#media-gallery-remove-item-form input[type="submit"]:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form input[type="submit"]:hover,
 body.page-media-gallery-detail form.file-form input[type="submit"]:hover,
 body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="submit"]:hover {
@@ -23927,6 +24092,9 @@ body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="s
 body.page-admin-content-file form.media-bulk-upload-multiedit-form input[type="submit"] a,
 body.page-admin-content-file form.file-form input[type="submit"] a,
 body.page-admin-content-file form#media-gallery-remove-item-form input[type="submit"] a,
+.page-file form.media-bulk-upload-multiedit-form input[type="submit"] a,
+.page-file form.file-form input[type="submit"] a,
+.page-file form#media-gallery-remove-item-form input[type="submit"] a,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form input[type="submit"] a,
 body.page-media-gallery-detail form.file-form input[type="submit"] a,
 body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="submit"] a {
@@ -23936,18 +24104,27 @@ body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="s
 body.page-admin-content-file form.media-bulk-upload-multiedit-form input[type="submit"] a:hover,
 body.page-admin-content-file form.file-form input[type="submit"] a:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form input[type="submit"] a:hover,
+.page-file form.media-bulk-upload-multiedit-form input[type="submit"] a:hover,
+.page-file form.file-form input[type="submit"] a:hover,
+.page-file form#media-gallery-remove-item-form input[type="submit"] a:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form input[type="submit"] a:hover,
 body.page-media-gallery-detail form.file-form input[type="submit"] a:hover,
 body.page-media-gallery-detail form#media-gallery-remove-item-form input[type="submit"] a:hover {
   color: white;
 }
-/* line 22, ../sass/component/_page__admin_files.scss */
+/* line 23, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file form.media-bulk-upload-multiedit-form > div > a,
 body.page-admin-content-file form.media-bulk-upload-multiedit-form #edit-cancel,
 body.page-admin-content-file form.file-form > div > a,
 body.page-admin-content-file form.file-form #edit-cancel,
 body.page-admin-content-file form#media-gallery-remove-item-form > div > a,
 body.page-admin-content-file form#media-gallery-remove-item-form #edit-cancel,
+.page-file form.media-bulk-upload-multiedit-form > div > a,
+.page-file form.media-bulk-upload-multiedit-form #edit-cancel,
+.page-file form.file-form > div > a,
+.page-file form.file-form #edit-cancel,
+.page-file form#media-gallery-remove-item-form > div > a,
+.page-file form#media-gallery-remove-item-form #edit-cancel,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form > div > a,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form #edit-cancel,
 body.page-media-gallery-detail form.file-form > div > a,
@@ -23985,6 +24162,12 @@ body.page-admin-content-file form.file-form > div > a:hover,
 body.page-admin-content-file form.file-form #edit-cancel:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form > div > a:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form #edit-cancel:hover,
+.page-file form.media-bulk-upload-multiedit-form > div > a:hover,
+.page-file form.media-bulk-upload-multiedit-form #edit-cancel:hover,
+.page-file form.file-form > div > a:hover,
+.page-file form.file-form #edit-cancel:hover,
+.page-file form#media-gallery-remove-item-form > div > a:hover,
+.page-file form#media-gallery-remove-item-form #edit-cancel:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form > div > a:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form #edit-cancel:hover,
 body.page-media-gallery-detail form.file-form > div > a:hover,
@@ -24000,6 +24183,12 @@ body.page-admin-content-file form.file-form > div > a a,
 body.page-admin-content-file form.file-form #edit-cancel a,
 body.page-admin-content-file form#media-gallery-remove-item-form > div > a a,
 body.page-admin-content-file form#media-gallery-remove-item-form #edit-cancel a,
+.page-file form.media-bulk-upload-multiedit-form > div > a a,
+.page-file form.media-bulk-upload-multiedit-form #edit-cancel a,
+.page-file form.file-form > div > a a,
+.page-file form.file-form #edit-cancel a,
+.page-file form#media-gallery-remove-item-form > div > a a,
+.page-file form#media-gallery-remove-item-form #edit-cancel a,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form > div > a a,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form #edit-cancel a,
 body.page-media-gallery-detail form.file-form > div > a a,
@@ -24015,6 +24204,12 @@ body.page-admin-content-file form.file-form > div > a a:hover,
 body.page-admin-content-file form.file-form #edit-cancel a:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form > div > a a:hover,
 body.page-admin-content-file form#media-gallery-remove-item-form #edit-cancel a:hover,
+.page-file form.media-bulk-upload-multiedit-form > div > a a:hover,
+.page-file form.media-bulk-upload-multiedit-form #edit-cancel a:hover,
+.page-file form.file-form > div > a a:hover,
+.page-file form.file-form #edit-cancel a:hover,
+.page-file form#media-gallery-remove-item-form > div > a a:hover,
+.page-file form#media-gallery-remove-item-form #edit-cancel a:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form > div > a a:hover,
 body.page-media-gallery-detail form.media-bulk-upload-multiedit-form #edit-cancel a:hover,
 body.page-media-gallery-detail form.file-form > div > a a:hover,
@@ -24023,8 +24218,9 @@ body.page-media-gallery-detail form#media-gallery-remove-item-form > div > a a:h
 body.page-media-gallery-detail form#media-gallery-remove-item-form #edit-cancel a:hover {
   color: white;
 }
-/* line 27, ../sass/component/_page__admin_files.scss */
+/* line 28, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file h2,
+.page-file h2,
 body.page-media-gallery-detail h2 {
   border: 1px solid #a4b6bf;
   padding: 10px;
@@ -24036,21 +24232,27 @@ body.page-media-gallery-detail h2 {
   background-repeat: no-repeat;
   font-weight: 300;
 }
-/* line 37, ../sass/component/_page__admin_files.scss */
+/* line 38, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file h2:hover,
+.page-file h2:hover,
 body.page-media-gallery-detail h2:hover {
   color: #2b647d;
 }
-/* line 40, ../sass/component/_page__admin_files.scss */
+/* line 41, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file h2.active,
+.page-file h2.active,
 body.page-media-gallery-detail h2.active {
   background-image: url("../images/gn-icons/icon-arrow-down-grey.png");
 }
-/* line 44, ../sass/component/_page__admin_files.scss */
+/* line 45, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file .file-form.file-image-form.form-wrapper,
 body.page-admin-content-file .file-form.file-video-form.form-wrapper,
 body.page-admin-content-file .file-form.file-document-form.form-wrapper,
 body.page-admin-content-file .file-form.file-audio-form.form-wrapper,
+.page-file .file-form.file-image-form.form-wrapper,
+.page-file .file-form.file-video-form.form-wrapper,
+.page-file .file-form.file-document-form.form-wrapper,
+.page-file .file-form.file-audio-form.form-wrapper,
 body.page-media-gallery-detail .file-form.file-image-form.form-wrapper,
 body.page-media-gallery-detail .file-form.file-video-form.form-wrapper,
 body.page-media-gallery-detail .file-form.file-document-form.form-wrapper,
@@ -24058,11 +24260,15 @@ body.page-media-gallery-detail .file-form.file-audio-form.form-wrapper {
   padding: 0 10px;
   display: none;
 }
-/* line 50, ../sass/component/_page__admin_files.scss */
+/* line 51, ../sass/component/_page__admin_files.scss */
 body.page-admin-content-file .file-form.file-image-form.form-wrapper.active,
 body.page-admin-content-file .file-form.file-video-form.form-wrapper.active,
 body.page-admin-content-file .file-form.file-document-form.form-wrapper.active,
 body.page-admin-content-file .file-form.file-audio-form.form-wrapper.active,
+.page-file .file-form.file-image-form.form-wrapper.active,
+.page-file .file-form.file-video-form.form-wrapper.active,
+.page-file .file-form.file-document-form.form-wrapper.active,
+.page-file .file-form.file-audio-form.form-wrapper.active,
 body.page-media-gallery-detail .file-form.file-image-form.form-wrapper.active,
 body.page-media-gallery-detail .file-form.file-video-form.form-wrapper.active,
 body.page-media-gallery-detail .file-form.file-document-form.form-wrapper.active,
@@ -24083,6 +24289,125 @@ body.page-media-gallery-detail .file-form.file-audio-form.form-wrapper.active {
 /* line 7, ../sass/component/_ewheel.scss */
 #ewheel-form input#CALCULATE {
   margin-top: 20px;
+}
+
+/* line 1, ../sass/component/_course__reports.scss */
+#user-report,
+#course-report {
+  width: 100%;
+}
+/* line 4, ../sass/component/_course__reports.scss */
+#user-report td,
+#course-report td {
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+/* line 8, ../sass/component/_course__reports.scss */
+#user-report td em,
+#course-report td em {
+  font-weight: bold;
+}
+/* line 12, ../sass/component/_course__reports.scss */
+#user-report .level1,
+#course-report .level1 {
+  padding-left: 0.5em;
+  text-align: left;
+}
+/* line 16, ../sass/component/_course__reports.scss */
+#user-report .level2,
+#course-report .level2 {
+  padding-left: 1.5em;
+  text-align: left;
+}
+/* line 19, ../sass/component/_course__reports.scss */
+#user-report .level2.file,
+#course-report .level2.file {
+  padding-left: 3.5em;
+}
+/* line 23, ../sass/component/_course__reports.scss */
+#user-report .level3,
+#course-report .level3 {
+  padding-left: 2.5em;
+  text-align: left;
+}
+/* line 26, ../sass/component/_course__reports.scss */
+#user-report .level3.file,
+#course-report .level3.file {
+  padding-left: 4.5em;
+}
+/* line 30, ../sass/component/_course__reports.scss */
+#user-report .complete,
+#course-report .complete {
+  color: green;
+}
+/* line 33, ../sass/component/_course__reports.scss */
+#user-report .incomplete,
+#course-report .incomplete {
+  color: red;
+}
+
+/* line 38, ../sass/component/_course__reports.scss */
+#interaction-report {
+  margin-bottom: 20px;
+}
+/* line 40, ../sass/component/_course__reports.scss */
+#interaction-report .complete {
+  color: green;
+}
+/* line 42, ../sass/component/_course__reports.scss */
+#interaction-report .complete:before {
+  content: "\2713";
+}
+/* line 46, ../sass/component/_course__reports.scss */
+#interaction-report .incomplete {
+  color: red;
+}
+/* line 48, ../sass/component/_course__reports.scss */
+#interaction-report .incomplete:before {
+  content: "\2715";
+}
+
+/* line 2, ../sass/component/_description.scss */
+.body-wrapper .small {
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+/* line 6, ../sass/component/_description.scss */
+.body-wrapper .small::before {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f7f9fb+100&0+0,1+100 */
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #f7f9fb 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #f7f9fb 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #f7f9fb 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#f7f9fb', GradientType=0);
+  /* IE6-9 */
+  content: "\00a0";
+  height: 30%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+/* line 19, ../sass/component/_description.scss */
+.body-wrapper .big {
+  height: auto;
+}
+/* line 22, ../sass/component/_description.scss */
+.body-wrapper .body-readmore {
+  width: 100%;
+}
+/* line 24, ../sass/component/_description.scss */
+.body-wrapper .body-readmore .readmore {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #91a8b3;
 }
 
 /* SMACSS theme rules */

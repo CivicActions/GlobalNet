@@ -166,8 +166,9 @@ function gn2_sessions_fc_load() {
   gn2_sessions_fc_sorter($fcs, 'field_collection_item');
   $fcs['#suffix'] = '';
   if (og_user_access('node', arg(1), 'administer_group')) {
+    $sessions_form = drupal_get_form('gn2_sessions_fc_update_form');
     $fcs['#suffix'] .= '<a class="ajaxatron level1" data-parent="send-to-nid" data-type="add" data-nid="' . arg(1) . '" data-level="level1" id="ajaxatron-' . arg(1) . '">' . t('New Session') . '</a>';
-    $fcs['#suffix'] .= drupal_render(drupal_get_form('gn2_sessions_fc_update_form'));
+    $fcs['#suffix'] .= drupal_render($sessions_form);
     $fcs['#suffix'] .= '<div class="ajaxatron-ajax ajaxatron-' . arg(1) . '"><div class="sessions-ajax-form"></div><div style="display:block;clear:both"></div></div>';
   }
 
@@ -189,7 +190,18 @@ function gn2_sessions_fc_block_output() {
  * Determine whether or not user should see session.
  */
 function gn2_sessions_fc_session_access($gid) {
-  if (og_is_member('node', $gid)) {
+
+  $org = node_load(arg(1));
+  $is_og_manager = '';
+  if (!empty($org->field_parent_organization[LANGUAGE_NONE][0]['target_id'])) {
+    global $user;
+    $org_id = $org->field_parent_organization[LANGUAGE_NONE][0]['target_id'];
+    $manager_roles = array('org_manager', 'hr_manager', 'faculty');
+    $og_roles = og_get_user_roles('node', $org_id, $user->uid);
+    $is_og_manager = array_intersect($manager_roles, $og_roles);
+  }
+
+  if (og_is_member('node', $gid) || !empty($is_og_manager)) {
     return TRUE;
   }
 
@@ -395,37 +407,23 @@ function gn2_sessions_fc_reload() {
  * Implements hook_init().
  */
 function gn2_sessions_fc_init() {
+
   if (arg(0) == 'node' && is_numeric(arg(1)) || arg(0) == 'course-session-form' || arg(0) == 'gn2_sessions_fc-minipanel') {
     drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc.js');
     drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc_theming.js');
     drupal_add_js(drupal_get_path('module', 'gn2_sessions_fc') . '/gn2_sessions_fc_refresh.js', array('scope' => 'footer'));
     drupal_add_js('misc/collapse.js');
-    $node = node_load(arg(1));
-    if ($node->type == 'course') {
+    $node = '';
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $node = node_load(arg(1));
+    }
+    if (!empty($node) && $node->type === 'course') {
       drupal_add_js(array('gn2_sessions_fc' => array('gn2_sessions_fc_tabs' => 'tabs')), 'setting');
       if (og_user_access('node', arg(1), 'administer group')) {
         drupal_add_js(array('gn2_sessions_fc' => array('gn2_sessions_fc_og_admin' => 'Yes')), 'setting');
       }
     }
-    global $user;
-    $gid = arg(1);
-    $role = user_role_load_by_name('file admin');
 
-    // Allow group admin to edit files.
-    if (og_user_access('node', $gid, 'administer group') && !user_has_role($role->rid)) {
-      $query = db_insert('users_roles')
-        ->fields(array(
-          'uid' => $user->uid,
-          'rid' => $role->rid,
-        ));
-      $query->execute();
-    }
-    else {
-      $query = db_delete('users_roles')
-        ->condition('uid', $user->uid)
-        ->condition('rid', $role->rid)
-        ->execute();
-    }
   }
 }
 
@@ -517,6 +515,7 @@ function gn2_sessions_fc_form_gn2_sessions_fc_add_form_alter(&$form, &$form_stat
       $items = arg(2) == 'edit' ? $entity->field_session_presenter[LANGUAGE_NONE] : array();
     }
     $fields[] = field_default_form('field_collection_item', $entity, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
+
   }
 
   $form += (array) $fields;
@@ -558,10 +557,11 @@ function gn2_sessions_fc_add_form_submit($form, &$form_state) {
       }
       if ($form_state['values']['field_media'][LANGUAGE_NONE][0]['fid'] != 0) {
         $i = 0;
-        foreach ($form_state['values']['field_media'][LANGUAGE_NONE] as $media) {
+        foreach ($form_state['input']['field_media'][LANGUAGE_NONE] as $key => $media) {
           if ($media['fid'] > 0) {
             $field_collection_item->field_media[LANGUAGE_NONE][$i]['fid'] = $media['fid'];
             $field_collection_item->field_media[LANGUAGE_NONE][$i]['display'] = $media['display'];
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['weight'] = $key;
             $i++;
           }
         }
@@ -593,10 +593,11 @@ function gn2_sessions_fc_add_form_submit($form, &$form_state) {
 
       if ($form_state['values']['field_media'][LANGUAGE_NONE][0]['fid'] != 0) {
         $i = 0;
-        foreach ($form_state['values']['field_media'][LANGUAGE_NONE] as $media) {
+        foreach ($form_state['input']['field_media'][LANGUAGE_NONE] as $key => $media) {
           if ($media['fid'] > 0) {
             $field_collection_item->field_media[LANGUAGE_NONE][$i]['fid'] = $media['fid'];
             $field_collection_item->field_media[LANGUAGE_NONE][$i]['display'] = $media['display'];
+            $field_collection_item->field_media[LANGUAGE_NONE][$i]['weight'] = $key;
             $i++;
           }
         }
@@ -723,3 +724,16 @@ function gn2_sessions_fc_panels_pane_content_alter($content, $pane, $args, $cont
   }
 
 }
+
+/**
+ * Implements hook_file_download().
+ */
+function gn2_sessions_fc_file_download($uri) {
+  if (!empty($_SESSION['og_context']['gid'])) {
+    if (og_is_member('node', $_SESSION['og_context']['gid'], 'user')) {
+      $info = file_uri_to_object($uri);
+      return ['Content-Type' => $info->filemime];
+    }
+  }
+}
+

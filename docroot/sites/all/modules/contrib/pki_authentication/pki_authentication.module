@@ -167,7 +167,6 @@ function pki_authentication_login($token = '') {
   $destination = (filter_input(INPUT_GET, 'destination')) ? filter_input(INPUT_GET, 'destination') :
     '';
   drupal_goto($destination);
-  drupal_goto('');
 }
 /**
  * Extract the user info generated from the temporary table.
@@ -257,7 +256,6 @@ function pki_authentication_form_alter(&$form, &$form_state, $form_id) {
       // $lang = (empty($account->language)) ? 'und' : $account->language;
       $lang = LANGUAGE_NONE;
       if ($form['#user']->uid == $user->uid and empty($user->pki_authentication_pki_string[$lang][0]['value'])) {
-        // $url = variable_get('pki_authentication_base_root', '') . '/' . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));
         global $base_url;
         $cac_base_root = variable_get('pki_authentication_base_root', $base_url);
         $url = variable_get('gn2_cac_url', $cac_base_root) . url(variable_get('pki_authentication_pki_extraction_path', 'misc/pki_authentication/') . 'extract_pki.php?form=' . $form_id . "&uid=" . $user->uid, array('external' => TRUE));

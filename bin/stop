@@ -4,11 +4,12 @@ source $(dirname $0)/../lib/bowline/bowline
 
 echo "# STOPPING CONTAINERS"
 $DCOMPOSE stop
+if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+  docker-sync stop
+fi
 
 EXIT=$?
 echo -e "\033[m Exit Status: $EXIT"
 
 bowline
 exit $EXIT
-
-

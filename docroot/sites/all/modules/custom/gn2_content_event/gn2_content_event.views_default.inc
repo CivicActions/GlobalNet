@@ -865,9 +865,7 @@ function gn2_content_event_views_default_views() {
   /* events */  /* Events Calendar */ $handler->display->display_options['row_plugin'] = 'calendar_entity';
   /* events */  /* Events Calendar */ $handler->display->display_options['row_options']['colors']['legend'] = 'type';
   /* events */  /* Events Calendar */ $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
-  /* events */  /* Events Calendar */   'alumni_group' => '#ffffff',
   /* events */  /* Events Calendar */   'announcement' => '#ffffff',
-  /* events */  /* Events Calendar */   'coi' => '#ffffff',
   /* events */  /* Events Calendar */   'course' => '#ffffff',
   /* events */  /* Events Calendar */   'program' => '#ffffff',
   /* events */  /* Events Calendar */   'event' => '#ffffff',

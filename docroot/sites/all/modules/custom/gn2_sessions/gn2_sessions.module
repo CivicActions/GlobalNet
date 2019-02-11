@@ -1,8 +1,53 @@
 <?php
+
 /**
  * @file
  * Module file for gn2_sessions.
  */
+
+/**
+ * Implements hook_block_info().
+ */
+function gn2_sessions_block_info() {
+  $blocks['gn2_sessions_pdf_link'] = [
+    'info' => t('Print syllabus link'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  ];
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function gn2_sessions_block_view($delta = '') {
+  $block = [];
+
+  switch ($delta) {
+    case 'gn2_sessions_pdf_link':
+      $block = [
+        'subject' => '',
+        'content' => gn2_sessions_get_pdf_link(),
+      ];
+      break;
+  }
+  return $block;
+}
+
+function gn2_sessions_get_pdf_link() {
+  if (arg(0) === 'node' && is_numeric(arg(1))) {
+    $nid = arg(1);
+    $link = l(t('Download syllabus'), 'printpdf/' . $nid, [
+      'attributes' => [
+        'class' => ['single-download'],
+        'target' => '_blank',
+        'rel' => 'noopener',
+      ],
+    ]);
+
+    return '<div class="gn2_file_download_link file">' . $link . '</div>';
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -55,6 +100,26 @@ function gn2_sessions_form_alter(&$form, &$form_state, $form_id) {
       }
     }
 
+  }
+
+  // Hide PDF settings on node add/edit forms.
+  if (isset($form['print']['print_pdf'])) {
+    $form['print']['print_pdf']['#access'] = 0;
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_sessions_module_implements_alter(&$implementations, $hook) {
+  // We need to ensure our form_alter hook runs last.
+  if ($hook == 'form_alter') {
+    // module_implements() iterates through $implementations with a foreach loop
+    // which PHP iterates in the order that the items were added, so to move an
+    // item to the end of the array, we remove it and then add it.
+    $group = $implementations['gn2_sessions'];
+    unset($implementations['gn2_sessions']);
+    $implementations['gn2_sessions'] = $group;
   }
 }
 
@@ -173,12 +238,11 @@ function gn2_sessions_form_submit(&$form, $form_state) {
   if ($type == 'Day') {
     $time = $form_state['values']['field_day_number'][LANGUAGE_NONE][0]['value'];
     drupal_goto('node/' . $nid, array(
-        'query' => array(
-          'n' => $form_state['values']['field_session_association'][LANGUAGE_NONE][0]['target_id'],
-          'time' => $time,
-        ),
-      )
-    );
+      'query' => array(
+        'n' => $form_state['values']['field_session_association'][LANGUAGE_NONE][0]['target_id'],
+        'time' => $time,
+      ),
+    ));
   }
 
   if ($type == 'Unit') {
@@ -188,12 +252,11 @@ function gn2_sessions_form_submit(&$form, $form_state) {
     $n = $pid->field_session_association[LANGUAGE_NONE][0]['target_id'];
     $time = $pid->field_day_number[LANGUAGE_NONE][0]['value'];
     drupal_goto('node/' . $nid, array(
-        'query' => array(
-          'n' => $n,
-          'time' => $time,
-        ),
-      )
-    );
+      'query' => array(
+        'n' => $n,
+        'time' => $time,
+      ),
+    ));
   }
 }
 
@@ -515,4 +578,251 @@ function gn2_sessions_menu_local_tasks_alter(&$data, $router_item, $root_path) {
       $i++;
     }
   }
+}
+
+/**
+ * Builds the Session to be rendered.
+ *
+ * @param int $nid
+ *   The node ID to render.
+ *
+ * @return array
+ *   Returns a render array.
+ */
+function gn2_sessions_get_pdf($nid) {
+  $node = node_load($nid);
+  return gn2_sessions_prepare_session_to_print($node);
+}
+
+/**
+ * Gathers all of the session information.
+ *
+ * @param object $node
+ *   The node to be converted to a PDF.
+ *
+ * @return array
+ *   Returns a render array.
+ */
+function gn2_sessions_prepare_session_to_print($node) {
+  $sessions = [];
+  if (isset($node->field_session)) {
+    $session_references = field_get_items('node', $node, 'field_session');
+    if (!empty($session_references)) {
+      foreach ($session_references as $key => $session_id) {
+        $field_collection_entity = field_collection_field_get_entity($session_id);
+        $weight = gn2_sessions_get_single_field_collection_field_values($field_collection_entity, 'field_weight');
+        $array_key = ($weight === '10000') ? $key + (int) $weight : $weight;
+        $sessions[$array_key] = gn2_sessions_get_sessions_to_print($field_collection_entity);
+      }
+    }
+  }
+  ksort($sessions);
+  return $sessions;
+}
+
+/**
+ * Gathers the top level Session information.
+ *
+ * @param object $field_collection_session
+ *   The field_collection object for the Session.
+ *
+ * @return array
+ *   Returns a render array for the Session with Day and Unit sessions.
+ */
+function gn2_sessions_get_sessions_to_print($field_collection_session) {
+  $description = gn2_sessions_get_single_field_collection_field_values($field_collection_session, 'field_description');
+  $filtered_description = _gn2_sessions_remove_media_tags($description);
+  $sessions = [
+    'title' => [
+      '#markup' => '<h2>' . gn2_sessions_get_single_field_collection_field_values($field_collection_session, 'field_title') . '</h2>',
+    ],
+    'description' => [
+      '#markup' => '<p>' . $filtered_description . '</p>',
+    ],
+  ];
+
+  // Get the Day sessions.
+  if (!empty($field_collection_session->field_session_day)) {
+    $day_session_reference = field_get_items('field_collection_item', $field_collection_session, 'field_session_day');
+    $sessions['days'] = gn2_sessions_get_day_sessions_to_print($day_session_reference);
+  }
+  return $sessions;
+}
+
+/**
+ * Gathers the Day session information.
+ *
+ * @param array $day_id_array
+ *   The Day session array containing the field_collections reference IDs.
+ *
+ * @return array
+ *   Returns a render array for the Day session.
+ */
+function gn2_sessions_get_day_sessions_to_print($day_id_array) {
+  $day_sessions = [];
+  foreach ($day_id_array as $key => $day_id) {
+    $field_collection_day = field_collection_field_get_entity($day_id);
+    $weight = gn2_sessions_get_single_field_collection_field_values($field_collection_day, 'field_weight');
+    $array_key = ($weight === '10000') ? $key + (int) $weight : $weight;
+    $description = gn2_sessions_get_single_field_collection_field_values($field_collection_day, 'field_description');
+    $filtered_description = _gn2_sessions_remove_media_tags($description);
+    $day_sessions[$array_key] = [
+      '#type' => 'container',
+      'title' => [
+        '#markup' => '<h3>' . gn2_sessions_get_single_field_collection_field_values($field_collection_day, 'field_title') . '</h3>',
+      ],
+      'description' => [
+        '#markup' => '<p>' . $filtered_description . '</p>',
+      ],
+      '#attributes' => [
+        'style' => ['margin-left: 10px;'],
+      ],
+    ];
+    $presenters = gn2_sessions_get_presenters($field_collection_day);
+    if (!empty($presenters)) {
+      $title = format_plural(count($presenters), 'Presenter', 'Presenters');
+      $day_sessions[$array_key]['presenters'] = [
+        '#title' => t('!present', ['!present' => $title]),
+        '#items' => $presenters,
+        '#theme' => 'item_list',
+      ];
+    }
+    $files = gn2_sessions_get_media_link($field_collection_day);
+    if (!empty($files)) {
+      $title = format_plural(count($files), 'File', 'Files');
+      $day_sessions[$array_key]['files'] = [
+        '#title' => t('!files', ['!files' => $title]),
+        '#items' => $files,
+        '#theme' => 'item_list',
+      ];
+    }
+
+    // Get the Day sessions.
+    if (!empty($field_collection_day->field_unit)) {
+      $unit_session_reference = field_get_items('field_collection_item', $field_collection_day, 'field_unit');
+      $day_sessions[$array_key]['units'] = gn2_sessions_get_unit_sessions_to_print($unit_session_reference);
+    }
+  }
+  ksort($day_sessions);
+  return $day_sessions;
+}
+
+/**
+ * Gathers the Unit session information.
+ *
+ * @param array $unit_id_array
+ *   The Unit session array containing the field_collections reference IDs.
+ *
+ * @return array
+ *   Returns a render array for the Unit session.
+ */
+function gn2_sessions_get_unit_sessions_to_print($unit_id_array) {
+  $unit_sessions = [];
+  foreach ($unit_id_array as $key => $unit_id) {
+    $field_collection_unit = field_collection_field_get_entity($unit_id);
+    $weight = gn2_sessions_get_single_field_collection_field_values($field_collection_unit, 'field_weight');
+    $array_key = ($weight === '10000') ? $key + (int) $weight : $weight;
+    $description = gn2_sessions_get_single_field_collection_field_values($field_collection_unit, 'field_description');
+    $filtered_description = _gn2_sessions_remove_media_tags($description);
+    $unit_sessions[$array_key] = [
+      '#type' => 'container',
+      'title' => [
+        '#markup' => '<h4>' . gn2_sessions_get_single_field_collection_field_values($field_collection_unit, 'field_title') . '</h4>',
+      ],
+      'description' => [
+        '#markup' => '<p>' . $filtered_description . '</p>',
+      ],
+      '#attributes' => [
+        'style' => ['margin-left: 20px;'],
+      ],
+    ];
+    $presenters = gn2_sessions_get_presenters($field_collection_unit);
+    if (!empty($presenters)) {
+      $title = format_plural(count($presenters), 'Presenter', 'Presenters');
+      $day_sessions[$array_key]['presenters'] = [
+        '#title' => t('!present', ['!present' => $title]),
+        '#items' => $presenters,
+        '#theme' => 'item_list',
+      ];
+    }
+    $files = gn2_sessions_get_media_link($field_collection_unit);
+    if (!empty($files)) {
+      $title = format_plural(count($files), 'File', 'Files');
+      $day_sessions[$array_key]['files'] = [
+        '#title' => t('!files', ['!files' => $title]),
+        '#items' => $files,
+        '#theme' => 'item_list',
+      ];
+    }
+  }
+  ksort($unit_sessions);
+  return $unit_sessions;
+}
+
+/**
+ * Return the field collection field values for a given entity.
+ *
+ * @param array $entity
+ *   The field_collection field from which to get the values.
+ * @param string $field_name
+ *   The field name.
+ *
+ * @return string
+ *   Returns the field value for the given field.
+ */
+function gn2_sessions_get_single_field_collection_field_values($entity, $field_name) {
+  $value = field_get_items('field_collection_item', $entity, $field_name);
+  if ($value) {
+    return $value[0]['value'];
+  }
+}
+
+/**
+ * Return the field collection field values for a given entity.
+ *
+ * @param array $entity
+ *   The field_collection field from which to get the values.
+ *
+ * @return array
+ *   Returns an array of containing the name of the presenters.
+ */
+function gn2_sessions_get_presenters($entity) {
+  $presenter_users = field_get_items('field_collection_item', $entity, 'field_session_presenter');
+  $field_values = [];
+  if ($presenter_users) {
+    foreach ($presenter_users as $value) {
+      $presenter_user_object = user_load($value['target_id']);
+      $first_name = field_get_items('user', $presenter_user_object, 'field_first_name');
+      $last_name = field_get_items('user', $presenter_user_object, 'field_last_name');
+      $full_name = ($first_name && $last_name) ? $first_name[0]['value'] . ' ' . $last_name[0]['value'] : $presenter_user_object->name;
+      $field_values[] = $full_name;
+    }
+  }
+  return $field_values;
+}
+
+/**
+ * Gets the media entity references and returns an array of links to the files.
+ *
+ * @param array $entity
+ *   The field_collection_item with the file entity references.
+ *
+ * @return array
+ *   Returns an array of links.
+ */
+function gn2_sessions_get_media_link($entity) {
+  $media_values = field_get_items('field_collection_item', $entity, 'field_media');
+  $files = [];
+  if ($media_values) {
+    foreach ($media_values as $fid) {
+      $file = file_load($fid['fid']);
+      $file_url = file_create_url($file->uri);
+      $files[] = l($file->filename, $file_url);
+    }
+  }
+  return $files;
+}
+
+function _gn2_sessions_remove_media_tags($string) {
+  return preg_replace(MEDIA_WYSIWYG_TOKEN_REGEX, ' ', $string);
 }

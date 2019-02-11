@@ -1,4 +1,4 @@
-(function ($, Drupal, window, document, undefined) {
+(function ($) {
 
   Drupal.behaviors.gn2_sessions_fc_theming = {
     attach: function (context, settings) {
@@ -41,8 +41,8 @@
             $(this).closest(".session-container").removeClass("ajaxatron-hover");
           }
         );
-      })
+      });
     }
   };
 
-})(jQuery, Drupal, this, this.document);
+}(jQuery));

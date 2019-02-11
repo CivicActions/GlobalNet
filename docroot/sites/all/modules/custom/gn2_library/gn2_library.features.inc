@@ -63,13 +63,13 @@ function gn2_library_default_search_api_index() {
         "field_link:url" : { "type" : "uri" },
         "field_resource_category" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_resource_description:value" : { "type" : "text" },
-        "field_resource_language" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "field_resource_language" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_resource_tags" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_resource_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "nid" : { "type" : "integer" },
         "og_group_ref" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "node" },
         "search_api_language" : { "type" : "string" },
-        "title" : { "type" : "text" }
+        "title" : { "type" : "string" }
       },
       "data_alter_callbacks" : {
         "search_api_alter_bundle_filter" : {

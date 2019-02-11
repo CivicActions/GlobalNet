@@ -261,9 +261,12 @@ function gn2_themeparts_swap_block_view_alter(&$data, $block) {
 
   // For the site logo block...
   if ($block->module == 'gn2_base_config' && $block->delta == 'site-logo') {
-
+    $org_nid = !empty($data['content']['#organization']->nid) ? $data['content']['#organization']->nid : '';
     // Site logo is changed depending on the organization.
-    $file_path = variable_get("gn2_themeparts_swap_filepath_logo-{$data['content']['#organization']->nid}", NULL);
+    $file_path = '';
+    if (!empty($org_nid)) {
+      $file_path = variable_get("gn2_themeparts_swap_filepath_logo-{$data['content']['#organization']->nid}", NULL);
+    }
 
     // Replaces logo if under the account page. Keep login styles.
     if (arg(0) == 'account' && isset($_SESSION['gn2_context_organization_nid'])) {
@@ -284,8 +287,9 @@ function gn2_themeparts_swap_block_view_alter(&$data, $block) {
         'title' => t('GlobalNet Home'),
       ),
     );
+    $org_title = !empty($data['content']['#organization']->title) ? $data['content']['#organization']->title : '';
     $data['content']['name'] = array(
-      '#markup' => l($data['content']['#organization']->title, "<front>", $url_parameters),
+      '#markup' => l($org_title, "<front>", $url_parameters),
       '#prefix' => '<h1 class="organization-name">',
       '#suffix' => '</h1>',
     );

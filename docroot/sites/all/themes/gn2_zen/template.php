@@ -19,7 +19,7 @@ function gn2_zen_preprocess_field(&$variables, $hook) {
       $t1 = _gn2_content_event_convert_date_to_user_timezone($start, 'H:i');
       $output = '<span class="date-display-single">' . $d1 . ' - ' . $t1;
 
-      $end = $variables['element']['#items'][0]['value2'];
+      $end = !empty($variables['element']['#items'][0]['value2']) ? $variables['element']['#items'][0]['value2'] : '';
       if ($start != $end) {
         $d2 = _gn2_content_event_convert_date_to_user_timezone($end, 'd M Y');
         $t2 = _gn2_content_event_convert_date_to_user_timezone($end, 'H:i');
@@ -39,8 +39,8 @@ function gn2_zen_preprocess_field(&$variables, $hook) {
       $i = 0;
       $count = count($variables['items']);
       while ($i <= $count - 1) {
-        $user = user_load_by_name($variables['items'][$i]['#markup']);
-
+        $user = user_load_by_name($variables['items'][$i]['#label']);
+        $variables['items'][$i] = '';
         $image = !empty($user->picture->uri) ? '<img src="' . image_style_url('media_thumbnail', $user->picture->uri) . '"/>' : '<img src ="/sites/all/themes/gn2_zen/images/generic-head.jpg">';
         $user_link = l($image, 'user/' . $user->uid, array('html' => TRUE));
         $first = !empty($user->field_name_first[LANGUAGE_NONE][0]['safe_value']) ? $user->field_name_first[LANGUAGE_NONE][0]['safe_value'] : '';

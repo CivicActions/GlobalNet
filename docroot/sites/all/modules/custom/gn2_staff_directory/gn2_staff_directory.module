@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the gn2_staff_directory feature.
+ */
+
+include_once 'gn2_staff_directory.features.inc';

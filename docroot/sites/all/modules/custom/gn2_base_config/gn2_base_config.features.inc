@@ -64,46 +64,6 @@ function gn2_base_config_views_api($module = NULL, $api = NULL) {
  */
 function gn2_base_config_default_entityform_type() {
   $items = array();
-  $items['contact_support'] = entity_import('entityform_type', '{
-    "type" : "contact_support",
-    "label" : "Contact GlobalNET",
-    "data" : {
-      "draftable" : 0,
-      "draft_redirect_path" : "",
-      "draft_button_text" : "",
-      "draft_save_text" : { "value" : "", "format" : "full_html" },
-      "submit_button_text" : "",
-      "submit_confirm_msg" : "",
-      "your_submissions" : "",
-      "disallow_resubmit_msg" : "",
-      "delete_confirm_msg" : "",
-      "page_title_view" : "",
-      "preview_page" : 0,
-      "submission_page_title" : "Contact Support",
-      "submission_text" : {
-        "value" : "\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\r\\n",
-        "format" : "filtered_html"
-      },
-      "submission_show_submitted" : 0,
-      "submissions_view" : "default",
-      "user_submissions_view" : "default",
-      "form_status" : "ENTITYFORM_OPEN",
-      "roles" : { "1" : "1", "2" : "2", "9" : "9", "10" : 0 },
-      "resubmit_action" : "new",
-      "redirect_path" : "",
-      "instruction_pre" : {
-        "value" : "\\u003Cp\\u003EIf you have a technical question or need technical support, please use the Technical Support form linked in the bottom right footer.\\u003C\\/p\\u003E\\r\\n",
-        "format" : "filtered_html"
-      }
-    },
-    "weight" : "0",
-    "paths" : { "submit" : {
-        "source" : "eform\\/submit\\/contact-support",
-        "alias" : "contact-support",
-        "language" : "und"
-      }
-    }
-  }');
   $items['course_feedback'] = entity_import('entityform_type', '{
     "type" : "course_feedback",
     "label" : "Course Feedback",
@@ -252,14 +212,13 @@ function gn2_base_config_flag_default_flags() {
     'title' => 'Favorite',
     'global' => 0,
     'types' => array(
-      0 => 'alumni_group',
-      1 => 'announcement',
-      2 => 'course',
-      3 => 'event',
-      4 => 'group',
-      5 => 'news',
-      6 => 'post',
-      7 => 'publication',
+      0 => 'announcement',
+      1 => 'course',
+      2 => 'event',
+      3 => 'group',
+      4 => 'news',
+      5 => 'post',
+      6 => 'publication',
     ),
     'flag_short' => 'Add as Favorite',
     'flag_long' => 'Add this [node:type] to your favorites',
@@ -456,6 +415,21 @@ function gn2_base_config_image_default_styles() {
   /* media_gallery__160x160_ */     ),
   /* media_gallery__160x160_ */   ),
   /* media_gallery__160x160_ */ );
+
+  // Exported image style: medium_square.
+  $styles['medium_square'] = array(
+  /* medium_square */   'label' => 'medium_square',
+  /* medium_square */   'effects' => array(
+  /* medium_square */     2 => array(
+  /* medium_square */       'name' => 'image_scale_and_crop',
+  /* medium_square */       'data' => array(
+  /* medium_square */         'width' => 300,
+  /* medium_square */         'height' => 300,
+  /* medium_square */       ),
+  /* medium_square */       'weight' => 1,
+  /* medium_square */     ),
+  /* medium_square */   ),
+  /* medium_square */ );
 
   // Exported image style: news_author_thumbnail.
   $styles['news_author_thumbnail'] = array(
@@ -775,14 +749,6 @@ function gn2_base_config_default_message_type() {
  */
 function gn2_base_config_node_info() {
   $items = array(
-    'alumni_group' => array(
-      'name' => t('Alumni Group'),
-      'base' => 'node_content',
-      'description' => t('An alumni group is a community of people who have attended events and classes together.'),
-      'has_title' => '1',
-      'title_label' => t('Alumni Group Title'),
-      'help' => '',
-    ),
     'announcement' => array(
       'name' => t('Announcement'),
       'base' => 'node_content',

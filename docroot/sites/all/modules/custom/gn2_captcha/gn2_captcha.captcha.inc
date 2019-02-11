@@ -21,26 +21,10 @@ function gn2_captcha_captcha_default_points() {
   $captcha = new stdClass();
   $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
   $captcha->api_version = 1;
-  $captcha->form_id = 'comment_node_alumni_group_form';
-  $captcha->module = '';
-  $captcha->captcha_type = '';
-  $export['comment_node_alumni_group_form'] = $captcha;
-
-  $captcha = new stdClass();
-  $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
-  $captcha->api_version = 1;
   $captcha->form_id = 'comment_node_announcement_form';
   $captcha->module = '';
   $captcha->captcha_type = '';
   $export['comment_node_announcement_form'] = $captcha;
-
-  $captcha = new stdClass();
-  $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
-  $captcha->api_version = 1;
-  $captcha->form_id = 'comment_node_coi_form';
-  $captcha->module = '';
-  $captcha->captcha_type = '';
-  $export['comment_node_coi_form'] = $captcha;
 
   $captcha = new stdClass();
   $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
@@ -173,14 +157,6 @@ function gn2_captcha_captcha_default_points() {
   $captcha = new stdClass();
   $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
   $captcha->api_version = 1;
-  $captcha->form_id = 'contact_support_entityform_edit_form';
-  $captcha->module = '';
-  $captcha->captcha_type = 'default';
-  $export['contact_support_entityform_edit_form'] = $captcha;
-
-  $captcha = new stdClass();
-  $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
-  $captcha->api_version = 1;
   $captcha->form_id = 'tech_support_entityform_edit_form';
   $captcha->module = '';
   $captcha->captcha_type = 'default';
@@ -217,6 +193,14 @@ function gn2_captcha_captcha_default_points() {
   $captcha->module = '';
   $captcha->captcha_type = '';
   $export['user_register_form'] = $captcha;
+
+  $captcha = new stdClass();
+  $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */
+  $captcha->api_version = 1;
+  $captcha->form_id = 'support_node_form';
+  $captcha->module = '';
+  $captcha->captcha_type = 'default';
+  $export['support_node_form'] = $captcha;
 
   $captcha = new stdClass();
   $captcha->disabled = FALSE; /* Edit this to true to make a default captcha disabled initially */

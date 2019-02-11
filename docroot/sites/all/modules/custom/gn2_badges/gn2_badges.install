@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ *   Install and update functions for GN2 badges.class module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_badges_schema() {
+  $schema = [];
+
+  $schema['gn2_badges_user_totals'] = [
+    'description' => 'The base table for GN2 badges.class',
+    'fields' => [
+      'bid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'level' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => 'gn2_badges_level_one',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'unique keys' => [
+      'bid' => [
+        'bid',
+      ],
+    ],
+    'primary key' => [
+      'uid',
+    ],
+  ];
+
+  return $schema;
+}

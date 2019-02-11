@@ -18,3 +18,9 @@ $DCOMPOSE rm --force -v
 # The remove orphans option is important for removing containers that might be
 # defined outside of the main docker-compose.yml file.
 $DCOMPOSE down --volumes --remove-orphans
+
+if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+  docker-sync stop
+  docker-sync clean
+fi
+exit 0;

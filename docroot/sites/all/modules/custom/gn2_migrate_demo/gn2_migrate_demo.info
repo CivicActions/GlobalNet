@@ -1,0 +1,4 @@
+name = GN2 Migrate Demo
+description = Just a placeholder
+core = 7.x
+package = GlobalNET

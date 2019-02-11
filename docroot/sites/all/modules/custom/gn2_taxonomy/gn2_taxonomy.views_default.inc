@@ -1648,8 +1648,6 @@ function gn2_taxonomy_views_default_views() {
   /* topics */  /* Topic OG Groups */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* topics */  /* Topic OG Groups */ $handler->display->display_options['filters']['type']['relationship'] = 'reverse_field_topic_node';
   /* topics */  /* Topic OG Groups */ $handler->display->display_options['filters']['type']['value'] = array(
-  /* topics */  /* Topic OG Groups */   'alumni_group' => 'alumni_group',
-  /* topics */  /* Topic OG Groups */   'coi' => 'coi',
   /* topics */  /* Topic OG Groups */   'group' => 'group',
   /* topics */  /* Topic OG Groups */ );
   /* topics */  /* Topic OG Groups */ $handler->display->display_options['argument_input'] = array(
@@ -1748,9 +1746,7 @@ function gn2_taxonomy_views_default_views() {
   /* topics */  /* Country OG Terms List */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* topics */  /* Country OG Terms List */ $handler->display->display_options['filters']['type']['relationship'] = 'og_membership_related_node';
   /* topics */  /* Country OG Terms List */ $handler->display->display_options['filters']['type']['value'] = array(
-  /* topics */  /* Country OG Terms List */   'alumni_group' => 'alumni_group',
   /* topics */  /* Country OG Terms List */   'announcement' => 'announcement',
-  /* topics */  /* Country OG Terms List */   'coi' => 'coi',
   /* topics */  /* Country OG Terms List */   'course' => 'course',
   /* topics */  /* Country OG Terms List */   'event' => 'event',
   /* topics */  /* Country OG Terms List */   'group' => 'group',

@@ -245,7 +245,9 @@ function gn2_admin_dashboard_default_page_manager_pages() {
    /* admin_dashboard 72d4017a */   'admin_title' => '',
    /* admin_dashboard 72d4017a */   'title' => 'Administrative Dashboard',
    /* admin_dashboard 72d4017a */   'body' => '<div class="fancy-bullets">
-<br/>
+<ul class="dashboard-link-list">
+<li><a href="/admin/manage/report-watchdog">Watchdog Log</a></li>
+</ul><br/>
 <h3>Support Desk</h3>
 <ul class="dashboard-link-list">
 <li><a href="/admin/manage/support">Support Desk Tickets</a></li>
@@ -257,6 +259,11 @@ function gn2_admin_dashboard_default_page_manager_pages() {
 <li><a href="/admin/config/remove-users">Delete Users</a></li>
 <li><a href="/admin/people/uif?destination=users/dashboard">Bulk Import Users</a></li>
 </ul><br/>
+<h3>Roles</h3>
+<ul class="dashboard-link-list">
+<li><a href="/admin/reports/role_watchdog">View Role Grants Report</a></li>
+<li><a href="/admin/reports/og-roles">View OG Roles Report</a></li>
+</ul><br/>
 <h3>Content</h3>
 <ul class="dashboard-link-list">
 <li><a href="/admin/manage/content">Manage Content</a></li>
@@ -266,7 +273,6 @@ function gn2_admin_dashboard_default_page_manager_pages() {
 <li><a href="/admin/reports/entity-delete-log">View Deleted Content Log</a></li>
 <li><a href="/admin/reports/orphaned-content">View Orphaned Content</a></li>
 <li><a href="/admin/config/people/anonymous_publishing_pet/realnames">View Anonymous Publishing Content</a></li>
-<li><a href="/admin/reports/role_watchdog">View Role Grants Report</a></li>
 </ul><br/>
 <h3>Metrics</h3>
 <ul class="dashboard-link-list">
@@ -323,7 +329,6 @@ function gn2_admin_dashboard_default_page_manager_pages() {
 <li><a href="/admin/manage/users/add/user">Add New User</a></li>
 <li><a href="/admin/people/uif?destination=users/dashboard">Bulk Import Users</a></li>
 <li><a href="/admin/manage/userform/submissions/userreg">Create new account form submissions</a></li>
-<li><a href="/admin/manage/form/submissions/contact_support">Support form submissions</a></li>
 <li><a href="/admin/manage/form/submissions/feedback">Feedback submissions</a></li>
 <li><a href="/admin/manage/user-profile-updates">User profile update submissions</a></li>
 </ul></div>',

@@ -1,6 +1,6 @@
 @api @add @content @mediagallery
 Feature: Adding Media Galleries
-  @groupmanager
+  @groupmanager @justthing
   Scenario Outline: Group Managers can create new Galleries on groups they are
   managing.
     Given I am logged in as <user> with password "civicactions"

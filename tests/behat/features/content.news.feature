@@ -1,22 +1,6 @@
 @api
 Feature: content.news.feature
 
-  Testing aspects of the news content type 0m31.620s
-
-Scenario: View More Nodes Link   @RD-2377
-
-    Given I am logged in as "qa-admin" with password "CivicActions3#"
-
-        And I visit the node with title "George C. Marshall Center"
-        And I click "View all news items"
-          Then I should see "Search news content"
-
-        And I visit the node with title "A group in GCMC"
-         Then I should see the link "View all posts" in the "main content" region
-        And I click "View all posts"
-          Then I should see "Search news and post content"
-
-
   Scenario: Topics are required on News   @RD-3139
 
     Given I am logged in as "uorgmanager1" with password "civicactions"

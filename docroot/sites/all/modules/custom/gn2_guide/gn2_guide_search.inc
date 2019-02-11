@@ -85,7 +85,7 @@ function _gn2_guide_searcher_form($form,&$form_submit) {
   $form['output'] = array(
     '#value' => '<span class="search-button">Search</span><span class="right-text">'
       . '<span class="white-text">Can\'t find what you\'re looking for?</span>'
-      . '<span><a href="/contact-support">Contact Support</a></span></span>',
+      . '<span><a href="/node/add/support" id="help-desk-support"> Contact the Help Desk</a></span></span>',
     '#type' => 'fieldset',
   );
   return $form;

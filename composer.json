@@ -10,7 +10,7 @@
     ],
     "require": {
         "drupal/drupal-extension": "*",
-        "drupal/drupal-driver": "v1.1.5.2",
+        "drupal/drupal-driver": "v1.3.2",
         "phploc/phploc": "*",
         "sebastian/phpcpd": "*",
         "phpunit/phpunit": "*",

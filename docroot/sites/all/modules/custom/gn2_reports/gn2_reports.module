@@ -69,6 +69,26 @@ function gn2_reports_menu() {
     'access arguments' => array(1),
     'file' => 'includes/role_watchdog.inc',
   );
+  // OG User's roles report
+  $items['admin/reports/og-roles'] = [
+    'title' => 'OG user roles report',
+    'description' => 'A report listing the number of users with a given role.',
+    'page callback' => 'gn2_report_og_user_roles',
+    'access arguments' => ['access site reports'],
+    'file' => 'includes/og_roles_report.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+  // OG User's by role report
+  $items['admin/reports/og-role/%'] = [
+    'title' => 'OG users by role',
+    'description' => 'A report listing the users for a given role.',
+    'page callback' => 'gn2_report_users_by_role',
+    'page arguments' => [3],
+    'access arguments' => ['access site reports'],
+    'file' => 'includes/og_roles_report_by_role.inc',
+    'type' => MENU_CALLBACK,
+  ];
+
   return $items;
 }
 
@@ -480,8 +500,6 @@ function _gn2_reports_watchdog_filter_form($form, &$form_state) {
   $results = db_select('og_role', 'o')
     ->fields('o', array('rid', 'group_bundle', 'name'))
     ->condition('o.group_type', 'node', '=')
-    ->condition('o.group_bundle', 'alumni_group', '!=')
-    ->condition('o.group_bundle', 'coi', '!=')
     ->orderBy('o.group_bundle', 'ASC')
     ->execute()
     ->fetchAllAssoc('rid');
@@ -694,7 +712,7 @@ function _gn2_reports_og_role_watchdog_export_csv() {
  */
 function gn2_reports_views_pre_render(&$view) {
   if ($view->name == 'user_bulk_block' || $view->name == 'report_user') {
-    $view->attachment_before = '<h4>Member Count: ' . $view->total_rows . '</h4>';
+    $view->attachment_before = '<h4>' . t('Search Result Count') . ': ' . $view->total_rows . '</h4>';
   }
   if ($view->name == 'admin_content' && ($view->current_display == 'page_1' || $view->current_display == 'page_manage_content')) {
     $view->attachment_before = '<h4>Content Count: ' . $view->total_rows . '</h4>';

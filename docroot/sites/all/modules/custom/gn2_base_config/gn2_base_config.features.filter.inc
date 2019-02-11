@@ -71,22 +71,6 @@ function gn2_base_config_filter_default_formats() {
   /* full_html */   ),
   /* full_html */ );
 
-  // Exported format: PHP code.
-  $formats['php_code'] = array(
-  /* php_code */   'format' => 'php_code',
-  /* php_code */   'name' => 'PHP code',
-  /* php_code */   'cache' => 0,
-  /* php_code */   'status' => 1,
-  /* php_code */   'weight' => -7,
-  /* php_code */   'filters' => array(
-  /* php_code */     'php_code' => array(
-  /* php_code */       'weight' => 0,
-  /* php_code */       'status' => 1,
-  /* php_code */       'settings' => array(),
-  /* php_code */     ),
-  /* php_code */   ),
-  /* php_code */ );
-
   // Exported format: Plain text.
   $formats['plain_text'] = array(
   /* plain_text */   'format' => 'plain_text',

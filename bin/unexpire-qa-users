@@ -1,0 +1,28 @@
+#!/usr/bin/env bowline-shell
+
+MY_ARGS="--host=${NAME_PREFIX}dbhost --user=dbuser --password=dbpass ${NAME_PREFIX}drupal"
+MYSQL="mysql $MY_ARGS"
+
+USERS="'qa-admin','qa-groupmanager','qa-member1','qa-member2','jen_general','uadmin','uauthenticated','ugroupmanager1','ugroupmanager2','umember1','umember2','uorgmanager1','uorgmanager2','ugroupmanager1b','ugroupmanager2b','umember1b','umember2b','uorgmanager1b','uorgmanager2b','uhrmanager1b','uhrmanager2b'"
+
+# Update the password policy table such that USERS password never expires.
+echo "
+UPDATE password_policy_history
+   SET created = (SELECT UNIX_TIMESTAMP())
+ WHERE uid in (SELECT uid FROM users WHERE name IN ($USERS));
+" | $MYSQL
+
+# Ensure all USERS are active.
+echo "UPDATE users SET status = 1 WHERE name IN ($USERS);
+" | $MYSQL
+
+# Ensure all USERS (also in user_revision table) are active.
+echo "UPDATE user_revision SET status = 1 WHERE name IN ($USERS);
+" | $MYSQL
+
+# Ensure USERS do not need to reset password.
+echo "
+UPDATE password_policy_force_change
+   SET force_change = 0
+ WHERE uid IN (SELECT uid FROM users WHERE name IN ($USERS));
+" | $MYSQL

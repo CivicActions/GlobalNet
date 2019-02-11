@@ -27,9 +27,6 @@ function gn2_invitations_form_alter(&$form, &$form_state, $form_id) {
     $invitation_types = array(
       'individual' => t('Select individual members to invite'),
       'email' => t('Invite users by email'),
-      //'group' => t('Invite all group members'),
-      //'required' => t('All group members are automatically enrolled in event. A message will be sent'),
-      //'csv' => t('Import CSV file'),
     );
     // This field is needed to select how the invitation will be sent.
     $form['invitation_type'] = array(
@@ -45,24 +42,6 @@ function gn2_invitations_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => -1,
       '#description' => t('Invite an user by email address.'),
     );
-    // This field will be used to send invitations to all members of a group.
-   /* $form['group'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Group name'),
-      '#autocomplete_path' => 'get-all-groups',
-      '#weight' => -1,
-      '#description' => t('Send an invitation to all members of a group.'),
-    );*/
-    // This field will be used to import email addresses from a CSV file.
-    /*$form['import'] = array(
-      '#title' => t('Import'),
-      '#type' => 'managed_file',
-      '#description' => t('The uploaded csv will be imported and temporarily saved.'),
-      '#upload_location' => 'public://',
-      '#upload_validators' => array(
-        'file_validate_extensions' => array('csv'),
-      ),
-    );*/
 
     $form['#submit'][] = '_gn2_invitations_process_invitations';
     $form['#submit'][] = '_gn2_invitations_invitees_notification';
@@ -75,62 +54,16 @@ function gn2_invitations_form_alter(&$form, &$form_state, $form_id) {
  */
 function _gn2_invitations_process_invitations($form, &$form_state) {
   $invitation_type = $form_state['input']['invitation_type'];
-  switch ($invitation_type) {
-    // Sends an invitation by user email.
-    case 'email':
-      $group = $form_state['input']['group'];
-      $emails = $form_state['input']['email'];
-      $form_state['group_invitees'] = _gn2_invitations_get_email_invitees($group, $emails);
-      break;
-
-    // Sends an invitation to all the members of a group.
-    case 'group':
-      $group = $form_state['input']['group'];
-      $form_state['group_invitees'] = _gn2_invitations_get_all_group_members($group);
-      break;
-
-    // Sets up a flag to enroll all members of a group.
-    case 'required':
-      $group = $form_state['input']['group'];
-      $form_state['group_invitees'] = _gn2_invitations_get_all_group_members($group);
-      $form_state['register_all'] = TRUE;
-      break;
-
-    case 'csv':
-      $gid = $form_state['build_info']['args'][1];
-      $file = file_load($form_state['input']['import']['fid']);
-      $uri = $file->uri;
-      if (!empty($uri)) {
-        if (file_exists(drupal_realpath($uri))) {
-          $handle = fopen(drupal_realpath($uri), "r");
-          while (($data = fgetcsv($handle, 0, '\n', '"')) !== FALSE) {
-            $operations[] = array(
-              '_gn2_invitations_import_batch_processing',
-              array($data, $gid),
-            );
-          }
-          $batch = array(
-            'title' => t('Importing CSV...'),
-            'operations' => $operations,
-            'finished' => '_gn2_invitations_import_finished',
-            'error_message' => t('The installation has encountered an error.'),
-            'progress_message' => t('Imported @current of @total invitation.'),
-          );
-          batch_set($batch);
-          fclose($handle);
-        }
-      }
-      else {
-        drupal_set_message(t('There was an error uploading your file. Please contact a System administator.'), 'error');
-      }
-      break;
+  if ($invitation_type === 'email') {
+    $emails = $form_state['input']['email'];
+    $form_state['group_invitees'] = _gn2_invitations_get_email_invitees($emails);
   }
 }
 
 /**
  * Invite people via email.
  */
-function _gn2_invitations_get_email_invitees($group, $emails) {
+function _gn2_invitations_get_email_invitees($emails) {
   $emails = explode(',', $emails);
   $invitees = '';
 

@@ -67,7 +67,8 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
 
   // RD-1974: unsetting unnecessary fields in file upload/edit forms.
   if ($form_id == 'file_entity_add_upload' || $form_id == 'file_entity_edit' ||
-    (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)) {
+      (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)
+  ) {
 
     if (array_key_exists('focal_point', $form)) {
       $form['focal_point']['#prefix'] = "<label>Set the focal point of this image</label>";
@@ -93,12 +94,12 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
     }
     if (array_key_exists('field_license', $form)) {
       if (isset($form['field_license'][LANGUAGE_NONE]['#description'])) {
-        $form['field_license'][LANGUAGE_NONE]['#description'] = 
-        t('<strong>Public Domain</strong> – Copyright is expired or author has dedicated material to the public domain.<br>' . 
-        '<strong>Public Domain – Government</strong> US Government Work, Foreign Copyrights may apply. Approved for Public Release.<br>'.
-        '<strong>Copyright - All Rights Reserved</strong> Copyrighted work. Reproduced with permission. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
-        '<strong>Copyright - Fair Use.</strong> Copyrighted work. Reproduced under fair use exception. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
-        '<strong>Copyright - Reproduced by Author</strong> Copyrighted work. All Rights Reserved – Reproduced by author.');
+        $form['field_license'][LANGUAGE_NONE]['#description'] =
+          t('<strong>Public Domain</strong> – Copyright is expired or author has dedicated material to the public domain.<br>' .
+            '<strong>Public Domain – Government</strong> US Government Work, Foreign Copyrights may apply. Approved for Public Release.<br>' .
+            '<strong>Copyright - All Rights Reserved</strong> Copyrighted work. Reproduced with permission. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
+            '<strong>Copyright - Fair Use.</strong> Copyrighted work. Reproduced under fair use exception. No further reproduction is authorized. See copyright holder for permission to use this content.<br>' .
+            '<strong>Copyright - Reproduced by Author</strong> Copyrighted work. All Rights Reserved – Reproduced by author.');
       }
       // RD-3875 As a user, when I upload a file I should see clear Default License Settings Options.
       $new_options = array(
@@ -106,7 +107,7 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
         'cc_nc' => t('Public Domain – Government'),
         'cc_nd_nc' => t('Copyright - All Rights Reserved'),
         'cc' => t('Copyright - Fair Use'),
-        'cc_sa' => t('Copyright - Reproduced by Author')
+        'cc_sa' => t('Copyright - Reproduced by Author'),
       );
       $form['field_license'][LANGUAGE_NONE]['#options'] = $new_options;
     }
@@ -157,7 +158,6 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
     case 'post_node_form':
     case 'group_node_form':
     case 'page_node_form':
-    case 'coi_node_form':
     case 'poll_node_form':
     case 'publication_node_form':
       $form['og_menu']['#access'] = FALSE;
@@ -176,7 +176,6 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
     case 'page_node_form':
     case 'poll_node_form':
     case 'publication_node_form':
-    case 'coi_node_form':
       $form['menu']['#access'] = FALSE;
 
       break;
@@ -295,10 +294,11 @@ function gn2_base_config_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => 20,
     );
   }
-  
+
   // RD-1974: unsetting unnecessary fields in file upload/edit forms.
   if ($form_id == 'file_entity_add_upload' || $form_id == 'file_entity_edit' ||
-    (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)) {
+      (isset($form['#entity_type']) && $form['#entity_type'] == 'file' && strpos($form_id, 'media_edit_') !== FALSE)
+  ) {
     if (array_key_exists('field_file_document_title_text', $form)) {
       unset($form['field_file_document_title_text']);
     }
@@ -461,13 +461,46 @@ function gn2_base_config_form_gn2_manager_access_user_form_alter(&$form, &$form_
  * RD-3312 Change “Modify OG user roles” status to read “Modify user roles”.
  */
 function gn2_base_config_form_views_form_og_members_admin_override_default_alter(&$form, &$form_state, $form_id) {
-  $ops = $form['select']['operation']['#options'];
-  foreach ($ops as $key => $op) {
-    if ($op == 'Modify OG user roles') {
-      $ops[$key] = 'Modify user roles';
+  // Adding redirect to ensure proper query string structure; @see RD-3274.
+  $query = drupal_get_query_parameters();
+  if (!empty($query)) {
+    $form['#redirect'] = [
+      current_path(),
+      [
+        'query' => $query,
+      ],
+    ];
+    unset($form['#action']);
+  }
+  
+  if (!empty($form['select'])) {
+    $ops = $form['select']['operation']['#options'];
+    foreach ($ops as $key => $op) {
+      if ($op == 'Modify OG user roles') {
+        $ops[$key] = 'Modify user roles';
+      }
+    }
+    $form['select']['operation']['#options'] = $ops;
+  }
+
+  // Hide Content Specialist role from non-Organization groups; @see RD-4316.
+  if (arg(0) === 'group' && arg(1) === 'node' && is_numeric(arg(2))) {
+    $type = db_query('SELECT type FROM {node} WHERE nid = :nid', [':nid' => arg(2)])->fetchField();
+    if ($type !== 'organization') {
+      if (isset($form['add_roles'])) {
+        $key = array_search('Content Specialist', $form['add_roles']['#options']);
+        if ($key) {
+          unset($form['add_roles']['#options'][$key]);
+        }
+      }
+      if (isset($form['remove_roles'])) {
+        $key = array_search('Content Specialist', $form['remove_roles']['#options']);
+        if ($key) {
+          unset($form['remove_roles']['#options'][$key]);
+        }
+      }
     }
   }
-  $form['select']['operation']['#options'] = $ops;
 }
 
 /**
@@ -486,6 +519,17 @@ function gn2_base_config_form_user_profile_form_alter(&$form, &$form_state, $for
   }
   if (isset($form['account']['current_pass'])) {
     $form['account']['current_pass']['#access'] = FALSE;
+  }
+
+  // Ensure that phone country code defaults to the correct code; see @RD-2794.
+  if (!empty($form['#user']->field_telephone)) {
+    $fc_id = field_get_items('user', $form['#user'], 'field_telephone');
+    // Load the telephone field_collection.
+    $phone_data = ($fc_id) ? field_collection_item_load($fc_id[0]['value']) : NULL;
+    if ($phone_data && isset($phone_data->field_telephone_country_code)) {
+      $country_code = field_get_items('field_collection_item', $phone_data, 'field_telephone_country_code');
+      $form['field_telephone'][LANGUAGE_NONE][0]['field_telephone_country_code'][LANGUAGE_NONE]['#default_value'] = $country_code[0]['value'];
+    }
   }
 }
 
@@ -721,9 +765,9 @@ function gn2_base_config_votingapi_results_alter(&$cache, $entity_type, $entity_
  */
 function _gn2_base_config_alter_datetime_description($element, &$form_state) {
   $date_text = t('Click to use the calendar to<br>select the date or type in the'
-      . '<br>date using DD MMM YYYY<br>format. For example,<br>01 Jan 2016');
+                 . '<br>date using DD MMM YYYY<br>format. For example,<br>01 Jan 2016');
   $time_text = 'Enter !var time of the event<br>in 24 hr format. For example,'
-      . '<br>10:00AM as 10:00 and<br>2:00PM as 14:00.';
+               . '<br>10:00AM as 10:00 and<br>2:00PM as 14:00.';
   $element[0]['value']['date']['#description'] = $element[0]['value2']['date']['#description'] = $date_text;
   $element[0]['value']['time']['#description'] = t($time_text, array('!var' => 'start'));
   $element[0]['value2']['time']['#description'] = t($time_text, array('!var' => 'end'));
@@ -749,7 +793,6 @@ function _gn2_base_config_get_forms_with_simplify() {
  * Implements hook_field_widget_form_alter().
  */
 function gn2_base_config_field_widget_form_alter(&$element, &$form_state, $context) {
-
   if ($context['field']['field_name'] == 'field_gn2_simple_access') {
     $element['#title'] = '';
     $element['#prefix'] = t('<label>Who can see this content</label><br>');
@@ -762,7 +805,12 @@ function gn2_base_config_field_widget_form_alter(&$element, &$form_state, $conte
 function gn2_base_config_form_media_gallery_node_form_alter(&$form, &$form_state) {
   global $user;
   $is_drupal_admin = in_array('administrator', $user->roles);
-  $form['hide_blocks_settings'] = array('#type' => 'hidden', '#value' => $is_drupal_admin);
+  $is_org_manager = gn2_manager_access_is_org_manager();
+  $value = ($is_drupal_admin || $is_org_manager) ? 1 : 0;
+  $form['hide_blocks_settings'] = array(
+    '#type' => 'hidden',
+    '#value' => $value,
+  );
 
   // Loads js.
   drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/folder_blocks.js');
@@ -881,10 +929,11 @@ function gn2_base_config_node_access_callback($op, $node = NULL, $account = NULL
   // promote-sitewide-public) give access.
   $path = current_path();
   $our_view_paths = substr_count($path, "promote-organization") > 0 ||
-    substr_count($path, "promote-sitewide-public") > 0;
+                    substr_count($path, "promote-sitewide-public") > 0;
   if (($op == "view" || $op == "update") && !isset($node) && $our_view_paths) {
     return TRUE;
   }
+
   return entity_metadata_no_hook_node_access($op, $node, $account);
 }
 
@@ -964,6 +1013,7 @@ function gn2_base_config_theme(&$existing, $type, $theme, $path) {
     'template' => 'gn2-users-polls-results',
     'variables' => array('results' => array()),
   );
+
   return $hook_theme;
 }
 
@@ -1093,6 +1143,7 @@ function gn2_base_config_block_view($delta) {
       $block['content'] = gn2_base_config_short_title();
       break;
   }
+
   return $block;
 }
 
@@ -1104,7 +1155,7 @@ function gn2_base_config_site_logo() {
   $org = node_load($gid);
 
   $img = drupal_get_path('theme', 'gn2_zen') . '/images/org-logos/logo_globalnet.png';
-  $title = str_ireplace('Platform', '', $org->title);
+  $title = !empty($org->title) ? str_ireplace('Platform', '', $org->title) : '';
   $title = t('!site Home', array('!site' => $title));
 
   // Translation variables.
@@ -1143,9 +1194,9 @@ function _gn2_base_config_event_registration() {
     // Get the Registration Limit.
     $reg_limit_number = field_get_items('node', $node, 'field_registration_limit_number');
     $registration_limit_number = ($reg_limit_number) ? $reg_limit_number[0]['value']
-        : NULL;
+      : NULL;
     $full = ($registration_limit && $registration_limit_number <= $number_of_registrants) ?
-        TRUE : FALSE;
+      TRUE : FALSE;
     // Get the Event start date.
     $dates = field_get_items('node', $node, 'field_event_date');
     $start = strtotime($dates[0]['value']);
@@ -1160,7 +1211,8 @@ function _gn2_base_config_event_registration() {
     // or if the start date has passed, or if the class is full AND user is not
     // already a member or a pending member.
     if ((!$registration || $registration_handling == 'closed' || $start <= time()
-        || $full) && (!$is_enrolled && !$is_pending)) {
+         || $full) && (!$is_enrolled && !$is_pending)
+    ) {
       return;
     }
 
@@ -1213,6 +1265,7 @@ function _gn2_base_config_get_users_in_group($gid) {
     ->condition('u.status', 1, '=')
     ->fields('u', array('uid', 'name'))
     ->join('og_membership', 'ogm', "ogm.gid = :gid AND u.uid = ogm.etid AND ogm.entity_type = 'user'", array(':gid' => $gid));
+
   return $query->execute()->fetchAll();
 }
 
@@ -1398,7 +1451,14 @@ function gn2_base_config_views_pre_render(&$view) {
     }
   }
   elseif ($view->name == 'topics') {
-    $view_displays = ['panel_pane_3', 'panel_pane_4', 'panel_pane_5', 'panel_pane_6', 'panel_pane_7', 'panel_pane_8'];
+    $view_displays = [
+      'panel_pane_3',
+      'panel_pane_4',
+      'panel_pane_5',
+      'panel_pane_6',
+      'panel_pane_7',
+      'panel_pane_8',
+    ];
     if (in_array($view->current_display, $view_displays)) {
       if (is_array($view->result)) {
         foreach ($view->result as $key => $result) {
@@ -1447,6 +1507,7 @@ function gn2_base_config_write_message_form($settings, &$form_state) {
     '#title' => t('Message'),
     '#required' => TRUE,
   );
+
   return $form;
 }
 
@@ -1457,6 +1518,7 @@ function gn2_base_config_write_message_submit($form, $form_state) {
   $return = array();
   $return['message'] = $form_state['values']['message'];
   $return['subject'] = $form_state['values']['subject'];
+
   return $return;
 }
 
@@ -1464,7 +1526,7 @@ function gn2_base_config_write_message_submit($form, $form_state) {
  * Custom action for sending bulk messages.
  */
 function gn2_base_config_write_message(&$entity, $context) {
-  $user  = user_load($entity->etid);
+  $user = user_load($entity->etid);
   $subject = $context['subject'];
   $message = $context['message'];
   privatemsg_new_thread(array($user), $subject, $message);
@@ -1474,14 +1536,7 @@ function gn2_base_config_write_message(&$entity, $context) {
  * Implements hook_node_presave().
  */
 function gn2_base_config_node_presave($node) {
-  global $user;
-  // RD-2164 Limit all users (except site admins) from changing the page alias.
-  // Avoid to modify the pathalias in old content.
-  // Administrator can edit it by enabling manually the checkbox to generate
-  // automatic pathalias.
-  if (!$node->is_new && !in_array('administrator', $user->roles)) {
-    $node->path['pathauto'] = 0;
-  }
+
   if ($node->type == 'event') {
     if (isset($node->field_event_date[LANGUAGE_NONE][0]['value'])) {
       $node->field_event_start_date[LANGUAGE_NONE][0]['value'] = $node->field_event_date[LANGUAGE_NONE][0]['value'];
@@ -1502,7 +1557,8 @@ function gn2_base_config_entity_presave($entity, $type) {
 
     $etype = '';
     if ($type == 'field_collection_item' && ($entity->field_name == 'field_education' || $entity->field_name == 'field_telephone' ||
-            $entity->field_name == 'field_employers' || $entity->field_name == 'field_expertise' || $entity->field_name == 'field_training')) {
+                                             $entity->field_name == 'field_employers' || $entity->field_name == 'field_expertise' || $entity->field_name == 'field_training')
+    ) {
       $etype = $entity->field_name;
     }
     elseif ($type == 'user') {
@@ -1576,7 +1632,12 @@ function gn2_base_config_entity_presave($entity, $type) {
  * @return bool
  *   Returns TRUE if the user is a Group Manager for the Org, else FALSE
  */
-function gn2_base_config_check_org_role($gid = NULL, $admin_roles = array('org_manager', 'hr_manager')) {
+function gn2_base_config_check_org_role(
+  $gid = NULL, $admin_roles = array(
+  'org_manager',
+  'hr_manager',
+)
+) {
   if (!$gid && arg(0) == 'node' && is_numeric(arg(1))) {
     if (!function_exists('gn2_simple_access_get_organization')) {
       module_load_include('inc', 'gn2_simple_access', 'gn2_simple_access');
@@ -1625,11 +1686,11 @@ function gn2_base_config_get_user_orgs($uid = NULL) {
     $query = db_select('og_membership', 'ogm');
     $query->join('node', 'n', "n.nid = ogm.gid");
     $query->condition('ogm.entity_type', 'user', '=')
-               ->condition('ogm.etid', $uid, '=')
-               ->condition('ogm.state', $states, 'IN')
-               ->condition('ogm.group_type', 'node', '=')
-               ->condition('n.type', 'organization', '=')
-               ->addField('ogm', 'gid', 'gid');
+          ->condition('ogm.etid', $uid, '=')
+          ->condition('ogm.state', $states, 'IN')
+          ->condition('ogm.group_type', 'node', '=')
+          ->condition('n.type', 'organization', '=')
+          ->addField('ogm', 'gid', 'gid');
     $results = $query->execute();
     $orgs = $results->fetchCol();
 
@@ -1638,10 +1699,10 @@ function gn2_base_config_get_user_orgs($uid = NULL) {
     $gr_query->distinct();
     $gr_query->join('field_data_field_parent_organization', 'org', 'org.entity_id = ogm.gid');
     $gr_query->condition('ogm.entity_type', 'user', '=')
-              ->condition('ogm.etid', $uid, '=')
-              ->condition('ogm.state', $states, 'IN')
-              ->condition('ogm.group_type', 'node', '=')
-              ->addField('org', 'field_parent_organization_target_id', 'gid');
+             ->condition('ogm.etid', $uid, '=')
+             ->condition('ogm.state', $states, 'IN')
+             ->condition('ogm.group_type', 'node', '=')
+             ->addField('org', 'field_parent_organization_target_id', 'gid');
     $gr_results = $gr_query->execute();
     $groups = $gr_results->fetchCol();
     $return[$uid] = $orgs + $groups;
@@ -1663,7 +1724,12 @@ function gn2_base_config_get_user_orgs($uid = NULL) {
  * @return bool
  *   Returns TRUE if the user is a Group Manager for any Org, else FALSE
  */
-function gn2_base_config_manage_any_org($admin_roles = array('org_manager', 'hr_manager')) {
+function gn2_base_config_manage_any_org(
+  $admin_roles = array(
+    'org_manager',
+    'hr_manager',
+  )
+) {
   $gids = gn2_base_config_get_user_orgs();
   foreach ($gids as $n => $gid) {
     if (gn2_base_config_check_org_role($gid, $admin_roles)) {
@@ -1671,6 +1737,7 @@ function gn2_base_config_manage_any_org($admin_roles = array('org_manager', 'hr_
       return TRUE;
     }
   }
+
   return FALSE;
 }
 
@@ -1734,6 +1801,7 @@ function gn2_base_config_set_group($field, $gid, array $form) {
       $form[$field][LANGUAGE_NONE][0]['admin'][0]['target_id']['#default_value'] = $entity_node->title . ' (' . $entity_node->nid . ')';
     }
   }
+
   return $form;
 }
 
@@ -1748,6 +1816,7 @@ function gn2_base_config_set_group($field, $gid, array $form) {
  */
 function gn2_base_config_user_online($uid) {
   $user_access = db_query("SELECT timestamp FROM {sessions} WHERE uid = :uid", array(':uid' => $uid))->fetchField();
+
   return ((REQUEST_TIME - $user_access) < 900) ? TRUE : FALSE;
 }
 
@@ -1808,10 +1877,10 @@ function gn2_base_config_uif_validate_user($user_data, $uid) {
 
   if (array_key_exists('field_crm_id', $user_data) && array_key_exists('field_crm_source', $user_data)) {
     $uid = db_query('SELECT crmid.entity_id, crms.field_crm_source_value AS source FROM {field_data_field_crm_id} crmid '
-            . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
-            . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
-            . 'AND crms.field_crm_source_value = \'rcpams\'',
-            array(':crmid' => $user_data['field_crm_id']))->fetch();
+                    . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
+                    . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
+                    . 'AND crms.field_crm_source_value = \'rcpams\'',
+      array(':crmid' => $user_data['field_crm_id']))->fetch();
     if (is_object($uid) && $uid->entity_id && strtolower($user_data['field_crm_source']) == 'rcpams') {
       $user = user_load($uid->entity_id);
       $error = t('A user, !user, already exists with RCPAMS ID: %id',
@@ -1847,6 +1916,7 @@ function gn2_base_config_uif_validate_user($user_data, $uid) {
       );
     }
   }
+
   return $error;
 }
 
@@ -1861,7 +1931,7 @@ function gn2_base_config_uif_validate_header($header) {
       $col_num = $col + 1;
       $column = gn2_base_config_ordinality($col_num);
       $message = t('The header for the %column column is empty. ',
-          array('%column' => $column));
+        array('%column' => $column));
       $message .= ($count > 1) ? t('This will result in a %error error message. ',
         array('%error' => 'Repeated columns')) : NULL;
       $message .= t('Either add a column header or delete the column, and try again.');
@@ -1894,15 +1964,18 @@ function gn2_base_config_uif_row_alter(&$row, $header_row) {
   }
   // Check if username is already taken by another email.
   elseif ($name && $user = user_load_by_name($row[$name])) {
-    // Generate random int and ensure unique username.
-    $i = '';
-    do {
-      $username = $row[$name] . $i++;
-    } while (user_load_by_name($username));
-    
-    $row[$name] = $username;
+    if ($row[$mail] != $user->mail) {
+      // Generate random int and ensure unique username.
+      $i = '';
+      do {
+        $username = $row[$name] . $i++;
+      }
+      while (user_load_by_name($username));
 
-    return $row;
+      $row[$name] = $username;
+
+      return $row;
+    }
   }
 }
 
@@ -1918,7 +1991,7 @@ function gn2_base_config_uif_post_update($account, $user_data, $form_state) {
  * Return number with ordinal string.
  */
 function gn2_base_config_ordinality($number) {
-  $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+  $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
   if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
     return $number . 'th';
   }
@@ -2038,6 +2111,7 @@ function gn2_base_config_get_user_proper_name($uid, $link = FALSE) {
   else {
     $name = $user->name;
   }
+
   return ($link) ? l($name, 'user/' . $uid) : $name;
 }
 
@@ -2050,10 +2124,10 @@ function gn2_base_config_feeds_after_parse(FeedsSource $source, FeedsParserResul
     // Check to see if crm_id matches an existing RCPAMS ID.
     if (array_key_exists('field_crm_id', $user) && array_key_exists('field_crm_source', $user) && $user['field_crm_source'] == 'rcpams') {
       $uid = db_query('SELECT crmid.entity_id AS source FROM {field_data_field_crm_id} crmid '
-              . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
-              . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
-              . 'AND crms.field_crm_source_value = \'rcpams\'',
-              array(':crmid' => $user['field_crm_id']))->fetchField();
+                      . 'INNER JOIN {field_data_field_crm_source} crms ON crms.entity_id = crmid.entity_id '
+                      . 'WHERE crmid.entity_type = \'user\' AND crmid.field_crm_id_value = :crmid '
+                      . 'AND crms.field_crm_source_value = \'rcpams\'',
+        array(':crmid' => $user['field_crm_id']))->fetchField();
     }
     // Check for existing users.
     if (!$uid && array_key_exists('mail', $user)) {
@@ -2132,10 +2206,10 @@ function _gn2_base_config_user_profile_relationship_links($uid) {
     foreach ($relationships as $relationship) {
       if ($relationship->approved) {
         $response = t('You are connected') . ' | ' . l(t('Remove Contact'), drupal_get_path_alias('user/' . $user->uid) . "/relationships/$relationship->rid/remove", array(
-          'query' => array(
-            'destination' => drupal_get_path_alias('user/' . $loaded_user->uid),
-          ),
-        ));
+            'query' => array(
+              'destination' => drupal_get_path_alias('user/' . $loaded_user->uid),
+            ),
+          ));
       }
       else {
         if ($relationship->requester_id == $requester) {
@@ -2147,6 +2221,7 @@ function _gn2_base_config_user_profile_relationship_links($uid) {
       }
     }
   }
+
   return $response;
 }
 
@@ -2159,13 +2234,15 @@ function _gn2_base_config_display_leadership_block_title($contexts) {
 
   $node = $contexts['panelizer']->data;
   if (user_is_logged_in() && (isset($node->field_course_director[LANGUAGE_NONE][0]) ||
-    isset($node->field_course_event_coordinator[LANGUAGE_NONE][0]) ||
-    isset($node->field_course_faculty[LANGUAGE_NONE][0]) ||
-    isset($node->field_course_seminar_leader[LANGUAGE_NONE][0]) ||
-    isset($node->field_course_support_staff[LANGUAGE_NONE][0]) ||
-    isset($node->field_deputy_course_director[LANGUAGE_NONE][0]))) {
+                              isset($node->field_course_event_coordinator[LANGUAGE_NONE][0]) ||
+                              isset($node->field_course_faculty[LANGUAGE_NONE][0]) ||
+                              isset($node->field_course_seminar_leader[LANGUAGE_NONE][0]) ||
+                              isset($node->field_course_support_staff[LANGUAGE_NONE][0]) ||
+                              isset($node->field_deputy_course_director[LANGUAGE_NONE][0]))
+  ) {
     return TRUE;
   }
+
   return FALSE;
 }
 
@@ -2187,6 +2264,7 @@ function _gn2_base_config_get_course_title_acronym() {
     'subject' => 'Course title and acronym.',
     'content' => $content,
   );
+
   return $block;
 }
 
@@ -2204,10 +2282,10 @@ function _gn2_base_config_get_organization_name() {
     $query = new EntityFieldQuery();
 
     $result = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'organization')
-      ->propertyCondition('status', NODE_PUBLISHED)
-      ->fieldCondition('field_org_short_title', 'value', $value['short'], '=')
-      ->execute();
+                    ->entityCondition('bundle', 'organization')
+                    ->propertyCondition('status', NODE_PUBLISHED)
+                    ->fieldCondition('field_org_short_title', 'value', $value['short'], '=')
+                    ->execute();
 
     if (isset($result['node'])) {
       $tmp = each($result['node']);
@@ -2269,7 +2347,13 @@ function gn2_base_config_init() {
     }
   }
   drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/responsive_tabs.js');
+  global $base_url;
+  $nid = $group_id = gn2_context_get_org_id();
+  if (!variable_get('gn2_themeparts_swap_filepath_logo-' . $nid)) {
+    variable_set('gn2_themeparts_swap_filepath_logo-' . $nid, $base_url . '/' . drupal_get_path('theme', 'gn2_zen') . '/images/org-logos/logo_globalnet.png');
+  }
 }
+
 
 /**
  * RD-2892, Helper function used to display default content for ABOUT in footer.
@@ -2278,6 +2362,7 @@ function _gn2_base_config_footer_content_rule($contexts) {
   if (isset($contexts['requiredcontext_entity:node_1']->data->field_footer_description)) {
     return TRUE;
   }
+
   return FALSE;
 }
 
@@ -2291,6 +2376,7 @@ function gn2_base_config_short_title() {
       field_get_items('node', $node, 'field_group_short_title') : NULL;
     $short_title = ($short) ? $short[0]['value'] . ': ' : NULL;
     $title = ($node) ? $node->title : NULL;
+
     return '<h1>' . $short_title . $title . '</h1>';
   }
 }
@@ -2303,19 +2389,21 @@ function gn2_base_config_short_title() {
  */
 function gn2_base_config_form_user_pass_alter(&$form, &$form_state) {
   $org_id = gn2_context_get_org_id();
+  $form['actions']['submit']['#value'] = 'Submit';
   $current = current_path();
   $path = url('node/add/support', array(
-    'query' => array(
-      'gid' => $org_id,
-      'destination' => $current,
-    ),
-  )
+      'query' => array(
+        'gid' => $org_id,
+        'destination' => $current,
+      ),
+    )
   );
 
   $form['#prefix'] = '<p class = "tech-support__description description">' .
-    t('If you know you have an account, but have forgotten your username and registered email address,
-    please contact us through the <a href = "@technical-support"> Technical Support </a> form.
-    This form can also be found in the right side of the site footer.', array('@technical-support' => $path)) . '</p>';
+                     t('To set a new password, fill out the form with your GlobalNET username or the email address 
+associated with your account and click "submit." You will be sent an email with further instructions.
+If you know you have an account, but have forgotten your username and registered email address, 
+please contact us through the <a href="@technical-support">Help desk</a> form.', array('@technical-support' => $path)) . '</p>';
 }
 
 /**
@@ -2324,4 +2412,114 @@ function gn2_base_config_form_user_pass_alter(&$form, &$form_state) {
 function _gn2_base_config_set_request_message($form, &$form_state) {
   $node = node_load($form['gid']['#value']);
   drupal_set_message(t('Your request to join the group "!group" is pending. You will receive a notification if a group manager approves your request.', array('!group' => $node->title)));
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function gn2_base_config_field_formatter_info() {
+  // Adding Summary only field format.
+  return array(
+    'summary_only_formatter' => array(
+      'label' => t('Summary only'),
+      'field types' => array('text_with_summary'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function gn2_base_config_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  switch ($display['type']) {
+    case 'summary_only_formatter':
+      $element = array();
+      foreach ($items as $item){
+        if (isset($item['summary']) && !empty($item['summary'])) {
+          $element[]['#markup'] = $item['summary'];
+        }
+      }
+      return $element;
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_base_config_form_og_ui_add_users_alter(&$form, &$form_state, $form_id) {
+  $type = db_query('SELECT type FROM {node} WHERE nid = :nid', [':nid' => $form['gid']['#value']])->fetchField();
+  if ($type !== 'organization') {
+    $key = array_search('Content Specialist', $form['og_user']['roles']['#options']);
+    if ($key) {
+      unset($form['og_user']['roles']['#options'][$key]);
+    }
+  }
+}
+
+/**
+ * Implements hook_rules_action_info().
+ */
+function gn2_base_config_rules_action_info() {
+  return [
+    '_gn2_base_config_notify_group_members' => [
+      'label' => t('Gallery group member notification'),
+      'group' => t('GlobalNET'),
+      'configurable' => FALSE,
+      'arguments' => [
+        'node' => [
+          'type' => 'node',
+          'label' => t('Content'),
+        ],
+      ],
+    ],
+    '_gn2_tech_support_notify_org_admin' => [
+      'label' => t('Tech Support - notify Org admin'),
+      'group' => t('GlobalNET'),
+      'configurable' => FALSE,
+      'arguments' => [
+        'entityform' => [
+          'type' => 'entityform',
+          'label' => t('Entityform Submission'),
+        ],
+        'site' => [
+          'type' => 'site',
+          'label' => t('Site'),
+        ],
+      ],
+      'module' => 'gn2_tech_support',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_rules_condition_info().
+ */
+function gn2_base_config_rules_condition_info() {
+  return [
+    'gn2_base_config_check_for_new_user_email' => [
+      'label' => t('Check for existing user'),
+      'group' => t('GlobalNET'),
+      'arguments' => [
+        'entityform' => [
+          'type' => 'entityform',
+          'label' => t('Entityform Submission'),
+        ],
+      ],
+    ],
+  ];
+}
+
+function gn2_base_config_check_for_new_user_email($entityform) {
+  $email_field_data = field_get_items('entityform', $entityform, 'field_email');
+  $email_address = (isset($email_field_data)) ? $email_field_data[0]['email'] : NULL;
+  $user = ($email_address) ? user_load_by_mail($email_address) : NULL;
+  if (is_object($user)) {
+    $link = l($user->name, 'user/' . $user->uid);
+    drupal_set_message(t('A user, !link, already exist with the email address %email', array('!link' => $link, '%email' => $user->mail)));
+    return FALSE;
+  }
+  else {
+    return TRUE;
+  }
 }

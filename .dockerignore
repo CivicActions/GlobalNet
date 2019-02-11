@@ -1,0 +1,5 @@
+# Don't include in the docker build context
+.git
+.composer
+vendor
+

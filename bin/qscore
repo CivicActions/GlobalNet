@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+JQ='docker run -i --rm --name jq pinterb/jq:0.0.15'
+
+# Extract the sum of the remediation_points element.
+RAW_VALUE=$(codeclimate analyze -f json "$@" | $JQ '[.[] | if .remediation_points then .remediation_points else 70000 end] | add')
+
+# Divide by 10000 to avoid silly large numbers, and add a sanity check.
+VALUE=$(echo "$((RAW_VALUE / 10000))" | grep '^[[:digit:]]\+$')
+
+if [ "$VALUE" = "" ]; then
+  echo "Invalid result - run codeclimate and review output"
+  exit 1
+fi
+
+# Simple approach - just output the value.
+# This is great for a new project where you can commit to keeping the score at
+# zero, adding any false positives in .codeclimate.yml.
+echo "QScore: $VALUE"
+# Return a fail if score deviates from zero.
+exit $VALUE
+
+# Comparative approach - needs an external metrics service.
+# This is more useful for existing projects and can ensure no regressions, or
+# you can adjust the math below to ensure a small improvement with each commit.
+#if [ "$1" = "--record" ]; then
+#  # Submit $VALUE to a metrics service (e.g. Stathat).
+#  # Use this to submit a daily baseline on your master/stable branch. 
+#  curl -d "stat=qscore&ezkey=USERID&value=$VALUE" http://api.stathat.com/ez
+#else
+#  echo "          QScore: $VALUE"
+#  # Retrieve most recent $PREV from a metrics service (e.g. Stathat).
+#  PREV=$(curl -s https://www.stathat.com/x/ACCESSTOKEN/data/STATID?t=2d1d | $JQ '[.[].points[].value] | max')
+#  echo "Current baseline: $PREV"
+#  DIFF=$((PREV - VALUE))
+#
+#  if [ "${DIFF:0:1}" = "-" ]; then
+#    echo "Congratulations - code quality has improved by ${DIFF:1} points!"
+#    echo 0
+#  elif [ "${DIFF}" = "0" ]; then
+#    echo "Great - code quality still matches the baseline."
+#    echo 0
+#  else
+#    echo "Sorry - code quality has regressed by ${DIFF} points."
+#    echo 1
+#  fi
+#fi
+

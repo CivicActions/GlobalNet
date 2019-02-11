@@ -46,42 +46,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_-comment_body */   ),
   /* comment-comment_node_-comment_body */ );
 
-  // Exported field_instance: 'comment-comment_node_alumni_group-comment_body'.
-  $field_instances['comment-comment_node_alumni_group-comment_body'] = array(
-  /* comment-comment_node_alumni_group-comment_body */   'bundle' => 'comment_node_alumni_group',
-  /* comment-comment_node_alumni_group-comment_body */   'default_value' => NULL,
-  /* comment-comment_node_alumni_group-comment_body */   'deleted' => 0,
-  /* comment-comment_node_alumni_group-comment_body */   'description' => '',
-  /* comment-comment_node_alumni_group-comment_body */   'display' => array(
-  /* comment-comment_node_alumni_group-comment_body */     'default' => array(
-  /* comment-comment_node_alumni_group-comment_body */       'label' => 'hidden',
-  /* comment-comment_node_alumni_group-comment_body */       'module' => 'text',
-  /* comment-comment_node_alumni_group-comment_body */       'settings' => array(
-  /* comment-comment_node_alumni_group-comment_body */         'field_formatter_class' => '',
-  /* comment-comment_node_alumni_group-comment_body */       ),
-  /* comment-comment_node_alumni_group-comment_body */       'type' => 'text_default',
-  /* comment-comment_node_alumni_group-comment_body */       'weight' => 0,
-  /* comment-comment_node_alumni_group-comment_body */     ),
-  /* comment-comment_node_alumni_group-comment_body */   ),
-  /* comment-comment_node_alumni_group-comment_body */   'entity_type' => 'comment',
-  /* comment-comment_node_alumni_group-comment_body */   'field_name' => 'comment_body',
-  /* comment-comment_node_alumni_group-comment_body */   'label' => 'Comment',
-  /* comment-comment_node_alumni_group-comment_body */   'required' => TRUE,
-  /* comment-comment_node_alumni_group-comment_body */   'settings' => array(
-  /* comment-comment_node_alumni_group-comment_body */     'text_processing' => 1,
-  /* comment-comment_node_alumni_group-comment_body */     'user_field_privacy' => FALSE,
-  /* comment-comment_node_alumni_group-comment_body */     'user_register_form' => FALSE,
-  /* comment-comment_node_alumni_group-comment_body */   ),
-  /* comment-comment_node_alumni_group-comment_body */   'widget' => array(
-  /* comment-comment_node_alumni_group-comment_body */     'module' => 'text',
-  /* comment-comment_node_alumni_group-comment_body */     'settings' => array(
-  /* comment-comment_node_alumni_group-comment_body */       'rows' => 5,
-  /* comment-comment_node_alumni_group-comment_body */     ),
-  /* comment-comment_node_alumni_group-comment_body */     'type' => 'text_textarea',
-  /* comment-comment_node_alumni_group-comment_body */     'weight' => 0,
-  /* comment-comment_node_alumni_group-comment_body */   ),
-  /* comment-comment_node_alumni_group-comment_body */ );
-
   // Exported field_instance: 'comment-comment_node_announcement-comment_body'.
   $field_instances['comment-comment_node_announcement-comment_body'] = array(
   /* comment-comment_node_announcement-comment_body */   'bundle' => 'comment_node_announcement',
@@ -207,7 +171,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_course-comment_body */       'allowed_formats' => array(
   /* comment-comment_node_course-comment_body */         'filtered_html' => 'filtered_html',
   /* comment-comment_node_course-comment_body */         'full_html' => 0,
-  /* comment-comment_node_course-comment_body */         'php_code' => 0,
   /* comment-comment_node_course-comment_body */         'plain_text' => 0,
   /* comment-comment_node_course-comment_body */       ),
   /* comment-comment_node_course-comment_body */       'allowed_formats_toggle' => 1,
@@ -219,9 +182,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_course-comment_body */           ),
   /* comment-comment_node_course-comment_body */           'full_html' => array(
   /* comment-comment_node_course-comment_body */             'weight' => -8,
-  /* comment-comment_node_course-comment_body */           ),
-  /* comment-comment_node_course-comment_body */           'php_code' => array(
-  /* comment-comment_node_course-comment_body */             'weight' => -7,
   /* comment-comment_node_course-comment_body */           ),
   /* comment-comment_node_course-comment_body */           'plain_text' => array(
   /* comment-comment_node_course-comment_body */             'weight' => -9,
@@ -276,7 +236,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_event-comment_body */       'allowed_formats' => array(
   /* comment-comment_node_event-comment_body */         'filtered_html' => 'filtered_html',
   /* comment-comment_node_event-comment_body */         'full_html' => 0,
-  /* comment-comment_node_event-comment_body */         'php_code' => 0,
   /* comment-comment_node_event-comment_body */         'plain_text' => 0,
   /* comment-comment_node_event-comment_body */       ),
   /* comment-comment_node_event-comment_body */       'allowed_formats_toggle' => 1,
@@ -288,9 +247,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_event-comment_body */           ),
   /* comment-comment_node_event-comment_body */           'full_html' => array(
   /* comment-comment_node_event-comment_body */             'weight' => -8,
-  /* comment-comment_node_event-comment_body */           ),
-  /* comment-comment_node_event-comment_body */           'php_code' => array(
-  /* comment-comment_node_event-comment_body */             'weight' => -7,
   /* comment-comment_node_event-comment_body */           ),
   /* comment-comment_node_event-comment_body */           'plain_text' => array(
   /* comment-comment_node_event-comment_body */             'weight' => -9,
@@ -417,7 +373,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_news-comment_body */       'allowed_formats' => array(
   /* comment-comment_node_news-comment_body */         'filtered_html' => 'filtered_html',
   /* comment-comment_node_news-comment_body */         'full_html' => 0,
-  /* comment-comment_node_news-comment_body */         'php_code' => 0,
   /* comment-comment_node_news-comment_body */         'plain_text' => 0,
   /* comment-comment_node_news-comment_body */       ),
   /* comment-comment_node_news-comment_body */       'allowed_formats_toggle' => 1,
@@ -429,9 +384,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_news-comment_body */           ),
   /* comment-comment_node_news-comment_body */           'full_html' => array(
   /* comment-comment_node_news-comment_body */             'weight' => -8,
-  /* comment-comment_node_news-comment_body */           ),
-  /* comment-comment_node_news-comment_body */           'php_code' => array(
-  /* comment-comment_node_news-comment_body */             'weight' => -7,
   /* comment-comment_node_news-comment_body */           ),
   /* comment-comment_node_news-comment_body */           'plain_text' => array(
   /* comment-comment_node_news-comment_body */             'weight' => -9,
@@ -687,7 +639,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_post-comment_body */       'allowed_formats' => array(
   /* comment-comment_node_post-comment_body */         'filtered_html' => 'filtered_html',
   /* comment-comment_node_post-comment_body */         'full_html' => 0,
-  /* comment-comment_node_post-comment_body */         'php_code' => 0,
   /* comment-comment_node_post-comment_body */         'plain_text' => 0,
   /* comment-comment_node_post-comment_body */       ),
   /* comment-comment_node_post-comment_body */       'allowed_formats_toggle' => 1,
@@ -699,9 +650,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_post-comment_body */           ),
   /* comment-comment_node_post-comment_body */           'full_html' => array(
   /* comment-comment_node_post-comment_body */             'weight' => -8,
-  /* comment-comment_node_post-comment_body */           ),
-  /* comment-comment_node_post-comment_body */           'php_code' => array(
-  /* comment-comment_node_post-comment_body */             'weight' => -7,
   /* comment-comment_node_post-comment_body */           ),
   /* comment-comment_node_post-comment_body */           'plain_text' => array(
   /* comment-comment_node_post-comment_body */             'weight' => -9,
@@ -849,7 +797,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_publication-comment_body */       'allowed_formats' => array(
   /* comment-comment_node_publication-comment_body */         'filtered_html' => 'filtered_html',
   /* comment-comment_node_publication-comment_body */         'full_html' => 0,
-  /* comment-comment_node_publication-comment_body */         'php_code' => 0,
   /* comment-comment_node_publication-comment_body */         'plain_text' => 0,
   /* comment-comment_node_publication-comment_body */       ),
   /* comment-comment_node_publication-comment_body */       'allowed_formats_toggle' => 1,
@@ -861,9 +808,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_publication-comment_body */           ),
   /* comment-comment_node_publication-comment_body */           'full_html' => array(
   /* comment-comment_node_publication-comment_body */             'weight' => -8,
-  /* comment-comment_node_publication-comment_body */           ),
-  /* comment-comment_node_publication-comment_body */           'php_code' => array(
-  /* comment-comment_node_publication-comment_body */             'weight' => -7,
   /* comment-comment_node_publication-comment_body */           ),
   /* comment-comment_node_publication-comment_body */           'plain_text' => array(
   /* comment-comment_node_publication-comment_body */             'weight' => -9,
@@ -886,189 +830,6 @@ function gn2_base_config_field_default_field_instances() {
   /* comment-comment_node_publication-comment_body */     'weight' => 0,
   /* comment-comment_node_publication-comment_body */   ),
   /* comment-comment_node_publication-comment_body */ );
-
-  // Exported field_instance: 'entityform-contact_support-field_email_address'.
-  $field_instances['entityform-contact_support-field_email_address'] = array(
-  /* entityform-contact_support-field_email_address */   'bundle' => 'contact_support',
-  /* entityform-contact_support-field_email_address */   'default_value' => NULL,
-  /* entityform-contact_support-field_email_address */   'deleted' => 0,
-  /* entityform-contact_support-field_email_address */   'description' => '',
-  /* entityform-contact_support-field_email_address */   'display' => array(
-  /* entityform-contact_support-field_email_address */     'default' => array(
-  /* entityform-contact_support-field_email_address */       'label' => 'above',
-  /* entityform-contact_support-field_email_address */       'module' => 'email',
-  /* entityform-contact_support-field_email_address */       'settings' => array(
-  /* entityform-contact_support-field_email_address */         'field_formatter_class' => '',
-  /* entityform-contact_support-field_email_address */       ),
-  /* entityform-contact_support-field_email_address */       'type' => 'email_default',
-  /* entityform-contact_support-field_email_address */       'weight' => 1,
-  /* entityform-contact_support-field_email_address */     ),
-  /* entityform-contact_support-field_email_address */     'week' => array(
-  /* entityform-contact_support-field_email_address */       'label' => 'above',
-  /* entityform-contact_support-field_email_address */       'settings' => array(),
-  /* entityform-contact_support-field_email_address */       'type' => 'hidden',
-  /* entityform-contact_support-field_email_address */       'weight' => 0,
-  /* entityform-contact_support-field_email_address */     ),
-  /* entityform-contact_support-field_email_address */   ),
-  /* entityform-contact_support-field_email_address */   'entity_type' => 'entityform',
-  /* entityform-contact_support-field_email_address */   'fences_wrapper' => 'div',
-  /* entityform-contact_support-field_email_address */   'field_name' => 'field_email_address',
-  /* entityform-contact_support-field_email_address */   'label' => 'Email Address',
-  /* entityform-contact_support-field_email_address */   'required' => 1,
-  /* entityform-contact_support-field_email_address */   'settings' => array(
-  /* entityform-contact_support-field_email_address */     'user_field_privacy' => FALSE,
-  /* entityform-contact_support-field_email_address */     'user_register_form' => FALSE,
-  /* entityform-contact_support-field_email_address */   ),
-  /* entityform-contact_support-field_email_address */   'widget' => array(
-  /* entityform-contact_support-field_email_address */     'active' => 1,
-  /* entityform-contact_support-field_email_address */     'module' => 'email',
-  /* entityform-contact_support-field_email_address */     'settings' => array(
-  /* entityform-contact_support-field_email_address */       'size' => 60,
-  /* entityform-contact_support-field_email_address */     ),
-  /* entityform-contact_support-field_email_address */     'type' => 'email_textfield',
-  /* entityform-contact_support-field_email_address */     'weight' => 32,
-  /* entityform-contact_support-field_email_address */   ),
-  /* entityform-contact_support-field_email_address */ );
-
-  // Exported field_instance: 'entityform-contact_support-field_question'.
-  $field_instances['entityform-contact_support-field_question'] = array(
-  /* entityform-contact_support-field_question */   'bundle' => 'contact_support',
-  /* entityform-contact_support-field_question */   'default_value' => NULL,
-  /* entityform-contact_support-field_question */   'deleted' => 0,
-  /* entityform-contact_support-field_question */   'description' => '',
-  /* entityform-contact_support-field_question */   'display' => array(
-  /* entityform-contact_support-field_question */     'default' => array(
-  /* entityform-contact_support-field_question */       'label' => 'above',
-  /* entityform-contact_support-field_question */       'module' => 'text',
-  /* entityform-contact_support-field_question */       'settings' => array(
-  /* entityform-contact_support-field_question */         'field_formatter_class' => '',
-  /* entityform-contact_support-field_question */       ),
-  /* entityform-contact_support-field_question */       'type' => 'text_default',
-  /* entityform-contact_support-field_question */       'weight' => 2,
-  /* entityform-contact_support-field_question */     ),
-  /* entityform-contact_support-field_question */     'week' => array(
-  /* entityform-contact_support-field_question */       'label' => 'above',
-  /* entityform-contact_support-field_question */       'settings' => array(),
-  /* entityform-contact_support-field_question */       'type' => 'hidden',
-  /* entityform-contact_support-field_question */       'weight' => 0,
-  /* entityform-contact_support-field_question */     ),
-  /* entityform-contact_support-field_question */   ),
-  /* entityform-contact_support-field_question */   'entity_type' => 'entityform',
-  /* entityform-contact_support-field_question */   'fences_wrapper' => 'div',
-  /* entityform-contact_support-field_question */   'field_name' => 'field_question',
-  /* entityform-contact_support-field_question */   'label' => 'Question',
-  /* entityform-contact_support-field_question */   'required' => 1,
-  /* entityform-contact_support-field_question */   'settings' => array(
-  /* entityform-contact_support-field_question */     'better_formats' => array(
-  /* entityform-contact_support-field_question */       'allowed_formats' => array(
-  /* entityform-contact_support-field_question */         'filtered_html' => 'filtered_html',
-  /* entityform-contact_support-field_question */         'full_html' => 'full_html',
-  /* entityform-contact_support-field_question */         'php_code' => 'php_code',
-  /* entityform-contact_support-field_question */         'plain_text' => 'plain_text',
-  /* entityform-contact_support-field_question */       ),
-  /* entityform-contact_support-field_question */       'allowed_formats_toggle' => 0,
-  /* entityform-contact_support-field_question */       'default_order_toggle' => 0,
-  /* entityform-contact_support-field_question */       'default_order_wrapper' => array(
-  /* entityform-contact_support-field_question */         'formats' => array(
-  /* entityform-contact_support-field_question */           'filtered_html' => array(
-  /* entityform-contact_support-field_question */             'weight' => -10,
-  /* entityform-contact_support-field_question */           ),
-  /* entityform-contact_support-field_question */           'full_html' => array(
-  /* entityform-contact_support-field_question */             'weight' => -8,
-  /* entityform-contact_support-field_question */           ),
-  /* entityform-contact_support-field_question */           'php_code' => array(
-  /* entityform-contact_support-field_question */             'weight' => -7,
-  /* entityform-contact_support-field_question */           ),
-  /* entityform-contact_support-field_question */           'plain_text' => array(
-  /* entityform-contact_support-field_question */             'weight' => -9,
-  /* entityform-contact_support-field_question */           ),
-  /* entityform-contact_support-field_question */         ),
-  /* entityform-contact_support-field_question */       ),
-  /* entityform-contact_support-field_question */     ),
-  /* entityform-contact_support-field_question */     'text_processing' => 0,
-  /* entityform-contact_support-field_question */     'user_field_privacy' => FALSE,
-  /* entityform-contact_support-field_question */     'user_register_form' => FALSE,
-  /* entityform-contact_support-field_question */   ),
-  /* entityform-contact_support-field_question */   'widget' => array(
-  /* entityform-contact_support-field_question */     'active' => 1,
-  /* entityform-contact_support-field_question */     'module' => 'text',
-  /* entityform-contact_support-field_question */     'settings' => array(
-  /* entityform-contact_support-field_question */       'rows' => 5,
-  /* entityform-contact_support-field_question */     ),
-  /* entityform-contact_support-field_question */     'type' => 'text_textarea',
-  /* entityform-contact_support-field_question */     'weight' => 33,
-  /* entityform-contact_support-field_question */   ),
-  /* entityform-contact_support-field_question */ );
-
-  // Exported field_instance: 'entityform-contact_support-field_support_name'.
-  $field_instances['entityform-contact_support-field_support_name'] = array(
-  /* entityform-contact_support-field_support_name */   'bundle' => 'contact_support',
-  /* entityform-contact_support-field_support_name */   'default_value' => NULL,
-  /* entityform-contact_support-field_support_name */   'deleted' => 0,
-  /* entityform-contact_support-field_support_name */   'description' => '',
-  /* entityform-contact_support-field_support_name */   'display' => array(
-  /* entityform-contact_support-field_support_name */     'default' => array(
-  /* entityform-contact_support-field_support_name */       'label' => 'above',
-  /* entityform-contact_support-field_support_name */       'module' => 'text',
-  /* entityform-contact_support-field_support_name */       'settings' => array(
-  /* entityform-contact_support-field_support_name */         'field_formatter_class' => '',
-  /* entityform-contact_support-field_support_name */       ),
-  /* entityform-contact_support-field_support_name */       'type' => 'text_default',
-  /* entityform-contact_support-field_support_name */       'weight' => 0,
-  /* entityform-contact_support-field_support_name */     ),
-  /* entityform-contact_support-field_support_name */     'week' => array(
-  /* entityform-contact_support-field_support_name */       'label' => 'above',
-  /* entityform-contact_support-field_support_name */       'settings' => array(),
-  /* entityform-contact_support-field_support_name */       'type' => 'hidden',
-  /* entityform-contact_support-field_support_name */       'weight' => 0,
-  /* entityform-contact_support-field_support_name */     ),
-  /* entityform-contact_support-field_support_name */   ),
-  /* entityform-contact_support-field_support_name */   'entity_type' => 'entityform',
-  /* entityform-contact_support-field_support_name */   'fences_wrapper' => 'div',
-  /* entityform-contact_support-field_support_name */   'field_name' => 'field_support_name',
-  /* entityform-contact_support-field_support_name */   'label' => 'Name',
-  /* entityform-contact_support-field_support_name */   'required' => 1,
-  /* entityform-contact_support-field_support_name */   'settings' => array(
-  /* entityform-contact_support-field_support_name */     'better_formats' => array(
-  /* entityform-contact_support-field_support_name */       'allowed_formats' => array(
-  /* entityform-contact_support-field_support_name */         'filtered_html' => 'filtered_html',
-  /* entityform-contact_support-field_support_name */         'full_html' => 'full_html',
-  /* entityform-contact_support-field_support_name */         'php_code' => 'php_code',
-  /* entityform-contact_support-field_support_name */         'plain_text' => 'plain_text',
-  /* entityform-contact_support-field_support_name */       ),
-  /* entityform-contact_support-field_support_name */       'allowed_formats_toggle' => 0,
-  /* entityform-contact_support-field_support_name */       'default_order_toggle' => 0,
-  /* entityform-contact_support-field_support_name */       'default_order_wrapper' => array(
-  /* entityform-contact_support-field_support_name */         'formats' => array(
-  /* entityform-contact_support-field_support_name */           'filtered_html' => array(
-  /* entityform-contact_support-field_support_name */             'weight' => -10,
-  /* entityform-contact_support-field_support_name */           ),
-  /* entityform-contact_support-field_support_name */           'full_html' => array(
-  /* entityform-contact_support-field_support_name */             'weight' => -8,
-  /* entityform-contact_support-field_support_name */           ),
-  /* entityform-contact_support-field_support_name */           'php_code' => array(
-  /* entityform-contact_support-field_support_name */             'weight' => -7,
-  /* entityform-contact_support-field_support_name */           ),
-  /* entityform-contact_support-field_support_name */           'plain_text' => array(
-  /* entityform-contact_support-field_support_name */             'weight' => -9,
-  /* entityform-contact_support-field_support_name */           ),
-  /* entityform-contact_support-field_support_name */         ),
-  /* entityform-contact_support-field_support_name */       ),
-  /* entityform-contact_support-field_support_name */     ),
-  /* entityform-contact_support-field_support_name */     'text_processing' => 0,
-  /* entityform-contact_support-field_support_name */     'user_field_privacy' => FALSE,
-  /* entityform-contact_support-field_support_name */     'user_register_form' => FALSE,
-  /* entityform-contact_support-field_support_name */   ),
-  /* entityform-contact_support-field_support_name */   'widget' => array(
-  /* entityform-contact_support-field_support_name */     'active' => 1,
-  /* entityform-contact_support-field_support_name */     'module' => 'text',
-  /* entityform-contact_support-field_support_name */     'settings' => array(
-  /* entityform-contact_support-field_support_name */       'size' => 60,
-  /* entityform-contact_support-field_support_name */     ),
-  /* entityform-contact_support-field_support_name */     'type' => 'text_textfield',
-  /* entityform-contact_support-field_support_name */     'weight' => 31,
-  /* entityform-contact_support-field_support_name */   ),
-  /* entityform-contact_support-field_support_name */ );
 
   // Exported field_instance: 'entityform-course_feedback-field_description'.
   $field_instances['entityform-course_feedback-field_description'] = array(
@@ -1175,6 +936,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-course_feedback-field_organization */       'label' => 'above',
   /* entityform-course_feedback-field_organization */       'module' => 'entityreference',
   /* entityform-course_feedback-field_organization */       'settings' => array(
+  /* entityform-course_feedback-field_organization */         'bypass_access' => FALSE,
   /* entityform-course_feedback-field_organization */         'field_formatter_class' => '',
   /* entityform-course_feedback-field_organization */         'link' => FALSE,
   /* entityform-course_feedback-field_organization */       ),
@@ -1269,6 +1031,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-course_feedback-og_entityform_group_ref */       'label' => 'above',
   /* entityform-course_feedback-og_entityform_group_ref */       'module' => 'entityreference',
   /* entityform-course_feedback-og_entityform_group_ref */       'settings' => array(
+  /* entityform-course_feedback-og_entityform_group_ref */         'bypass_access' => FALSE,
   /* entityform-course_feedback-og_entityform_group_ref */         'field_formatter_class' => '',
   /* entityform-course_feedback-og_entityform_group_ref */         'link' => FALSE,
   /* entityform-course_feedback-og_entityform_group_ref */       ),
@@ -1374,7 +1137,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-field_description */       'allowed_formats' => array(
   /* entityform-event_feedback-field_description */         'filtered_html' => 'filtered_html',
   /* entityform-event_feedback-field_description */         'full_html' => 'full_html',
-  /* entityform-event_feedback-field_description */         'php_code' => 'php_code',
   /* entityform-event_feedback-field_description */         'plain_text' => 'plain_text',
   /* entityform-event_feedback-field_description */       ),
   /* entityform-event_feedback-field_description */       'allowed_formats_toggle' => 0,
@@ -1386,9 +1148,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-field_description */           ),
   /* entityform-event_feedback-field_description */           'full_html' => array(
   /* entityform-event_feedback-field_description */             'weight' => -8,
-  /* entityform-event_feedback-field_description */           ),
-  /* entityform-event_feedback-field_description */           'php_code' => array(
-  /* entityform-event_feedback-field_description */             'weight' => -7,
   /* entityform-event_feedback-field_description */           ),
   /* entityform-event_feedback-field_description */           'plain_text' => array(
   /* entityform-event_feedback-field_description */             'weight' => -9,
@@ -1467,6 +1226,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-field_organization */       'label' => 'above',
   /* entityform-event_feedback-field_organization */       'module' => 'entityreference',
   /* entityform-event_feedback-field_organization */       'settings' => array(
+  /* entityform-event_feedback-field_organization */         'bypass_access' => FALSE,
   /* entityform-event_feedback-field_organization */         'field_formatter_class' => '',
   /* entityform-event_feedback-field_organization */         'link' => FALSE,
   /* entityform-event_feedback-field_organization */       ),
@@ -1537,7 +1297,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-field_title */       'allowed_formats' => array(
   /* entityform-event_feedback-field_title */         'filtered_html' => 'filtered_html',
   /* entityform-event_feedback-field_title */         'full_html' => 'full_html',
-  /* entityform-event_feedback-field_title */         'php_code' => 'php_code',
   /* entityform-event_feedback-field_title */         'plain_text' => 'plain_text',
   /* entityform-event_feedback-field_title */       ),
   /* entityform-event_feedback-field_title */       'allowed_formats_toggle' => 0,
@@ -1549,9 +1308,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-field_title */           ),
   /* entityform-event_feedback-field_title */           'full_html' => array(
   /* entityform-event_feedback-field_title */             'weight' => -8,
-  /* entityform-event_feedback-field_title */           ),
-  /* entityform-event_feedback-field_title */           'php_code' => array(
-  /* entityform-event_feedback-field_title */             'weight' => -7,
   /* entityform-event_feedback-field_title */           ),
   /* entityform-event_feedback-field_title */           'plain_text' => array(
   /* entityform-event_feedback-field_title */             'weight' => -9,
@@ -1586,6 +1342,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-event_feedback-og_entityform_group_ref */       'label' => 'above',
   /* entityform-event_feedback-og_entityform_group_ref */       'module' => 'entityreference',
   /* entityform-event_feedback-og_entityform_group_ref */       'settings' => array(
+  /* entityform-event_feedback-og_entityform_group_ref */         'bypass_access' => FALSE,
   /* entityform-event_feedback-og_entityform_group_ref */         'field_formatter_class' => '',
   /* entityform-event_feedback-og_entityform_group_ref */         'link' => FALSE,
   /* entityform-event_feedback-og_entityform_group_ref */       ),
@@ -1767,7 +1524,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-field_description */       'allowed_formats' => array(
   /* entityform-group_feedback-field_description */         'filtered_html' => 'filtered_html',
   /* entityform-group_feedback-field_description */         'full_html' => 'full_html',
-  /* entityform-group_feedback-field_description */         'php_code' => 'php_code',
   /* entityform-group_feedback-field_description */         'plain_text' => 'plain_text',
   /* entityform-group_feedback-field_description */       ),
   /* entityform-group_feedback-field_description */       'allowed_formats_toggle' => 0,
@@ -1779,9 +1535,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-field_description */           ),
   /* entityform-group_feedback-field_description */           'full_html' => array(
   /* entityform-group_feedback-field_description */             'weight' => -8,
-  /* entityform-group_feedback-field_description */           ),
-  /* entityform-group_feedback-field_description */           'php_code' => array(
-  /* entityform-group_feedback-field_description */             'weight' => -7,
   /* entityform-group_feedback-field_description */           ),
   /* entityform-group_feedback-field_description */           'plain_text' => array(
   /* entityform-group_feedback-field_description */             'weight' => -9,
@@ -1860,6 +1613,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-field_organization */       'label' => 'above',
   /* entityform-group_feedback-field_organization */       'module' => 'entityreference',
   /* entityform-group_feedback-field_organization */       'settings' => array(
+  /* entityform-group_feedback-field_organization */         'bypass_access' => FALSE,
   /* entityform-group_feedback-field_organization */         'field_formatter_class' => '',
   /* entityform-group_feedback-field_organization */         'link' => FALSE,
   /* entityform-group_feedback-field_organization */       ),
@@ -1930,7 +1684,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-field_title */       'allowed_formats' => array(
   /* entityform-group_feedback-field_title */         'filtered_html' => 'filtered_html',
   /* entityform-group_feedback-field_title */         'full_html' => 'full_html',
-  /* entityform-group_feedback-field_title */         'php_code' => 'php_code',
   /* entityform-group_feedback-field_title */         'plain_text' => 'plain_text',
   /* entityform-group_feedback-field_title */       ),
   /* entityform-group_feedback-field_title */       'allowed_formats_toggle' => 0,
@@ -1942,9 +1695,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-field_title */           ),
   /* entityform-group_feedback-field_title */           'full_html' => array(
   /* entityform-group_feedback-field_title */             'weight' => -8,
-  /* entityform-group_feedback-field_title */           ),
-  /* entityform-group_feedback-field_title */           'php_code' => array(
-  /* entityform-group_feedback-field_title */             'weight' => -7,
   /* entityform-group_feedback-field_title */           ),
   /* entityform-group_feedback-field_title */           'plain_text' => array(
   /* entityform-group_feedback-field_title */             'weight' => -9,
@@ -1979,6 +1729,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-group_feedback-og_entityform_group_ref */       'label' => 'above',
   /* entityform-group_feedback-og_entityform_group_ref */       'module' => 'entityreference',
   /* entityform-group_feedback-og_entityform_group_ref */       'settings' => array(
+  /* entityform-group_feedback-og_entityform_group_ref */         'bypass_access' => FALSE,
   /* entityform-group_feedback-og_entityform_group_ref */         'field_formatter_class' => '',
   /* entityform-group_feedback-og_entityform_group_ref */         'link' => FALSE,
   /* entityform-group_feedback-og_entityform_group_ref */       ),
@@ -2159,7 +1910,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-reject_request-field_email_body */       'allowed_formats' => array(
   /* entityform-reject_request-field_email_body */         'filtered_html' => 'filtered_html',
   /* entityform-reject_request-field_email_body */         'full_html' => 'full_html',
-  /* entityform-reject_request-field_email_body */         'php_code' => 'php_code',
   /* entityform-reject_request-field_email_body */         'plain_text' => 'plain_text',
   /* entityform-reject_request-field_email_body */       ),
   /* entityform-reject_request-field_email_body */       'allowed_formats_toggle' => 0,
@@ -2171,9 +1921,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-reject_request-field_email_body */           ),
   /* entityform-reject_request-field_email_body */           'full_html' => array(
   /* entityform-reject_request-field_email_body */             'weight' => -8,
-  /* entityform-reject_request-field_email_body */           ),
-  /* entityform-reject_request-field_email_body */           'php_code' => array(
-  /* entityform-reject_request-field_email_body */             'weight' => -7,
   /* entityform-reject_request-field_email_body */           ),
   /* entityform-reject_request-field_email_body */           'plain_text' => array(
   /* entityform-reject_request-field_email_body */             'weight' => -9,
@@ -2209,6 +1956,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-reject_request-field_organization */       'label' => 'above',
   /* entityform-reject_request-field_organization */       'module' => 'entityreference',
   /* entityform-reject_request-field_organization */       'settings' => array(
+  /* entityform-reject_request-field_organization */         'bypass_access' => FALSE,
   /* entityform-reject_request-field_organization */         'field_formatter_class' => '',
   /* entityform-reject_request-field_organization */         'link' => FALSE,
   /* entityform-reject_request-field_organization */       ),
@@ -2298,6 +2046,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-userprofileupdates-field_organization */       'label' => 'above',
   /* entityform-userprofileupdates-field_organization */       'module' => 'entityreference',
   /* entityform-userprofileupdates-field_organization */       'settings' => array(
+  /* entityform-userprofileupdates-field_organization */         'bypass_access' => FALSE,
   /* entityform-userprofileupdates-field_organization */         'field_formatter_class' => '',
   /* entityform-userprofileupdates-field_organization */         'link' => FALSE,
   /* entityform-userprofileupdates-field_organization */       ),
@@ -2428,7 +2177,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-userprofileupdates-field_updated_fields */       'allowed_formats' => array(
   /* entityform-userprofileupdates-field_updated_fields */         'filtered_html' => 'filtered_html',
   /* entityform-userprofileupdates-field_updated_fields */         'full_html' => 'full_html',
-  /* entityform-userprofileupdates-field_updated_fields */         'php_code' => 'php_code',
   /* entityform-userprofileupdates-field_updated_fields */         'plain_text' => 'plain_text',
   /* entityform-userprofileupdates-field_updated_fields */       ),
   /* entityform-userprofileupdates-field_updated_fields */       'allowed_formats_toggle' => 0,
@@ -2440,9 +2188,6 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-userprofileupdates-field_updated_fields */           ),
   /* entityform-userprofileupdates-field_updated_fields */           'full_html' => array(
   /* entityform-userprofileupdates-field_updated_fields */             'weight' => -8,
-  /* entityform-userprofileupdates-field_updated_fields */           ),
-  /* entityform-userprofileupdates-field_updated_fields */           'php_code' => array(
-  /* entityform-userprofileupdates-field_updated_fields */             'weight' => -7,
   /* entityform-userprofileupdates-field_updated_fields */           ),
   /* entityform-userprofileupdates-field_updated_fields */           'plain_text' => array(
   /* entityform-userprofileupdates-field_updated_fields */             'weight' => -9,
@@ -2477,6 +2222,7 @@ function gn2_base_config_field_default_field_instances() {
   /* entityform-userprofileupdates-field_user */       'label' => 'above',
   /* entityform-userprofileupdates-field_user */       'module' => 'entityreference',
   /* entityform-userprofileupdates-field_user */       'settings' => array(
+  /* entityform-userprofileupdates-field_user */         'bypass_access' => FALSE,
   /* entityform-userprofileupdates-field_user */         'field_formatter_class' => '',
   /* entityform-userprofileupdates-field_user */         'link' => FALSE,
   /* entityform-userprofileupdates-field_user */       ),
@@ -3020,205 +2766,6 @@ function gn2_base_config_field_default_field_instances() {
   /* field_collection_item-field_employers-field_job_description */     'weight' => 6,
   /* field_collection_item-field_employers-field_job_description */   ),
   /* field_collection_item-field_employers-field_job_description */ );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_expertise-field_expertise_availability'.
-  $field_instances['field_collection_item-field_expertise-field_expertise_availability'] = array(
-  /* field_collection_item-field_expertise-field_expertise_availability */   'bundle' => 'field_expertise',
-  /* field_collection_item-field_expertise-field_expertise_availability */   'default_value' => NULL,
-  /* field_collection_item-field_expertise-field_expertise_availability */   'deleted' => 0,
-  /* field_collection_item-field_expertise-field_expertise_availability */   'description' => '',
-  /* field_collection_item-field_expertise-field_expertise_availability */   'display' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */     'default' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */       'label' => 'above',
-  /* field_collection_item-field_expertise-field_expertise_availability */       'module' => 'list',
-  /* field_collection_item-field_expertise-field_expertise_availability */       'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */         'field_formatter_class' => '',
-  /* field_collection_item-field_expertise-field_expertise_availability */       ),
-  /* field_collection_item-field_expertise-field_expertise_availability */       'type' => 'list_default',
-  /* field_collection_item-field_expertise-field_expertise_availability */       'weight' => 3,
-  /* field_collection_item-field_expertise-field_expertise_availability */     ),
-  /* field_collection_item-field_expertise-field_expertise_availability */   ),
-  /* field_collection_item-field_expertise-field_expertise_availability */   'entity_type' => 'field_collection_item',
-  /* field_collection_item-field_expertise-field_expertise_availability */   'field_name' => 'field_expertise_availability',
-  /* field_collection_item-field_expertise-field_expertise_availability */   'label' => 'Availability',
-  /* field_collection_item-field_expertise-field_expertise_availability */   'required' => 0,
-  /* field_collection_item-field_expertise-field_expertise_availability */   'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */     'user_field_privacy' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_availability */     'user_register_form' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_availability */   ),
-  /* field_collection_item-field_expertise-field_expertise_availability */   'widget' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */     'active' => 1,
-  /* field_collection_item-field_expertise-field_expertise_availability */     'module' => 'options',
-  /* field_collection_item-field_expertise-field_expertise_availability */     'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_availability */       'apply_chosen' => '',
-  /* field_collection_item-field_expertise-field_expertise_availability */     ),
-  /* field_collection_item-field_expertise-field_expertise_availability */     'type' => 'options_select',
-  /* field_collection_item-field_expertise-field_expertise_availability */     'weight' => 3,
-  /* field_collection_item-field_expertise-field_expertise_availability */   ),
-  /* field_collection_item-field_expertise-field_expertise_availability */ );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_expertise-field_expertise_experience'.
-  $field_instances['field_collection_item-field_expertise-field_expertise_experience'] = array(
-  /* field_collection_item-field_expertise-field_expertise_experience */   'bundle' => 'field_expertise',
-  /* field_collection_item-field_expertise-field_expertise_experience */   'default_value' => NULL,
-  /* field_collection_item-field_expertise-field_expertise_experience */   'deleted' => 0,
-  /* field_collection_item-field_expertise-field_expertise_experience */   'description' => '',
-  /* field_collection_item-field_expertise-field_expertise_experience */   'display' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */     'default' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */       'label' => 'above',
-  /* field_collection_item-field_expertise-field_expertise_experience */       'module' => 'text',
-  /* field_collection_item-field_expertise-field_expertise_experience */       'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */         'field_formatter_class' => '',
-  /* field_collection_item-field_expertise-field_expertise_experience */       ),
-  /* field_collection_item-field_expertise-field_expertise_experience */       'type' => 'text_default',
-  /* field_collection_item-field_expertise-field_expertise_experience */       'weight' => 2,
-  /* field_collection_item-field_expertise-field_expertise_experience */     ),
-  /* field_collection_item-field_expertise-field_expertise_experience */   ),
-  /* field_collection_item-field_expertise-field_expertise_experience */   'entity_type' => 'field_collection_item',
-  /* field_collection_item-field_expertise-field_expertise_experience */   'field_name' => 'field_expertise_experience',
-  /* field_collection_item-field_expertise-field_expertise_experience */   'label' => 'What is your experience with this topic?',
-  /* field_collection_item-field_expertise-field_expertise_experience */   'required' => 0,
-  /* field_collection_item-field_expertise-field_expertise_experience */   'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */     'text_processing' => 0,
-  /* field_collection_item-field_expertise-field_expertise_experience */     'user_field_privacy' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_experience */     'user_register_form' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_experience */   ),
-  /* field_collection_item-field_expertise-field_expertise_experience */   'widget' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */     'active' => 1,
-  /* field_collection_item-field_expertise-field_expertise_experience */     'module' => 'text',
-  /* field_collection_item-field_expertise-field_expertise_experience */     'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_experience */       'rows' => 5,
-  /* field_collection_item-field_expertise-field_expertise_experience */     ),
-  /* field_collection_item-field_expertise-field_expertise_experience */     'type' => 'text_textarea',
-  /* field_collection_item-field_expertise-field_expertise_experience */     'weight' => 2,
-  /* field_collection_item-field_expertise-field_expertise_experience */   ),
-  /* field_collection_item-field_expertise-field_expertise_experience */ );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_expertise-field_expertise_level'.
-  $field_instances['field_collection_item-field_expertise-field_expertise_level'] = array(
-  /* field_collection_item-field_expertise-field_expertise_level */   'bundle' => 'field_expertise',
-  /* field_collection_item-field_expertise-field_expertise_level */   'default_value' => NULL,
-  /* field_collection_item-field_expertise-field_expertise_level */   'deleted' => 0,
-  /* field_collection_item-field_expertise-field_expertise_level */   'description' => '',
-  /* field_collection_item-field_expertise-field_expertise_level */   'display' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */     'default' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */       'label' => 'above',
-  /* field_collection_item-field_expertise-field_expertise_level */       'module' => 'list',
-  /* field_collection_item-field_expertise-field_expertise_level */       'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */         'field_formatter_class' => '',
-  /* field_collection_item-field_expertise-field_expertise_level */       ),
-  /* field_collection_item-field_expertise-field_expertise_level */       'type' => 'list_default',
-  /* field_collection_item-field_expertise-field_expertise_level */       'weight' => 1,
-  /* field_collection_item-field_expertise-field_expertise_level */     ),
-  /* field_collection_item-field_expertise-field_expertise_level */   ),
-  /* field_collection_item-field_expertise-field_expertise_level */   'entity_type' => 'field_collection_item',
-  /* field_collection_item-field_expertise-field_expertise_level */   'fences_wrapper' => 'span',
-  /* field_collection_item-field_expertise-field_expertise_level */   'field_name' => 'field_expertise_level',
-  /* field_collection_item-field_expertise-field_expertise_level */   'label' => 'Level of Expertise',
-  /* field_collection_item-field_expertise-field_expertise_level */   'required' => 0,
-  /* field_collection_item-field_expertise-field_expertise_level */   'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */     'user_field_privacy' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_level */     'user_register_form' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_level */   ),
-  /* field_collection_item-field_expertise-field_expertise_level */   'widget' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */     'active' => 1,
-  /* field_collection_item-field_expertise-field_expertise_level */     'module' => 'options',
-  /* field_collection_item-field_expertise-field_expertise_level */     'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_level */       'apply_chosen' => '',
-  /* field_collection_item-field_expertise-field_expertise_level */     ),
-  /* field_collection_item-field_expertise-field_expertise_level */     'type' => 'options_select',
-  /* field_collection_item-field_expertise-field_expertise_level */     'weight' => 0,
-  /* field_collection_item-field_expertise-field_expertise_level */   ),
-  /* field_collection_item-field_expertise-field_expertise_level */ );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_expertise-field_expertise_topic'.
-  $field_instances['field_collection_item-field_expertise-field_expertise_topic'] = array(
-  /* field_collection_item-field_expertise-field_expertise_topic */   'bundle' => 'field_expertise',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'default_value' => NULL,
-  /* field_collection_item-field_expertise-field_expertise_topic */   'deleted' => 0,
-  /* field_collection_item-field_expertise-field_expertise_topic */   'description' => '',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'display' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */     'default' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */       'label' => 'above',
-  /* field_collection_item-field_expertise-field_expertise_topic */       'module' => 'taxonomy',
-  /* field_collection_item-field_expertise-field_expertise_topic */       'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */         'field_formatter_class' => '',
-  /* field_collection_item-field_expertise-field_expertise_topic */       ),
-  /* field_collection_item-field_expertise-field_expertise_topic */       'type' => 'taxonomy_term_reference_link',
-  /* field_collection_item-field_expertise-field_expertise_topic */       'weight' => 0,
-  /* field_collection_item-field_expertise-field_expertise_topic */     ),
-  /* field_collection_item-field_expertise-field_expertise_topic */   ),
-  /* field_collection_item-field_expertise-field_expertise_topic */   'entity_type' => 'field_collection_item',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'fences_wrapper' => 'span',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'field_name' => 'field_expertise_topic',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'label' => 'Topic of expertise',
-  /* field_collection_item-field_expertise-field_expertise_topic */   'required' => 0,
-  /* field_collection_item-field_expertise-field_expertise_topic */   'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */     'user_field_privacy' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_topic */     'user_register_form' => FALSE,
-  /* field_collection_item-field_expertise-field_expertise_topic */   ),
-  /* field_collection_item-field_expertise-field_expertise_topic */   'widget' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */     'active' => 1,
-  /* field_collection_item-field_expertise-field_expertise_topic */     'module' => 'options',
-  /* field_collection_item-field_expertise-field_expertise_topic */     'settings' => array(
-  /* field_collection_item-field_expertise-field_expertise_topic */       'apply_chosen' => '',
-  /* field_collection_item-field_expertise-field_expertise_topic */     ),
-  /* field_collection_item-field_expertise-field_expertise_topic */     'type' => 'options_select',
-  /* field_collection_item-field_expertise-field_expertise_topic */     'weight' => 1,
-  /* field_collection_item-field_expertise-field_expertise_topic */   ),
-  /* field_collection_item-field_expertise-field_expertise_topic */ );
-
-  // Exported field_instance:
-  // 'field_collection_item-field_expertise-field_validated_by'.
-  $field_instances['field_collection_item-field_expertise-field_validated_by'] = array(
-  /* field_collection_item-field_expertise-field_validated_by */   'bundle' => 'field_expertise',
-  /* field_collection_item-field_expertise-field_validated_by */   'default_value' => NULL,
-  /* field_collection_item-field_expertise-field_validated_by */   'default_value_function' => '',
-  /* field_collection_item-field_expertise-field_validated_by */   'deleted' => 0,
-  /* field_collection_item-field_expertise-field_validated_by */   'description' => '',
-  /* field_collection_item-field_expertise-field_validated_by */   'display' => array(
-  /* field_collection_item-field_expertise-field_validated_by */     'default' => array(
-  /* field_collection_item-field_expertise-field_validated_by */       'label' => 'above',
-  /* field_collection_item-field_expertise-field_validated_by */       'module' => 'entityreference',
-  /* field_collection_item-field_expertise-field_validated_by */       'settings' => array(
-  /* field_collection_item-field_expertise-field_validated_by */         'field_formatter_class' => '',
-  /* field_collection_item-field_expertise-field_validated_by */         'link' => FALSE,
-  /* field_collection_item-field_expertise-field_validated_by */       ),
-  /* field_collection_item-field_expertise-field_validated_by */       'type' => 'entityreference_label',
-  /* field_collection_item-field_expertise-field_validated_by */       'weight' => 6,
-  /* field_collection_item-field_expertise-field_validated_by */     ),
-  /* field_collection_item-field_expertise-field_validated_by */   ),
-  /* field_collection_item-field_expertise-field_validated_by */   'entity_type' => 'field_collection_item',
-  /* field_collection_item-field_expertise-field_validated_by */   'fences_wrapper' => 'div',
-  /* field_collection_item-field_expertise-field_validated_by */   'field_name' => 'field_validated_by',
-  /* field_collection_item-field_expertise-field_validated_by */   'label' => 'Validated by',
-  /* field_collection_item-field_expertise-field_validated_by */   'required' => 0,
-  /* field_collection_item-field_expertise-field_validated_by */   'settings' => array(
-  /* field_collection_item-field_expertise-field_validated_by */     'behaviors' => array(
-  /* field_collection_item-field_expertise-field_validated_by */       'prepopulate' => array(
-  /* field_collection_item-field_expertise-field_validated_by */         'status' => 0,
-  /* field_collection_item-field_expertise-field_validated_by */       ),
-  /* field_collection_item-field_expertise-field_validated_by */     ),
-  /* field_collection_item-field_expertise-field_validated_by */     'user_field_privacy' => FALSE,
-  /* field_collection_item-field_expertise-field_validated_by */     'user_register_form' => FALSE,
-  /* field_collection_item-field_expertise-field_validated_by */   ),
-  /* field_collection_item-field_expertise-field_validated_by */   'widget' => array(
-  /* field_collection_item-field_expertise-field_validated_by */     'active' => 1,
-  /* field_collection_item-field_expertise-field_validated_by */     'module' => 'entityreference',
-  /* field_collection_item-field_expertise-field_validated_by */     'settings' => array(
-  /* field_collection_item-field_expertise-field_validated_by */       'label_help_description' => '',
-  /* field_collection_item-field_expertise-field_validated_by */       'match_operator' => 'CONTAINS',
-  /* field_collection_item-field_expertise-field_validated_by */       'path' => '',
-  /* field_collection_item-field_expertise-field_validated_by */       'size' => 60,
-  /* field_collection_item-field_expertise-field_validated_by */     ),
-  /* field_collection_item-field_expertise-field_validated_by */     'type' => 'entityreference_autocomplete',
-  /* field_collection_item-field_expertise-field_validated_by */     'weight' => 7,
-  /* field_collection_item-field_expertise-field_validated_by */   ),
-  /* field_collection_item-field_expertise-field_validated_by */ );
 
   // Exported field_instance:
   // 'field_collection_item-field_telephone-field_telephone_country_code'.
@@ -5208,7 +4755,6 @@ function gn2_base_config_field_default_field_instances() {
   /* file-image-field_file_image_alt_text */       'allowed_formats' => array(
   /* file-image-field_file_image_alt_text */         'filtered_html' => 'filtered_html',
   /* file-image-field_file_image_alt_text */         'full_html' => 'full_html',
-  /* file-image-field_file_image_alt_text */         'php_code' => 'php_code',
   /* file-image-field_file_image_alt_text */         'plain_text' => 'plain_text',
   /* file-image-field_file_image_alt_text */       ),
   /* file-image-field_file_image_alt_text */       'allowed_formats_toggle' => 0,
@@ -5220,9 +4766,6 @@ function gn2_base_config_field_default_field_instances() {
   /* file-image-field_file_image_alt_text */           ),
   /* file-image-field_file_image_alt_text */           'full_html' => array(
   /* file-image-field_file_image_alt_text */             'weight' => -8,
-  /* file-image-field_file_image_alt_text */           ),
-  /* file-image-field_file_image_alt_text */           'php_code' => array(
-  /* file-image-field_file_image_alt_text */             'weight' => -7,
   /* file-image-field_file_image_alt_text */           ),
   /* file-image-field_file_image_alt_text */           'plain_text' => array(
   /* file-image-field_file_image_alt_text */             'weight' => -9,
@@ -8149,1483 +7692,6 @@ function gn2_base_config_field_default_field_instances() {
   /* message_type-message_type-message_text */   ),
   /* message_type-message_type-message_text */ );
 
-  // Exported field_instance: 'node-alumni_group-body'.
-  $field_instances['node-alumni_group-body'] = array(
-  /* node-alumni_group-body */   'bundle' => 'alumni_group',
-  /* node-alumni_group-body */   'default_value' => NULL,
-  /* node-alumni_group-body */   'deleted' => 0,
-  /* node-alumni_group-body */   'description' => '',
-  /* node-alumni_group-body */   'display' => array(
-  /* node-alumni_group-body */     'default' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'module' => 'text',
-  /* node-alumni_group-body */       'settings' => array(
-  /* node-alumni_group-body */         'field_formatter_class' => '',
-  /* node-alumni_group-body */       ),
-  /* node-alumni_group-body */       'type' => 'text_default',
-  /* node-alumni_group-body */       'weight' => 12,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'group_teaser' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'module' => 'text',
-  /* node-alumni_group-body */       'settings' => array(
-  /* node-alumni_group-body */         'field_formatter_class' => '',
-  /* node-alumni_group-body */       ),
-  /* node-alumni_group-body */       'type' => 'text_default',
-  /* node-alumni_group-body */       'weight' => 12,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'recursive_subgroups' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'module' => 'text',
-  /* node-alumni_group-body */       'settings' => array(
-  /* node-alumni_group-body */         'field_formatter_class' => '',
-  /* node-alumni_group-body */       ),
-  /* node-alumni_group-body */       'type' => 'text_default',
-  /* node-alumni_group-body */       'weight' => 12,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'search_teaser' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'settings' => array(),
-  /* node-alumni_group-body */       'type' => 'hidden',
-  /* node-alumni_group-body */       'weight' => 0,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'sidebar_' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'settings' => array(),
-  /* node-alumni_group-body */       'type' => 'hidden',
-  /* node-alumni_group-body */       'weight' => 0,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'settings' => array(),
-  /* node-alumni_group-body */       'type' => 'hidden',
-  /* node-alumni_group-body */       'weight' => 0,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'teaser' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'settings' => array(),
-  /* node-alumni_group-body */       'type' => 'hidden',
-  /* node-alumni_group-body */       'weight' => 0,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'teaserthumb' => array(
-  /* node-alumni_group-body */       'label' => 'above',
-  /* node-alumni_group-body */       'settings' => array(),
-  /* node-alumni_group-body */       'type' => 'hidden',
-  /* node-alumni_group-body */       'weight' => 0,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */   ),
-  /* node-alumni_group-body */   'entity_type' => 'node',
-  /* node-alumni_group-body */   'fences_wrapper' => 'no_wrapper',
-  /* node-alumni_group-body */   'field_name' => 'body',
-  /* node-alumni_group-body */   'label' => 'Alumni Group Description',
-  /* node-alumni_group-body */   'required' => 0,
-  /* node-alumni_group-body */   'settings' => array(
-  /* node-alumni_group-body */     'better_formats' => array(
-  /* node-alumni_group-body */       'allowed_formats' => array(
-  /* node-alumni_group-body */         'filtered_html' => 'filtered_html',
-  /* node-alumni_group-body */         'full_html' => 'full_html',
-  /* node-alumni_group-body */         'php_code' => 'php_code',
-  /* node-alumni_group-body */         'plain_text' => 'plain_text',
-  /* node-alumni_group-body */       ),
-  /* node-alumni_group-body */       'allowed_formats_toggle' => 0,
-  /* node-alumni_group-body */       'default_order_toggle' => 0,
-  /* node-alumni_group-body */       'default_order_wrapper' => array(
-  /* node-alumni_group-body */         'formats' => array(
-  /* node-alumni_group-body */           'filtered_html' => array(
-  /* node-alumni_group-body */             'weight' => -10,
-  /* node-alumni_group-body */           ),
-  /* node-alumni_group-body */           'full_html' => array(
-  /* node-alumni_group-body */             'weight' => -8,
-  /* node-alumni_group-body */           ),
-  /* node-alumni_group-body */           'php_code' => array(
-  /* node-alumni_group-body */             'weight' => -7,
-  /* node-alumni_group-body */           ),
-  /* node-alumni_group-body */           'plain_text' => array(
-  /* node-alumni_group-body */             'weight' => -9,
-  /* node-alumni_group-body */           ),
-  /* node-alumni_group-body */         ),
-  /* node-alumni_group-body */       ),
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'display_summary' => 0,
-  /* node-alumni_group-body */     'text_processing' => 1,
-  /* node-alumni_group-body */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-body */     'user_register_form' => FALSE,
-  /* node-alumni_group-body */   ),
-  /* node-alumni_group-body */   'widget' => array(
-  /* node-alumni_group-body */     'active' => 1,
-  /* node-alumni_group-body */     'module' => 'text',
-  /* node-alumni_group-body */     'settings' => array(
-  /* node-alumni_group-body */       'label_help_description' => '',
-  /* node-alumni_group-body */       'rows' => 20,
-  /* node-alumni_group-body */       'summary_rows' => 5,
-  /* node-alumni_group-body */     ),
-  /* node-alumni_group-body */     'type' => 'text_textarea_with_summary',
-  /* node-alumni_group-body */     'weight' => 3,
-  /* node-alumni_group-body */   ),
-  /* node-alumni_group-body */ );
-
-  // Exported field_instance: 'node-alumni_group-field_country'.
-  $field_instances['node-alumni_group-field_country'] = array(
-  /* node-alumni_group-field_country */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_country */   'default_value' => NULL,
-  /* node-alumni_group-field_country */   'deleted' => 0,
-  /* node-alumni_group-field_country */   'description' => '',
-  /* node-alumni_group-field_country */   'display' => array(
-  /* node-alumni_group-field_country */     'default' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'module' => 'taxonomy',
-  /* node-alumni_group-field_country */       'settings' => array(
-  /* node-alumni_group-field_country */         'field_formatter_class' => '',
-  /* node-alumni_group-field_country */       ),
-  /* node-alumni_group-field_country */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_country */       'weight' => 9,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'group_teaser' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'module' => 'taxonomy',
-  /* node-alumni_group-field_country */       'settings' => array(
-  /* node-alumni_group-field_country */         'field_formatter_class' => '',
-  /* node-alumni_group-field_country */       ),
-  /* node-alumni_group-field_country */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_country */       'weight' => 9,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'module' => 'taxonomy',
-  /* node-alumni_group-field_country */       'settings' => array(
-  /* node-alumni_group-field_country */         'field_formatter_class' => '',
-  /* node-alumni_group-field_country */       ),
-  /* node-alumni_group-field_country */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_country */       'weight' => 9,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'search_teaser' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'module' => 'taxonomy',
-  /* node-alumni_group-field_country */       'settings' => array(
-  /* node-alumni_group-field_country */         'field_formatter_class' => '',
-  /* node-alumni_group-field_country */       ),
-  /* node-alumni_group-field_country */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_country */       'weight' => 9,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'sidebar_' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'sidebar_teaser' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'teaser' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'teaserthumb' => array(
-  /* node-alumni_group-field_country */       'label' => 'above',
-  /* node-alumni_group-field_country */       'settings' => array(),
-  /* node-alumni_group-field_country */       'type' => 'hidden',
-  /* node-alumni_group-field_country */       'weight' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */   ),
-  /* node-alumni_group-field_country */   'entity_type' => 'node',
-  /* node-alumni_group-field_country */   'fences_wrapper' => 'no_wrapper',
-  /* node-alumni_group-field_country */   'field_name' => 'field_country',
-  /* node-alumni_group-field_country */   'label' => 'Countries',
-  /* node-alumni_group-field_country */   'required' => 0,
-  /* node-alumni_group-field_country */   'settings' => array(
-  /* node-alumni_group-field_country */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_country */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_country */   ),
-  /* node-alumni_group-field_country */   'widget' => array(
-  /* node-alumni_group-field_country */     'active' => 1,
-  /* node-alumni_group-field_country */     'module' => 'term_reference_tree',
-  /* node-alumni_group-field_country */     'settings' => array(
-  /* node-alumni_group-field_country */       'cascading_selection' => 0,
-  /* node-alumni_group-field_country */       'filter_view' => '',
-  /* node-alumni_group-field_country */       'label_help_description' => '',
-  /* node-alumni_group-field_country */       'leaves_only' => 0,
-  /* node-alumni_group-field_country */       'max_depth' => '',
-  /* node-alumni_group-field_country */       'parent_term_id' => '',
-  /* node-alumni_group-field_country */       'select_parents' => 0,
-  /* node-alumni_group-field_country */       'start_minimized' => 0,
-  /* node-alumni_group-field_country */       'token_display' => '',
-  /* node-alumni_group-field_country */       'track_list' => 0,
-  /* node-alumni_group-field_country */     ),
-  /* node-alumni_group-field_country */     'type' => 'term_reference_tree',
-  /* node-alumni_group-field_country */     'weight' => 10,
-  /* node-alumni_group-field_country */   ),
-  /* node-alumni_group-field_country */ );
-
-  // Exported field_instance: 'node-alumni_group-field_gn2_simple_access'.
-  $field_instances['node-alumni_group-field_gn2_simple_access'] = array(
-  /* node-alumni_group-field_gn2_simple_access */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_gn2_simple_access */   'default_value' => array(
-  /* node-alumni_group-field_gn2_simple_access */     0 => array(
-  /* node-alumni_group-field_gn2_simple_access */       'value' => 'group',
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */   ),
-  /* node-alumni_group-field_gn2_simple_access */   'deleted' => 0,
-  /* node-alumni_group-field_gn2_simple_access */   'description' => '',
-  /* node-alumni_group-field_gn2_simple_access */   'display' => array(
-  /* node-alumni_group-field_gn2_simple_access */     'default' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'module' => 'list',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(
-  /* node-alumni_group-field_gn2_simple_access */         'field_formatter_class' => '',
-  /* node-alumni_group-field_gn2_simple_access */       ),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'list_default',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 5,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'group_teaser' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'module' => 'list',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(
-  /* node-alumni_group-field_gn2_simple_access */         'field_formatter_class' => '',
-  /* node-alumni_group-field_gn2_simple_access */       ),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'list_default',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 5,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'module' => 'list',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(
-  /* node-alumni_group-field_gn2_simple_access */         'field_formatter_class' => '',
-  /* node-alumni_group-field_gn2_simple_access */       ),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'list_default',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 5,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'search_teaser' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'module' => 'list',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(
-  /* node-alumni_group-field_gn2_simple_access */         'field_formatter_class' => '',
-  /* node-alumni_group-field_gn2_simple_access */       ),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'list_default',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 5,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'sidebar_' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'sidebar_teaser' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'teaser' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */     'teaserthumb' => array(
-  /* node-alumni_group-field_gn2_simple_access */       'label' => 'above',
-  /* node-alumni_group-field_gn2_simple_access */       'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */       'type' => 'hidden',
-  /* node-alumni_group-field_gn2_simple_access */       'weight' => 0,
-  /* node-alumni_group-field_gn2_simple_access */     ),
-  /* node-alumni_group-field_gn2_simple_access */   ),
-  /* node-alumni_group-field_gn2_simple_access */   'entity_type' => 'node',
-  /* node-alumni_group-field_gn2_simple_access */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_gn2_simple_access */   'field_name' => 'field_gn2_simple_access',
-  /* node-alumni_group-field_gn2_simple_access */   'label' => 'Who can see this content?',
-  /* node-alumni_group-field_gn2_simple_access */   'required' => 0,
-  /* node-alumni_group-field_gn2_simple_access */   'settings' => array(
-  /* node-alumni_group-field_gn2_simple_access */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_gn2_simple_access */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_gn2_simple_access */   ),
-  /* node-alumni_group-field_gn2_simple_access */   'widget' => array(
-  /* node-alumni_group-field_gn2_simple_access */     'active' => 1,
-  /* node-alumni_group-field_gn2_simple_access */     'module' => 'options',
-  /* node-alumni_group-field_gn2_simple_access */     'settings' => array(),
-  /* node-alumni_group-field_gn2_simple_access */     'type' => 'options_buttons',
-  /* node-alumni_group-field_gn2_simple_access */     'weight' => 8,
-  /* node-alumni_group-field_gn2_simple_access */   ),
-  /* node-alumni_group-field_gn2_simple_access */ );
-
-  // Exported field_instance: 'node-alumni_group-field_group_help'.
-  $field_instances['node-alumni_group-field_group_help'] = array(
-  /* node-alumni_group-field_group_help */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_group_help */   'default_value' => array(
-  /* node-alumni_group-field_group_help */     0 => array(
-  /* node-alumni_group-field_group_help */       'value' => 'Default help text',
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */   ),
-  /* node-alumni_group-field_group_help */   'deleted' => 0,
-  /* node-alumni_group-field_group_help */   'description' => '',
-  /* node-alumni_group-field_group_help */   'display' => array(
-  /* node-alumni_group-field_group_help */     'default' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'module' => 'text',
-  /* node-alumni_group-field_group_help */       'settings' => array(
-  /* node-alumni_group-field_group_help */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_help */       ),
-  /* node-alumni_group-field_group_help */       'type' => 'text_default',
-  /* node-alumni_group-field_group_help */       'weight' => 15,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'group_teaser' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'module' => 'text',
-  /* node-alumni_group-field_group_help */       'settings' => array(
-  /* node-alumni_group-field_group_help */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_help */       ),
-  /* node-alumni_group-field_group_help */       'type' => 'text_default',
-  /* node-alumni_group-field_group_help */       'weight' => 15,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'module' => 'text',
-  /* node-alumni_group-field_group_help */       'settings' => array(
-  /* node-alumni_group-field_group_help */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_help */       ),
-  /* node-alumni_group-field_group_help */       'type' => 'text_default',
-  /* node-alumni_group-field_group_help */       'weight' => 15,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'search_teaser' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'settings' => array(),
-  /* node-alumni_group-field_group_help */       'type' => 'hidden',
-  /* node-alumni_group-field_group_help */       'weight' => 0,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'sidebar_' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'settings' => array(),
-  /* node-alumni_group-field_group_help */       'type' => 'hidden',
-  /* node-alumni_group-field_group_help */       'weight' => 0,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'settings' => array(),
-  /* node-alumni_group-field_group_help */       'type' => 'hidden',
-  /* node-alumni_group-field_group_help */       'weight' => 0,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'teaser' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'settings' => array(),
-  /* node-alumni_group-field_group_help */       'type' => 'hidden',
-  /* node-alumni_group-field_group_help */       'weight' => 0,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'teaserthumb' => array(
-  /* node-alumni_group-field_group_help */       'label' => 'above',
-  /* node-alumni_group-field_group_help */       'settings' => array(),
-  /* node-alumni_group-field_group_help */       'type' => 'hidden',
-  /* node-alumni_group-field_group_help */       'weight' => 0,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */   ),
-  /* node-alumni_group-field_group_help */   'entity_type' => 'node',
-  /* node-alumni_group-field_group_help */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_group_help */   'field_name' => 'field_group_help',
-  /* node-alumni_group-field_group_help */   'label' => ' Help',
-  /* node-alumni_group-field_group_help */   'required' => 0,
-  /* node-alumni_group-field_group_help */   'settings' => array(
-  /* node-alumni_group-field_group_help */     'better_formats' => array(
-  /* node-alumni_group-field_group_help */       'allowed_formats' => array(
-  /* node-alumni_group-field_group_help */         'filtered_html' => 'filtered_html',
-  /* node-alumni_group-field_group_help */         'full_html' => 'full_html',
-  /* node-alumni_group-field_group_help */         'php_code' => 'php_code',
-  /* node-alumni_group-field_group_help */         'plain_text' => 'plain_text',
-  /* node-alumni_group-field_group_help */       ),
-  /* node-alumni_group-field_group_help */       'allowed_formats_toggle' => 0,
-  /* node-alumni_group-field_group_help */       'default_order_toggle' => 0,
-  /* node-alumni_group-field_group_help */       'default_order_wrapper' => array(
-  /* node-alumni_group-field_group_help */         'formats' => array(
-  /* node-alumni_group-field_group_help */           'filtered_html' => array(
-  /* node-alumni_group-field_group_help */             'weight' => -10,
-  /* node-alumni_group-field_group_help */           ),
-  /* node-alumni_group-field_group_help */           'full_html' => array(
-  /* node-alumni_group-field_group_help */             'weight' => -8,
-  /* node-alumni_group-field_group_help */           ),
-  /* node-alumni_group-field_group_help */           'php_code' => array(
-  /* node-alumni_group-field_group_help */             'weight' => -7,
-  /* node-alumni_group-field_group_help */           ),
-  /* node-alumni_group-field_group_help */           'plain_text' => array(
-  /* node-alumni_group-field_group_help */             'weight' => -9,
-  /* node-alumni_group-field_group_help */           ),
-  /* node-alumni_group-field_group_help */         ),
-  /* node-alumni_group-field_group_help */       ),
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'text_processing' => 1,
-  /* node-alumni_group-field_group_help */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_group_help */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_group_help */   ),
-  /* node-alumni_group-field_group_help */   'widget' => array(
-  /* node-alumni_group-field_group_help */     'active' => 1,
-  /* node-alumni_group-field_group_help */     'module' => 'text',
-  /* node-alumni_group-field_group_help */     'settings' => array(
-  /* node-alumni_group-field_group_help */       'label_help_description' => '',
-  /* node-alumni_group-field_group_help */       'rows' => 5,
-  /* node-alumni_group-field_group_help */     ),
-  /* node-alumni_group-field_group_help */     'type' => 'text_textarea',
-  /* node-alumni_group-field_group_help */     'weight' => 8,
-  /* node-alumni_group-field_group_help */   ),
-  /* node-alumni_group-field_group_help */ );
-
-  // Exported field_instance: 'node-alumni_group-field_group_short_title'.
-  $field_instances['node-alumni_group-field_group_short_title'] = array(
-  /* node-alumni_group-field_group_short_title */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_group_short_title */   'default_value' => NULL,
-  /* node-alumni_group-field_group_short_title */   'deleted' => 0,
-  /* node-alumni_group-field_group_short_title */   'description' => 'Use this field to save an acronym for this group. (E.g. CNG - Counter-Narcotics Group) This will be used in place of the full title for URL paths, breadcrumbs, and for reporting activity statistics. <a href="/guide>More help is available in the guide</a>',
-  /* node-alumni_group-field_group_short_title */   'display' => array(
-  /* node-alumni_group-field_group_short_title */     'default' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'module' => 'text',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(
-  /* node-alumni_group-field_group_short_title */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */       'type' => 'text_default',
-  /* node-alumni_group-field_group_short_title */       'weight' => 3,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'group_teaser' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'module' => 'text',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(
-  /* node-alumni_group-field_group_short_title */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */       'type' => 'text_default',
-  /* node-alumni_group-field_group_short_title */       'weight' => 3,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'module' => 'text',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(
-  /* node-alumni_group-field_group_short_title */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */       'type' => 'text_default',
-  /* node-alumni_group-field_group_short_title */       'weight' => 3,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'search_teaser' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'module' => 'text',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(
-  /* node-alumni_group-field_group_short_title */         'field_formatter_class' => '',
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */       'type' => 'text_default',
-  /* node-alumni_group-field_group_short_title */       'weight' => 3,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'sidebar_' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'sidebar_teaser' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'teaser' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'teaserthumb' => array(
-  /* node-alumni_group-field_group_short_title */       'label' => 'above',
-  /* node-alumni_group-field_group_short_title */       'settings' => array(),
-  /* node-alumni_group-field_group_short_title */       'type' => 'hidden',
-  /* node-alumni_group-field_group_short_title */       'weight' => 0,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */   ),
-  /* node-alumni_group-field_group_short_title */   'entity_type' => 'node',
-  /* node-alumni_group-field_group_short_title */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_group_short_title */   'field_name' => 'field_group_short_title',
-  /* node-alumni_group-field_group_short_title */   'label' => 'Alumni Group Acronym ',
-  /* node-alumni_group-field_group_short_title */   'required' => 0,
-  /* node-alumni_group-field_group_short_title */   'settings' => array(
-  /* node-alumni_group-field_group_short_title */     'better_formats' => array(
-  /* node-alumni_group-field_group_short_title */       'allowed_formats' => array(
-  /* node-alumni_group-field_group_short_title */         'filtered_html' => 'filtered_html',
-  /* node-alumni_group-field_group_short_title */         'full_html' => 'full_html',
-  /* node-alumni_group-field_group_short_title */         'php_code' => 'php_code',
-  /* node-alumni_group-field_group_short_title */         'plain_text' => 'plain_text',
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */       'allowed_formats_toggle' => 0,
-  /* node-alumni_group-field_group_short_title */       'default_order_toggle' => 0,
-  /* node-alumni_group-field_group_short_title */       'default_order_wrapper' => array(
-  /* node-alumni_group-field_group_short_title */         'formats' => array(
-  /* node-alumni_group-field_group_short_title */           'filtered_html' => array(
-  /* node-alumni_group-field_group_short_title */             'weight' => -10,
-  /* node-alumni_group-field_group_short_title */           ),
-  /* node-alumni_group-field_group_short_title */           'full_html' => array(
-  /* node-alumni_group-field_group_short_title */             'weight' => -8,
-  /* node-alumni_group-field_group_short_title */           ),
-  /* node-alumni_group-field_group_short_title */           'php_code' => array(
-  /* node-alumni_group-field_group_short_title */             'weight' => -7,
-  /* node-alumni_group-field_group_short_title */           ),
-  /* node-alumni_group-field_group_short_title */           'plain_text' => array(
-  /* node-alumni_group-field_group_short_title */             'weight' => -9,
-  /* node-alumni_group-field_group_short_title */           ),
-  /* node-alumni_group-field_group_short_title */         ),
-  /* node-alumni_group-field_group_short_title */       ),
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'text_processing' => 0,
-  /* node-alumni_group-field_group_short_title */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_group_short_title */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_group_short_title */   ),
-  /* node-alumni_group-field_group_short_title */   'widget' => array(
-  /* node-alumni_group-field_group_short_title */     'active' => 1,
-  /* node-alumni_group-field_group_short_title */     'module' => 'text',
-  /* node-alumni_group-field_group_short_title */     'settings' => array(
-  /* node-alumni_group-field_group_short_title */       'label_help_description' => '',
-  /* node-alumni_group-field_group_short_title */       'size' => 15,
-  /* node-alumni_group-field_group_short_title */     ),
-  /* node-alumni_group-field_group_short_title */     'type' => 'text_textfield',
-  /* node-alumni_group-field_group_short_title */     'weight' => 2,
-  /* node-alumni_group-field_group_short_title */   ),
-  /* node-alumni_group-field_group_short_title */ );
-
-  // Exported field_instance: 'node-alumni_group-field_main_image'.
-  $field_instances['node-alumni_group-field_main_image'] = array(
-  /* node-alumni_group-field_main_image */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_main_image */   'deleted' => 0,
-  /* node-alumni_group-field_main_image */   'description' => 'Browse to add a cover image for the group.',
-  /* node-alumni_group-field_main_image */   'display' => array(
-  /* node-alumni_group-field_main_image */     'default' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'module' => 'image',
-  /* node-alumni_group-field_main_image */       'settings' => array(
-  /* node-alumni_group-field_main_image */         'field_formatter_class' => '',
-  /* node-alumni_group-field_main_image */         'image_link' => '',
-  /* node-alumni_group-field_main_image */         'image_style' => '',
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'type' => 'image',
-  /* node-alumni_group-field_main_image */       'weight' => 13,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'group_teaser' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'module' => 'image',
-  /* node-alumni_group-field_main_image */       'settings' => array(
-  /* node-alumni_group-field_main_image */         'field_formatter_class' => '',
-  /* node-alumni_group-field_main_image */         'image_link' => '',
-  /* node-alumni_group-field_main_image */         'image_style' => '',
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'type' => 'image',
-  /* node-alumni_group-field_main_image */       'weight' => 13,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'module' => 'image',
-  /* node-alumni_group-field_main_image */       'settings' => array(
-  /* node-alumni_group-field_main_image */         'field_formatter_class' => '',
-  /* node-alumni_group-field_main_image */         'image_link' => '',
-  /* node-alumni_group-field_main_image */         'image_style' => '',
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'type' => 'image',
-  /* node-alumni_group-field_main_image */       'weight' => 13,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'search_teaser' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'settings' => array(),
-  /* node-alumni_group-field_main_image */       'type' => 'hidden',
-  /* node-alumni_group-field_main_image */       'weight' => 0,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'sidebar_' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'settings' => array(),
-  /* node-alumni_group-field_main_image */       'type' => 'hidden',
-  /* node-alumni_group-field_main_image */       'weight' => 0,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'settings' => array(),
-  /* node-alumni_group-field_main_image */       'type' => 'hidden',
-  /* node-alumni_group-field_main_image */       'weight' => 0,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'teaser' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'settings' => array(),
-  /* node-alumni_group-field_main_image */       'type' => 'hidden',
-  /* node-alumni_group-field_main_image */       'weight' => 0,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'teaserthumb' => array(
-  /* node-alumni_group-field_main_image */       'label' => 'above',
-  /* node-alumni_group-field_main_image */       'settings' => array(),
-  /* node-alumni_group-field_main_image */       'type' => 'hidden',
-  /* node-alumni_group-field_main_image */       'weight' => 0,
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */   ),
-  /* node-alumni_group-field_main_image */   'entity_type' => 'node',
-  /* node-alumni_group-field_main_image */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_main_image */   'field_name' => 'field_main_image',
-  /* node-alumni_group-field_main_image */   'label' => 'Main Image',
-  /* node-alumni_group-field_main_image */   'required' => 0,
-  /* node-alumni_group-field_main_image */   'settings' => array(
-  /* node-alumni_group-field_main_image */     'alt_field' => 0,
-  /* node-alumni_group-field_main_image */     'default_image' => 0,
-  /* node-alumni_group-field_main_image */     'file_directory' => '',
-  /* node-alumni_group-field_main_image */     'file_extensions' => 'png gif jpg jpeg',
-  /* node-alumni_group-field_main_image */     'max_filesize' => '8 MB',
-  /* node-alumni_group-field_main_image */     'max_resolution' => '',
-  /* node-alumni_group-field_main_image */     'min_resolution' => '',
-  /* node-alumni_group-field_main_image */     'title_field' => 0,
-  /* node-alumni_group-field_main_image */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_main_image */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_main_image */   ),
-  /* node-alumni_group-field_main_image */   'widget' => array(
-  /* node-alumni_group-field_main_image */     'active' => 1,
-  /* node-alumni_group-field_main_image */     'module' => 'media',
-  /* node-alumni_group-field_main_image */     'settings' => array(
-  /* node-alumni_group-field_main_image */       'allowed_schemes' => array(
-  /* node-alumni_group-field_main_image */         'private' => 'private',
-  /* node-alumni_group-field_main_image */         'public' => 'public',
-  /* node-alumni_group-field_main_image */         'vimeo' => 0,
-  /* node-alumni_group-field_main_image */         'youtube' => 0,
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'allowed_types' => array(
-  /* node-alumni_group-field_main_image */         'audio' => 0,
-  /* node-alumni_group-field_main_image */         'document' => 0,
-  /* node-alumni_group-field_main_image */         'image' => 'image',
-  /* node-alumni_group-field_main_image */         'video' => 0,
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'browser_plugins' => array(
-  /* node-alumni_group-field_main_image */         'media_default--media_browser_1' => 0,
-  /* node-alumni_group-field_main_image */         'media_default--media_browser_my_files' => 0,
-  /* node-alumni_group-field_main_image */         'media_internet' => 0,
-  /* node-alumni_group-field_main_image */         'upload' => 0,
-  /* node-alumni_group-field_main_image */       ),
-  /* node-alumni_group-field_main_image */       'label_help_description' => '',
-  /* node-alumni_group-field_main_image */     ),
-  /* node-alumni_group-field_main_image */     'type' => 'media_generic',
-  /* node-alumni_group-field_main_image */     'weight' => 4,
-  /* node-alumni_group-field_main_image */   ),
-  /* node-alumni_group-field_main_image */ );
-
-  // Exported field_instance: 'node-alumni_group-field_rec_links'.
-  $field_instances['node-alumni_group-field_rec_links'] = array(
-  /* node-alumni_group-field_rec_links */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_rec_links */   'default_value' => NULL,
-  /* node-alumni_group-field_rec_links */   'deleted' => 0,
-  /* node-alumni_group-field_rec_links */   'description' => '',
-  /* node-alumni_group-field_rec_links */   'display' => array(
-  /* node-alumni_group-field_rec_links */     'default' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'module' => 'link',
-  /* node-alumni_group-field_rec_links */       'settings' => array(
-  /* node-alumni_group-field_rec_links */         'field_formatter_class' => '',
-  /* node-alumni_group-field_rec_links */       ),
-  /* node-alumni_group-field_rec_links */       'type' => 'link_default',
-  /* node-alumni_group-field_rec_links */       'weight' => 14,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'group_teaser' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'module' => 'link',
-  /* node-alumni_group-field_rec_links */       'settings' => array(
-  /* node-alumni_group-field_rec_links */         'field_formatter_class' => '',
-  /* node-alumni_group-field_rec_links */       ),
-  /* node-alumni_group-field_rec_links */       'type' => 'link_default',
-  /* node-alumni_group-field_rec_links */       'weight' => 14,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'module' => 'link',
-  /* node-alumni_group-field_rec_links */       'settings' => array(
-  /* node-alumni_group-field_rec_links */         'field_formatter_class' => '',
-  /* node-alumni_group-field_rec_links */       ),
-  /* node-alumni_group-field_rec_links */       'type' => 'link_default',
-  /* node-alumni_group-field_rec_links */       'weight' => 14,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'search_teaser' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'settings' => array(),
-  /* node-alumni_group-field_rec_links */       'type' => 'hidden',
-  /* node-alumni_group-field_rec_links */       'weight' => 0,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'sidebar_' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'settings' => array(),
-  /* node-alumni_group-field_rec_links */       'type' => 'hidden',
-  /* node-alumni_group-field_rec_links */       'weight' => 0,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'settings' => array(),
-  /* node-alumni_group-field_rec_links */       'type' => 'hidden',
-  /* node-alumni_group-field_rec_links */       'weight' => 0,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'teaser' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'settings' => array(),
-  /* node-alumni_group-field_rec_links */       'type' => 'hidden',
-  /* node-alumni_group-field_rec_links */       'weight' => 0,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'teaserthumb' => array(
-  /* node-alumni_group-field_rec_links */       'label' => 'above',
-  /* node-alumni_group-field_rec_links */       'settings' => array(),
-  /* node-alumni_group-field_rec_links */       'type' => 'hidden',
-  /* node-alumni_group-field_rec_links */       'weight' => 0,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */   ),
-  /* node-alumni_group-field_rec_links */   'entity_type' => 'node',
-  /* node-alumni_group-field_rec_links */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_rec_links */   'field_name' => 'field_rec_links',
-  /* node-alumni_group-field_rec_links */   'label' => 'Recommended Links',
-  /* node-alumni_group-field_rec_links */   'required' => 0,
-  /* node-alumni_group-field_rec_links */   'settings' => array(
-  /* node-alumni_group-field_rec_links */     'absolute_url' => 1,
-  /* node-alumni_group-field_rec_links */     'attributes' => array(
-  /* node-alumni_group-field_rec_links */       'class' => '',
-  /* node-alumni_group-field_rec_links */       'configurable_class' => 0,
-  /* node-alumni_group-field_rec_links */       'configurable_title' => 0,
-  /* node-alumni_group-field_rec_links */       'rel' => '',
-  /* node-alumni_group-field_rec_links */       'target' => 'default',
-  /* node-alumni_group-field_rec_links */       'title' => '',
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'display' => array(
-  /* node-alumni_group-field_rec_links */       'url_cutoff' => 80,
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'enable_tokens' => 1,
-  /* node-alumni_group-field_rec_links */     'rel_remove' => 'default',
-  /* node-alumni_group-field_rec_links */     'title' => 'optional',
-  /* node-alumni_group-field_rec_links */     'title_label_use_field_label' => 0,
-  /* node-alumni_group-field_rec_links */     'title_maxlength' => 128,
-  /* node-alumni_group-field_rec_links */     'title_value' => '',
-  /* node-alumni_group-field_rec_links */     'url' => 0,
-  /* node-alumni_group-field_rec_links */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_rec_links */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_rec_links */     'validate_url' => 1,
-  /* node-alumni_group-field_rec_links */   ),
-  /* node-alumni_group-field_rec_links */   'widget' => array(
-  /* node-alumni_group-field_rec_links */     'active' => 0,
-  /* node-alumni_group-field_rec_links */     'module' => 'link',
-  /* node-alumni_group-field_rec_links */     'settings' => array(
-  /* node-alumni_group-field_rec_links */       'label_help_description' => '',
-  /* node-alumni_group-field_rec_links */     ),
-  /* node-alumni_group-field_rec_links */     'type' => 'link_field',
-  /* node-alumni_group-field_rec_links */     'weight' => 5,
-  /* node-alumni_group-field_rec_links */   ),
-  /* node-alumni_group-field_rec_links */ );
-
-  // Exported field_instance: 'node-alumni_group-field_region'.
-  $field_instances['node-alumni_group-field_region'] = array(
-  /* node-alumni_group-field_region */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_region */   'default_value' => NULL,
-  /* node-alumni_group-field_region */   'deleted' => 0,
-  /* node-alumni_group-field_region */   'description' => '',
-  /* node-alumni_group-field_region */   'display' => array(
-  /* node-alumni_group-field_region */     'default' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'module' => 'taxonomy',
-  /* node-alumni_group-field_region */       'settings' => array(
-  /* node-alumni_group-field_region */         'field_formatter_class' => '',
-  /* node-alumni_group-field_region */       ),
-  /* node-alumni_group-field_region */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_region */       'weight' => 10,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'group_teaser' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'module' => 'taxonomy',
-  /* node-alumni_group-field_region */       'settings' => array(
-  /* node-alumni_group-field_region */         'field_formatter_class' => '',
-  /* node-alumni_group-field_region */       ),
-  /* node-alumni_group-field_region */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_region */       'weight' => 10,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'module' => 'taxonomy',
-  /* node-alumni_group-field_region */       'settings' => array(
-  /* node-alumni_group-field_region */         'field_formatter_class' => '',
-  /* node-alumni_group-field_region */       ),
-  /* node-alumni_group-field_region */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_region */       'weight' => 10,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'search_teaser' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'module' => 'taxonomy',
-  /* node-alumni_group-field_region */       'settings' => array(
-  /* node-alumni_group-field_region */         'field_formatter_class' => '',
-  /* node-alumni_group-field_region */       ),
-  /* node-alumni_group-field_region */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_region */       'weight' => 10,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'sidebar_' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'sidebar_teaser' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'teaser' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'teaserthumb' => array(
-  /* node-alumni_group-field_region */       'label' => 'above',
-  /* node-alumni_group-field_region */       'settings' => array(),
-  /* node-alumni_group-field_region */       'type' => 'hidden',
-  /* node-alumni_group-field_region */       'weight' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */   ),
-  /* node-alumni_group-field_region */   'entity_type' => 'node',
-  /* node-alumni_group-field_region */   'fences_wrapper' => 'no_wrapper',
-  /* node-alumni_group-field_region */   'field_name' => 'field_region',
-  /* node-alumni_group-field_region */   'label' => 'Regions',
-  /* node-alumni_group-field_region */   'required' => 0,
-  /* node-alumni_group-field_region */   'settings' => array(
-  /* node-alumni_group-field_region */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_region */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_region */   ),
-  /* node-alumni_group-field_region */   'widget' => array(
-  /* node-alumni_group-field_region */     'active' => 1,
-  /* node-alumni_group-field_region */     'module' => 'term_reference_tree',
-  /* node-alumni_group-field_region */     'settings' => array(
-  /* node-alumni_group-field_region */       'cascading_selection' => 0,
-  /* node-alumni_group-field_region */       'filter_view' => '',
-  /* node-alumni_group-field_region */       'label_help_description' => '',
-  /* node-alumni_group-field_region */       'leaves_only' => 0,
-  /* node-alumni_group-field_region */       'max_depth' => '',
-  /* node-alumni_group-field_region */       'parent_term_id' => '',
-  /* node-alumni_group-field_region */       'select_parents' => 0,
-  /* node-alumni_group-field_region */       'start_minimized' => 0,
-  /* node-alumni_group-field_region */       'token_display' => '',
-  /* node-alumni_group-field_region */       'track_list' => 0,
-  /* node-alumni_group-field_region */     ),
-  /* node-alumni_group-field_region */     'type' => 'term_reference_tree',
-  /* node-alumni_group-field_region */     'weight' => 9,
-  /* node-alumni_group-field_region */   ),
-  /* node-alumni_group-field_region */ );
-
-  // Exported field_instance: 'node-alumni_group-field_topic'.
-  $field_instances['node-alumni_group-field_topic'] = array(
-  /* node-alumni_group-field_topic */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_topic */   'default_value' => NULL,
-  /* node-alumni_group-field_topic */   'deleted' => 0,
-  /* node-alumni_group-field_topic */   'description' => '',
-  /* node-alumni_group-field_topic */   'display' => array(
-  /* node-alumni_group-field_topic */     'default' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'module' => 'taxonomy',
-  /* node-alumni_group-field_topic */       'settings' => array(
-  /* node-alumni_group-field_topic */         'field_formatter_class' => '',
-  /* node-alumni_group-field_topic */       ),
-  /* node-alumni_group-field_topic */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_topic */       'weight' => 11,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'group_teaser' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'module' => 'taxonomy',
-  /* node-alumni_group-field_topic */       'settings' => array(
-  /* node-alumni_group-field_topic */         'field_formatter_class' => '',
-  /* node-alumni_group-field_topic */       ),
-  /* node-alumni_group-field_topic */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_topic */       'weight' => 11,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'recursive_subgroups' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'module' => 'taxonomy',
-  /* node-alumni_group-field_topic */       'settings' => array(
-  /* node-alumni_group-field_topic */         'field_formatter_class' => '',
-  /* node-alumni_group-field_topic */       ),
-  /* node-alumni_group-field_topic */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_topic */       'weight' => 11,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'search_teaser' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'module' => 'taxonomy',
-  /* node-alumni_group-field_topic */       'settings' => array(
-  /* node-alumni_group-field_topic */         'field_formatter_class' => '',
-  /* node-alumni_group-field_topic */       ),
-  /* node-alumni_group-field_topic */       'type' => 'taxonomy_term_reference_link',
-  /* node-alumni_group-field_topic */       'weight' => 11,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'sidebar_' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'sidebar_teaser' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'teaser' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'teaserthumb' => array(
-  /* node-alumni_group-field_topic */       'label' => 'above',
-  /* node-alumni_group-field_topic */       'settings' => array(),
-  /* node-alumni_group-field_topic */       'type' => 'hidden',
-  /* node-alumni_group-field_topic */       'weight' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */   ),
-  /* node-alumni_group-field_topic */   'entity_type' => 'node',
-  /* node-alumni_group-field_topic */   'fences_wrapper' => 'no_wrapper',
-  /* node-alumni_group-field_topic */   'field_name' => 'field_topic',
-  /* node-alumni_group-field_topic */   'label' => 'Topics',
-  /* node-alumni_group-field_topic */   'required' => 0,
-  /* node-alumni_group-field_topic */   'settings' => array(
-  /* node-alumni_group-field_topic */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-field_topic */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_topic */   ),
-  /* node-alumni_group-field_topic */   'widget' => array(
-  /* node-alumni_group-field_topic */     'active' => 1,
-  /* node-alumni_group-field_topic */     'module' => 'term_reference_tree',
-  /* node-alumni_group-field_topic */     'settings' => array(
-  /* node-alumni_group-field_topic */       'cascading_selection' => 0,
-  /* node-alumni_group-field_topic */       'filter_view' => '',
-  /* node-alumni_group-field_topic */       'label_help_description' => '',
-  /* node-alumni_group-field_topic */       'leaves_only' => 0,
-  /* node-alumni_group-field_topic */       'max_depth' => '',
-  /* node-alumni_group-field_topic */       'parent_term_id' => '',
-  /* node-alumni_group-field_topic */       'select_parents' => 0,
-  /* node-alumni_group-field_topic */       'start_minimized' => 0,
-  /* node-alumni_group-field_topic */       'token_display' => '',
-  /* node-alumni_group-field_topic */       'track_list' => 0,
-  /* node-alumni_group-field_topic */     ),
-  /* node-alumni_group-field_topic */     'type' => 'term_reference_tree',
-  /* node-alumni_group-field_topic */     'weight' => 10,
-  /* node-alumni_group-field_topic */   ),
-  /* node-alumni_group-field_topic */ );
-
-  // Exported field_instance: 'node-alumni_group-group_access'.
-  $field_instances['node-alumni_group-group_access'] = array(
-  /* node-alumni_group-group_access */   'bundle' => 'alumni_group',
-  /* node-alumni_group-group_access */   'default_value' => array(
-  /* node-alumni_group-group_access */     0 => array(
-  /* node-alumni_group-group_access */       'value' => 1,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */   ),
-  /* node-alumni_group-group_access */   'deleted' => 0,
-  /* node-alumni_group-group_access */   'description' => 'Please do not modify this field; Group visibility will be automatically set to its correct value upon saving.',
-  /* node-alumni_group-group_access */   'display' => array(
-  /* node-alumni_group-group_access */     'default' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'module' => 'list',
-  /* node-alumni_group-group_access */       'settings' => array(
-  /* node-alumni_group-group_access */         'field_formatter_class' => '',
-  /* node-alumni_group-group_access */       ),
-  /* node-alumni_group-group_access */       'type' => 'list_default',
-  /* node-alumni_group-group_access */       'weight' => 8,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'group_teaser' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'module' => 'list',
-  /* node-alumni_group-group_access */       'settings' => array(
-  /* node-alumni_group-group_access */         'field_formatter_class' => '',
-  /* node-alumni_group-group_access */       ),
-  /* node-alumni_group-group_access */       'type' => 'list_default',
-  /* node-alumni_group-group_access */       'weight' => 8,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'recursive_subgroups' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'module' => 'list',
-  /* node-alumni_group-group_access */       'settings' => array(
-  /* node-alumni_group-group_access */         'field_formatter_class' => '',
-  /* node-alumni_group-group_access */       ),
-  /* node-alumni_group-group_access */       'type' => 'list_default',
-  /* node-alumni_group-group_access */       'weight' => 8,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'search_teaser' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'module' => 'list',
-  /* node-alumni_group-group_access */       'settings' => array(
-  /* node-alumni_group-group_access */         'field_formatter_class' => '',
-  /* node-alumni_group-group_access */       ),
-  /* node-alumni_group-group_access */       'type' => 'list_default',
-  /* node-alumni_group-group_access */       'weight' => 8,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'sidebar_' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'sidebar_teaser' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'teaser' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'teaserthumb' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'settings' => array(),
-  /* node-alumni_group-group_access */       'type' => 'hidden',
-  /* node-alumni_group-group_access */       'weight' => 0,
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */   ),
-  /* node-alumni_group-group_access */   'entity_type' => 'node',
-  /* node-alumni_group-group_access */   'fences_wrapper' => 'div',
-  /* node-alumni_group-group_access */   'field_name' => 'group_access',
-  /* node-alumni_group-group_access */   'label' => 'Group visibility',
-  /* node-alumni_group-group_access */   'required' => 0,
-  /* node-alumni_group-group_access */   'settings' => array(
-  /* node-alumni_group-group_access */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-group_access */     'user_register_form' => FALSE,
-  /* node-alumni_group-group_access */   ),
-  /* node-alumni_group-group_access */   'view modes' => array(
-  /* node-alumni_group-group_access */     'full' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'type' => 'options_onoff',
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */     'teaser' => array(
-  /* node-alumni_group-group_access */       'label' => 'above',
-  /* node-alumni_group-group_access */       'type' => 'options_onoff',
-  /* node-alumni_group-group_access */     ),
-  /* node-alumni_group-group_access */   ),
-  /* node-alumni_group-group_access */   'widget' => array(
-  /* node-alumni_group-group_access */     'active' => 1,
-  /* node-alumni_group-group_access */     'module' => 'options',
-  /* node-alumni_group-group_access */     'settings' => array(),
-  /* node-alumni_group-group_access */     'type' => 'options_buttons',
-  /* node-alumni_group-group_access */     'weight' => 7,
-  /* node-alumni_group-group_access */   ),
-  /* node-alumni_group-group_access */   'widget_type' => 'options_select',
-  /* node-alumni_group-group_access */ );
-
-  // Exported field_instance: 'node-alumni_group-group_group'.
-  $field_instances['node-alumni_group-group_group'] = array(
-  /* node-alumni_group-group_group */   'bundle' => 'alumni_group',
-  /* node-alumni_group-group_group */   'default_value' => array(
-  /* node-alumni_group-group_group */     0 => array(
-  /* node-alumni_group-group_group */       'value' => 1,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */   ),
-  /* node-alumni_group-group_group */   'deleted' => 0,
-  /* node-alumni_group-group_group */   'description' => 'Determine if this is an OG group.',
-  /* node-alumni_group-group_group */   'display' => array(
-  /* node-alumni_group-group_group */     'default' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'module' => 'og_ui',
-  /* node-alumni_group-group_group */       'settings' => array(
-  /* node-alumni_group-group_group */         'field_formatter_class' => '',
-  /* node-alumni_group-group_group */         'field_name' => FALSE,
-  /* node-alumni_group-group_group */       ),
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */       'weight' => 1,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'group_teaser' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'module' => 'og_ui',
-  /* node-alumni_group-group_group */       'settings' => array(
-  /* node-alumni_group-group_group */         'field_formatter_class' => '',
-  /* node-alumni_group-group_group */         'field_name' => FALSE,
-  /* node-alumni_group-group_group */       ),
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */       'weight' => 1,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'recursive_subgroups' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'module' => 'og_ui',
-  /* node-alumni_group-group_group */       'settings' => array(
-  /* node-alumni_group-group_group */         'field_formatter_class' => '',
-  /* node-alumni_group-group_group */         'field_name' => FALSE,
-  /* node-alumni_group-group_group */       ),
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */       'weight' => 1,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'search_teaser' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'module' => 'og_ui',
-  /* node-alumni_group-group_group */       'settings' => array(
-  /* node-alumni_group-group_group */         'field_formatter_class' => '',
-  /* node-alumni_group-group_group */         'field_name' => FALSE,
-  /* node-alumni_group-group_group */       ),
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */       'weight' => 1,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'sidebar_' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'sidebar_teaser' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'teaser' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'teaserthumb' => array(
-  /* node-alumni_group-group_group */       'label' => 'above',
-  /* node-alumni_group-group_group */       'settings' => array(),
-  /* node-alumni_group-group_group */       'type' => 'hidden',
-  /* node-alumni_group-group_group */       'weight' => 0,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */   ),
-  /* node-alumni_group-group_group */   'display_label' => 1,
-  /* node-alumni_group-group_group */   'entity_type' => 'node',
-  /* node-alumni_group-group_group */   'field_name' => 'group_group',
-  /* node-alumni_group-group_group */   'label' => 'Group',
-  /* node-alumni_group-group_group */   'required' => FALSE,
-  /* node-alumni_group-group_group */   'settings' => array(
-  /* node-alumni_group-group_group */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-group_group */     'user_register_form' => FALSE,
-  /* node-alumni_group-group_group */   ),
-  /* node-alumni_group-group_group */   'view modes' => array(
-  /* node-alumni_group-group_group */     'full' => array(
-  /* node-alumni_group-group_group */       'custom settings' => FALSE,
-  /* node-alumni_group-group_group */       'label' => 'Full',
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'teaser' => array(
-  /* node-alumni_group-group_group */       'custom settings' => FALSE,
-  /* node-alumni_group-group_group */       'label' => 'Teaser',
-  /* node-alumni_group-group_group */       'type' => 'og_group_subscribe',
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */   ),
-  /* node-alumni_group-group_group */   'widget' => array(
-  /* node-alumni_group-group_group */     'module' => 'options',
-  /* node-alumni_group-group_group */     'settings' => array(
-  /* node-alumni_group-group_group */       'display_label' => 0,
-  /* node-alumni_group-group_group */       'og_hide' => TRUE,
-  /* node-alumni_group-group_group */     ),
-  /* node-alumni_group-group_group */     'type' => 'options_onoff',
-  /* node-alumni_group-group_group */     'weight' => 9,
-  /* node-alumni_group-group_group */   ),
-  /* node-alumni_group-group_group */ );
-
-  // Exported field_instance: 'node-alumni_group-og_group_ref'.
-  $field_instances['node-alumni_group-og_group_ref'] = array(
-  /* node-alumni_group-og_group_ref */   'bundle' => 'alumni_group',
-  /* node-alumni_group-og_group_ref */   'default_value' => NULL,
-  /* node-alumni_group-og_group_ref */   'default_value_function' => '',
-  /* node-alumni_group-og_group_ref */   'deleted' => 0,
-  /* node-alumni_group-og_group_ref */   'description' => '',
-  /* node-alumni_group-og_group_ref */   'display' => array(
-  /* node-alumni_group-og_group_ref */     'default' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'module' => 'og_ui',
-  /* node-alumni_group-og_group_ref */       'settings' => array(
-  /* node-alumni_group-og_group_ref */         'field_formatter_class' => '',
-  /* node-alumni_group-og_group_ref */       ),
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */       'weight' => 2,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'group_teaser' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'module' => 'og_ui',
-  /* node-alumni_group-og_group_ref */       'settings' => array(
-  /* node-alumni_group-og_group_ref */         'field_formatter_class' => '',
-  /* node-alumni_group-og_group_ref */       ),
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */       'weight' => 2,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'recursive_subgroups' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'module' => 'og_ui',
-  /* node-alumni_group-og_group_ref */       'settings' => array(
-  /* node-alumni_group-og_group_ref */         'field_formatter_class' => '',
-  /* node-alumni_group-og_group_ref */       ),
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */       'weight' => 2,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'search_teaser' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'module' => 'og_ui',
-  /* node-alumni_group-og_group_ref */       'settings' => array(
-  /* node-alumni_group-og_group_ref */         'field_formatter_class' => '',
-  /* node-alumni_group-og_group_ref */       ),
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */       'weight' => 2,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'sidebar_' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'sidebar_teaser' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'teaser' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'teaserthumb' => array(
-  /* node-alumni_group-og_group_ref */       'label' => 'above',
-  /* node-alumni_group-og_group_ref */       'settings' => array(),
-  /* node-alumni_group-og_group_ref */       'type' => 'hidden',
-  /* node-alumni_group-og_group_ref */       'weight' => 0,
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */   ),
-  /* node-alumni_group-og_group_ref */   'entity_type' => 'node',
-  /* node-alumni_group-og_group_ref */   'field_name' => 'og_group_ref',
-  /* node-alumni_group-og_group_ref */   'label' => 'Groups audience',
-  /* node-alumni_group-og_group_ref */   'required' => FALSE,
-  /* node-alumni_group-og_group_ref */   'settings' => array(
-  /* node-alumni_group-og_group_ref */     'behaviors' => array(
-  /* node-alumni_group-og_group_ref */       'og_widget' => array(
-  /* node-alumni_group-og_group_ref */         'admin' => array(
-  /* node-alumni_group-og_group_ref */           'widget_type' => 'entityreference_autocomplete',
-  /* node-alumni_group-og_group_ref */         ),
-  /* node-alumni_group-og_group_ref */         'default' => array(
-  /* node-alumni_group-og_group_ref */           'widget_type' => 'options_select',
-  /* node-alumni_group-og_group_ref */         ),
-  /* node-alumni_group-og_group_ref */         'status' => TRUE,
-  /* node-alumni_group-og_group_ref */       ),
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-og_group_ref */     'user_register_form' => FALSE,
-  /* node-alumni_group-og_group_ref */   ),
-  /* node-alumni_group-og_group_ref */   'view modes' => array(
-  /* node-alumni_group-og_group_ref */     'full' => array(
-  /* node-alumni_group-og_group_ref */       'custom settings' => FALSE,
-  /* node-alumni_group-og_group_ref */       'label' => 'Full',
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */     'teaser' => array(
-  /* node-alumni_group-og_group_ref */       'custom settings' => FALSE,
-  /* node-alumni_group-og_group_ref */       'label' => 'Teaser',
-  /* node-alumni_group-og_group_ref */       'type' => 'og_list_default',
-  /* node-alumni_group-og_group_ref */     ),
-  /* node-alumni_group-og_group_ref */   ),
-  /* node-alumni_group-og_group_ref */   'widget' => array(
-  /* node-alumni_group-og_group_ref */     'module' => 'og',
-  /* node-alumni_group-og_group_ref */     'settings' => array(),
-  /* node-alumni_group-og_group_ref */     'type' => 'og_complex',
-  /* node-alumni_group-og_group_ref */     'weight' => 6,
-  /* node-alumni_group-og_group_ref */   ),
-  /* node-alumni_group-og_group_ref */ );
-
-  // Exported field_instance: 'node-alumni_group-og_roles_permissions'.
-  $field_instances['node-alumni_group-og_roles_permissions'] = array(
-  /* node-alumni_group-og_roles_permissions */   'bundle' => 'alumni_group',
-  /* node-alumni_group-og_roles_permissions */   'default_value' => array(
-  /* node-alumni_group-og_roles_permissions */     0 => array(
-  /* node-alumni_group-og_roles_permissions */       'value' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */   ),
-  /* node-alumni_group-og_roles_permissions */   'deleted' => 0,
-  /* node-alumni_group-og_roles_permissions */   'description' => '',
-  /* node-alumni_group-og_roles_permissions */   'display' => array(
-  /* node-alumni_group-og_roles_permissions */     'default' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'module' => 'list',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(
-  /* node-alumni_group-og_roles_permissions */         'field_formatter_class' => '',
-  /* node-alumni_group-og_roles_permissions */       ),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 7,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'group_teaser' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'module' => 'list',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(
-  /* node-alumni_group-og_roles_permissions */         'field_formatter_class' => '',
-  /* node-alumni_group-og_roles_permissions */       ),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 7,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'recursive_subgroups' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'module' => 'list',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(
-  /* node-alumni_group-og_roles_permissions */         'field_formatter_class' => '',
-  /* node-alumni_group-og_roles_permissions */       ),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 7,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'search_teaser' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'module' => 'list',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(
-  /* node-alumni_group-og_roles_permissions */         'field_formatter_class' => '',
-  /* node-alumni_group-og_roles_permissions */       ),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 7,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'sidebar_' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'sidebar_teaser' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'teaser' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'teaser_w_thumb_and_search' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'teaserthumb' => array(
-  /* node-alumni_group-og_roles_permissions */       'label' => 'above',
-  /* node-alumni_group-og_roles_permissions */       'settings' => array(),
-  /* node-alumni_group-og_roles_permissions */       'type' => 'hidden',
-  /* node-alumni_group-og_roles_permissions */       'weight' => 0,
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */   ),
-  /* node-alumni_group-og_roles_permissions */   'entity_type' => 'node',
-  /* node-alumni_group-og_roles_permissions */   'field_name' => 'og_roles_permissions',
-  /* node-alumni_group-og_roles_permissions */   'label' => 'Group roles and permissions',
-  /* node-alumni_group-og_roles_permissions */   'required' => TRUE,
-  /* node-alumni_group-og_roles_permissions */   'settings' => array(
-  /* node-alumni_group-og_roles_permissions */     'user_field_privacy' => FALSE,
-  /* node-alumni_group-og_roles_permissions */     'user_register_form' => FALSE,
-  /* node-alumni_group-og_roles_permissions */   ),
-  /* node-alumni_group-og_roles_permissions */   'view modes' => array(
-  /* node-alumni_group-og_roles_permissions */     'full' => array(
-  /* node-alumni_group-og_roles_permissions */       'custom settings' => FALSE,
-  /* node-alumni_group-og_roles_permissions */       'label' => 'Full',
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'teaser' => array(
-  /* node-alumni_group-og_roles_permissions */       'custom settings' => FALSE,
-  /* node-alumni_group-og_roles_permissions */       'label' => 'Teaser',
-  /* node-alumni_group-og_roles_permissions */       'type' => 'list_default',
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */   ),
-  /* node-alumni_group-og_roles_permissions */   'widget' => array(
-  /* node-alumni_group-og_roles_permissions */     'module' => 'options',
-  /* node-alumni_group-og_roles_permissions */     'settings' => array(
-  /* node-alumni_group-og_roles_permissions */       'apply_chosen' => '',
-  /* node-alumni_group-og_roles_permissions */     ),
-  /* node-alumni_group-og_roles_permissions */     'type' => 'options_select',
-  /* node-alumni_group-og_roles_permissions */     'weight' => 10,
-  /* node-alumni_group-og_roles_permissions */   ),
-  /* node-alumni_group-og_roles_permissions */ );
-
   // Exported field_instance: 'node-announcement-body'.
   $field_instances['node-announcement-body'] = array(
   /* node-announcement-body */   'bundle' => 'announcement',
@@ -9920,7 +7986,7 @@ function gn2_base_config_field_default_field_instances() {
   $field_instances['node-announcement-field_main_image'] = array(
   /* node-announcement-field_main_image */   'bundle' => 'announcement',
   /* node-announcement-field_main_image */   'deleted' => 0,
-  /* node-announcement-field_main_image */   'description' => 'The "Main Image" appears before the text of your announcement, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this announcement. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
+  /* node-announcement-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-announcement-field_main_image */   'display' => array(
   /* node-announcement-field_main_image */     'default' => array(
   /* node-announcement-field_main_image */       'label' => 'above',
@@ -10708,7 +8774,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-body */   'bundle' => 'course',
   /* node-course-body */   'default_value' => NULL,
   /* node-course-body */   'deleted' => 0,
-  /* node-course-body */   'description' => '',
+  /* node-course-body */   'description' => 'The Course Description will be displayed below the main image (if you add one) and will display approximately 600 characters with a <em><b>Read more</b></em> link. If you would like to add text overlaying the main image, click the <b>Edit Summary</b> link above and add text there. Since the Summary will be display overlaid on the image, for best results, the this should be limited to fewer than 250 characters.',
   /* node-course-body */   'display' => array(
   /* node-course-body */     'default' => array(
   /* node-course-body */       'label' => 'above',
@@ -10780,22 +8846,40 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-body */   'label' => 'Course Description',
   /* node-course-body */   'required' => 1,
   /* node-course-body */   'settings' => array(
+  /* node-course-body */     'better_formats' => array(
+  /* node-course-body */       'allowed_formats' => array(
+  /* node-course-body */         'filtered_html' => 'filtered_html',
+  /* node-course-body */         'full_html' => 'full_html',
+  /* node-course-body */         'plain_text' => 'plain_text',
+  /* node-course-body */         'sessions_wysiwyg' => 'sessions_wysiwyg',
+  /* node-course-body */       ),
+  /* node-course-body */       'allowed_formats_toggle' => 0,
+  /* node-course-body */       'default_order_toggle' => 0,
+  /* node-course-body */       'default_order_wrapper' => array(
+  /* node-course-body */         'formats' => array(
+  /* node-course-body */           'filtered_html' => array(
+  /* node-course-body */             'weight' => -10,
+  /* node-course-body */           ),
+  /* node-course-body */           'full_html' => array(
+  /* node-course-body */             'weight' => -8,
+  /* node-course-body */           ),
+  /* node-course-body */           'plain_text' => array(
+  /* node-course-body */             'weight' => -9,
+  /* node-course-body */           ),
+  /* node-course-body */           'sessions_wysiwyg' => array(
+  /* node-course-body */             'weight' => 0,
+  /* node-course-body */           ),
+  /* node-course-body */         ),
+  /* node-course-body */       ),
+  /* node-course-body */     ),
   /* node-course-body */     'display_summary' => 1,
   /* node-course-body */     'text_processing' => 1,
-  /* node-course-body */     'user_field_privacy' => FALSE,
   /* node-course-body */     'user_register_form' => FALSE,
   /* node-course-body */   ),
   /* node-course-body */   'widget' => array(
   /* node-course-body */     'active' => 1,
   /* node-course-body */     'module' => 'text',
   /* node-course-body */     'settings' => array(
-  /* node-course-body */       'label_help_description' => '350 characters',
-  /* node-course-body */       'maxlength_js' => 350,
-  /* node-course-body */       'maxlength_js_enforce' => 0,
-  /* node-course-body */       'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-  /* node-course-body */       'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-  /* node-course-body */       'maxlength_js_summary' => '350 characters',
-  /* node-course-body */       'maxlength_js_truncate_html' => 0,
   /* node-course-body */       'rows' => 10,
   /* node-course-body */       'summary_rows' => 5,
   /* node-course-body */     ),
@@ -10816,6 +8900,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_alumni_specialist */       'label' => 'above',
   /* node-course-field_alumni_specialist */       'module' => 'entityreference',
   /* node-course-field_alumni_specialist */       'settings' => array(
+  /* node-course-field_alumni_specialist */         'bypass_access' => FALSE,
   /* node-course-field_alumni_specialist */         'field_formatter_class' => '',
   /* node-course-field_alumni_specialist */         'link' => FALSE,
   /* node-course-field_alumni_specialist */       ),
@@ -11091,6 +9176,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_course_director */       'label' => 'above',
   /* node-course-field_course_director */       'module' => 'entityreference',
   /* node-course-field_course_director */       'settings' => array(
+  /* node-course-field_course_director */         'bypass_access' => FALSE,
   /* node-course-field_course_director */         'field_formatter_class' => '',
   /* node-course-field_course_director */         'link' => FALSE,
   /* node-course-field_course_director */       ),
@@ -11186,6 +9272,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_course_event_coordinator */       'label' => 'above',
   /* node-course-field_course_event_coordinator */       'module' => 'entityreference',
   /* node-course-field_course_event_coordinator */       'settings' => array(
+  /* node-course-field_course_event_coordinator */         'bypass_access' => FALSE,
   /* node-course-field_course_event_coordinator */         'field_formatter_class' => '',
   /* node-course-field_course_event_coordinator */         'link' => FALSE,
   /* node-course-field_course_event_coordinator */       ),
@@ -11281,6 +9368,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_course_faculty */       'label' => 'above',
   /* node-course-field_course_faculty */       'module' => 'entityreference',
   /* node-course-field_course_faculty */       'settings' => array(
+  /* node-course-field_course_faculty */         'bypass_access' => FALSE,
   /* node-course-field_course_faculty */         'field_formatter_class' => '',
   /* node-course-field_course_faculty */         'link' => FALSE,
   /* node-course-field_course_faculty */       ),
@@ -11486,6 +9574,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_course_seminar_leader */       'label' => 'above',
   /* node-course-field_course_seminar_leader */       'module' => 'entityreference',
   /* node-course-field_course_seminar_leader */       'settings' => array(
+  /* node-course-field_course_seminar_leader */         'bypass_access' => FALSE,
   /* node-course-field_course_seminar_leader */         'field_formatter_class' => '',
   /* node-course-field_course_seminar_leader */         'link' => FALSE,
   /* node-course-field_course_seminar_leader */       ),
@@ -11581,6 +9670,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_course_support_staff */       'label' => 'above',
   /* node-course-field_course_support_staff */       'module' => 'entityreference',
   /* node-course-field_course_support_staff */       'settings' => array(
+  /* node-course-field_course_support_staff */         'bypass_access' => FALSE,
   /* node-course-field_course_support_staff */         'field_formatter_class' => '',
   /* node-course-field_course_support_staff */         'link' => FALSE,
   /* node-course-field_course_support_staff */       ),
@@ -11786,6 +9876,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_deputy_course_director */       'label' => 'above',
   /* node-course-field_deputy_course_director */       'module' => 'entityreference',
   /* node-course-field_deputy_course_director */       'settings' => array(
+  /* node-course-field_deputy_course_director */         'bypass_access' => FALSE,
   /* node-course-field_deputy_course_director */         'field_formatter_class' => '',
   /* node-course-field_deputy_course_director */         'link' => FALSE,
   /* node-course-field_deputy_course_director */       ),
@@ -12026,7 +10117,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_group_help */       'allowed_formats' => array(
   /* node-course-field_group_help */         'filtered_html' => 'filtered_html',
   /* node-course-field_group_help */         'full_html' => 'full_html',
-  /* node-course-field_group_help */         'php_code' => 'php_code',
   /* node-course-field_group_help */         'plain_text' => 'plain_text',
   /* node-course-field_group_help */       ),
   /* node-course-field_group_help */       'allowed_formats_toggle' => 0,
@@ -12038,9 +10128,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course-field_group_help */           ),
   /* node-course-field_group_help */           'full_html' => array(
   /* node-course-field_group_help */             'weight' => -8,
-  /* node-course-field_group_help */           ),
-  /* node-course-field_group_help */           'php_code' => array(
-  /* node-course-field_group_help */             'weight' => -7,
   /* node-course-field_group_help */           ),
   /* node-course-field_group_help */           'plain_text' => array(
   /* node-course-field_group_help */             'weight' => -9,
@@ -12253,7 +10340,7 @@ function gn2_base_config_field_default_field_instances() {
   $field_instances['node-course-field_main_image'] = array(
   /* node-course-field_main_image */   'bundle' => 'course',
   /* node-course-field_main_image */   'deleted' => 0,
-  /* node-course-field_main_image */   'description' => 'Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-course-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-course-field_main_image */   'display' => array(
   /* node-course-field_main_image */     'default' => array(
   /* node-course-field_main_image */       'label' => 'above',
@@ -13225,7 +11312,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-body */       'allowed_formats' => array(
   /* node-course_group-body */         'filtered_html' => 'filtered_html',
   /* node-course_group-body */         'full_html' => 'full_html',
-  /* node-course_group-body */         'php_code' => 'php_code',
   /* node-course_group-body */         'plain_text' => 'plain_text',
   /* node-course_group-body */       ),
   /* node-course_group-body */       'allowed_formats_toggle' => 0,
@@ -13237,9 +11323,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-body */           ),
   /* node-course_group-body */           'full_html' => array(
   /* node-course_group-body */             'weight' => -8,
-  /* node-course_group-body */           ),
-  /* node-course_group-body */           'php_code' => array(
-  /* node-course_group-body */             'weight' => -7,
   /* node-course_group-body */           ),
   /* node-course_group-body */           'plain_text' => array(
   /* node-course_group-body */             'weight' => -9,
@@ -13591,7 +11674,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-field_group_help */       'allowed_formats' => array(
   /* node-course_group-field_group_help */         'filtered_html' => 'filtered_html',
   /* node-course_group-field_group_help */         'full_html' => 'full_html',
-  /* node-course_group-field_group_help */         'php_code' => 'php_code',
   /* node-course_group-field_group_help */         'plain_text' => 'plain_text',
   /* node-course_group-field_group_help */       ),
   /* node-course_group-field_group_help */       'allowed_formats_toggle' => 0,
@@ -13603,9 +11685,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-field_group_help */           ),
   /* node-course_group-field_group_help */           'full_html' => array(
   /* node-course_group-field_group_help */             'weight' => -8,
-  /* node-course_group-field_group_help */           ),
-  /* node-course_group-field_group_help */           'php_code' => array(
-  /* node-course_group-field_group_help */             'weight' => -7,
   /* node-course_group-field_group_help */           ),
   /* node-course_group-field_group_help */           'plain_text' => array(
   /* node-course_group-field_group_help */             'weight' => -9,
@@ -13726,7 +11805,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-field_group_short_title */       'allowed_formats' => array(
   /* node-course_group-field_group_short_title */         'filtered_html' => 'filtered_html',
   /* node-course_group-field_group_short_title */         'full_html' => 'full_html',
-  /* node-course_group-field_group_short_title */         'php_code' => 'php_code',
   /* node-course_group-field_group_short_title */         'plain_text' => 'plain_text',
   /* node-course_group-field_group_short_title */       ),
   /* node-course_group-field_group_short_title */       'allowed_formats_toggle' => 0,
@@ -13738,9 +11816,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-course_group-field_group_short_title */           ),
   /* node-course_group-field_group_short_title */           'full_html' => array(
   /* node-course_group-field_group_short_title */             'weight' => -8,
-  /* node-course_group-field_group_short_title */           ),
-  /* node-course_group-field_group_short_title */           'php_code' => array(
-  /* node-course_group-field_group_short_title */             'weight' => -7,
   /* node-course_group-field_group_short_title */           ),
   /* node-course_group-field_group_short_title */           'plain_text' => array(
   /* node-course_group-field_group_short_title */             'weight' => -9,
@@ -13767,7 +11842,7 @@ function gn2_base_config_field_default_field_instances() {
   $field_instances['node-course_group-field_main_image'] = array(
   /* node-course_group-field_main_image */   'bundle' => 'course_group',
   /* node-course_group-field_main_image */   'deleted' => 0,
-  /* node-course_group-field_main_image */   'description' => '',
+  /* node-course_group-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-course_group-field_main_image */   'display' => array(
   /* node-course_group-field_main_image */     'default' => array(
   /* node-course_group-field_main_image */       'label' => 'above',
@@ -14974,7 +13049,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_addl_contact_info */       'allowed_formats' => array(
   /* node-event-field_addl_contact_info */         'filtered_html' => 'filtered_html',
   /* node-event-field_addl_contact_info */         'full_html' => 'full_html',
-  /* node-event-field_addl_contact_info */         'php_code' => 'php_code',
   /* node-event-field_addl_contact_info */         'plain_text' => 'plain_text',
   /* node-event-field_addl_contact_info */       ),
   /* node-event-field_addl_contact_info */       'allowed_formats_toggle' => 0,
@@ -14986,9 +13060,6 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_addl_contact_info */           ),
   /* node-event-field_addl_contact_info */           'full_html' => array(
   /* node-event-field_addl_contact_info */             'weight' => -8,
-  /* node-event-field_addl_contact_info */           ),
-  /* node-event-field_addl_contact_info */           'php_code' => array(
-  /* node-event-field_addl_contact_info */             'weight' => -7,
   /* node-event-field_addl_contact_info */           ),
   /* node-event-field_addl_contact_info */           'plain_text' => array(
   /* node-event-field_addl_contact_info */             'weight' => -9,
@@ -15385,6 +13456,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_event_contact_person */       'label' => 'above',
   /* node-event-field_event_contact_person */       'module' => 'entityreference',
   /* node-event-field_event_contact_person */       'settings' => array(
+  /* node-event-field_event_contact_person */         'bypass_access' => FALSE,
   /* node-event-field_event_contact_person */         'field_formatter_class' => '',
   /* node-event-field_event_contact_person */         'link' => FALSE,
   /* node-event-field_event_contact_person */       ),
@@ -15395,6 +13467,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_event_contact_person */       'label' => 'above',
   /* node-event-field_event_contact_person */       'module' => 'entityreference',
   /* node-event-field_event_contact_person */       'settings' => array(
+  /* node-event-field_event_contact_person */         'bypass_access' => FALSE,
   /* node-event-field_event_contact_person */         'field_formatter_class' => '',
   /* node-event-field_event_contact_person */         'link' => FALSE,
   /* node-event-field_event_contact_person */       ),
@@ -15405,6 +13478,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_event_contact_person */       'label' => 'above',
   /* node-event-field_event_contact_person */       'module' => 'entityreference',
   /* node-event-field_event_contact_person */       'settings' => array(
+  /* node-event-field_event_contact_person */         'bypass_access' => FALSE,
   /* node-event-field_event_contact_person */         'field_formatter_class' => '',
   /* node-event-field_event_contact_person */         'link' => FALSE,
   /* node-event-field_event_contact_person */       ),
@@ -15457,6 +13531,7 @@ function gn2_base_config_field_default_field_instances() {
   /* node-event-field_event_contact_person */       'label' => 'above',
   /* node-event-field_event_contact_person */       'module' => 'entityreference',
   /* node-event-field_event_contact_person */       'settings' => array(
+  /* node-event-field_event_contact_person */         'bypass_access' => FALSE,
   /* node-event-field_event_contact_person */         'field_formatter_class' => '',
   /* node-event-field_event_contact_person */         'link' => FALSE,
   /* node-event-field_event_contact_person */       ),
@@ -16917,6 +14992,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-event-field_notification_recipients */       'label' => 'above',
   /* node-event-field_notification_recipients */       'module' => 'entityreference',
   /* node-event-field_notification_recipients */       'settings' => array(
+  /* node-event-field_notification_recipients */         'bypass_access' => FALSE,
   /* node-event-field_notification_recipients */         'field_formatter_class' => '',
   /* node-event-field_notification_recipients */         'link' => FALSE,
   /* node-event-field_notification_recipients */       ),
@@ -19123,7 +17199,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-group-body */   'bundle' => 'group',
   /* node-group-body */   'default_value' => NULL,
   /* node-group-body */   'deleted' => 0,
-  /* node-group-body */   'description' => 'The Group Description will overlay your group\'s Main Image (if you add one), so if you plan to include an image, a short description is best; if you prefer a long Group Description, adding a Main Image is not recommended (group display will be compromised). Please note: you can add additional custom group content to the "Help" field toward the bottom of this form.',
+  /* node-group-body */   'description' => 'The Group Description will be displayed below the main image (if you add one) and will display approximately 600 characters with a <em><b>Read more</b></em> link. If you would like to add text overlaying the main image, click the <b>Edit Summary</b> link above and add text there. Since the Summary will be display overlaid on the image, for best results, the this should be limited to fewer than 250 characters.',
   /* node-group-body */   'display' => array(
   /* node-group-body */     'default' => array(
   /* node-group-body */       'label' => 'hidden',
@@ -19199,8 +17275,8 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-group-body */       'allowed_formats' => array(
   /* node-group-body */         'filtered_html' => 'filtered_html',
   /* node-group-body */         'full_html' => 'full_html',
-  /* node-group-body */         'php_code' => 'php_code',
   /* node-group-body */         'plain_text' => 'plain_text',
+  /* node-group-body */         'sessions_wysiwyg' => 0,
   /* node-group-body */       ),
   /* node-group-body */       'allowed_formats_toggle' => 0,
   /* node-group-body */       'default_order_toggle' => 0,
@@ -19212,11 +17288,11 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-group-body */           'full_html' => array(
   /* node-group-body */             'weight' => -8,
   /* node-group-body */           ),
-  /* node-group-body */           'php_code' => array(
-  /* node-group-body */             'weight' => -7,
-  /* node-group-body */           ),
   /* node-group-body */           'plain_text' => array(
   /* node-group-body */             'weight' => -9,
+  /* node-group-body */           ),
+  /* node-group-body */           'sessions_wysiwyg' => array(
+  /* node-group-body */             'weight' => 0,
   /* node-group-body */           ),
   /* node-group-body */         ),
   /* node-group-body */       ),
@@ -19517,7 +17593,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-group-field_group_help */       'allowed_formats' => array(
   /* node-group-field_group_help */         'filtered_html' => 'filtered_html',
   /* node-group-field_group_help */         'full_html' => 'full_html',
-  /* node-group-field_group_help */         'php_code' => 'php_code',
   /* node-group-field_group_help */         'plain_text' => 'plain_text',
   /* node-group-field_group_help */       ),
   /* node-group-field_group_help */       'allowed_formats_toggle' => 0,
@@ -19529,9 +17604,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-group-field_group_help */           ),
   /* node-group-field_group_help */           'full_html' => array(
   /* node-group-field_group_help */             'weight' => -8,
-  /* node-group-field_group_help */           ),
-  /* node-group-field_group_help */           'php_code' => array(
-  /* node-group-field_group_help */             'weight' => -7,
   /* node-group-field_group_help */           ),
   /* node-group-field_group_help */           'plain_text' => array(
   /* node-group-field_group_help */             'weight' => -9,
@@ -19649,7 +17721,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-group-field_main_image'] = array(
   /* node-group-field_main_image */   'bundle' => 'group',
   /* node-group-field_main_image */   'deleted' => 0,
-  /* node-group-field_main_image */   'description' => 'If you upload a Main Image, it will appear at the top of your group page, below the title. Images will be automatically resized to 810 x 400 px. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-group-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-group-field_main_image */   'display' => array(
   /* node-group-field_main_image */     'default' => array(
   /* node-group-field_main_image */       'label' => 'above',
@@ -21448,7 +19520,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-news-field_main_image'] = array(
   /* node-news-field_main_image */   'bundle' => 'news',
   /* node-news-field_main_image */   'deleted' => 0,
-  /* node-news-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
+  /* node-news-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-news-field_main_image */   'display' => array(
   /* node-news-field_main_image */     'default' => array(
   /* node-news-field_main_image */       'label' => 'hidden',
@@ -23062,7 +21134,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-organization-field_footer_description */       'allowed_formats' => array(
   /* node-organization-field_footer_description */         'filtered_html' => 'filtered_html',
   /* node-organization-field_footer_description */         'full_html' => 'full_html',
-  /* node-organization-field_footer_description */         'php_code' => 'php_code',
   /* node-organization-field_footer_description */         'plain_text' => 'plain_text',
   /* node-organization-field_footer_description */       ),
   /* node-organization-field_footer_description */       'allowed_formats_toggle' => 0,
@@ -23074,9 +21145,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-organization-field_footer_description */           ),
   /* node-organization-field_footer_description */           'full_html' => array(
   /* node-organization-field_footer_description */             'weight' => -8,
-  /* node-organization-field_footer_description */           ),
-  /* node-organization-field_footer_description */           'php_code' => array(
-  /* node-organization-field_footer_description */             'weight' => -7,
   /* node-organization-field_footer_description */           ),
   /* node-organization-field_footer_description */           'plain_text' => array(
   /* node-organization-field_footer_description */             'weight' => -9,
@@ -23191,7 +21259,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-organization-field_main_image'] = array(
   /* node-organization-field_main_image */   'bundle' => 'organization',
   /* node-organization-field_main_image */   'deleted' => 0,
-  /* node-organization-field_main_image */   'description' => 'Please note: The "Main Image" only appears on the GlobalNET home page.  In all other organizations, it does not appear on any page. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-organization-field_main_image */   'description' => 'Please note: The "Main Image" only appears on the GlobalNET home page. The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-organization-field_main_image */   'display' => array(
   /* node-organization-field_main_image */     'default' => array(
   /* node-organization-field_main_image */       'label' => 'above',
@@ -23360,7 +21428,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-organization-field_org_short_title */       'allowed_formats' => array(
   /* node-organization-field_org_short_title */         'filtered_html' => 'filtered_html',
   /* node-organization-field_org_short_title */         'full_html' => 'full_html',
-  /* node-organization-field_org_short_title */         'php_code' => 'php_code',
   /* node-organization-field_org_short_title */         'plain_text' => 'plain_text',
   /* node-organization-field_org_short_title */       ),
   /* node-organization-field_org_short_title */       'allowed_formats_toggle' => 0,
@@ -23372,9 +21439,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-organization-field_org_short_title */           ),
   /* node-organization-field_org_short_title */           'full_html' => array(
   /* node-organization-field_org_short_title */             'weight' => -8,
-  /* node-organization-field_org_short_title */           ),
-  /* node-organization-field_org_short_title */           'php_code' => array(
-  /* node-organization-field_org_short_title */             'weight' => -7,
   /* node-organization-field_org_short_title */           ),
   /* node-organization-field_org_short_title */           'plain_text' => array(
   /* node-organization-field_org_short_title */             'weight' => -9,
@@ -24976,7 +23040,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-post-field_main_image'] = array(
   /* node-post-field_main_image */   'bundle' => 'post',
   /* node-post-field_main_image */   'deleted' => 0,
-  /* node-post-field_main_image */   'description' => 'The "Main Image" appears before the text of your post, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this post. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-post-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-post-field_main_image */   'display' => array(
   /* node-post-field_main_image */     'default' => array(
   /* node-post-field_main_image */       'label' => 'above',
@@ -25838,6 +23902,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-post-og_group_ref */       'label' => 'inline',
   /* node-post-og_group_ref */       'module' => 'entityreference',
   /* node-post-og_group_ref */       'settings' => array(
+  /* node-post-og_group_ref */         'bypass_access' => FALSE,
   /* node-post-og_group_ref */         'field_formatter_class' => '',
   /* node-post-og_group_ref */         'link' => 0,
   /* node-post-og_group_ref */       ),
@@ -25990,7 +24055,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-program-body */       'allowed_formats' => array(
   /* node-program-body */         'filtered_html' => 'filtered_html',
   /* node-program-body */         'full_html' => 'full_html',
-  /* node-program-body */         'php_code' => 'php_code',
   /* node-program-body */         'plain_text' => 'plain_text',
   /* node-program-body */       ),
   /* node-program-body */       'allowed_formats_toggle' => 0,
@@ -26002,9 +24066,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-program-body */           ),
   /* node-program-body */           'full_html' => array(
   /* node-program-body */             'weight' => -8,
-  /* node-program-body */           ),
-  /* node-program-body */           'php_code' => array(
-  /* node-program-body */             'weight' => -7,
   /* node-program-body */           ),
   /* node-program-body */           'plain_text' => array(
   /* node-program-body */             'weight' => -9,
@@ -26239,7 +24300,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-program-field_description */       'allowed_formats' => array(
   /* node-program-field_description */         'filtered_html' => 'filtered_html',
   /* node-program-field_description */         'full_html' => 'full_html',
-  /* node-program-field_description */         'php_code' => 'php_code',
   /* node-program-field_description */         'plain_text' => 'plain_text',
   /* node-program-field_description */       ),
   /* node-program-field_description */       'allowed_formats_toggle' => 0,
@@ -26251,9 +24311,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-program-field_description */           ),
   /* node-program-field_description */           'full_html' => array(
   /* node-program-field_description */             'weight' => -8,
-  /* node-program-field_description */           ),
-  /* node-program-field_description */           'php_code' => array(
-  /* node-program-field_description */             'weight' => -7,
   /* node-program-field_description */           ),
   /* node-program-field_description */           'plain_text' => array(
   /* node-program-field_description */             'weight' => -9,
@@ -26505,7 +24562,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-program-field_main_image'] = array(
   /* node-program-field_main_image */   'bundle' => 'program',
   /* node-program-field_main_image */   'deleted' => 0,
-  /* node-program-field_main_image */   'description' => '',
+  /* node-program-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-program-field_main_image */   'display' => array(
   /* node-program-field_main_image */     'default' => array(
   /* node-program-field_main_image */       'label' => 'above',
@@ -27485,7 +25542,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   $field_instances['node-publication-field_main_image'] = array(
   /* node-publication-field_main_image */   'bundle' => 'publication',
   /* node-publication-field_main_image */   'deleted' => 0,
-  /* node-publication-field_main_image */   'description' => 'Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-publication-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-publication-field_main_image */   'display' => array(
   /* node-publication-field_main_image */     'default' => array(
   /* node-publication-field_main_image */       'label' => 'hidden',
@@ -27762,7 +25819,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-publication-field_publication_author */       'allowed_formats' => array(
   /* node-publication-field_publication_author */         'filtered_html' => 'filtered_html',
   /* node-publication-field_publication_author */         'full_html' => 'full_html',
-  /* node-publication-field_publication_author */         'php_code' => 0,
   /* node-publication-field_publication_author */         'plain_text' => 'plain_text',
   /* node-publication-field_publication_author */       ),
   /* node-publication-field_publication_author */       'allowed_formats_toggle' => 1,
@@ -27774,9 +25830,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-publication-field_publication_author */           ),
   /* node-publication-field_publication_author */           'full_html' => array(
   /* node-publication-field_publication_author */             'weight' => -8,
-  /* node-publication-field_publication_author */           ),
-  /* node-publication-field_publication_author */           'php_code' => array(
-  /* node-publication-field_publication_author */             'weight' => -7,
   /* node-publication-field_publication_author */           ),
   /* node-publication-field_publication_author */           'plain_text' => array(
   /* node-publication-field_publication_author */             'weight' => -9,
@@ -28131,7 +26184,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-publication-field_subtitle */       'allowed_formats' => array(
   /* node-publication-field_subtitle */         'filtered_html' => 'filtered_html',
   /* node-publication-field_subtitle */         'full_html' => 'full_html',
-  /* node-publication-field_subtitle */         'php_code' => 'php_code',
   /* node-publication-field_subtitle */         'plain_text' => 'plain_text',
   /* node-publication-field_subtitle */       ),
   /* node-publication-field_subtitle */       'allowed_formats_toggle' => 0,
@@ -28143,9 +26195,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* node-publication-field_subtitle */           ),
   /* node-publication-field_subtitle */           'full_html' => array(
   /* node-publication-field_subtitle */             'weight' => -8,
-  /* node-publication-field_subtitle */           ),
-  /* node-publication-field_subtitle */           'php_code' => array(
-  /* node-publication-field_subtitle */             'weight' => -7,
   /* node-publication-field_subtitle */           ),
   /* node-publication-field_subtitle */           'plain_text' => array(
   /* node-publication-field_subtitle */             'weight' => -9,
@@ -28951,7 +27000,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_bio_short */       'label' => 'above',
   /* user-user-field_bio_short */       'settings' => array(),
   /* user-user-field_bio_short */       'type' => 'hidden',
-  /* user-user-field_bio_short */       'weight' => 21,
+  /* user-user-field_bio_short */       'weight' => 25,
   /* user-user-field_bio_short */     ),
   /* user-user-field_bio_short */     'full_name_phone' => array(
   /* user-user-field_bio_short */       'label' => 'above',
@@ -29003,7 +27052,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_bio_short */       'allowed_formats' => array(
   /* user-user-field_bio_short */         'filtered_html' => 'filtered_html',
   /* user-user-field_bio_short */         'full_html' => 'full_html',
-  /* user-user-field_bio_short */         'php_code' => 'php_code',
   /* user-user-field_bio_short */         'plain_text' => 'plain_text',
   /* user-user-field_bio_short */       ),
   /* user-user-field_bio_short */       'allowed_formats_toggle' => 0,
@@ -29015,9 +27063,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_bio_short */           ),
   /* user-user-field_bio_short */           'full_html' => array(
   /* user-user-field_bio_short */             'weight' => -8,
-  /* user-user-field_bio_short */           ),
-  /* user-user-field_bio_short */           'php_code' => array(
-  /* user-user-field_bio_short */             'weight' => -7,
   /* user-user-field_bio_short */           ),
   /* user-user-field_bio_short */           'plain_text' => array(
   /* user-user-field_bio_short */             'weight' => -9,
@@ -29060,7 +27105,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_biography */       'label' => 'above',
   /* user-user-field_biography */       'settings' => array(),
   /* user-user-field_biography */       'type' => 'hidden',
-  /* user-user-field_biography */       'weight' => 20,
+  /* user-user-field_biography */       'weight' => 24,
   /* user-user-field_biography */     ),
   /* user-user-field_biography */     'full_name_phone' => array(
   /* user-user-field_biography */       'label' => 'above',
@@ -29115,7 +27160,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_biography */       'allowed_formats' => array(
   /* user-user-field_biography */         'filtered_html' => 'filtered_html',
   /* user-user-field_biography */         'full_html' => 'full_html',
-  /* user-user-field_biography */         'php_code' => 'php_code',
   /* user-user-field_biography */         'plain_text' => 'plain_text',
   /* user-user-field_biography */       ),
   /* user-user-field_biography */       'allowed_formats_toggle' => 0,
@@ -29127,9 +27171,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_biography */           ),
   /* user-user-field_biography */           'full_html' => array(
   /* user-user-field_biography */             'weight' => -8,
-  /* user-user-field_biography */           ),
-  /* user-user-field_biography */           'php_code' => array(
-  /* user-user-field_biography */             'weight' => -7,
   /* user-user-field_biography */           ),
   /* user-user-field_biography */           'plain_text' => array(
   /* user-user-field_biography */             'weight' => -9,
@@ -29172,7 +27213,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_cocom_region */         'field_formatter_class' => '',
   /* user-user-field_cocom_region */       ),
   /* user-user-field_cocom_region */       'type' => 'list_default',
-  /* user-user-field_cocom_region */       'weight' => 34,
+  /* user-user-field_cocom_region */       'weight' => 14,
   /* user-user-field_cocom_region */     ),
   /* user-user-field_cocom_region */     'full_name_phone' => array(
   /* user-user-field_cocom_region */       'label' => 'above',
@@ -29253,7 +27294,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_countries_of_interest */       'label' => 'above',
   /* user-user-field_countries_of_interest */       'settings' => array(),
   /* user-user-field_countries_of_interest */       'type' => 'hidden',
-  /* user-user-field_countries_of_interest */       'weight' => 27,
+  /* user-user-field_countries_of_interest */       'weight' => 31,
   /* user-user-field_countries_of_interest */     ),
   /* user-user-field_countries_of_interest */     'full_name_phone' => array(
   /* user-user-field_countries_of_interest */       'label' => 'above',
@@ -29335,7 +27376,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_country_of_representation */       'label' => 'above',
   /* user-user-field_country_of_representation */       'settings' => array(),
   /* user-user-field_country_of_representation */       'type' => 'hidden',
-  /* user-user-field_country_of_representation */       'weight' => 30,
+  /* user-user-field_country_of_representation */       'weight' => 34,
   /* user-user-field_country_of_representation */     ),
   /* user-user-field_country_of_representation */     'full_name_phone' => array(
   /* user-user-field_country_of_representation */       'label' => 'above',
@@ -29419,7 +27460,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_country_of_residence */       'label' => 'inline',
   /* user-user-field_country_of_residence */       'settings' => array(),
   /* user-user-field_country_of_residence */       'type' => 'hidden',
-  /* user-user-field_country_of_residence */       'weight' => 29,
+  /* user-user-field_country_of_residence */       'weight' => 33,
   /* user-user-field_country_of_residence */     ),
   /* user-user-field_country_of_residence */     'full_name_phone' => array(
   /* user-user-field_country_of_residence */       'label' => 'above',
@@ -29501,7 +27542,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_crm_id */       'label' => 'above',
   /* user-user-field_crm_id */       'settings' => array(),
   /* user-user-field_crm_id */       'type' => 'hidden',
-  /* user-user-field_crm_id */       'weight' => 31,
+  /* user-user-field_crm_id */       'weight' => 35,
   /* user-user-field_crm_id */     ),
   /* user-user-field_crm_id */     'full_name_phone' => array(
   /* user-user-field_crm_id */       'label' => 'above',
@@ -29578,7 +27619,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_crm_source */       'label' => 'above',
   /* user-user-field_crm_source */       'settings' => array(),
   /* user-user-field_crm_source */       'type' => 'hidden',
-  /* user-user-field_crm_source */       'weight' => 32,
+  /* user-user-field_crm_source */       'weight' => 36,
   /* user-user-field_crm_source */     ),
   /* user-user-field_crm_source */     'full_name_phone' => array(
   /* user-user-field_crm_source */       'label' => 'above',
@@ -29657,7 +27698,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_cv_resume */         'field_formatter_class' => '',
   /* user-user-field_cv_resume */       ),
   /* user-user-field_cv_resume */       'type' => 'file_default',
-  /* user-user-field_cv_resume */       'weight' => 36,
+  /* user-user-field_cv_resume */       'weight' => 16,
   /* user-user-field_cv_resume */     ),
   /* user-user-field_cv_resume */     'full_name_phone' => array(
   /* user-user-field_cv_resume */       'label' => 'above',
@@ -29709,7 +27750,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_cv_resume */       'progress_indicator' => 'throbber',
   /* user-user-field_cv_resume */     ),
   /* user-user-field_cv_resume */     'type' => 'file_generic',
-  /* user-user-field_cv_resume */     'weight' => 66,
+  /* user-user-field_cv_resume */     'weight' => 91,
   /* user-user-field_cv_resume */   ),
   /* user-user-field_cv_resume */ );
 
@@ -29738,7 +27779,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_date_of_death */       'label' => 'above',
   /* user-user-field_date_of_death */       'settings' => array(),
   /* user-user-field_date_of_death */       'type' => 'hidden',
-  /* user-user-field_date_of_death */       'weight' => 14,
+  /* user-user-field_date_of_death */       'weight' => 19,
   /* user-user-field_date_of_death */     ),
   /* user-user-field_date_of_death */     'full_name_phone' => array(
   /* user-user-field_date_of_death */       'label' => 'above',
@@ -29849,7 +27890,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_education */       'label' => 'above',
   /* user-user-field_education */       'settings' => array(),
   /* user-user-field_education */       'type' => 'hidden',
-  /* user-user-field_education */       'weight' => 25,
+  /* user-user-field_education */       'weight' => 29,
   /* user-user-field_education */     ),
   /* user-user-field_education */     'full_name_phone' => array(
   /* user-user-field_education */       'label' => 'above',
@@ -29947,7 +27988,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_employers */       'label' => 'above',
   /* user-user-field_employers */       'settings' => array(),
   /* user-user-field_employers */       'type' => 'hidden',
-  /* user-user-field_employers */       'weight' => 24,
+  /* user-user-field_employers */       'weight' => 28,
   /* user-user-field_employers */     ),
   /* user-user-field_employers */     'full_name_phone' => array(
   /* user-user-field_employers */       'label' => 'above',
@@ -30022,103 +28063,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_employers */   ),
   /* user-user-field_employers */ );
 
-  // Exported field_instance: 'user-user-field_expertise'.
-  $field_instances['user-user-field_expertise'] = array(
-  /* user-user-field_expertise */   'bundle' => 'user',
-  /* user-user-field_expertise */   'default_value' => NULL,
-  /* user-user-field_expertise */   'deleted' => 0,
-  /* user-user-field_expertise */   'description' => '',
-  /* user-user-field_expertise */   'display' => array(
-  /* user-user-field_expertise */     'about_this_author' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'module' => 'field_collection',
-  /* user-user-field_expertise */       'settings' => array(
-  /* user-user-field_expertise */         'add' => 'Add',
-  /* user-user-field_expertise */         'delete' => 'Delete',
-  /* user-user-field_expertise */         'description' => 1,
-  /* user-user-field_expertise */         'edit' => 'Edit',
-  /* user-user-field_expertise */         'field_formatter_class' => '',
-  /* user-user-field_expertise */         'view_mode' => 'full',
-  /* user-user-field_expertise */       ),
-  /* user-user-field_expertise */       'type' => 'field_collection_view',
-  /* user-user-field_expertise */       'weight' => 12,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'default' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'settings' => array(),
-  /* user-user-field_expertise */       'type' => 'hidden',
-  /* user-user-field_expertise */       'weight' => 22,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'full_name_phone' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'settings' => array(),
-  /* user-user-field_expertise */       'type' => 'hidden',
-  /* user-user-field_expertise */       'weight' => 0,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'participant_teaser' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'settings' => array(),
-  /* user-user-field_expertise */       'type' => 'hidden',
-  /* user-user-field_expertise */       'weight' => 22,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'search_teaser_with_thumb' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'settings' => array(),
-  /* user-user-field_expertise */       'type' => 'hidden',
-  /* user-user-field_expertise */       'weight' => 12,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'session_presenter' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'settings' => array(),
-  /* user-user-field_expertise */       'type' => 'hidden',
-  /* user-user-field_expertise */       'weight' => 22,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'token' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'module' => 'field_collection',
-  /* user-user-field_expertise */       'settings' => array(
-  /* user-user-field_expertise */         'add' => 'Add',
-  /* user-user-field_expertise */         'delete' => 'Delete',
-  /* user-user-field_expertise */         'description' => 1,
-  /* user-user-field_expertise */         'edit' => 'Edit',
-  /* user-user-field_expertise */         'field_formatter_class' => '',
-  /* user-user-field_expertise */         'view_mode' => 'full',
-  /* user-user-field_expertise */       ),
-  /* user-user-field_expertise */       'type' => 'field_collection_view',
-  /* user-user-field_expertise */       'weight' => 15,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */     'user_info_block' => array(
-  /* user-user-field_expertise */       'label' => 'above',
-  /* user-user-field_expertise */       'module' => 'field_collection',
-  /* user-user-field_expertise */       'settings' => array(
-  /* user-user-field_expertise */         'add' => 'Add',
-  /* user-user-field_expertise */         'delete' => 'Delete',
-  /* user-user-field_expertise */         'description' => 1,
-  /* user-user-field_expertise */         'edit' => 'Edit',
-  /* user-user-field_expertise */         'field_formatter_class' => '',
-  /* user-user-field_expertise */         'view_mode' => 'full',
-  /* user-user-field_expertise */       ),
-  /* user-user-field_expertise */       'type' => 'field_collection_view',
-  /* user-user-field_expertise */       'weight' => 12,
-  /* user-user-field_expertise */     ),
-  /* user-user-field_expertise */   ),
-  /* user-user-field_expertise */   'entity_type' => 'user',
-  /* user-user-field_expertise */   'field_name' => 'field_expertise',
-  /* user-user-field_expertise */   'label' => 'Expertise',
-  /* user-user-field_expertise */   'required' => 0,
-  /* user-user-field_expertise */   'settings' => array(
-  /* user-user-field_expertise */     'user_field_privacy' => FALSE,
-  /* user-user-field_expertise */     'user_register_form' => 0,
-  /* user-user-field_expertise */   ),
-  /* user-user-field_expertise */   'widget' => array(
-  /* user-user-field_expertise */     'active' => 0,
-  /* user-user-field_expertise */     'module' => 'field_collection',
-  /* user-user-field_expertise */     'settings' => array(),
-  /* user-user-field_expertise */     'type' => 'field_collection_embed',
-  /* user-user-field_expertise */     'weight' => 33,
-  /* user-user-field_expertise */   ),
-  /* user-user-field_expertise */ );
-
   // Exported field_instance: 'user-user-field_facebook'.
   $field_instances['user-user-field_facebook'] = array(
   /* user-user-field_facebook */   'bundle' => 'user',
@@ -30139,7 +28083,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_facebook */       'label' => 'above',
   /* user-user-field_facebook */       'settings' => array(),
   /* user-user-field_facebook */       'type' => 'hidden',
-  /* user-user-field_facebook */       'weight' => 16,
+  /* user-user-field_facebook */       'weight' => 21,
   /* user-user-field_facebook */     ),
   /* user-user-field_facebook */     'full_name_phone' => array(
   /* user-user-field_facebook */       'label' => 'above',
@@ -30194,7 +28138,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_facebook */       'allowed_formats' => array(
   /* user-user-field_facebook */         'filtered_html' => 'filtered_html',
   /* user-user-field_facebook */         'full_html' => 'full_html',
-  /* user-user-field_facebook */         'php_code' => 'php_code',
   /* user-user-field_facebook */         'plain_text' => 'plain_text',
   /* user-user-field_facebook */       ),
   /* user-user-field_facebook */       'allowed_formats_toggle' => 0,
@@ -30206,9 +28149,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_facebook */           ),
   /* user-user-field_facebook */           'full_html' => array(
   /* user-user-field_facebook */             'weight' => -8,
-  /* user-user-field_facebook */           ),
-  /* user-user-field_facebook */           'php_code' => array(
-  /* user-user-field_facebook */             'weight' => -7,
   /* user-user-field_facebook */           ),
   /* user-user-field_facebook */           'plain_text' => array(
   /* user-user-field_facebook */             'weight' => -9,
@@ -30252,7 +28192,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_linkedin */       'label' => 'above',
   /* user-user-field_linkedin */       'settings' => array(),
   /* user-user-field_linkedin */       'type' => 'hidden',
-  /* user-user-field_linkedin */       'weight' => 15,
+  /* user-user-field_linkedin */       'weight' => 20,
   /* user-user-field_linkedin */     ),
   /* user-user-field_linkedin */     'full_name_phone' => array(
   /* user-user-field_linkedin */       'label' => 'above',
@@ -30307,7 +28247,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_linkedin */       'allowed_formats' => array(
   /* user-user-field_linkedin */         'filtered_html' => 'filtered_html',
   /* user-user-field_linkedin */         'full_html' => 'full_html',
-  /* user-user-field_linkedin */         'php_code' => 'php_code',
   /* user-user-field_linkedin */         'plain_text' => 'plain_text',
   /* user-user-field_linkedin */       ),
   /* user-user-field_linkedin */       'allowed_formats_toggle' => 0,
@@ -30319,9 +28258,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_linkedin */           ),
   /* user-user-field_linkedin */           'full_html' => array(
   /* user-user-field_linkedin */             'weight' => -8,
-  /* user-user-field_linkedin */           ),
-  /* user-user-field_linkedin */           'php_code' => array(
-  /* user-user-field_linkedin */             'weight' => -7,
   /* user-user-field_linkedin */           ),
   /* user-user-field_linkedin */           'plain_text' => array(
   /* user-user-field_linkedin */             'weight' => -9,
@@ -30368,7 +28304,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_first */         'field_formatter_class' => '',
   /* user-user-field_name_first */       ),
   /* user-user-field_name_first */       'type' => 'text_default',
-  /* user-user-field_name_first */       'weight' => 1,
+  /* user-user-field_name_first */       'weight' => 2,
   /* user-user-field_name_first */     ),
   /* user-user-field_name_first */     'full_name_phone' => array(
   /* user-user-field_name_first */       'label' => 'above',
@@ -30429,7 +28365,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_first */       'allowed_formats' => array(
   /* user-user-field_name_first */         'filtered_html' => 'filtered_html',
   /* user-user-field_name_first */         'full_html' => 'full_html',
-  /* user-user-field_name_first */         'php_code' => 'php_code',
   /* user-user-field_name_first */         'plain_text' => 'plain_text',
   /* user-user-field_name_first */       ),
   /* user-user-field_name_first */       'allowed_formats_toggle' => 0,
@@ -30441,9 +28376,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_first */           ),
   /* user-user-field_name_first */           'full_html' => array(
   /* user-user-field_name_first */             'weight' => -8,
-  /* user-user-field_name_first */           ),
-  /* user-user-field_name_first */           'php_code' => array(
-  /* user-user-field_name_first */             'weight' => -7,
   /* user-user-field_name_first */           ),
   /* user-user-field_name_first */           'plain_text' => array(
   /* user-user-field_name_first */             'weight' => -9,
@@ -30463,7 +28395,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_first */       'size' => 60,
   /* user-user-field_name_first */     ),
   /* user-user-field_name_first */     'type' => 'text_textfield',
-  /* user-user-field_name_first */     'weight' => 60,
+  /* user-user-field_name_first */     'weight' => 84,
   /* user-user-field_name_first */   ),
   /* user-user-field_name_first */ );
 
@@ -30490,7 +28422,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_last */         'field_formatter_class' => '',
   /* user-user-field_name_last */       ),
   /* user-user-field_name_last */       'type' => 'text_default',
-  /* user-user-field_name_last */       'weight' => 3,
+  /* user-user-field_name_last */       'weight' => 4,
   /* user-user-field_name_last */     ),
   /* user-user-field_name_last */     'full_name_phone' => array(
   /* user-user-field_name_last */       'label' => 'above',
@@ -30551,7 +28483,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_last */       'allowed_formats' => array(
   /* user-user-field_name_last */         'filtered_html' => 'filtered_html',
   /* user-user-field_name_last */         'full_html' => 'full_html',
-  /* user-user-field_name_last */         'php_code' => 'php_code',
   /* user-user-field_name_last */         'plain_text' => 'plain_text',
   /* user-user-field_name_last */       ),
   /* user-user-field_name_last */       'allowed_formats_toggle' => 0,
@@ -30563,9 +28494,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_last */           ),
   /* user-user-field_name_last */           'full_html' => array(
   /* user-user-field_name_last */             'weight' => -8,
-  /* user-user-field_name_last */           ),
-  /* user-user-field_name_last */           'php_code' => array(
-  /* user-user-field_name_last */             'weight' => -7,
   /* user-user-field_name_last */           ),
   /* user-user-field_name_last */           'plain_text' => array(
   /* user-user-field_name_last */             'weight' => -9,
@@ -30585,7 +28513,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_last */       'size' => 60,
   /* user-user-field_name_last */     ),
   /* user-user-field_name_last */     'type' => 'text_textfield',
-  /* user-user-field_name_last */     'weight' => 63,
+  /* user-user-field_name_last */     'weight' => 86,
   /* user-user-field_name_last */   ),
   /* user-user-field_name_last */ );
 
@@ -30614,7 +28542,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_middle */         'trim_length' => 1,
   /* user-user-field_name_middle */       ),
   /* user-user-field_name_middle */       'type' => 'text_trimmed',
-  /* user-user-field_name_middle */       'weight' => 2,
+  /* user-user-field_name_middle */       'weight' => 3,
   /* user-user-field_name_middle */     ),
   /* user-user-field_name_middle */     'full_name_phone' => array(
   /* user-user-field_name_middle */       'label' => 'above',
@@ -30678,7 +28606,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_middle */       'allowed_formats' => array(
   /* user-user-field_name_middle */         'filtered_html' => 'filtered_html',
   /* user-user-field_name_middle */         'full_html' => 'full_html',
-  /* user-user-field_name_middle */         'php_code' => 'php_code',
   /* user-user-field_name_middle */         'plain_text' => 'plain_text',
   /* user-user-field_name_middle */       ),
   /* user-user-field_name_middle */       'allowed_formats_toggle' => 0,
@@ -30690,9 +28617,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_middle */           ),
   /* user-user-field_name_middle */           'full_html' => array(
   /* user-user-field_name_middle */             'weight' => -8,
-  /* user-user-field_name_middle */           ),
-  /* user-user-field_name_middle */           'php_code' => array(
-  /* user-user-field_name_middle */             'weight' => -7,
   /* user-user-field_name_middle */           ),
   /* user-user-field_name_middle */           'plain_text' => array(
   /* user-user-field_name_middle */             'weight' => -9,
@@ -30712,7 +28636,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_name_middle */       'size' => 60,
   /* user-user-field_name_middle */     ),
   /* user-user-field_name_middle */     'type' => 'text_textfield',
-  /* user-user-field_name_middle */     'weight' => 62,
+  /* user-user-field_name_middle */     'weight' => 85,
   /* user-user-field_name_middle */   ),
   /* user-user-field_name_middle */ );
 
@@ -30739,7 +28663,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_nationality */         'field_formatter_class' => '',
   /* user-user-field_nationality */       ),
   /* user-user-field_nationality */       'type' => 'list_default',
-  /* user-user-field_nationality */       'weight' => 8,
+  /* user-user-field_nationality */       'weight' => 11,
   /* user-user-field_nationality */     ),
   /* user-user-field_nationality */     'full_name_phone' => array(
   /* user-user-field_nationality */       'label' => 'above',
@@ -30883,7 +28807,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_org_role */       'label_help_description' => '',
   /* user-user-field_org_role */     ),
   /* user-user-field_org_role */     'type' => 'options_select',
-  /* user-user-field_org_role */     'weight' => 73,
+  /* user-user-field_org_role */     'weight' => 90,
   /* user-user-field_org_role */   ),
   /* user-user-field_org_role */ );
 
@@ -30912,7 +28836,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_telephone */       'label' => 'hidden',
   /* user-user-field_telephone */       'settings' => array(),
   /* user-user-field_telephone */       'type' => 'hidden',
-  /* user-user-field_telephone */       'weight' => 23,
+  /* user-user-field_telephone */       'weight' => 27,
   /* user-user-field_telephone */     ),
   /* user-user-field_telephone */     'full_name_phone' => array(
   /* user-user-field_telephone */       'label' => 'above',
@@ -31007,7 +28931,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_topics_of_interest */       'label' => 'above',
   /* user-user-field_topics_of_interest */       'settings' => array(),
   /* user-user-field_topics_of_interest */       'type' => 'hidden',
-  /* user-user-field_topics_of_interest */       'weight' => 28,
+  /* user-user-field_topics_of_interest */       'weight' => 32,
   /* user-user-field_topics_of_interest */     ),
   /* user-user-field_topics_of_interest */     'full_name_phone' => array(
   /* user-user-field_topics_of_interest */       'label' => 'above',
@@ -31094,7 +29018,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_training */       'label' => 'above',
   /* user-user-field_training */       'settings' => array(),
   /* user-user-field_training */       'type' => 'hidden',
-  /* user-user-field_training */       'weight' => 26,
+  /* user-user-field_training */       'weight' => 30,
   /* user-user-field_training */     ),
   /* user-user-field_training */     'full_name_phone' => array(
   /* user-user-field_training */       'label' => 'above',
@@ -31186,7 +29110,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_twitter */       'label' => 'above',
   /* user-user-field_twitter */       'settings' => array(),
   /* user-user-field_twitter */       'type' => 'hidden',
-  /* user-user-field_twitter */       'weight' => 17,
+  /* user-user-field_twitter */       'weight' => 22,
   /* user-user-field_twitter */     ),
   /* user-user-field_twitter */     'full_name_phone' => array(
   /* user-user-field_twitter */       'label' => 'above',
@@ -31241,7 +29165,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_twitter */       'allowed_formats' => array(
   /* user-user-field_twitter */         'filtered_html' => 'filtered_html',
   /* user-user-field_twitter */         'full_html' => 'full_html',
-  /* user-user-field_twitter */         'php_code' => 'php_code',
   /* user-user-field_twitter */         'plain_text' => 'plain_text',
   /* user-user-field_twitter */       ),
   /* user-user-field_twitter */       'allowed_formats_toggle' => 0,
@@ -31253,9 +29176,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_twitter */           ),
   /* user-user-field_twitter */           'full_html' => array(
   /* user-user-field_twitter */             'weight' => -8,
-  /* user-user-field_twitter */           ),
-  /* user-user-field_twitter */           'php_code' => array(
-  /* user-user-field_twitter */             'weight' => -7,
   /* user-user-field_twitter */           ),
   /* user-user-field_twitter */           'plain_text' => array(
   /* user-user-field_twitter */             'weight' => -9,
@@ -31299,7 +29219,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_organization */         'field_formatter_class' => '',
   /* user-user-field_user_organization */       ),
   /* user-user-field_user_organization */       'type' => 'text_default',
-  /* user-user-field_user_organization */       'weight' => 7,
+  /* user-user-field_user_organization */       'weight' => 8,
   /* user-user-field_user_organization */     ),
   /* user-user-field_user_organization */     'full_name_phone' => array(
   /* user-user-field_user_organization */       'label' => 'above',
@@ -31357,7 +29277,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_organization */       'allowed_formats' => array(
   /* user-user-field_user_organization */         'filtered_html' => 'filtered_html',
   /* user-user-field_user_organization */         'full_html' => 'full_html',
-  /* user-user-field_user_organization */         'php_code' => 'php_code',
   /* user-user-field_user_organization */         'plain_text' => 'plain_text',
   /* user-user-field_user_organization */       ),
   /* user-user-field_user_organization */       'allowed_formats_toggle' => 0,
@@ -31369,9 +29288,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_organization */           ),
   /* user-user-field_user_organization */           'full_html' => array(
   /* user-user-field_user_organization */             'weight' => -8,
-  /* user-user-field_user_organization */           ),
-  /* user-user-field_user_organization */           'php_code' => array(
-  /* user-user-field_user_organization */             'weight' => -7,
   /* user-user-field_user_organization */           ),
   /* user-user-field_user_organization */           'plain_text' => array(
   /* user-user-field_user_organization */             'weight' => -9,
@@ -31391,7 +29307,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_organization */       'size' => 80,
   /* user-user-field_user_organization */     ),
   /* user-user-field_user_organization */     'type' => 'text_textfield',
-  /* user-user-field_user_organization */     'weight' => 67,
+  /* user-user-field_user_organization */     'weight' => 89,
   /* user-user-field_user_organization */   ),
   /* user-user-field_user_organization */ );
 
@@ -31473,7 +29389,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_rank_prefix */       'allowed_formats' => array(
   /* user-user-field_user_rank_prefix */         'filtered_html' => 'filtered_html',
   /* user-user-field_user_rank_prefix */         'full_html' => 'full_html',
-  /* user-user-field_user_rank_prefix */         'php_code' => 'php_code',
   /* user-user-field_user_rank_prefix */         'plain_text' => 'plain_text',
   /* user-user-field_user_rank_prefix */       ),
   /* user-user-field_user_rank_prefix */       'allowed_formats_toggle' => 0,
@@ -31485,9 +29400,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_rank_prefix */           ),
   /* user-user-field_user_rank_prefix */           'full_html' => array(
   /* user-user-field_user_rank_prefix */             'weight' => -8,
-  /* user-user-field_user_rank_prefix */           ),
-  /* user-user-field_user_rank_prefix */           'php_code' => array(
-  /* user-user-field_user_rank_prefix */             'weight' => -7,
   /* user-user-field_user_rank_prefix */           ),
   /* user-user-field_user_rank_prefix */           'plain_text' => array(
   /* user-user-field_user_rank_prefix */             'weight' => -9,
@@ -31507,7 +29419,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_rank_prefix */       'size' => 20,
   /* user-user-field_user_rank_prefix */     ),
   /* user-user-field_user_rank_prefix */     'type' => 'text_textfield',
-  /* user-user-field_user_rank_prefix */     'weight' => 59,
+  /* user-user-field_user_rank_prefix */     'weight' => 83,
   /* user-user-field_user_rank_prefix */   ),
   /* user-user-field_user_rank_prefix */ );
 
@@ -31531,7 +29443,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_suffix */         'field_formatter_class' => '',
   /* user-user-field_user_suffix */       ),
   /* user-user-field_user_suffix */       'type' => 'list_default',
-  /* user-user-field_user_suffix */       'weight' => 4,
+  /* user-user-field_user_suffix */       'weight' => 6,
   /* user-user-field_user_suffix */     ),
   /* user-user-field_user_suffix */     'full_name_phone' => array(
   /* user-user-field_user_suffix */       'label' => 'above',
@@ -31596,7 +29508,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_suffix */       'label_help_description' => '',
   /* user-user-field_user_suffix */     ),
   /* user-user-field_user_suffix */     'type' => 'options_select',
-  /* user-user-field_user_suffix */     'weight' => 64,
+  /* user-user-field_user_suffix */     'weight' => 87,
   /* user-user-field_user_suffix */   ),
   /* user-user-field_user_suffix */ );
 
@@ -31620,7 +29532,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_title */         'field_formatter_class' => '',
   /* user-user-field_user_title */       ),
   /* user-user-field_user_title */       'type' => 'text_default',
-  /* user-user-field_user_title */       'weight' => 6,
+  /* user-user-field_user_title */       'weight' => 9,
   /* user-user-field_user_title */     ),
   /* user-user-field_user_title */     'full_name_phone' => array(
   /* user-user-field_user_title */       'label' => 'above',
@@ -31678,7 +29590,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_title */       'allowed_formats' => array(
   /* user-user-field_user_title */         'filtered_html' => 'filtered_html',
   /* user-user-field_user_title */         'full_html' => 'full_html',
-  /* user-user-field_user_title */         'php_code' => 'php_code',
   /* user-user-field_user_title */         'plain_text' => 'plain_text',
   /* user-user-field_user_title */       ),
   /* user-user-field_user_title */       'allowed_formats_toggle' => 0,
@@ -31690,9 +29601,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_title */           ),
   /* user-user-field_user_title */           'full_html' => array(
   /* user-user-field_user_title */             'weight' => -8,
-  /* user-user-field_user_title */           ),
-  /* user-user-field_user_title */           'php_code' => array(
-  /* user-user-field_user_title */             'weight' => -7,
   /* user-user-field_user_title */           ),
   /* user-user-field_user_title */           'plain_text' => array(
   /* user-user-field_user_title */             'weight' => -9,
@@ -31712,7 +29620,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_user_title */       'size' => 80,
   /* user-user-field_user_title */     ),
   /* user-user-field_user_title */     'type' => 'text_textfield',
-  /* user-user-field_user_title */     'weight' => 65,
+  /* user-user-field_user_title */     'weight' => 88,
   /* user-user-field_user_title */   ),
   /* user-user-field_user_title */ );
 
@@ -31736,7 +29644,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_website */       'label' => 'above',
   /* user-user-field_website */       'settings' => array(),
   /* user-user-field_website */       'type' => 'hidden',
-  /* user-user-field_website */       'weight' => 19,
+  /* user-user-field_website */       'weight' => 23,
   /* user-user-field_website */     ),
   /* user-user-field_website */     'full_name_phone' => array(
   /* user-user-field_website */       'label' => 'above',
@@ -31791,7 +29699,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_website */       'allowed_formats' => array(
   /* user-user-field_website */         'filtered_html' => 'filtered_html',
   /* user-user-field_website */         'full_html' => 'full_html',
-  /* user-user-field_website */         'php_code' => 'php_code',
   /* user-user-field_website */         'plain_text' => 'plain_text',
   /* user-user-field_website */       ),
   /* user-user-field_website */       'allowed_formats_toggle' => 0,
@@ -31803,9 +29710,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-field_website */           ),
   /* user-user-field_website */           'full_html' => array(
   /* user-user-field_website */             'weight' => -8,
-  /* user-user-field_website */           ),
-  /* user-user-field_website */           'php_code' => array(
-  /* user-user-field_website */             'weight' => -7,
   /* user-user-field_website */           ),
   /* user-user-field_website */           'plain_text' => array(
   /* user-user-field_website */             'weight' => -9,
@@ -31847,7 +29751,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   /* user-user-og_user_node */       'label' => 'above',
   /* user-user-og_user_node */       'settings' => array(),
   /* user-user-og_user_node */       'type' => 'hidden',
-  /* user-user-og_user_node */       'weight' => 12,
+  /* user-user-og_user_node */       'weight' => 18,
   /* user-user-og_user_node */     ),
   /* user-user-og_user_node */     'full_name_phone' => array(
   /* user-user-og_user_node */       'label' => 'above',
@@ -31950,8 +29854,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Allow sessions');
   t('Alt Text');
   t('Alternative text is used by screen readers, search engines, and when the image cannot be loaded. By adding alt text you improve accessibility and search engine optimization.');
-  t('Alumni Group Acronym ');
-  t('Alumni Group Description');
   t('Alumni Specialist');
   t('Are there registration limits for this event?');
   t('Associated Countries');
@@ -31960,10 +29862,8 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Attach Course Syllabus');
   t('Attach Files to this Event');
   t('Author');
-  t('Availability');
   t('Biography');
   t('Body');
-  t('Browse to add a cover image for the group.');
   t('Building / Floor / Room');
   t('COCOM Region');
   t('CV/Resume');
@@ -32019,7 +29919,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Event Start Date');
   t('Event Type');
   t('Event language');
-  t('Expertise');
   t('Extension');
   t('Facebook');
   t('Faculty');
@@ -32054,7 +29953,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Invitation');
   t('Job Description');
   t('Job title');
-  t('Level of Expertise');
   t('License settings for this audio');
   t('License settings for this file');
   t('License settings for this image');
@@ -32067,7 +29965,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Message text');
   t('Middle Name');
   t('NOTE: the "About" field is limited to 400 characters.');
-  t('Name');
   t('Nationality');
   t('Non-Degree Training and Certification');
   t('Notification');
@@ -32080,7 +29977,7 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Please do not modify this field; Group visibility will be automatically set to its correct value upon saving.');
   t('Please enter a longer description of your background.  This will appear on your full profile.');
   t('Please enter a short (less than 400 words) description of your background. This will be used to produce short descriptions of you for speaker/presenter lists, conference directories, etc.');
-  t('Please note: The "Main Image" only appears on the GlobalNET home page.  In all other organizations, it does not appear on any page. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
+  t('Please note: The "Main Image" only appears on the GlobalNET home page. The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.');
   t('Please note: The summary or body text will be truncated at 140 characters when this item appears in "teaser" listings.');
   t('Please upload a thumbnail image of the publication. This image will be used for display in teaser lists. They are very important to catch the attention of readers. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
   t('Position/Title');
@@ -32088,7 +29985,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Publication Date');
   t('Publisher');
   t('Purpose of Page');
-  t('Question');
   t('READ BEFORE USING THIS FIELD: Text entered in this optional field will be displayed on the Event page INSTEAD of the date and time entered above. For use in special situations such as complex repeating dates (i.e. "The first Thursday of every month"). In most cases, it is advisable to leave this field blank. If you do opt to use this field, the date(s) and time(s) you entered above will still be used to determine where the Event falls in the calendar and in Event listings.');
   t('Rank/Prefix');
   t('Recommended Links');
@@ -32119,14 +30015,13 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Telephone');
   t('Telephone Number');
   t('Telephone number');
-  t('The "Main Image" appears before the text of your announcement, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this announcement. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.');
-  t('The "Main Image" appears before the text of your news item, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.');
-  t('The "Main Image" appears before the text of your post, between the title and author information.  If you do not also upload a thumbnail image, this image will accompany any teasers for this post. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
+  t('The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.');
   t('The "Thumbnail Image" will accompany the teaser for this announcement.  If you do not upload a thumbnail image, the main image will appear in the teaser. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
   t('The "Thumbnail Image" will accompany the teaser for this news item.  If you do not upload a thumbnail image, the main image will appear in the teaser. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
   t('The "Thumbnail Image" will accompany the teaser for this post.  If you do not upload a thumbnail image, the main image will appear in the teaser.<br> Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
+  t('The Course Description will be displayed below the main image (if you add one) and will display approximately 600 characters with a <em><b>Read more</b></em> link. If you would like to add text overlaying the main image, click the <b>Edit Summary</b> link above and add text there. Since the Summary will be display overlaid on the image, for best results, the this should be limited to fewer than 250 characters.');
   t('The Description will overlay your group\'s Main Image (if you add one), so if you plan to include an image, a short description is best; if you prefer a long Description, adding a Main Image is not recommended (display will be compromised). Please note: you can add additional custom group content to the "Help" field toward the bottom of this form.');
-  t('The Group Description will overlay your group\'s Main Image (if you add one), so if you plan to include an image, a short description is best; if you prefer a long Group Description, adding a Main Image is not recommended (group display will be compromised). Please note: you can add additional custom group content to the "Help" field toward the bottom of this form.');
+  t('The Group Description will be displayed below the main image (if you add one) and will display approximately 600 characters with a <em><b>Read more</b></em> link. If you would like to add text overlaying the main image, click the <b>Edit Summary</b> link above and add text there. Since the Summary will be display overlaid on the image, for best results, the this should be limited to fewer than 250 characters.');
   t('The country you are representing on the GlobalNet system and in the classes, seminars and events you attend.');
   t('The country you currently live in');
   t('The country you were born in and/or have a passport for.');
@@ -32141,7 +30036,6 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Thumbnail Image');
   t('Title');
   t('Title Text');
-  t('Topic of expertise');
   t('Topics');
   t('Topics of Interest');
   t('Turning off "Receive Notifications" will turn off SMS and Email notifications. If you enter a mobile number and have these notifications enabled, you will get SMS messages from GlobalNET when other users send you messages.');
@@ -32150,13 +30044,10 @@ Selecting <i>Open Adobe Connect</i> will create an open access Watercooler type 
   t('Updated Date');
   t('Updated Fields');
   t('Upload your Curriculum Vitae (CV) or Resume here.');
-  t('Use this field to save an acronym for this group. (E.g. CNG - Counter-Narcotics Group) This will be used in place of the full title for URL paths, breadcrumbs, and for reporting activity statistics. <a href="/guide>More help is available in the guide</a>');
   t('User');
-  t('Validated by');
   t('Visibility');
   t('Web Conference Details');
   t('Website');
-  t('What is your experience with this topic?');
   t('Who can see the Event?');
   t('Who can see this content?');
   t('Year');

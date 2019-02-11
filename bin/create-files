@@ -68,6 +68,6 @@ do
   #echo "$src" "$dest_path" |cat -A
 done
 
-chown -R www-data:www-data /var/www
+chown -R apache:apache /var/www
 
 echo -e "\ndone."

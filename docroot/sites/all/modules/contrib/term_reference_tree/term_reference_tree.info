@@ -4,9 +4,9 @@ package = Fields
 core = 7.x
 dependencies[] = taxonomy
 
-; Information added by drupal.org packaging script on 2013-10-19
-version = "7.x-1.10+0-dev"
+; Information added by Drupal.org packaging script on 2018-01-31
+version = "7.x-1.11"
 core = "7.x"
 project = "term_reference_tree"
-datestamp = "1382146740"
+datestamp = "1517382184"
 

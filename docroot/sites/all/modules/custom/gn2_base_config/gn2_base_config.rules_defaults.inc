@@ -34,32 +34,6 @@ function gn2_base_config_default_rules_configuration() {
       ]
     }
   }');
-  $items['rules_contact_support_submission'] = entity_import('rules_config', '{ "rules_contact_support_submission" : {
-      "LABEL" : "Contact Support submission",
-      "PLUGIN" : "reaction rule",
-      "OWNER" : "rules",
-      "TAGS" : [ "Support" ],
-      "REQUIRES" : [ "rules", "entityform" ],
-      "ON" : { "entityform_insert" : [] },
-      "IF" : [
-        { "entity_is_of_bundle" : {
-            "entity" : [ "entityform" ],
-            "type" : "entityform",
-            "bundle" : { "value" : { "contact_support" : "contact_support", "tech_support" : "tech_support" } }
-          }
-        }
-      ],
-      "DO" : [
-        { "mail" : {
-            "to" : "admin@globalnetplatform.org",
-            "subject" : "Contact Support submission from: [entityform:field-support-name]",
-            "message" : "Name: [entityform:field-support-name]\\r\\n\\r\\nEmail Address: [entityform:field-email]\\r\\n\\r\\nQuestion:\\r\\n[entityform:field-question]\\r\\n\\r\\nFor further details, view the full record: [entityform:url]",
-            "language" : [ "" ]
-          }
-        }
-      ]
-    }
-  }');
   $items['rules_content'] = entity_import('rules_config', '{ "rules_content" : {
       "LABEL" : "Content",
       "PLUGIN" : "reaction rule",
@@ -70,7 +44,6 @@ function gn2_base_config_default_rules_configuration() {
         { "node_is_of_type" : {
             "node" : [ "node" ],
             "type" : { "value" : {
-                "alumni_group" : "alumni_group",
                 "announcement" : "announcement",
                 "coi" : "coi",
                 "course" : "course",
@@ -125,14 +98,12 @@ function gn2_base_config_default_rules_configuration() {
       "LABEL" : "Gallery group member notification",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "php", "rules" ],
+      "REQUIRES" : [ "gn2_base_config", "rules" ],
       "ON" : {
         "node_insert--media_gallery" : { "bundle" : "media_gallery" },
         "node_update--media_gallery" : { "bundle" : "media_gallery" }
       },
-      "DO" : [
-        { "php_eval" : { "code" : "_gn2_base_config_notify_group_members($node);" } }
-      ]
+      "DO" : [ { "_gn2_base_config_notify_group_members" : { "node" : [ "node" ] } } ]
     }
   }');
   $items['rules_help_search_result_redirect'] = entity_import('rules_config', '{ "rules_help_search_result_redirect" : {
@@ -141,9 +112,7 @@ function gn2_base_config_default_rules_configuration() {
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_view--help" : { "bundle" : "help" } },
-      "DO" : [
-        { "redirect" : { "url" : "\\u003C?php print \\u0027guide\\/Search\\/\\u0027 . $node-\\u003Enid; ?\\u003E" } }
-      ]
+      "DO" : [ { "redirect" : { "url" : "guide\\/Search\\/[node:nid]" } } ]
     }
   }');
   $items['rules_like_message'] = entity_import('rules_config', '{ "rules_like_message" : {
@@ -255,7 +224,7 @@ function gn2_base_config_default_rules_configuration() {
       "LABEL" : "Rules link: Approve anonymous rules set",
       "PLUGIN" : "rule set",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "php", "og" ],
+      "REQUIRES" : [ "rules", "gn2_base_config", "og" ],
       "USES VARIABLES" : { "entityform" : { "label" : "entityform", "type" : "entityform" } },
       "RULES" : [
         { "RULE" : {
@@ -271,7 +240,7 @@ function gn2_base_config_default_rules_configuration() {
               { "entity_has_field" : { "entity" : [ "entityform" ], "field" : "field_email" } },
               { "entity_has_field" : { "entity" : [ "entityform" ], "field" : "field_name_first" } },
               { "entity_has_field" : { "entity" : [ "entityform" ], "field" : "field_name_last" } },
-              { "php_eval" : { "code" : "$user = user_load_by_mail($entityform-\\u003Efield_email[LANGUAGE_NONE][0][\\u0027email\\u0027]);\\r\\nif (is_object($user)) {\\r\\n  $link = l($user-\\u003Ename, \\u0027user\\/\\u0027 . $user-\\u003Euid);\\r\\n  drupal_set_message(t(\\u0027A user, !link, already exist with the email address %email\\u0027, array(\\u0027!link\\u0027 =\\u003E $link, \\u0027%email\\u0027 =\\u003E $user-\\u003Email)));\\r\\n  return FALSE;\\r\\n}\\r\\nelse {\\r\\n  return TRUE;\\r\\n}" } },
+              { "gn2_base_config_check_for_new_user_email" : { "entityform" : [ "entityform" ] } },
               { "entity_has_field" : { "entity" : [ "entityform" ], "field" : "field_organization" } }
             ],
             "DO" : [
@@ -680,7 +649,7 @@ function gn2_base_config_default_rules_configuration() {
               { "mail" : {
                   "to" : [ "mail" ],
                   "subject" : "New user for [org-group:title]",
-                  "message" : "[entityform:field-name-first] [entityform:field-name-last] has requested membership to [org-group:title]\\r\\n\\r\\nGiven Name: [entityform:field-name-first]\\r\\nFamily Name: [entityform:field-name-last]\\r\\nEmail Address: [entityform:field-email]\\r\\n\\r\\nCountry of Residence: [entityform:field-country-of-residence]\\r\\nPreferred Language: [entityform:field-preferred-language]\\r\\nWhere do you work: [entityform:field-where-do-you-work]\\r\\n\\r\\nReason for creating an account: [entityform:field-why-do-you-want]\\r\\n\\r\\nAdditional Comments\\/Remarks: [entityform:field-anything-else]\\r\\n\\r\\nFor further details, view the full request: [entityform:url]",
+                  "message" : "[entityform:field-name-first] [entityform:field-name-last] has requested membership to [org-group:title]\\r\\n\\r\\nGiven Name: [entityform:field-name-first]\\r\\nFamily Name: [entityform:field-name-last]\\r\\nEmail Address: [entityform:field-email]\\r\\n\\r\\nCountry of Residence: [entityform:field-country-of-residence]\\r\\nPreferred Language: [entityform:field-preferred-language]\\r\\nWhere do you work: [entityform:field-where-do-you-work]\\r\\n\\r\\nReason for creating an account: [entityform:field-why-do-you-want]\\r\\n\\r\\nAdditional Comments\\/Remarks: [entityform:field-anything-else]\\r\\n\\r\\nFor further details, view the full request: [site:url]\\/admin\\/manage\\/users\\/regforms\\/[entityform:entityform-id]?destination=node\\/[org-group:nid]\\/dashboard\\/userforms\\/submissions\\/userreg",
                   "language" : [ "" ]
                 }
               }
@@ -930,7 +899,7 @@ function gn2_base_config_default_rules_configuration() {
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "TAGS" : [ "Support" ],
-      "REQUIRES" : [ "rules", "php", "entityform" ],
+      "REQUIRES" : [ "rules", "gn2_tech_support", "entityform" ],
       "ON" : { "entityform_insert" : [] },
       "IF" : [
         { "entity_is_of_bundle" : {
@@ -941,7 +910,7 @@ function gn2_base_config_default_rules_configuration() {
         }
       ],
       "DO" : [
-        { "php_eval" : { "code" : "_gn2_tech_support_notify_org_admin($entityform, $site);" } }
+        { "_gn2_tech_support_notify_org_admin" : { "entityform" : [ "entityform" ], "site" : [ "site" ] } }
       ]
     }
   }');

@@ -3,26 +3,27 @@
 source $(dirname $0)/../lib/bowline/bowline
 assert_proxy
 
-if [ "$($DCOMPOSE ps | grep -c filestore)" -eq "0" ];then
-  echo "# Initial copy to container volume. This can take a long time, especially on non-linux systems."
-  $DCOMPOSE up -d --no-recreate filestore
-  file-copy .
+echo "# STARTING CONTAINERS"
+if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+  echo "## Starting Docker Sync"
+  docker_sync_init
+  docker-sync start
 fi
 
-echo "# STARTING CONTAINERS"
 $DCOMPOSE stop web
-$DCOMPOSE rm -f web
-$DCOMPOSE build
+$DCOMPOSE rm --force web
 $DCOMPOSE up -d --no-recreate
+
+exit 2
 
 ## GlobalNet specific items below.
 
 if [ "$1" = "rebuild-web" ];then
   echo "Rebuild web container. This action doesn't impact the db containers and should be harmless."
   echo "This might take a few minutes."
-  $DCOMPOSE stop web php
-  $DCOMPOSE rm --force web php
-  docker rmi --force --no-prune=true ${SLUG}_web_1 ${SLUG}_php_1
+  $DCOMPOSE stop web
+  $DCOMPOSE rm --force web
+  docker rmi --force --no-prune=true ${SLUG}_web_1
   $DCOMPOSE up -d --no-recreate
 elif [ "$1" = "rebuild-all" ];then
   echo "Rebuilding containers. This action will wipe out all your sandbox."
@@ -49,9 +50,7 @@ else
   git --git-dir=.git/hooks/.git --work-tree=.git/hooks pull --no-rebase
 fi
 
-assert_composer
-enter sudo composer self-update
-composer install
+fix-perms
 sync-wait vendor
 
 if [ "$(git tag -l | grep ^2015-07-15-j)" ]; then
@@ -72,6 +71,12 @@ enter sudo ln -s /var/www/vendor/bin/drush /usr/local/bin/drush
 
 EXIT=$?
 echo -e "\033[m Exit Status: $EXIT"
+
+# Connect network manually if not connected
+if [ ! "$(docker inspect proxy | grep ${BOWLINE}_default)" ];then
+  echo "Connecting network ${BOWLINE}_default to proxy..."
+  docker network connect ${BOWLINE}_default proxy
+fi
 
 bowline
 exit $EXIT

@@ -1,0 +1,145 @@
+diff --git a/modules/media_wysiwyg/js/media_wysiwyg.filter.js b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+index 3a80bb9..a92b098 100644
+--- a/modules/media_wysiwyg/js/media_wysiwyg.filter.js
++++ b/modules/media_wysiwyg/js/media_wysiwyg.filter.js
+@@ -13,7 +13,7 @@
+      * Replaces media tokens with the placeholders for html editing.
+      * @param content
+      */
+-    replaceTokenWithPlaceholder: function(content) {
++    replaceTokenWithPlaceholder: function (content) {
+       Drupal.media.filter.ensure_tagmap();
+       var matches = content.match(/\[\[.*?\]\]/g);
+ 
+@@ -58,7 +58,7 @@
+ 
+           // Apply attributes.
+           var element = Drupal.media.filter.create_element(media, media_definition);
+-          var markup  = Drupal.media.filter.outerHTML(element);
++          var markup = Drupal.media.filter.outerHTML(element);
+ 
+           // Use split and join to replace all instances of macro with markup.
+           content = content.split(match).join(markup);
+@@ -91,7 +91,7 @@
+      *   - title: The value of the title field.
+      *   - titleField: The id of the title field.
+      */
+-    parseAttributeFields: function(options, includeFieldID) {
++    parseAttributeFields: function (options, includeFieldID) {
+       var attributes = {};
+ 
+       for (var field in options) {
+@@ -138,7 +138,7 @@
+      * @param file_info (object)
+      *   A JSON decoded object of the file being inserted/updated.
+      */
+-    syncAttributesToFields: function(file_info) {
++    syncAttributesToFields: function (file_info) {
+       if (!file_info) {
+         file_info = {};
+       }
+@@ -171,7 +171,7 @@
+      * @param content (string)
+      *   The markup within the wysiwyg instance.
+      */
+-    replacePlaceholderWithToken: function(content) {
++    replacePlaceholderWithToken: function (content) {
+       Drupal.media.filter.ensure_tagmap();
+ 
+       // Locate and process all the media placeholders in the WYSIWYG content.
+@@ -214,11 +214,16 @@
+      *    A object containing the media file information (fid, view_mode, etc).
+      */
+     create_element: function (html, info) {
+-      if ($('<div>').append(html).text().length === html.length) {
++      // Let's have a fallback if no image is passed to ensure operation completes.
++      if (html == undefined) {
++        html = '<span class="file"><img class="file-icon" alt="" title="application/octet-stream" src="/sites/all/themes/gn2_zen/images/gn2_file_icons/video-x-generic.svg" /></span>';
++      }
++      else if ($('<div>').append(html).text().length === html.length) {
+         // Element is not an html tag. Surround it in a span element so we can
+         // pass the file attributes.
+         html = '<span>' + html + '</span>';
+       }
++
+       var element = $(html);
+ 
+       // Parse out link wrappers. They will be re-applied when the image is
+@@ -234,7 +239,7 @@
+ 
+       // Move attributes from the file info array to the placeholder element.
+       if (info.attributes) {
+-        $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function(i, a) {
++        $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function (i, a) {
+           if (info.attributes[a]) {
+             element.attr(a, info.attributes[a]);
+           }
+@@ -282,14 +287,14 @@
+       var classes = ['media-element'];
+       if (info.view_mode) {
+         // Remove any existing view mode classes.
+-        element.removeClass (function (index, css) {
+-          return (css.match (/\bfile-\S+/g) || []).join(' ');
++        element.removeClass(function (index, css) {
++          return (css.match(/\bfile-\S+/g) || []).join(' ');
+         });
+         classes.push('file-' + info.view_mode.replace(/_/g, '-'));
+       }
+       // Check for alignment info, after removing any existing alignment class.
+-      element.removeClass (function (index, css) {
+-        return (css.match (/\bmedia-wysiwyg-align-\S+/g) || []).join(' ');
++      element.removeClass(function (index, css) {
++        return (css.match(/\bmedia-wysiwyg-align-\S+/g) || []).join(' ');
+       });
+       if (info.fields && info.fields.alignment) {
+         classes.push('media-wysiwyg-align-' + info.fields.alignment);
+@@ -340,7 +345,7 @@
+         if (file_info = Drupal.settings.mediaDataMap[fid]) {
+           file_info.attributes = {};
+ 
+-          $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function(i, a) {
++          $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function (i, a) {
+             if (value = element.attr(a)) {
+               // Replace &quot; by \" to avoid error with JSON format.
+               if (typeof value == 'string') {
+@@ -417,7 +422,7 @@
+     /**
+      * Ensures the src tracking has been initialized and returns it.
+      */
+-    ensureSourceMap: function() {
++    ensureSourceMap: function () {
+       Drupal.settings.mediaSourceMap = Drupal.settings.mediaSourceMap || {};
+       return Drupal.settings.mediaSourceMap;
+     },
+@@ -425,7 +430,7 @@
+     /**
+      * Ensures the data tracking has been initialized and returns it.
+      */
+-    ensureDataMap: function() {
++    ensureDataMap: function () {
+       Drupal.settings.mediaDataMap = Drupal.settings.mediaDataMap || {};
+       return Drupal.settings.mediaDataMap;
+     },
+@@ -445,11 +450,11 @@
+      * @returns the overridden link_title or the existing link text if no
+      * overridden.
+      */
+-    overrideLinkTitle: function(file) {
++    overrideLinkTitle: function (file) {
+       var file_title_field = Drupal.settings.media.img_title_field.replace('field_', '');
+       var file_title_field_machine_name = '';
+       if (typeof(file.fields) != 'undefined') {
+-        jQuery.each(file.fields, function(field, fieldValue) {
++        jQuery.each(file.fields, function (field, fieldValue) {
+           if (field.indexOf(file_title_field) != -1) {
+             file_title_field_machine_name = field;
+           }
+@@ -470,7 +475,7 @@
+     /**
+      * Generates a unique "delta" for each embedding of a particular file.
+      */
+-    fileEmbedDelta: function(fid, element) {
++    fileEmbedDelta: function (fid, element) {
+       // Ensure we have an object to track our deltas.
+       Drupal.settings.mediaDeltas = Drupal.settings.mediaDeltas || {};
+       Drupal.settings.maxMediaDelta = Drupal.settings.maxMediaDelta || 0;

@@ -112,6 +112,16 @@ Feature: menu.hooks.access.feature  3m54.09s
       | node/2240/metrics/analytics | administrator | 200      |
       | node/2240/file-metrics      | authenticated | 403      |
 
+  Scenario Outline: Group or Course managers should be able to access Metrics @RD-4356
+    Given I am logged in as "ugroupmanager1" with password "civicactions"
+    And I visit the system path "<path>"
+    Then I should get a <response> HTTP response
+    Examples:
+      | path              | response |
+      | node/2260/metrics | 200      |
+      | node/2261/metrics | 200      |
+      | node/2282/metrics | 403      |
+
   Scenario Outline: gn2_og.module menu hooks not logged in
     Given I am an anonymous user
     And I visit the system path "<anonpath>"
@@ -137,8 +147,6 @@ Feature: menu.hooks.access.feature  3m54.09s
       | admin/people/groups                               | administrator | 200      |
       | users/autocomplete                                | authenticated | 403      |
       | users/autocomplete                                | administrator | 200      |
-      | move/groups/autocomplete                          | authenticated | 403      |
-      | move/groups/autocomplete                          | administrator | 200      |
       | group/node/2240/admin/people/manage               | authenticated | 403      |
       | group/node/2240/admin/people/manage               | administrator | 200      |
 
@@ -152,7 +160,6 @@ Feature: menu.hooks.access.feature  3m54.09s
       | group/node/2240/admin/people/addbulkmembers       |
       | admin/people/groups                               |
       | users/autocomplete                                |
-      | move/groups/autocomplete                          |
       | group/node/2240/admin/people/manage               |
       | group/node/2240/join                              |
 

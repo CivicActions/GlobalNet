@@ -87,7 +87,7 @@ function gn2_library_field_default_field_bases() {
   // Exported field_base: 'field_resource_language'.
   $field_bases['field_resource_language'] = array(
   /* field_resource_language */   'active' => 1,
-  /* field_resource_language */   'cardinality' => 1,
+  /* field_resource_language */   'cardinality' => -1,
   /* field_resource_language */   'deleted' => 0,
   /* field_resource_language */   'entity_types' => array(),
   /* field_resource_language */   'field_name' => 'field_resource_language',
@@ -135,6 +135,28 @@ function gn2_library_field_default_field_bases() {
   /* field_resource_tags */   'translatable' => 0,
   /* field_resource_tags */   'type' => 'taxonomy_term_reference',
   /* field_resource_tags */ );
+
+  // Exported field_base: 'field_resource_thumbnail'.
+  $field_bases['field_resource_thumbnail'] = array(
+  /* field_resource_thumbnail */   'active' => 1,
+  /* field_resource_thumbnail */   'cardinality' => 1,
+  /* field_resource_thumbnail */   'deleted' => 0,
+  /* field_resource_thumbnail */   'entity_types' => array(),
+  /* field_resource_thumbnail */   'field_name' => 'field_resource_thumbnail',
+  /* field_resource_thumbnail */   'indexes' => array(
+  /* field_resource_thumbnail */     'fid' => array(
+  /* field_resource_thumbnail */       0 => 'fid',
+  /* field_resource_thumbnail */     ),
+  /* field_resource_thumbnail */   ),
+  /* field_resource_thumbnail */   'locked' => 0,
+  /* field_resource_thumbnail */   'module' => 'image',
+  /* field_resource_thumbnail */   'settings' => array(
+  /* field_resource_thumbnail */     'default_image' => 0,
+  /* field_resource_thumbnail */     'uri_scheme' => 'private',
+  /* field_resource_thumbnail */   ),
+  /* field_resource_thumbnail */   'translatable' => 0,
+  /* field_resource_thumbnail */   'type' => 'image',
+  /* field_resource_thumbnail */ );
 
   // Exported field_base: 'field_resource_type'.
   $field_bases['field_resource_type'] = array(

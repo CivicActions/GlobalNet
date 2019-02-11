@@ -5,47 +5,27 @@ Feature: content.nodes
   @RD-2338 @RD-2989 @assignee:ana.willem @assignee:eric.napier @version:3/22_Launch_Release @OPEN @hillary @member @umember1
   Scenario: Confirm post author name matches name in about author block
 
-        Given I am logged in as "umember1" with password "civicactions"
-        And I visit "node/{node:title:Or1 Gr1PU Po18GR}"
-        #fails here
-        Then I should see the text "Umar Member One" in the "sidebar" region
-        Then I should see the text "Umar Member One" in the "main content" region
+    Given I am logged in as "umember1" with password "civicactions"
+    And I visit "node/{node:title:Or1 Gr1PU Po18GR}"
+    #fails here
+    Then I should see the text "Umar Member One" in the "sidebar" region
+    Then I should see the text "Umar Member One" in the "main content" region
 
 
   @RD-2416 @assignee:richard.gilbert @version:3/22_Launch_Release @COMPLETED @administrator @uadmin
   Scenario: Confirm news node org and author info is accurate
 
-        Given I am logged in as "uadmin" with password "civicactions"
-        And I visit "or1/or1-ne1pu"
-        Then I should see the text "From Or1" in the "main content" region
-        And I should see the link "Unity Orgma Nagerone" in the "main content" region
-        # And I should see the text "/" in the "main content" region
-        And I visit the edit form for node with title "Or1 Ne1pu"
-        #this might be where the test was failing
-        Then the "Parent Organization" field should contain "{node:title:Or1}"
-        # Which is the parent org ID
-        And the "edit-name" field should contain "uorgmanager1"
-        And I should see the CSS selector "#edit-date"
-
-
-  @RD-2102 @assignee:tom.camp @version:OT_Release @COMPLETED @qa-admin
-  Scenario: Confirm taxonomy terms link to correct taxonomy pages
-
-        Given I am logged in as "qa-admin" with password "CivicActions3#"
-
-        And I visit the node with title "George C. Marshall Center Adds Ski Resort"
-        Then I should see the link "Civic-Military Relations" in the "sidebar" region
-        And I click "Civic-Military Relations"
-        Then I should see "Civic-Military Relations"
-        # Visual regression tests -->And it should look good
-
-        And I visit "/topics"
-        Then I should see the link "Action Learning"
-        And I should see the link "Administrative"
-        And I should see the link "Anti-Corruption"
-        When I click "Administrative"
-        Then I should see "Administrative"
-        # And it should look good
+    Given I am logged in as "uadmin" with password "civicactions"
+    And I visit "or1/or1-ne1pu"
+    Then I should see the text "From Or1" in the "main content" region
+    And I should see the link "Unity Orgma Nagerone" in the "main content" region
+    # And I should see the text "/" in the "main content" region
+    And I visit the edit form for node with title "Or1 Ne1pu"
+    #this might be where the test was failing
+    Then the "Parent Organization" field should contain "{node:title:Or1}"
+    # Which is the parent org ID
+    And the "edit-name" field should contain "uorgmanager1"
+    And I should see the CSS selector "#edit-date"
 
 
   @RD-2386 @assignee:ethan.teague @version:OT_Release @COMPLETED @uadmin
@@ -68,13 +48,13 @@ Feature: content.nodes
   @RD-2386 @assignee:ethan.teague @version:OT_Release @COMPLETED @uadmin
   Scenario: Ensure Poll Results Page shows results
 
-     Given I am logged in as "uadmin" with password "civicactions"
-     Then I click "a"
-     Then I click "submit"
-     And I visit "gcmc/q1/votes"
-     Then I should see the link "uadmin"
-     And I click "uadmin"
-     Then I should see the text "Ura Admin Istrator"
+    Given I am logged in as "uadmin" with password "civicactions"
+    Then I click "a"
+    Then I click "submit"
+    And I visit "gcmc/q1/votes"
+    Then I should see the link "uadmin"
+    And I click "uadmin"
+    Then I should see the text "Ura Admin Istrator"
 
 
   @RD-2480 @assignee:alexis.saransig @version:OT_Release @COMPLETED @uadmin
@@ -128,18 +108,18 @@ Feature: content.nodes
   @RD-2692 @version:3/22_Launch_Release @COMPLETED @uadmin
   Scenario: Confirm no preview button for comments
 
-        Given I am logged in as "uadmin" with password "civicactions"
-        And I visit "gcmc/mark-twain-101/announcement-for-mark-twain-101"
-        Then I should see the text "JOIN THE CONVERSATION"
-        And I should not see the CSS selector "input[id='edit-preview']"
-        And I visit "gcmc/mark-twain-101/event-for-mark-twain-101"
-        Then I should see the text "JOIN THE CONVERSATION"
-        And I should not see the CSS selector "input[id='edit-preview']"
-        And I visit "help/who-can-post-announcements"
-        And I should not see the CSS selector "input[id='edit-preview']"
-        And I visit "gcmc/mark-twain-101/publication-for-mark-twain-101"
-        Then I should see the text "JOIN THE CONVERSATION"
-        And I should not see the CSS selector "input[id='edit-preview']"
+    Given I am logged in as "uadmin" with password "civicactions"
+    And I visit "gcmc/mark-twain-101/announcement-for-mark-twain-101"
+    Then I should see the text "JOIN THE CONVERSATION"
+    And I should not see the CSS selector "input[id='edit-preview']"
+    And I visit "gcmc/mark-twain-101/event-for-mark-twain-101"
+    Then I should see the text "JOIN THE CONVERSATION"
+    And I should not see the CSS selector "input[id='edit-preview']"
+    And I visit "help/who-can-post-announcements"
+    And I should not see the CSS selector "input[id='edit-preview']"
+    And I visit "gcmc/mark-twain-101/publication-for-mark-twain-101"
+    Then I should see the text "JOIN THE CONVERSATION"
+    And I should not see the CSS selector "input[id='edit-preview']"
 
 
   @RD-2769 @assignee:tom.camp @version:3/22_Launch_Release @COMPLETED @umember1b @uorgmanager1
@@ -194,39 +174,39 @@ Feature: content.nodes
   @RD-2978 @version:Release_v2.002-20160401 @COMPLETED
   Scenario: Unpublish content
 
-        Given I am logged in as "uadmin" with password "civicactions"
-        # Poll
-        And  I visit the edit form for node with title "Or1 Co1PU Cg1PU Pl35PR"
-        And I press the "Unpublish" button
-        Then I should see the text "Unpublished"
-        And  I visit the edit form for node with title "Or1 Co1PU Cg1PU Pl35PR"
-        Then I press the "Publish" button
-        # News
-        And I visit the edit form for node with title "Or1 Pg1PU Ne28PR"
-        #And I click the element with CSS selector ".group-topics legend span a"
-        And I check the box "Peace"
-        And I press the "Unpublish" button
-        Then I should see the text "Unpublished"
-        And I visit the edit form for node with title "Or1 Pg1PU Ne28PR"
-        Then I press the "Publish" button
-        # Post
-        And  I visit the edit form for node with title "Or1 Po6PR"
-        And I press the "Unpublish" button
-        Then I should see the text "Unpublished"
-        And  I visit the edit form for node with title "Or1 Po6PR"
-        Then I press the "Publish" button
-        # Announcement
-        And I visit the edit form for node with title "Or1 Co1PU Cg1PU An49PR"
-        And I press the "Unpublish" button
-        Then I should see the text "Unpublished"
-        And I visit the edit form for node with title "Or1 Co1PU Cg1PU An49PR"
-        Then I press the "Publish" button
-        # Publication
-        And I visit the edit form for node with title "Or2 Pu14PR"
-        And I press the "Unpublish" button
-        Then I should see the text "Unpublished"
-        And I visit the edit form for node with title "Or2 Pu14PR"
-        Then I press the "Publish" button
+    Given I am logged in as "uadmin" with password "civicactions"
+    # Poll
+    And  I visit the edit form for node with title "Or1 Co1PU Cg1PU Pl35PR"
+    And I press the "Unpublish" button
+    Then I should see the text "Unpublished"
+    And  I visit the edit form for node with title "Or1 Co1PU Cg1PU Pl35PR"
+    Then I press the "Publish" button
+    # News
+    And I visit the edit form for node with title "Or1 Pg1PU Ne28PR"
+    #And I click the element with CSS selector ".group-topics legend span a"
+    And I check the box "Peace"
+    And I press the "Unpublish" button
+    Then I should see the text "Unpublished"
+    And I visit the edit form for node with title "Or1 Pg1PU Ne28PR"
+    Then I press the "Publish" button
+    # Post
+    And  I visit the edit form for node with title "Or1 Po6PR"
+    And I press the "Unpublish" button
+    Then I should see the text "Unpublished"
+    And  I visit the edit form for node with title "Or1 Po6PR"
+    Then I press the "Publish" button
+    # Announcement
+    And I visit the edit form for node with title "Or1 Co1PU Cg1PU An49PR"
+    And I press the "Unpublish" button
+    Then I should see the text "Unpublished"
+    And I visit the edit form for node with title "Or1 Co1PU Cg1PU An49PR"
+    Then I press the "Publish" button
+    # Publication
+    And I visit the edit form for node with title "Or2 Pu14PR"
+    And I press the "Unpublish" button
+    Then I should see the text "Unpublished"
+    And I visit the edit form for node with title "Or2 Pu14PR"
+    Then I press the "Publish" button
 
 
   @RD-2721 @assignee:tom.camp @version:3/25_Release @COMPLETED
@@ -256,18 +236,6 @@ Feature: content.nodes
     Given I am logged in as "uorgmanager1" with password "civicactions"
     And I visit the system path "node/add/news?gid={node:title:Or1}"
     Then I should see the CSS selector ".required-fields.group-topics"
-
-
-  #@RD-3140 @assignee:ana.willem @COMPLETED @wip
-  #Scenario: Publications missing regions & countries taxonomies from entry form
- # Manage program button doesn't exist. We need to dig into this test to see if we still need it.
- #
- #   Given I am logged in as "uorgmanager1" with password "civicactions"
-  #  And I visit the node with title "Or1 Pg1PU Pu28PR"
-   # And I press "Manage program"
-    #And I visit the edit form for node with title "Or1 Pg1PU Pu28PR"
-    #Then I should see the CSS selector ".collapsed.group-countries"
-    #Then I should see the CSS selector ".collapsed.group-regions"
 
 
   @RD-3117 @assignee:ana.willem @COMPLETED

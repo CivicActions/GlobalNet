@@ -64,3 +64,15 @@ function gn2_unblock_update_7001() {
 
   return $ret;
 }
+
+/**
+ * Clearing gn2_unblock_track records that are older than 15 minutes.
+ */
+function gn2_unblock_update_7002() {
+  $time = time() - 900;
+  $deleted = db_delete('gn2_unblock_track')
+    ->condition('timestamp', $time, '<')
+    ->execute();
+
+  echo "Deleted $deleted old records from gn2_unblock_track";
+}

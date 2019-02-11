@@ -45,7 +45,6 @@ function gn2_group_admin_block_view($delta = '') {
     case 'gn2_group_admin_menu':
       if (arg(0) == 'node' && is_numeric(arg(1))) {
         global $user;
-        //$exclude = array('alumni_group', 'course', 'event');
         $node = node_load(arg(1));
         $type = str_replace('_', ' ', $node->type);
         $options = array(

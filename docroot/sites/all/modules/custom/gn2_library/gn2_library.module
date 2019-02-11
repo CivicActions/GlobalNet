@@ -10,8 +10,31 @@ include_once 'gn2_library.features.inc';
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function gn2_library_form_resource_item_node_form_alter(&$form, &$form_state, $form_id) {
-  if (!empty($_GET['gid'])) {
-    $form['og_group_ref'][LANGUAGE_NONE][0]['default']['#default_value'] = $_GET['gid'];
+  $gid = filter_input(INPUT_GET, 'gid');
+  if ($gid) {
+    global $user;
+    $title = db_query('SELECT title FROM {node} WHERE nid = :gid', [
+      ':gid' => $gid,
+    ])->fetchField();
+    $access = og_user_access('node', $gid, 'create resource_item content', $user, FALSE, TRUE);
+    if ($access || in_array('administrator', $user->roles)) {
+      $form['og_group_ref'][LANGUAGE_NONE][0]['default'][0]['target_id']['#default_value'] = $title . ' (' . $gid . ')';
+    }
+    else {
+      drupal_set_message(t('You do not have permission to create Resource Items for the group %title', [
+        '%title' => $title,
+      ]));
+      drupal_access_denied();
+    }
   }
-  $form['og_group_ref'][LANGUAGE_NONE][0]['#access'] = FALSE;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_library_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  // Add helper text to exposed filters; @see RD-4287.
+  if ($form['#id'] === 'views-exposed-form-search-resources-panel-pane-1') {
+    $form['#suffix'] = '<div class="description">' . t('Use filter options and/or keyword search to find results') . '</div>';
+  }
 }

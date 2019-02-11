@@ -56,7 +56,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session-field_description */       'allowed_formats' => array(
   /* field_collection_item-field_session-field_description */         'filtered_html' => 0,
   /* field_collection_item-field_session-field_description */         'full_html' => 0,
-  /* field_collection_item-field_session-field_description */         'php_code' => 0,
   /* field_collection_item-field_session-field_description */         'plain_text' => 0,
   /* field_collection_item-field_session-field_description */         'sessions_wysiwyg' => 'sessions_wysiwyg',
   /* field_collection_item-field_session-field_description */       ),
@@ -69,9 +68,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session-field_description */           ),
   /* field_collection_item-field_session-field_description */           'full_html' => array(
   /* field_collection_item-field_session-field_description */             'weight' => -8,
-  /* field_collection_item-field_session-field_description */           ),
-  /* field_collection_item-field_session-field_description */           'php_code' => array(
-  /* field_collection_item-field_session-field_description */             'weight' => -7,
   /* field_collection_item-field_session-field_description */           ),
   /* field_collection_item-field_session-field_description */           'plain_text' => array(
   /* field_collection_item-field_session-field_description */             'weight' => -9,
@@ -197,7 +193,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session-field_title */       'allowed_formats' => array(
   /* field_collection_item-field_session-field_title */         'filtered_html' => 'filtered_html',
   /* field_collection_item-field_session-field_title */         'full_html' => 'full_html',
-  /* field_collection_item-field_session-field_title */         'php_code' => 'php_code',
   /* field_collection_item-field_session-field_title */         'plain_text' => 'plain_text',
   /* field_collection_item-field_session-field_title */       ),
   /* field_collection_item-field_session-field_title */       'allowed_formats_toggle' => 0,
@@ -209,9 +204,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session-field_title */           ),
   /* field_collection_item-field_session-field_title */           'full_html' => array(
   /* field_collection_item-field_session-field_title */             'weight' => -8,
-  /* field_collection_item-field_session-field_title */           ),
-  /* field_collection_item-field_session-field_title */           'php_code' => array(
-  /* field_collection_item-field_session-field_title */             'weight' => -7,
   /* field_collection_item-field_session-field_title */           ),
   /* field_collection_item-field_session-field_title */           'plain_text' => array(
   /* field_collection_item-field_session-field_title */             'weight' => -9,
@@ -301,7 +293,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session_day-field_description */       'allowed_formats' => array(
   /* field_collection_item-field_session_day-field_description */         'filtered_html' => 0,
   /* field_collection_item-field_session_day-field_description */         'full_html' => 0,
-  /* field_collection_item-field_session_day-field_description */         'php_code' => 0,
   /* field_collection_item-field_session_day-field_description */         'plain_text' => 0,
   /* field_collection_item-field_session_day-field_description */         'sessions_wysiwyg' => 'sessions_wysiwyg',
   /* field_collection_item-field_session_day-field_description */       ),
@@ -314,9 +305,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session_day-field_description */           ),
   /* field_collection_item-field_session_day-field_description */           'full_html' => array(
   /* field_collection_item-field_session_day-field_description */             'weight' => -48,
-  /* field_collection_item-field_session_day-field_description */           ),
-  /* field_collection_item-field_session_day-field_description */           'php_code' => array(
-  /* field_collection_item-field_session_day-field_description */             'weight' => -47,
   /* field_collection_item-field_session_day-field_description */           ),
   /* field_collection_item-field_session_day-field_description */           'plain_text' => array(
   /* field_collection_item-field_session_day-field_description */             'weight' => -50,
@@ -413,6 +401,7 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session_day-field_session_presenter */       'label' => 'hidden',
   /* field_collection_item-field_session_day-field_session_presenter */       'module' => 'entityreference',
   /* field_collection_item-field_session_day-field_session_presenter */       'settings' => array(
+  /* field_collection_item-field_session_day-field_session_presenter */         'bypass_access' => FALSE,
   /* field_collection_item-field_session_day-field_session_presenter */         'field_formatter_class' => '',
   /* field_collection_item-field_session_day-field_session_presenter */         'link' => FALSE,
   /* field_collection_item-field_session_day-field_session_presenter */       ),
@@ -474,7 +463,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session_day-field_title */       'allowed_formats' => array(
   /* field_collection_item-field_session_day-field_title */         'filtered_html' => 'filtered_html',
   /* field_collection_item-field_session_day-field_title */         'full_html' => 'full_html',
-  /* field_collection_item-field_session_day-field_title */         'php_code' => 'php_code',
   /* field_collection_item-field_session_day-field_title */         'plain_text' => 'plain_text',
   /* field_collection_item-field_session_day-field_title */       ),
   /* field_collection_item-field_session_day-field_title */       'allowed_formats_toggle' => 0,
@@ -486,9 +474,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_session_day-field_title */           ),
   /* field_collection_item-field_session_day-field_title */           'full_html' => array(
   /* field_collection_item-field_session_day-field_title */             'weight' => -8,
-  /* field_collection_item-field_session_day-field_title */           ),
-  /* field_collection_item-field_session_day-field_title */           'php_code' => array(
-  /* field_collection_item-field_session_day-field_title */             'weight' => -7,
   /* field_collection_item-field_session_day-field_title */           ),
   /* field_collection_item-field_session_day-field_title */           'plain_text' => array(
   /* field_collection_item-field_session_day-field_title */             'weight' => -9,
@@ -614,7 +599,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_unit-field_description */       'allowed_formats' => array(
   /* field_collection_item-field_unit-field_description */         'filtered_html' => 0,
   /* field_collection_item-field_unit-field_description */         'full_html' => 0,
-  /* field_collection_item-field_unit-field_description */         'php_code' => 0,
   /* field_collection_item-field_unit-field_description */         'plain_text' => 0,
   /* field_collection_item-field_unit-field_description */         'sessions_wysiwyg' => 'sessions_wysiwyg',
   /* field_collection_item-field_unit-field_description */       ),
@@ -627,9 +611,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_unit-field_description */           ),
   /* field_collection_item-field_unit-field_description */           'full_html' => array(
   /* field_collection_item-field_unit-field_description */             'weight' => -8,
-  /* field_collection_item-field_unit-field_description */           ),
-  /* field_collection_item-field_unit-field_description */           'php_code' => array(
-  /* field_collection_item-field_unit-field_description */             'weight' => -7,
   /* field_collection_item-field_unit-field_description */           ),
   /* field_collection_item-field_unit-field_description */           'plain_text' => array(
   /* field_collection_item-field_unit-field_description */             'weight' => -9,
@@ -724,6 +705,7 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_unit-field_session_presenter */       'label' => 'hidden',
   /* field_collection_item-field_unit-field_session_presenter */       'module' => 'entityreference',
   /* field_collection_item-field_unit-field_session_presenter */       'settings' => array(
+  /* field_collection_item-field_unit-field_session_presenter */         'bypass_access' => FALSE,
   /* field_collection_item-field_unit-field_session_presenter */         'field_formatter_class' => '',
   /* field_collection_item-field_unit-field_session_presenter */         'link' => FALSE,
   /* field_collection_item-field_unit-field_session_presenter */       ),
@@ -784,7 +766,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_unit-field_title */       'allowed_formats' => array(
   /* field_collection_item-field_unit-field_title */         'filtered_html' => 'filtered_html',
   /* field_collection_item-field_unit-field_title */         'full_html' => 'full_html',
-  /* field_collection_item-field_unit-field_title */         'php_code' => 'php_code',
   /* field_collection_item-field_unit-field_title */         'plain_text' => 'plain_text',
   /* field_collection_item-field_unit-field_title */       ),
   /* field_collection_item-field_unit-field_title */       'allowed_formats_toggle' => 0,
@@ -796,9 +777,6 @@ function gn2_courses_field_default_field_instances() {
   /* field_collection_item-field_unit-field_title */           ),
   /* field_collection_item-field_unit-field_title */           'full_html' => array(
   /* field_collection_item-field_unit-field_title */             'weight' => -8,
-  /* field_collection_item-field_unit-field_title */           ),
-  /* field_collection_item-field_unit-field_title */           'php_code' => array(
-  /* field_collection_item-field_unit-field_title */             'weight' => -7,
   /* field_collection_item-field_unit-field_title */           ),
   /* field_collection_item-field_unit-field_title */           'plain_text' => array(
   /* field_collection_item-field_unit-field_title */             'weight' => -9,
@@ -1002,15 +980,807 @@ function gn2_courses_field_default_field_instances() {
   /* node-course-field_session */   ),
   /* node-course-field_session */ );
 
+  // Exported field_instance: 'node-course_group-field_alumni_specialist'.
+  $field_instances['node-course_group-field_alumni_specialist'] = array(
+  /* node-course_group-field_alumni_specialist */   'bundle' => 'course_group',
+  /* node-course_group-field_alumni_specialist */   'default_value' => NULL,
+  /* node-course_group-field_alumni_specialist */   'default_value_function' => '',
+  /* node-course_group-field_alumni_specialist */   'deleted' => 0,
+  /* node-course_group-field_alumni_specialist */   'description' => '',
+  /* node-course_group-field_alumni_specialist */   'display' => array(
+  /* node-course_group-field_alumni_specialist */     'default' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'module' => 'entityreference',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(
+  /* node-course_group-field_alumni_specialist */         'bypass_access' => FALSE,
+  /* node-course_group-field_alumni_specialist */         'field_formatter_class' => '',
+  /* node-course_group-field_alumni_specialist */         'link' => FALSE,
+  /* node-course_group-field_alumni_specialist */       ),
+  /* node-course_group-field_alumni_specialist */       'type' => 'entityreference_label',
+  /* node-course_group-field_alumni_specialist */       'weight' => 21,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'events_list' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'group_teaser' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'one_column_teaser' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'search_teaser' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'sidebar_' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'teaser' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'teaserthumb' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'time_and_location' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'title_and_time' => array(
+  /* node-course_group-field_alumni_specialist */       'label' => 'above',
+  /* node-course_group-field_alumni_specialist */       'settings' => array(),
+  /* node-course_group-field_alumni_specialist */       'type' => 'hidden',
+  /* node-course_group-field_alumni_specialist */       'weight' => 0,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */   ),
+  /* node-course_group-field_alumni_specialist */   'entity_type' => 'node',
+  /* node-course_group-field_alumni_specialist */   'fences_wrapper' => 'div',
+  /* node-course_group-field_alumni_specialist */   'field_name' => 'field_alumni_specialist',
+  /* node-course_group-field_alumni_specialist */   'label' => 'Alumni Specialist',
+  /* node-course_group-field_alumni_specialist */   'required' => 0,
+  /* node-course_group-field_alumni_specialist */   'settings' => array(
+  /* node-course_group-field_alumni_specialist */     'behaviors' => array(
+  /* node-course_group-field_alumni_specialist */       'prepopulate' => array(
+  /* node-course_group-field_alumni_specialist */         'status' => 0,
+  /* node-course_group-field_alumni_specialist */       ),
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'user_register_form' => FALSE,
+  /* node-course_group-field_alumni_specialist */   ),
+  /* node-course_group-field_alumni_specialist */   'widget' => array(
+  /* node-course_group-field_alumni_specialist */     'active' => 1,
+  /* node-course_group-field_alumni_specialist */     'module' => 'entityreference',
+  /* node-course_group-field_alumni_specialist */     'settings' => array(
+  /* node-course_group-field_alumni_specialist */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_alumni_specialist */       'path' => '',
+  /* node-course_group-field_alumni_specialist */       'size' => 60,
+  /* node-course_group-field_alumni_specialist */     ),
+  /* node-course_group-field_alumni_specialist */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_alumni_specialist */     'weight' => 7,
+  /* node-course_group-field_alumni_specialist */   ),
+  /* node-course_group-field_alumni_specialist */ );
+
+  // Exported field_instance: 'node-course_group-field_course_director'.
+  $field_instances['node-course_group-field_course_director'] = array(
+  /* node-course_group-field_course_director */   'bundle' => 'course_group',
+  /* node-course_group-field_course_director */   'default_value' => NULL,
+  /* node-course_group-field_course_director */   'default_value_function' => '',
+  /* node-course_group-field_course_director */   'deleted' => 0,
+  /* node-course_group-field_course_director */   'description' => '',
+  /* node-course_group-field_course_director */   'display' => array(
+  /* node-course_group-field_course_director */     'default' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'module' => 'entityreference',
+  /* node-course_group-field_course_director */       'settings' => array(
+  /* node-course_group-field_course_director */         'bypass_access' => FALSE,
+  /* node-course_group-field_course_director */         'field_formatter_class' => '',
+  /* node-course_group-field_course_director */         'link' => FALSE,
+  /* node-course_group-field_course_director */       ),
+  /* node-course_group-field_course_director */       'type' => 'entityreference_label',
+  /* node-course_group-field_course_director */       'weight' => 15,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'events_list' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'group_teaser' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'one_column_teaser' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'search_teaser' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'sidebar_' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'teaser' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'teaserthumb' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'time_and_location' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'title_and_time' => array(
+  /* node-course_group-field_course_director */       'label' => 'above',
+  /* node-course_group-field_course_director */       'settings' => array(),
+  /* node-course_group-field_course_director */       'type' => 'hidden',
+  /* node-course_group-field_course_director */       'weight' => 0,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */   ),
+  /* node-course_group-field_course_director */   'entity_type' => 'node',
+  /* node-course_group-field_course_director */   'fences_wrapper' => 'div',
+  /* node-course_group-field_course_director */   'field_name' => 'field_course_director',
+  /* node-course_group-field_course_director */   'label' => 'Course Director',
+  /* node-course_group-field_course_director */   'required' => 0,
+  /* node-course_group-field_course_director */   'settings' => array(
+  /* node-course_group-field_course_director */     'behaviors' => array(
+  /* node-course_group-field_course_director */       'prepopulate' => array(
+  /* node-course_group-field_course_director */         'status' => 0,
+  /* node-course_group-field_course_director */       ),
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'user_register_form' => FALSE,
+  /* node-course_group-field_course_director */   ),
+  /* node-course_group-field_course_director */   'widget' => array(
+  /* node-course_group-field_course_director */     'active' => 1,
+  /* node-course_group-field_course_director */     'module' => 'entityreference',
+  /* node-course_group-field_course_director */     'settings' => array(
+  /* node-course_group-field_course_director */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_course_director */       'path' => '',
+  /* node-course_group-field_course_director */       'size' => 60,
+  /* node-course_group-field_course_director */     ),
+  /* node-course_group-field_course_director */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_course_director */     'weight' => 0,
+  /* node-course_group-field_course_director */   ),
+  /* node-course_group-field_course_director */ );
+
+  // Exported field_instance:
+  // 'node-course_group-field_course_event_coordinator'.
+  $field_instances['node-course_group-field_course_event_coordinator'] = array(
+  /* node-course_group-field_course_event_coordinator */   'bundle' => 'course_group',
+  /* node-course_group-field_course_event_coordinator */   'default_value' => NULL,
+  /* node-course_group-field_course_event_coordinator */   'default_value_function' => '',
+  /* node-course_group-field_course_event_coordinator */   'deleted' => 0,
+  /* node-course_group-field_course_event_coordinator */   'description' => '',
+  /* node-course_group-field_course_event_coordinator */   'display' => array(
+  /* node-course_group-field_course_event_coordinator */     'default' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'module' => 'entityreference',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(
+  /* node-course_group-field_course_event_coordinator */         'bypass_access' => FALSE,
+  /* node-course_group-field_course_event_coordinator */         'field_formatter_class' => '',
+  /* node-course_group-field_course_event_coordinator */         'link' => FALSE,
+  /* node-course_group-field_course_event_coordinator */       ),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'entityreference_label',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 17,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'events_list' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'group_teaser' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'one_column_teaser' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'search_teaser' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'sidebar_' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'teaser' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'teaserthumb' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'time_and_location' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'title_and_time' => array(
+  /* node-course_group-field_course_event_coordinator */       'label' => 'above',
+  /* node-course_group-field_course_event_coordinator */       'settings' => array(),
+  /* node-course_group-field_course_event_coordinator */       'type' => 'hidden',
+  /* node-course_group-field_course_event_coordinator */       'weight' => 0,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */   ),
+  /* node-course_group-field_course_event_coordinator */   'entity_type' => 'node',
+  /* node-course_group-field_course_event_coordinator */   'fences_wrapper' => 'div',
+  /* node-course_group-field_course_event_coordinator */   'field_name' => 'field_course_event_coordinator',
+  /* node-course_group-field_course_event_coordinator */   'label' => 'Event Coordinator',
+  /* node-course_group-field_course_event_coordinator */   'required' => 0,
+  /* node-course_group-field_course_event_coordinator */   'settings' => array(
+  /* node-course_group-field_course_event_coordinator */     'behaviors' => array(
+  /* node-course_group-field_course_event_coordinator */       'prepopulate' => array(
+  /* node-course_group-field_course_event_coordinator */         'status' => 0,
+  /* node-course_group-field_course_event_coordinator */       ),
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'user_register_form' => FALSE,
+  /* node-course_group-field_course_event_coordinator */   ),
+  /* node-course_group-field_course_event_coordinator */   'widget' => array(
+  /* node-course_group-field_course_event_coordinator */     'active' => 1,
+  /* node-course_group-field_course_event_coordinator */     'module' => 'entityreference',
+  /* node-course_group-field_course_event_coordinator */     'settings' => array(
+  /* node-course_group-field_course_event_coordinator */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_course_event_coordinator */       'path' => '',
+  /* node-course_group-field_course_event_coordinator */       'size' => 60,
+  /* node-course_group-field_course_event_coordinator */     ),
+  /* node-course_group-field_course_event_coordinator */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_course_event_coordinator */     'weight' => 3,
+  /* node-course_group-field_course_event_coordinator */   ),
+  /* node-course_group-field_course_event_coordinator */ );
+
+  // Exported field_instance: 'node-course_group-field_course_faculty'.
+  $field_instances['node-course_group-field_course_faculty'] = array(
+  /* node-course_group-field_course_faculty */   'bundle' => 'course_group',
+  /* node-course_group-field_course_faculty */   'default_value' => NULL,
+  /* node-course_group-field_course_faculty */   'default_value_function' => '',
+  /* node-course_group-field_course_faculty */   'deleted' => 0,
+  /* node-course_group-field_course_faculty */   'description' => '',
+  /* node-course_group-field_course_faculty */   'display' => array(
+  /* node-course_group-field_course_faculty */     'default' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'module' => 'entityreference',
+  /* node-course_group-field_course_faculty */       'settings' => array(
+  /* node-course_group-field_course_faculty */         'bypass_access' => FALSE,
+  /* node-course_group-field_course_faculty */         'field_formatter_class' => '',
+  /* node-course_group-field_course_faculty */         'link' => FALSE,
+  /* node-course_group-field_course_faculty */       ),
+  /* node-course_group-field_course_faculty */       'type' => 'entityreference_label',
+  /* node-course_group-field_course_faculty */       'weight' => 19,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'events_list' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'group_teaser' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'one_column_teaser' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'search_teaser' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'sidebar_' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'teaser' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'teaserthumb' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'time_and_location' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'title_and_time' => array(
+  /* node-course_group-field_course_faculty */       'label' => 'above',
+  /* node-course_group-field_course_faculty */       'settings' => array(),
+  /* node-course_group-field_course_faculty */       'type' => 'hidden',
+  /* node-course_group-field_course_faculty */       'weight' => 0,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */   ),
+  /* node-course_group-field_course_faculty */   'entity_type' => 'node',
+  /* node-course_group-field_course_faculty */   'fences_wrapper' => 'div',
+  /* node-course_group-field_course_faculty */   'field_name' => 'field_course_faculty',
+  /* node-course_group-field_course_faculty */   'label' => 'Faculty',
+  /* node-course_group-field_course_faculty */   'required' => 0,
+  /* node-course_group-field_course_faculty */   'settings' => array(
+  /* node-course_group-field_course_faculty */     'behaviors' => array(
+  /* node-course_group-field_course_faculty */       'prepopulate' => array(
+  /* node-course_group-field_course_faculty */         'status' => 0,
+  /* node-course_group-field_course_faculty */       ),
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'user_register_form' => FALSE,
+  /* node-course_group-field_course_faculty */   ),
+  /* node-course_group-field_course_faculty */   'widget' => array(
+  /* node-course_group-field_course_faculty */     'active' => 1,
+  /* node-course_group-field_course_faculty */     'module' => 'entityreference',
+  /* node-course_group-field_course_faculty */     'settings' => array(
+  /* node-course_group-field_course_faculty */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_course_faculty */       'path' => '',
+  /* node-course_group-field_course_faculty */       'size' => 60,
+  /* node-course_group-field_course_faculty */     ),
+  /* node-course_group-field_course_faculty */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_course_faculty */     'weight' => 5,
+  /* node-course_group-field_course_faculty */   ),
+  /* node-course_group-field_course_faculty */ );
+
+  // Exported field_instance: 'node-course_group-field_course_seminar_leader'.
+  $field_instances['node-course_group-field_course_seminar_leader'] = array(
+  /* node-course_group-field_course_seminar_leader */   'bundle' => 'course_group',
+  /* node-course_group-field_course_seminar_leader */   'default_value' => NULL,
+  /* node-course_group-field_course_seminar_leader */   'default_value_function' => '',
+  /* node-course_group-field_course_seminar_leader */   'deleted' => 0,
+  /* node-course_group-field_course_seminar_leader */   'description' => '',
+  /* node-course_group-field_course_seminar_leader */   'display' => array(
+  /* node-course_group-field_course_seminar_leader */     'default' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'module' => 'entityreference',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(
+  /* node-course_group-field_course_seminar_leader */         'bypass_access' => FALSE,
+  /* node-course_group-field_course_seminar_leader */         'field_formatter_class' => '',
+  /* node-course_group-field_course_seminar_leader */         'link' => FALSE,
+  /* node-course_group-field_course_seminar_leader */       ),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'entityreference_label',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 18,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'events_list' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'group_teaser' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'one_column_teaser' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'search_teaser' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'sidebar_' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'teaser' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'teaserthumb' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'time_and_location' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'title_and_time' => array(
+  /* node-course_group-field_course_seminar_leader */       'label' => 'above',
+  /* node-course_group-field_course_seminar_leader */       'settings' => array(),
+  /* node-course_group-field_course_seminar_leader */       'type' => 'hidden',
+  /* node-course_group-field_course_seminar_leader */       'weight' => 0,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */   ),
+  /* node-course_group-field_course_seminar_leader */   'entity_type' => 'node',
+  /* node-course_group-field_course_seminar_leader */   'fences_wrapper' => 'div',
+  /* node-course_group-field_course_seminar_leader */   'field_name' => 'field_course_seminar_leader',
+  /* node-course_group-field_course_seminar_leader */   'label' => 'Seminar Leader',
+  /* node-course_group-field_course_seminar_leader */   'required' => 0,
+  /* node-course_group-field_course_seminar_leader */   'settings' => array(
+  /* node-course_group-field_course_seminar_leader */     'behaviors' => array(
+  /* node-course_group-field_course_seminar_leader */       'prepopulate' => array(
+  /* node-course_group-field_course_seminar_leader */         'status' => 0,
+  /* node-course_group-field_course_seminar_leader */       ),
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'user_register_form' => FALSE,
+  /* node-course_group-field_course_seminar_leader */   ),
+  /* node-course_group-field_course_seminar_leader */   'widget' => array(
+  /* node-course_group-field_course_seminar_leader */     'active' => 1,
+  /* node-course_group-field_course_seminar_leader */     'module' => 'entityreference',
+  /* node-course_group-field_course_seminar_leader */     'settings' => array(
+  /* node-course_group-field_course_seminar_leader */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_course_seminar_leader */       'path' => '',
+  /* node-course_group-field_course_seminar_leader */       'size' => 60,
+  /* node-course_group-field_course_seminar_leader */     ),
+  /* node-course_group-field_course_seminar_leader */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_course_seminar_leader */     'weight' => 4,
+  /* node-course_group-field_course_seminar_leader */   ),
+  /* node-course_group-field_course_seminar_leader */ );
+
+  // Exported field_instance: 'node-course_group-field_course_support_staff'.
+  $field_instances['node-course_group-field_course_support_staff'] = array(
+  /* node-course_group-field_course_support_staff */   'bundle' => 'course_group',
+  /* node-course_group-field_course_support_staff */   'default_value' => NULL,
+  /* node-course_group-field_course_support_staff */   'default_value_function' => '',
+  /* node-course_group-field_course_support_staff */   'deleted' => 0,
+  /* node-course_group-field_course_support_staff */   'description' => '',
+  /* node-course_group-field_course_support_staff */   'display' => array(
+  /* node-course_group-field_course_support_staff */     'default' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'module' => 'entityreference',
+  /* node-course_group-field_course_support_staff */       'settings' => array(
+  /* node-course_group-field_course_support_staff */         'bypass_access' => FALSE,
+  /* node-course_group-field_course_support_staff */         'field_formatter_class' => '',
+  /* node-course_group-field_course_support_staff */         'link' => FALSE,
+  /* node-course_group-field_course_support_staff */       ),
+  /* node-course_group-field_course_support_staff */       'type' => 'entityreference_label',
+  /* node-course_group-field_course_support_staff */       'weight' => 20,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'events_list' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'group_teaser' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'one_column_teaser' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'search_teaser' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'sidebar_' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'teaser' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'teaserthumb' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'time_and_location' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'title_and_time' => array(
+  /* node-course_group-field_course_support_staff */       'label' => 'above',
+  /* node-course_group-field_course_support_staff */       'settings' => array(),
+  /* node-course_group-field_course_support_staff */       'type' => 'hidden',
+  /* node-course_group-field_course_support_staff */       'weight' => 0,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */   ),
+  /* node-course_group-field_course_support_staff */   'entity_type' => 'node',
+  /* node-course_group-field_course_support_staff */   'fences_wrapper' => 'div',
+  /* node-course_group-field_course_support_staff */   'field_name' => 'field_course_support_staff',
+  /* node-course_group-field_course_support_staff */   'label' => 'Course Support Staff',
+  /* node-course_group-field_course_support_staff */   'required' => 0,
+  /* node-course_group-field_course_support_staff */   'settings' => array(
+  /* node-course_group-field_course_support_staff */     'behaviors' => array(
+  /* node-course_group-field_course_support_staff */       'prepopulate' => array(
+  /* node-course_group-field_course_support_staff */         'status' => 0,
+  /* node-course_group-field_course_support_staff */       ),
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'user_register_form' => FALSE,
+  /* node-course_group-field_course_support_staff */   ),
+  /* node-course_group-field_course_support_staff */   'widget' => array(
+  /* node-course_group-field_course_support_staff */     'active' => 1,
+  /* node-course_group-field_course_support_staff */     'module' => 'entityreference',
+  /* node-course_group-field_course_support_staff */     'settings' => array(
+  /* node-course_group-field_course_support_staff */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_course_support_staff */       'path' => '',
+  /* node-course_group-field_course_support_staff */       'size' => 60,
+  /* node-course_group-field_course_support_staff */     ),
+  /* node-course_group-field_course_support_staff */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_course_support_staff */     'weight' => 6,
+  /* node-course_group-field_course_support_staff */   ),
+  /* node-course_group-field_course_support_staff */ );
+
+  // Exported field_instance: 'node-course_group-field_deputy_course_director'.
+  $field_instances['node-course_group-field_deputy_course_director'] = array(
+  /* node-course_group-field_deputy_course_director */   'bundle' => 'course_group',
+  /* node-course_group-field_deputy_course_director */   'default_value' => NULL,
+  /* node-course_group-field_deputy_course_director */   'default_value_function' => '',
+  /* node-course_group-field_deputy_course_director */   'deleted' => 0,
+  /* node-course_group-field_deputy_course_director */   'description' => '',
+  /* node-course_group-field_deputy_course_director */   'display' => array(
+  /* node-course_group-field_deputy_course_director */     'default' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'module' => 'entityreference',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(
+  /* node-course_group-field_deputy_course_director */         'bypass_access' => FALSE,
+  /* node-course_group-field_deputy_course_director */         'field_formatter_class' => '',
+  /* node-course_group-field_deputy_course_director */         'link' => FALSE,
+  /* node-course_group-field_deputy_course_director */       ),
+  /* node-course_group-field_deputy_course_director */       'type' => 'entityreference_label',
+  /* node-course_group-field_deputy_course_director */       'weight' => 16,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'events_list' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'group_teaser' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'one_column_teaser' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'post_teaser_group_landing_page' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'search_teaser' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'sidebar_' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'sidebar_teaser_v2' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'teaser' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'teaserthumb' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'time_and_location' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'title_and_time' => array(
+  /* node-course_group-field_deputy_course_director */       'label' => 'above',
+  /* node-course_group-field_deputy_course_director */       'settings' => array(),
+  /* node-course_group-field_deputy_course_director */       'type' => 'hidden',
+  /* node-course_group-field_deputy_course_director */       'weight' => 0,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */   ),
+  /* node-course_group-field_deputy_course_director */   'entity_type' => 'node',
+  /* node-course_group-field_deputy_course_director */   'fences_wrapper' => 'div',
+  /* node-course_group-field_deputy_course_director */   'field_name' => 'field_deputy_course_director',
+  /* node-course_group-field_deputy_course_director */   'label' => 'Deputy Course Director',
+  /* node-course_group-field_deputy_course_director */   'required' => 0,
+  /* node-course_group-field_deputy_course_director */   'settings' => array(
+  /* node-course_group-field_deputy_course_director */     'behaviors' => array(
+  /* node-course_group-field_deputy_course_director */       'prepopulate' => array(
+  /* node-course_group-field_deputy_course_director */         'status' => 0,
+  /* node-course_group-field_deputy_course_director */       ),
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'user_register_form' => FALSE,
+  /* node-course_group-field_deputy_course_director */   ),
+  /* node-course_group-field_deputy_course_director */   'widget' => array(
+  /* node-course_group-field_deputy_course_director */     'active' => 1,
+  /* node-course_group-field_deputy_course_director */     'module' => 'entityreference',
+  /* node-course_group-field_deputy_course_director */     'settings' => array(
+  /* node-course_group-field_deputy_course_director */       'match_operator' => 'CONTAINS',
+  /* node-course_group-field_deputy_course_director */       'path' => '',
+  /* node-course_group-field_deputy_course_director */       'size' => 60,
+  /* node-course_group-field_deputy_course_director */     ),
+  /* node-course_group-field_deputy_course_director */     'type' => 'entityreference_autocomplete',
+  /* node-course_group-field_deputy_course_director */     'weight' => 2,
+  /* node-course_group-field_deputy_course_director */   ),
+  /* node-course_group-field_deputy_course_director */ );
+
   // Translatables
   // Included for use with string extractors like potx.
+  t('Alumni Specialist');
   t('Associated Media');
   t('Choosing yes will display Tabs and Recommended Links to non-members.');
+  t('Course Director');
+  t('Course Support Staff');
   t('Day');
+  t('Deputy Course Director');
   t('Description');
   t('Display All Fields?');
+  t('Event Coordinator');
+  t('Faculty');
   t('Files must not exceed 500 MB. Allowed file types: avi csx doc docx gif gif gz jpeg jpg m4a m4v mov mp3 mp4 mpeg mpg mpv notebook odp ods odt oga ogg ogv pdf png pps ppsx ppt pptx pub tar txt weba webm webp wmv xls xlsx zip.');
   t('PLEASE NOTE: Session presenters are limited to course participants.  Individuals must already be members of the course before they can be assigned the role of presenter.');
+  t('Seminar Leader');
   t('Session');
   t('Session Presenter');
   t('Title');

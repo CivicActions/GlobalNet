@@ -1,0 +1,4 @@
+name = GN2 Tracking
+description = A module for tracking users' Course interactions
+core = 7.x
+package = GlobalNET

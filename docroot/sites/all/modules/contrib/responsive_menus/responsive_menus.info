@@ -4,9 +4,8 @@ package = User interface
 core = 7.x
 configure = admin/config/user-interface/responsive_menus
 
-; Information added by Drupal.org packaging script on 2015-07-28
-version = "7.x-1.5+15-dev"
+; Information added by Drupal.org packaging script on 2018-12-05
+version = "7.x-1.7"
 core = "7.x"
 project = "responsive_menus"
-datestamp = "1438042440"
-
+datestamp = "1544024284"

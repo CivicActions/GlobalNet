@@ -1,19 +1,54 @@
 (function ($, Drupal, window, document, undefined) {
+  // Base function for loading session add/edit form.
+  function sessionCreate() {
+    $('.ajaxatron').each(function (index, value) {
+      var str = $(this).attr('id');
+      var level = $(this).attr('data-level');
+      var nid = $(this).attr('data-nid');
+      var urlArg = str.split('-');
+      $(this).click(function () {
+        $('.loader').removeClass('loader-hidden');
+
+        $(this).siblings().children('.sessions-ajax-form').addClass('loading');
+        $.ajaxSetup({
+          beforeSend: function (xhr) {
+            xhr.overrideMimeType('text/html; charset=utf-8');
+          }
+        });
+        $('.ajaxatron-' + urlArg[1]).load('/admin/non-modal/add/' + urlArg[1] + '/' + level + '/' + nid, function () {
+          $(this).siblings().children('.sessions-ajax-form').removeClass('loading');
+          $('.loader').addClass('loader-hidden');
+
+        });
+        // This is what we do to naughty elements that won't go to bed when modals appear.
+        if ($(this).attr('data-level') !== 'level3') {
+          $('#footer-container,#header-wrapper').css('display', 'none');
+        }
+      });
+    });
+  }
 
   Drupal.behaviors.gn2_sessions_fc = {
+
     attach: function (context, settings) {
-      $('.view-session-level-1-title-links > a').each(function () {
+
+      // We hide the level one drag buttons for non-admins.
+      if (Drupal.settings.gn2_sessions_fc == undefined || !Drupal.settings.gn2_sessions_fc.gn2_sessions_fc_og_admin) {
+        $('.perm-handle').hide();
+      }
+
+      $('a.append-handle-catch').each(function () {
         if (Drupal.settings.gn2_sessions_fc.gn2_sessions_fc_og_admin && $(this).attr('href') != undefined) {
           var urlArg = $(this).attr('href').split('/');
           $(this).append('<span data-nid="' + urlArg[2] + '" data-level="level1" data-id="' + urlArg[3] + '" class="updateatron handle handle-group-level1">+</span>');
         }
-      })
+      });
       // Here's for level 2 items.
       $('.handle-group-level1').mousedown(function () {
         var brake = dragula({
           isContainer: function (el) {
             return el.classList.contains('view-content');
-          },
+          }
         });
         brake.on('dragend', function () {
           $('#updateatron-holder').addClass('show-updateatron');
@@ -21,7 +56,7 @@
           // Release the container when we drop the element.
           brake.destroy();
         });
-      })
+      });
 
 
       // Function used to update session order.
@@ -83,13 +118,14 @@
       });
 
       $(document).ajaxStop(function () {
-
+        // Base function for loading session add/edit form.
+        sessionCreate();
         // First we make our fieldsets clickable.
         $('fieldset.collapsible').once('collapse', function () {
           var $fieldset = $(this);
           // Expand fieldset if there are errors inside, or if it contains an
           // element that is targeted by the URI fragment identifier.
-          var anchor = location.hash && location.hash != '#' ? ', ' + location.hash : '';
+          var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
           if ($fieldset.find('.error' + anchor).length) {
             $fieldset.removeClass('collapsed');
           }
@@ -132,7 +168,7 @@
             // Release the container when we drop the element.
             blake.destroy();
           });
-        })
+        });
         // Here's for level 3 items.
         $('.handle-group-ind-items-level3').mousedown(function () {
           var snake = dragula({
@@ -172,54 +208,30 @@
 
 
         $('.deleteatron').click(function () {
-
-          if ($(this).parent().parent('.group-level1')) {
-            $(this).parent().parent('.group-level1').remove();
-          }
-
-          if ($(this).parent().parent('.field-type-field-collection')) {
-            $(this).parent().parent('.field-type-field-collection').remove();
-          }
-
-          var urlArg = $(this).attr('data-id');
-          var nid = $(this).attr('data-nid');
-          var token = $(this).attr('data-token');
-          $.ajax({
-            url: Drupal.settings.basePath + 'gn2_sessions_fc/delete/' + urlArg + '/' + nid + '/' + token,
-            type: 'GET',
-            success: function (ajaxData) {
-            },
-            error: function () {
-              console.log('Ajax delivery failed');
+          var retVal = confirm("Are you sure you want to delete this session?");
+          if (retVal === true) {
+            if ($(this).parent().parent('.group-level1')) {
+              $(this).parent().parent().parent().parent('.views-row').remove();
             }
-          });
-        });
 
-        // Base function for loading session add/edit form.
-        $('.ajaxatron').each(function (index, value) {
-          var str = $(this).attr('id');
-          var level = $(this).attr('data-level');
-          var nid = $(this).attr('data-nid');
-          var urlArg = str.split('-');
-          $(this).click(function () {
-            $('.loader').removeClass('loader-hidden');
+            if ($(this).parent().parent('.field-type-field-collection')) {
+              $(this).parent().parent('.field-type-field-collection').remove();
+            }
 
-            $(this).siblings().children('.sessions-ajax-form').addClass('loading');
-            $.ajaxSetup({
-              beforeSend: function (xhr) {
-                xhr.overrideMimeType('text/html; charset=utf-8');
+            var urlArg = $(this).attr('data-id');
+            var nid = $(this).attr('data-nid');
+            var token = $(this).attr('data-token');
+            $.ajax({
+              url: Drupal.settings.basePath + 'gn2_sessions_fc/delete/' + urlArg + '/' + nid + '/' + token,
+              type: 'GET',
+              success: function (ajaxData) {
+                location.reload();
+              },
+              error: function () {
+                console.log('Ajax delivery failed');
               }
             });
-            $('.ajaxatron-' + urlArg[1]).load('/admin/non-modal/add/' + urlArg[1] + '/' + level + '/' + nid, function () {
-              $(this).siblings().children('.sessions-ajax-form').removeClass('loading');
-              $('.loader').addClass('loader-hidden');
-
-            });
-            // This is what we do to naughty elements that won't go to bed when modals appear.
-            if ($(this).attr('data-level') !== 'level3') {
-              $('#footer-container,#header-wrapper').css('display', 'none');
-            }
-          });
+          }
         });
 
         // Fired when session edit button clicked.
@@ -233,7 +245,7 @@
 
             $('.loader').removeClass('loader-hidden');
             if ($('.loading').length < 1) {
-              if (level == 'level1') {
+              if (level === 'level1') {
                 $(this).parent().siblings('.field-group-fieldset').removeClass('collapsed');
                 $(this).parent().siblings('.session-edit-container').addClass('loading');
                 $(this).parent().siblings('.session-edit-container').load('/admin/non-modal/edit/' + urlArg + '/' + level + '/' + nid, function () {
@@ -259,7 +271,7 @@
         // Just reload the page.
         $('.cancelatron').click(function () {
           location.reload();
-        })
+        });
 
         // Simple js form validation for title field.
         $('#gn2-sessions-fc-add-form #edit-submit').click(function () {
@@ -273,6 +285,7 @@
   };
 
   $(document).ready(function () {
+    sessionCreate();
 
     function getQueryString(n) {
       var half = location.search.split(n + '=')[1];
@@ -314,7 +327,7 @@
           });
         }
         e.preventDefault();
-      })
+      });
     })
 
     // Load tabs on courses.

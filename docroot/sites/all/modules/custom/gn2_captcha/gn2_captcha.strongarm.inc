@@ -159,7 +159,7 @@ function gn2_captcha_strongarm() {
   /* captcha_token */  /* captcha_token */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* captcha_token */  /* captcha_token */ $strongarm->api_version = 1;
   /* captcha_token */  /* captcha_token */ $strongarm->name = 'captcha_token';
-  /* captcha_token */  /* captcha_token */ $strongarm->value = '3fdccde313e08efca4386861ed1aca68';
+  /* captcha_token */  /* captcha_token */ $strongarm->value = '';
   $export['captcha_token'] = $strongarm;
 
   /* image_captcha_background_color */  /* image_captcha_background_color */ $strongarm = new stdClass();

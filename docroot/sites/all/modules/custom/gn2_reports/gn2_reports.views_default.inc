@@ -28,7 +28,39 @@ function gn2_reports_views_default_views() {
   /* bulk_import_report */  /* Master */ $handler->display->display_options['access']['perm'] = 'administer users';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['cache']['type'] = 'none';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['query']['type'] = 'views_query';
-  /* bulk_import_report */  /* Master */ $handler->display->display_options['exposed_form']['type'] = 'basic';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['exposed_form']['options']['bef'] = array(
+  /* bulk_import_report */  /* Master */   'general' => array(
+  /* bulk_import_report */  /* Master */     'input_required' => 0,
+  /* bulk_import_report */  /* Master */     'text_input_required' => array(
+  /* bulk_import_report */  /* Master */       'text_input_required' => array(
+  /* bulk_import_report */  /* Master */         'value' => 'Select any filter and click on Apply to see results',
+  /* bulk_import_report */  /* Master */         'format' => 'filtered_html',
+  /* bulk_import_report */  /* Master */       ),
+  /* bulk_import_report */  /* Master */     ),
+  /* bulk_import_report */  /* Master */     'allow_secondary' => 0,
+  /* bulk_import_report */  /* Master */     'secondary_label' => 'Advanced options',
+  /* bulk_import_report */  /* Master */     'secondary_collapse_override' => '0',
+  /* bulk_import_report */  /* Master */   ),
+  /* bulk_import_report */  /* Master */   'timestamp' => array(
+  /* bulk_import_report */  /* Master */     'bef_format' => 'bef_datepicker',
+  /* bulk_import_report */  /* Master */     'more_options' => array(
+  /* bulk_import_report */  /* Master */       'autosubmit' => 0,
+  /* bulk_import_report */  /* Master */       'is_secondary' => 0,
+  /* bulk_import_report */  /* Master */       'any_label' => '',
+  /* bulk_import_report */  /* Master */       'bef_filter_description' => '',
+  /* bulk_import_report */  /* Master */       'tokens' => array(
+  /* bulk_import_report */  /* Master */         'available' => array(
+  /* bulk_import_report */  /* Master */           0 => 'global_types',
+  /* bulk_import_report */  /* Master */         ),
+  /* bulk_import_report */  /* Master */       ),
+  /* bulk_import_report */  /* Master */       'rewrite' => array(
+  /* bulk_import_report */  /* Master */         'filter_rewrite_values' => '',
+  /* bulk_import_report */  /* Master */       ),
+  /* bulk_import_report */  /* Master */       'datepicker_options' => '',
+  /* bulk_import_report */  /* Master */     ),
+  /* bulk_import_report */  /* Master */   ),
+  /* bulk_import_report */  /* Master */ );
   /* bulk_import_report */  /* Master */ $handler->display->display_options['pager']['type'] = 'full';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['pager']['options']['items_per_page'] = '50';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['style_plugin'] = 'table';
@@ -96,6 +128,10 @@ function gn2_reports_views_default_views() {
   /* bulk_import_report */  /* Master */     'empty_column' => 0,
   /* bulk_import_report */  /* Master */   ),
   /* bulk_import_report */  /* Master */ );
+  /* bulk_import_report */  /* Master */ /* Header: Global: Result summary */
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['header']['result']['id'] = 'result';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['header']['result']['table'] = 'views';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['header']['result']['field'] = 'result';
   /* bulk_import_report */  /* Master */ /* No results behavior: Global: Text area */
   /* bulk_import_report */  /* Master */ $handler->display->display_options['empty']['area']['id'] = 'area';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -165,6 +201,24 @@ function gn2_reports_views_default_views() {
   /* bulk_import_report */  /* Master */ $handler->display->display_options['sorts']['iid']['table'] = 'gn2_user_report_users';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['sorts']['iid']['field'] = 'iid';
   /* bulk_import_report */  /* Master */ $handler->display->display_options['sorts']['iid']['order'] = 'DESC';
+  /* bulk_import_report */  /* Master */ /* Filter criterion: User Import Report: Imported Date */
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['id'] = 'timestamp';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['table'] = 'gn2_user_report_users';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['field'] = 'timestamp';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['operator'] = '>=';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['exposed'] = TRUE;
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['operator_id'] = 'timestamp_op';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['label'] = 'Imported Date';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['use_operator'] = TRUE;
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['operator'] = 'timestamp_op';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['identifier'] = 'timestamp';
+  /* bulk_import_report */  /* Master */ $handler->display->display_options['filters']['timestamp']['expose']['remember_roles'] = array(
+  /* bulk_import_report */  /* Master */   2 => '2',
+  /* bulk_import_report */  /* Master */   1 => 0,
+  /* bulk_import_report */  /* Master */   9 => 0,
+  /* bulk_import_report */  /* Master */   10 => 0,
+  /* bulk_import_report */  /* Master */   11 => 0,
+  /* bulk_import_report */  /* Master */ );
 
   /* bulk_import_report */ /* Display: All imports */
   /* bulk_import_report */  /* All imports */ $handler = $view->new_display('page', 'All imports', 'page');
@@ -207,6 +261,8 @@ function gn2_reports_views_default_views() {
   /* bulk_import_report */   t('Sort by'),
   /* bulk_import_report */   t('Asc'),
   /* bulk_import_report */   t('Desc'),
+  /* bulk_import_report */   t('Select any filter and click on Apply to see results'),
+  /* bulk_import_report */   t('Advanced options'),
   /* bulk_import_report */   t('Items per page'),
   /* bulk_import_report */   t('- All -'),
   /* bulk_import_report */   t('Offset'),
@@ -214,6 +270,7 @@ function gn2_reports_views_default_views() {
   /* bulk_import_report */   t('‹ previous'),
   /* bulk_import_report */   t('next ›'),
   /* bulk_import_report */   t('last »'),
+  /* bulk_import_report */   t('Displaying @start - @end of @total'),
   /* bulk_import_report */   t('No bulk imports have been recorded.'),
   /* bulk_import_report */   t('Importing User'),
   /* bulk_import_report */   t('User'),
@@ -466,7 +523,7 @@ function gn2_reports_views_default_views() {
   /* report_user */  /* Master */   'field_formatter_class' => '',
   /* report_user */  /* Master */ );
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_name_last']['field_api_classes'] = TRUE;
-  /* report_user */  /* Master */ /* Field: User: Job title */
+  /* report_user */  /* Master */ /* Field: Field: Position */
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_title']['id'] = 'field_user_title';
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_title']['table'] = 'field_data_field_user_title';
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_title']['field'] = 'field_user_title';
@@ -477,7 +534,7 @@ function gn2_reports_views_default_views() {
   /* report_user */  /* Master */   'field_formatter_class' => '',
   /* report_user */  /* Master */ );
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_title']['field_api_classes'] = TRUE;
-  /* report_user */  /* Master */ /* Field: User: Organization */
+  /* report_user */  /* Master */ /* Field: Field: Organization */
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_organization']['id'] = 'field_user_organization';
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_organization']['table'] = 'field_data_field_user_organization';
   /* report_user */  /* Master */ $handler->display->display_options['fields']['field_user_organization']['field'] = 'field_user_organization';
@@ -715,7 +772,7 @@ function gn2_reports_views_default_views() {
   /* report_user */  /* Page */   'field_formatter_class' => '',
   /* report_user */  /* Page */ );
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_name_last']['field_api_classes'] = TRUE;
-  /* report_user */  /* Page */ /* Field: User: Job title */
+  /* report_user */  /* Page */ /* Field: Field: Position */
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_title']['id'] = 'field_user_title';
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_title']['table'] = 'field_data_field_user_title';
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_title']['field'] = 'field_user_title';
@@ -726,7 +783,7 @@ function gn2_reports_views_default_views() {
   /* report_user */  /* Page */   'field_formatter_class' => '',
   /* report_user */  /* Page */ );
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_title']['field_api_classes'] = TRUE;
-  /* report_user */  /* Page */ /* Field: User: Organization */
+  /* report_user */  /* Page */ /* Field: Field: Organization */
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_organization']['id'] = 'field_user_organization';
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_organization']['table'] = 'field_data_field_user_organization';
   /* report_user */  /* Page */ $handler->display->display_options['fields']['field_user_organization']['field'] = 'field_user_organization';
@@ -839,6 +896,7 @@ function gn2_reports_views_default_views() {
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['id'] = 'status';
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['table'] = 'users';
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['field'] = 'status';
+  /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['value'] = 'All';
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['group'] = 1;
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['exposed'] = TRUE;
   /* report_user */  /* Page */ $handler->display->display_options['filters']['status']['expose']['operator_id'] = '';
@@ -929,7 +987,7 @@ function gn2_reports_views_default_views() {
   /* report_user */   t('Last login'),
   /* report_user */   t('FirstName'),
   /* report_user */   t('LastName'),
-  /* report_user */   t('Job title'),
+  /* report_user */   t('Position'),
   /* report_user */   t('Organization'),
   /* report_user */   t('Residence'),
   /* report_user */   t('E-mail'),
@@ -1177,7 +1235,6 @@ function gn2_reports_views_default_views() {
   /* report_watchdog */  /* Master */   'entityreference' => 'entityreference',
   /* report_watchdog */  /* Master */   'features' => 'features',
   /* report_watchdog */  /* Master */   'file' => 'file',
-  /* report_watchdog */  /* Master */   'form' => 'form',
   /* report_watchdog */  /* Master */   'GN Notifications' => 'GN Notifications',
   /* report_watchdog */  /* Master */   'google analytics reports api' => 'google analytics reports api',
   /* report_watchdog */  /* Master */   'hook_update_deploy_tools' => 'hook_update_deploy_tools',

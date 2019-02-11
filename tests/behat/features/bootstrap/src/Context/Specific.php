@@ -749,7 +749,6 @@ class Specific extends RawDrupalContext {
       "group",
       "event",
       "organization",
-      "alumni_group",
       "course",
     );
     $content_count = 0;

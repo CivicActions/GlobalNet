@@ -1,0 +1,10 @@
+version: "2"
+services:
+  web:
+    volumes:
+      - bowline_filesync:/var/www:nocopy
+
+volumes:
+  bowline_filesync:
+    external:
+      name: "${SLUG}_filesync"

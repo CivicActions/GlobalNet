@@ -101,7 +101,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-body */       'allowed_formats' => array(
   /* node-coi-body */         'filtered_html' => 'filtered_html',
   /* node-coi-body */         'full_html' => 'full_html',
-  /* node-coi-body */         'php_code' => 0,
   /* node-coi-body */         'plain_text' => 'plain_text',
   /* node-coi-body */       ),
   /* node-coi-body */       'allowed_formats_toggle' => 1,
@@ -113,9 +112,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-body */           ),
   /* node-coi-body */           'full_html' => array(
   /* node-coi-body */             'weight' => -8,
-  /* node-coi-body */           ),
-  /* node-coi-body */           'php_code' => array(
-  /* node-coi-body */             'weight' => -7,
   /* node-coi-body */           ),
   /* node-coi-body */           'plain_text' => array(
   /* node-coi-body */             'weight' => -9,
@@ -417,7 +413,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-field_group_help */       'allowed_formats' => array(
   /* node-coi-field_group_help */         'filtered_html' => 'filtered_html',
   /* node-coi-field_group_help */         'full_html' => 'full_html',
-  /* node-coi-field_group_help */         'php_code' => 'php_code',
   /* node-coi-field_group_help */         'plain_text' => 'plain_text',
   /* node-coi-field_group_help */       ),
   /* node-coi-field_group_help */       'allowed_formats_toggle' => 0,
@@ -429,9 +424,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-field_group_help */           ),
   /* node-coi-field_group_help */           'full_html' => array(
   /* node-coi-field_group_help */             'weight' => -8,
-  /* node-coi-field_group_help */           ),
-  /* node-coi-field_group_help */           'php_code' => array(
-  /* node-coi-field_group_help */             'weight' => -7,
   /* node-coi-field_group_help */           ),
   /* node-coi-field_group_help */           'plain_text' => array(
   /* node-coi-field_group_help */             'weight' => -9,
@@ -536,7 +528,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-field_group_short_title */       'allowed_formats' => array(
   /* node-coi-field_group_short_title */         'filtered_html' => 'filtered_html',
   /* node-coi-field_group_short_title */         'full_html' => 'full_html',
-  /* node-coi-field_group_short_title */         'php_code' => 'php_code',
   /* node-coi-field_group_short_title */         'plain_text' => 'plain_text',
   /* node-coi-field_group_short_title */       ),
   /* node-coi-field_group_short_title */       'allowed_formats_toggle' => 0,
@@ -548,9 +539,6 @@ function gn2_coi_field_default_field_instances() {
   /* node-coi-field_group_short_title */           ),
   /* node-coi-field_group_short_title */           'full_html' => array(
   /* node-coi-field_group_short_title */             'weight' => -8,
-  /* node-coi-field_group_short_title */           ),
-  /* node-coi-field_group_short_title */           'php_code' => array(
-  /* node-coi-field_group_short_title */             'weight' => -7,
   /* node-coi-field_group_short_title */           ),
   /* node-coi-field_group_short_title */           'plain_text' => array(
   /* node-coi-field_group_short_title */             'weight' => -9,

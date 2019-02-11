@@ -1,5 +1,5 @@
 @api @add @content @customlandingpage
-Feature: Adding Custom Landing Page
+Feature: content.customlanding.add.feature
 
   @orgmanager
   Scenario Outline: Org Managers can create new Landing pages

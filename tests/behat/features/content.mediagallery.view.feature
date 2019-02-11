@@ -45,9 +45,9 @@ Feature: Viewing Media Galleries
     Then I should see the CSS selector ".view-resources .views-field-title"
 
 
-  @RD-1969
-  Scenario: Mp4's show up with correct headers
-    Given I am logged in as "qa-admin" with password "CivicActions3#"
-    And I visit "system/files/SampleVideo_1280x720_1mb.mp4"
-    Then I should get a 200 HTTP response
-    Then I see that the movie header is compatible with Safari
+  #@RD-1969 - this is now resolved by RD-4439
+  #Scenario: Mp4's show up with correct headers
+    #Given I am logged in as "qa-admin" with password "CivicActions3#"
+    #And I visit "system/files/SampleVideo_1280x720_1mb.mp4"
+    #Then I should get a 200 HTTP response
+    #Then I see that the movie header is compatible with Safari

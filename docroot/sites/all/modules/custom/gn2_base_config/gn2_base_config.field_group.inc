@@ -28,7 +28,6 @@ function gn2_base_config_field_group_info() {
    /* group_account|user|user|form */     2 => 'group_contact_info',
    /* group_account|user|user|form */     3 => 'group_education',
    /* group_account|user|user|form */     4 => 'group_employers',
-   /* group_account|user|user|form */     5 => 'group_expertise',
    /* group_account|user|user|form */     6 => 'group_interests_tab',
    /* group_account|user|user|form */     7 => 'group_settings',
    /* group_account|user|user|form */   ),
@@ -116,8 +115,7 @@ function gn2_base_config_field_group_info() {
    /* group_admin_settings|user|user|form */   'weight' => '9',
    /* group_admin_settings|user|user|form */   'children' => array(
    /* group_admin_settings|user|user|form */     0 => 'og_user_node',
-   /* group_admin_settings|user|user|form */     1 => 'field_org_role',
-   /* group_admin_settings|user|user|form */     2 => 'redirect',
+   /* group_admin_settings|user|user|form */     1 => 'redirect',
    /* group_admin_settings|user|user|form */   ),
    /* group_admin_settings|user|user|form */   'format_type' => 'fieldset',
    /* group_admin_settings|user|user|form */   'format_settings' => array(
@@ -535,37 +533,6 @@ function gn2_base_config_field_group_info() {
    /* group_basic_info|user|user|form */ );
   $field_groups['group_basic_info|user|user|form'] = $field_group;
 
-   /* group_basic|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_basic|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_basic|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_basic|node|alumni_group|form */ $field_group->identifier = 'group_basic|node|alumni_group|form';
-   /* group_basic|node|alumni_group|form */ $field_group->group_name = 'group_basic';
-   /* group_basic|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_basic|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_basic|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_basic|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_basic|node|alumni_group|form */ $field_group->data = array(
-   /* group_basic|node|alumni_group|form */   'label' => 'Basic Information',
-   /* group_basic|node|alumni_group|form */   'weight' => '0',
-   /* group_basic|node|alumni_group|form */   'children' => array(
-   /* group_basic|node|alumni_group|form */     0 => 'field_group_short_title',
-   /* group_basic|node|alumni_group|form */     1 => 'body',
-   /* group_basic|node|alumni_group|form */     2 => 'field_main_image',
-   /* group_basic|node|alumni_group|form */     3 => 'field_rec_links',
-   /* group_basic|node|alumni_group|form */     4 => 'title',
-   /* group_basic|node|alumni_group|form */   ),
-   /* group_basic|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_basic|node|alumni_group|form */   'format_settings' => array(
-   /* group_basic|node|alumni_group|form */     'formatter' => 'collapsible',
-   /* group_basic|node|alumni_group|form */     'instance_settings' => array(
-   /* group_basic|node|alumni_group|form */       'description' => '',
-   /* group_basic|node|alumni_group|form */       'classes' => 'group-basic field-group-fieldset',
-   /* group_basic|node|alumni_group|form */       'required_fields' => 1,
-   /* group_basic|node|alumni_group|form */     ),
-   /* group_basic|node|alumni_group|form */   ),
-   /* group_basic|node|alumni_group|form */ );
-  $field_groups['group_basic|node|alumni_group|form'] = $field_group;
-
    /* group_basic|node|course_group|form */ $field_group = new stdClass();
    /* group_basic|node|course_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_basic|node|course_group|form */ $field_group->api_version = 1;
@@ -772,34 +739,6 @@ function gn2_base_config_field_group_info() {
    /* group_content|node|post|teaserthumb */   ),
    /* group_content|node|post|teaserthumb */ );
   $field_groups['group_content|node|post|teaserthumb'] = $field_group;
-
-   /* group_countries|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_countries|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_countries|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_countries|node|alumni_group|form */ $field_group->identifier = 'group_countries|node|alumni_group|form';
-   /* group_countries|node|alumni_group|form */ $field_group->group_name = 'group_countries';
-   /* group_countries|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_countries|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_countries|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_countries|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_countries|node|alumni_group|form */ $field_group->data = array(
-   /* group_countries|node|alumni_group|form */   'label' => 'Countries',
-   /* group_countries|node|alumni_group|form */   'weight' => '4',
-   /* group_countries|node|alumni_group|form */   'children' => array(
-   /* group_countries|node|alumni_group|form */     0 => 'field_country',
-   /* group_countries|node|alumni_group|form */   ),
-   /* group_countries|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_countries|node|alumni_group|form */   'format_settings' => array(
-   /* group_countries|node|alumni_group|form */     'label' => 'Countries',
-   /* group_countries|node|alumni_group|form */     'instance_settings' => array(
-   /* group_countries|node|alumni_group|form */       'required_fields' => 0,
-   /* group_countries|node|alumni_group|form */       'classes' => 'group-countries field-group-fieldset',
-   /* group_countries|node|alumni_group|form */       'description' => '',
-   /* group_countries|node|alumni_group|form */     ),
-   /* group_countries|node|alumni_group|form */     'formatter' => 'collapsed',
-   /* group_countries|node|alumni_group|form */   ),
-   /* group_countries|node|alumni_group|form */ );
-  $field_groups['group_countries|node|alumni_group|form'] = $field_group;
 
    /* group_countries|node|announcement|form */ $field_group = new stdClass();
    /* group_countries|node|announcement|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -1367,39 +1306,6 @@ function gn2_base_config_field_group_info() {
    /* group_event_type|node|event|form */ );
   $field_groups['group_event_type|node|event|form'] = $field_group;
 
-   /* group_expertise|user|user|form */ $field_group = new stdClass();
-   /* group_expertise|user|user|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_expertise|user|user|form */ $field_group->api_version = 1;
-   /* group_expertise|user|user|form */ $field_group->identifier = 'group_expertise|user|user|form';
-   /* group_expertise|user|user|form */ $field_group->group_name = 'group_expertise';
-   /* group_expertise|user|user|form */ $field_group->entity_type = 'user';
-   /* group_expertise|user|user|form */ $field_group->bundle = 'user';
-   /* group_expertise|user|user|form */ $field_group->mode = 'form';
-   /* group_expertise|user|user|form */ $field_group->parent_name = 'group_account';
-   /* group_expertise|user|user|form */ $field_group->data = array(
-   /* group_expertise|user|user|form */   'label' => 'Expertise',
-   /* group_expertise|user|user|form */   'weight' => '34',
-   /* group_expertise|user|user|form */   'children' => array(
-   /* group_expertise|user|user|form */     0 => 'field_expertise',
-   /* group_expertise|user|user|form */   ),
-   /* group_expertise|user|user|form */   'format_type' => 'div',
-   /* group_expertise|user|user|form */   'format_settings' => array(
-   /* group_expertise|user|user|form */     'label' => 'Expertise',
-   /* group_expertise|user|user|form */     'instance_settings' => array(
-   /* group_expertise|user|user|form */       'required_fields' => 1,
-   /* group_expertise|user|user|form */       'id' => '',
-   /* group_expertise|user|user|form */       'classes' => 'hide',
-   /* group_expertise|user|user|form */       'description' => '',
-   /* group_expertise|user|user|form */       'show_label' => '1',
-   /* group_expertise|user|user|form */       'label_element' => 'h3',
-   /* group_expertise|user|user|form */       'effect' => 'none',
-   /* group_expertise|user|user|form */       'speed' => 'fast',
-   /* group_expertise|user|user|form */     ),
-   /* group_expertise|user|user|form */     'formatter' => 'open',
-   /* group_expertise|user|user|form */   ),
-   /* group_expertise|user|user|form */ );
-  $field_groups['group_expertise|user|user|form'] = $field_group;
-
    /* group_file_attachments|node|course|form */ $field_group = new stdClass();
    /* group_file_attachments|node|course|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_file_attachments|node|course|form */ $field_group->api_version = 1;
@@ -1458,33 +1364,6 @@ function gn2_base_config_field_group_info() {
    /* group_footer_content|node|organization|form */   ),
    /* group_footer_content|node|organization|form */ );
   $field_groups['group_footer_content|node|organization|form'] = $field_group;
-
-   /* group_help|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_help|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_help|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_help|node|alumni_group|form */ $field_group->identifier = 'group_help|node|alumni_group|form';
-   /* group_help|node|alumni_group|form */ $field_group->group_name = 'group_help';
-   /* group_help|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_help|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_help|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_help|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_help|node|alumni_group|form */ $field_group->data = array(
-   /* group_help|node|alumni_group|form */   'label' => 'Help',
-   /* group_help|node|alumni_group|form */   'weight' => '7',
-   /* group_help|node|alumni_group|form */   'children' => array(
-   /* group_help|node|alumni_group|form */     0 => 'field_group_help',
-   /* group_help|node|alumni_group|form */   ),
-   /* group_help|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_help|node|alumni_group|form */   'format_settings' => array(
-   /* group_help|node|alumni_group|form */     'formatter' => 'collapsible',
-   /* group_help|node|alumni_group|form */     'instance_settings' => array(
-   /* group_help|node|alumni_group|form */       'description' => '',
-   /* group_help|node|alumni_group|form */       'classes' => 'group-help field-group-fieldset',
-   /* group_help|node|alumni_group|form */       'required_fields' => 1,
-   /* group_help|node|alumni_group|form */     ),
-   /* group_help|node|alumni_group|form */   ),
-   /* group_help|node|alumni_group|form */ );
-  $field_groups['group_help|node|alumni_group|form'] = $field_group;
 
    /* group_help|node|course_group|form */ $field_group = new stdClass();
    /* group_help|node|course_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -1957,36 +1836,6 @@ function gn2_base_config_field_group_info() {
    /* group_miscellaneous|node|organization|form */ );
   $field_groups['group_miscellaneous|node|organization|form'] = $field_group;
 
-   /* group_misc|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_misc|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_misc|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_misc|node|alumni_group|form */ $field_group->identifier = 'group_misc|node|alumni_group|form';
-   /* group_misc|node|alumni_group|form */ $field_group->group_name = 'group_misc';
-   /* group_misc|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_misc|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_misc|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_misc|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_misc|node|alumni_group|form */ $field_group->data = array(
-   /* group_misc|node|alumni_group|form */   'label' => 'Miscellaneous',
-   /* group_misc|node|alumni_group|form */   'weight' => '11',
-   /* group_misc|node|alumni_group|form */   'children' => array(
-   /* group_misc|node|alumni_group|form */     0 => 'group_group',
-   /* group_misc|node|alumni_group|form */     1 => 'og_menu',
-   /* group_misc|node|alumni_group|form */     2 => 'path',
-   /* group_misc|node|alumni_group|form */     3 => 'redirect',
-   /* group_misc|node|alumni_group|form */   ),
-   /* group_misc|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_misc|node|alumni_group|form */   'format_settings' => array(
-   /* group_misc|node|alumni_group|form */     'formatter' => 'collapsible',
-   /* group_misc|node|alumni_group|form */     'instance_settings' => array(
-   /* group_misc|node|alumni_group|form */       'description' => '',
-   /* group_misc|node|alumni_group|form */       'classes' => 'group-misc field-group-fieldset',
-   /* group_misc|node|alumni_group|form */       'required_fields' => 1,
-   /* group_misc|node|alumni_group|form */     ),
-   /* group_misc|node|alumni_group|form */   ),
-   /* group_misc|node|alumni_group|form */ );
-  $field_groups['group_misc|node|alumni_group|form'] = $field_group;
-
    /* group_misc|node|group|form */ $field_group = new stdClass();
    /* group_misc|node|group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_misc|node|group|form */ $field_group->api_version = 1;
@@ -2443,37 +2292,6 @@ function gn2_base_config_field_group_info() {
    /* group_privacy_settings|node|publication|form */ );
   $field_groups['group_privacy_settings|node|publication|form'] = $field_group;
 
-   /* group_privacy|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_privacy|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_privacy|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_privacy|node|alumni_group|form */ $field_group->identifier = 'group_privacy|node|alumni_group|form';
-   /* group_privacy|node|alumni_group|form */ $field_group->group_name = 'group_privacy';
-   /* group_privacy|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_privacy|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_privacy|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_privacy|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_privacy|node|alumni_group|form */ $field_group->data = array(
-   /* group_privacy|node|alumni_group|form */   'label' => 'Privacy settings',
-   /* group_privacy|node|alumni_group|form */   'weight' => '9',
-   /* group_privacy|node|alumni_group|form */   'children' => array(
-   /* group_privacy|node|alumni_group|form */     0 => 'og_group_ref',
-   /* group_privacy|node|alumni_group|form */     1 => 'field_gn2_simple_access',
-   /* group_privacy|node|alumni_group|form */     2 => 'og_roles_permissions',
-   /* group_privacy|node|alumni_group|form */     3 => 'group_access',
-   /* group_privacy|node|alumni_group|form */   ),
-   /* group_privacy|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_privacy|node|alumni_group|form */   'format_settings' => array(
-   /* group_privacy|node|alumni_group|form */     'label' => 'Privacy settings',
-   /* group_privacy|node|alumni_group|form */     'instance_settings' => array(
-   /* group_privacy|node|alumni_group|form */       'required_fields' => 0,
-   /* group_privacy|node|alumni_group|form */       'classes' => 'group-privacy field-group-fieldset',
-   /* group_privacy|node|alumni_group|form */       'description' => '',
-   /* group_privacy|node|alumni_group|form */     ),
-   /* group_privacy|node|alumni_group|form */     'formatter' => 'collapsed',
-   /* group_privacy|node|alumni_group|form */   ),
-   /* group_privacy|node|alumni_group|form */ );
-  $field_groups['group_privacy|node|alumni_group|form'] = $field_group;
-
    /* group_privacy|node|course_group|form */ $field_group = new stdClass();
    /* group_privacy|node|course_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_privacy|node|course_group|form */ $field_group->api_version = 1;
@@ -2677,34 +2495,6 @@ function gn2_base_config_field_group_info() {
    /* group_publishing|node|post|form */   ),
    /* group_publishing|node|post|form */ );
   $field_groups['group_publishing|node|post|form'] = $field_group;
-
-   /* group_regions|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_regions|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_regions|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_regions|node|alumni_group|form */ $field_group->identifier = 'group_regions|node|alumni_group|form';
-   /* group_regions|node|alumni_group|form */ $field_group->group_name = 'group_regions';
-   /* group_regions|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_regions|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_regions|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_regions|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_regions|node|alumni_group|form */ $field_group->data = array(
-   /* group_regions|node|alumni_group|form */   'label' => 'Regions',
-   /* group_regions|node|alumni_group|form */   'weight' => '5',
-   /* group_regions|node|alumni_group|form */   'children' => array(
-   /* group_regions|node|alumni_group|form */     0 => 'field_region',
-   /* group_regions|node|alumni_group|form */   ),
-   /* group_regions|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_regions|node|alumni_group|form */   'format_settings' => array(
-   /* group_regions|node|alumni_group|form */     'label' => 'Regions',
-   /* group_regions|node|alumni_group|form */     'instance_settings' => array(
-   /* group_regions|node|alumni_group|form */       'required_fields' => 0,
-   /* group_regions|node|alumni_group|form */       'classes' => 'group-regions field-group-fieldset',
-   /* group_regions|node|alumni_group|form */       'description' => '',
-   /* group_regions|node|alumni_group|form */     ),
-   /* group_regions|node|alumni_group|form */     'formatter' => 'collapsed',
-   /* group_regions|node|alumni_group|form */   ),
-   /* group_regions|node|alumni_group|form */ );
-  $field_groups['group_regions|node|alumni_group|form'] = $field_group;
 
    /* group_regions|node|announcement|form */ $field_group = new stdClass();
    /* group_regions|node|announcement|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -3323,34 +3113,6 @@ function gn2_base_config_field_group_info() {
    /* group_title_section|node|event|form */ );
   $field_groups['group_title_section|node|event|form'] = $field_group;
 
-   /* group_topics|node|alumni_group|form */ $field_group = new stdClass();
-   /* group_topics|node|alumni_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-   /* group_topics|node|alumni_group|form */ $field_group->api_version = 1;
-   /* group_topics|node|alumni_group|form */ $field_group->identifier = 'group_topics|node|alumni_group|form';
-   /* group_topics|node|alumni_group|form */ $field_group->group_name = 'group_topics';
-   /* group_topics|node|alumni_group|form */ $field_group->entity_type = 'node';
-   /* group_topics|node|alumni_group|form */ $field_group->bundle = 'alumni_group';
-   /* group_topics|node|alumni_group|form */ $field_group->mode = 'form';
-   /* group_topics|node|alumni_group|form */ $field_group->parent_name = '';
-   /* group_topics|node|alumni_group|form */ $field_group->data = array(
-   /* group_topics|node|alumni_group|form */   'label' => 'Topics',
-   /* group_topics|node|alumni_group|form */   'weight' => '2',
-   /* group_topics|node|alumni_group|form */   'children' => array(
-   /* group_topics|node|alumni_group|form */     0 => 'field_topic',
-   /* group_topics|node|alumni_group|form */   ),
-   /* group_topics|node|alumni_group|form */   'format_type' => 'fieldset',
-   /* group_topics|node|alumni_group|form */   'format_settings' => array(
-   /* group_topics|node|alumni_group|form */     'label' => 'Topics',
-   /* group_topics|node|alumni_group|form */     'instance_settings' => array(
-   /* group_topics|node|alumni_group|form */       'required_fields' => 0,
-   /* group_topics|node|alumni_group|form */       'classes' => 'group-topics field-group-fieldset',
-   /* group_topics|node|alumni_group|form */       'description' => '',
-   /* group_topics|node|alumni_group|form */     ),
-   /* group_topics|node|alumni_group|form */     'formatter' => 'collapsed',
-   /* group_topics|node|alumni_group|form */   ),
-   /* group_topics|node|alumni_group|form */ );
-  $field_groups['group_topics|node|alumni_group|form'] = $field_group;
-
    /* group_topics|node|announcement|form */ $field_group = new stdClass();
    /* group_topics|node|announcement|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_topics|node|announcement|form */ $field_group->api_version = 1;
@@ -3619,12 +3381,13 @@ function gn2_base_config_field_group_info() {
    /* group_username_section|user|user|form */     0 => 'field_name_first',
    /* group_username_section|user|user|form */     1 => 'field_name_last',
    /* group_username_section|user|user|form */     2 => 'field_name_middle',
-   /* group_username_section|user|user|form */     3 => 'field_user_rank_prefix',
-   /* group_username_section|user|user|form */     4 => 'field_user_suffix',
-   /* group_username_section|user|user|form */     5 => 'field_user_organization',
-   /* group_username_section|user|user|form */     6 => 'field_user_title',
-   /* group_username_section|user|user|form */     7 => 'field_cv_resume',
-   /* group_username_section|user|user|form */     8 => 'picture',
+   /* group_username_section|user|user|form */     3 => 'field_org_role',
+   /* group_username_section|user|user|form */     4 => 'field_user_rank_prefix',
+   /* group_username_section|user|user|form */     5 => 'field_user_suffix',
+   /* group_username_section|user|user|form */     6 => 'field_user_organization',
+   /* group_username_section|user|user|form */     7 => 'field_user_title',
+   /* group_username_section|user|user|form */     8 => 'field_cv_resume',
+   /* group_username_section|user|user|form */     9 => 'picture',
    /* group_username_section|user|user|form */   ),
    /* group_username_section|user|user|form */   'format_type' => 'div',
    /* group_username_section|user|user|form */   'format_settings' => array(
@@ -3665,7 +3428,6 @@ function gn2_base_config_field_group_info() {
   t('Education & Training');
   t('Employers');
   t('Event Contact person');
-  t('Expertise');
   t('Files');
   t('Footer Content');
   t('Help');

@@ -1,0 +1,15 @@
+diff --git a/pki_authentication.module b/pki_authentication.module
+index 331a4c2..b05d3b9 100644
+--- a/pki_authentication.module
++++ b/pki_authentication.module
+@@ -164,7 +164,9 @@ function pki_authentication_login($token = '') {
+     drupal_set_message(t("System or configuration error. Please try again later."));
+   }
+   $_SESSION['used_cac'] = TRUE;
+-  drupal_goto('');
++  $destination = (filter_input(INPUT_GET, 'destination')) ? filter_input(INPUT_GET, 'destination') :
++    '';
++  drupal_goto($destination);
+ }
+ /**
+  * Extract the user info generated from the temporary table.

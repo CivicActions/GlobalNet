@@ -22,6 +22,7 @@ function gn2_og_field_default_field_instances() {
   /* node-about_page-field_parent_organization */       'label' => 'above',
   /* node-about_page-field_parent_organization */       'module' => 'entityreference',
   /* node-about_page-field_parent_organization */       'settings' => array(
+  /* node-about_page-field_parent_organization */         'bypass_access' => FALSE,
   /* node-about_page-field_parent_organization */         'field_formatter_class' => '',
   /* node-about_page-field_parent_organization */         'link' => FALSE,
   /* node-about_page-field_parent_organization */       ),
@@ -113,170 +114,6 @@ function gn2_og_field_default_field_instances() {
   /* node-about_page-field_parent_organization */   ),
   /* node-about_page-field_parent_organization */ );
 
-  // Exported field_instance: 'node-alumni_group-field_children_groups'.
-  $field_instances['node-alumni_group-field_children_groups'] = array(
-  /* node-alumni_group-field_children_groups */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_children_groups */   'default_value' => NULL,
-  /* node-alumni_group-field_children_groups */   'default_value_function' => '',
-  /* node-alumni_group-field_children_groups */   'deleted' => 0,
-  /* node-alumni_group-field_children_groups */   'description' => '',
-  /* node-alumni_group-field_children_groups */   'display' => array(
-  /* node-alumni_group-field_children_groups */     'default' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'module' => 'entityreference',
-  /* node-alumni_group-field_children_groups */       'settings' => array(
-  /* node-alumni_group-field_children_groups */         'field_formatter_class' => '',
-  /* node-alumni_group-field_children_groups */         'link' => FALSE,
-  /* node-alumni_group-field_children_groups */       ),
-  /* node-alumni_group-field_children_groups */       'type' => 'entityreference_label',
-  /* node-alumni_group-field_children_groups */       'weight' => 17,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'group_teaser' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'search_teaser' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'sidebar_' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'teaser' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'teaserthumb' => array(
-  /* node-alumni_group-field_children_groups */       'label' => 'above',
-  /* node-alumni_group-field_children_groups */       'settings' => array(),
-  /* node-alumni_group-field_children_groups */       'type' => 'hidden',
-  /* node-alumni_group-field_children_groups */       'weight' => 0,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */   ),
-  /* node-alumni_group-field_children_groups */   'entity_type' => 'node',
-  /* node-alumni_group-field_children_groups */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_children_groups */   'field_name' => 'field_children_groups',
-  /* node-alumni_group-field_children_groups */   'label' => 'Children Groups',
-  /* node-alumni_group-field_children_groups */   'required' => 0,
-  /* node-alumni_group-field_children_groups */   'settings' => array(
-  /* node-alumni_group-field_children_groups */     'behaviors' => array(
-  /* node-alumni_group-field_children_groups */       'prepopulate' => array(
-  /* node-alumni_group-field_children_groups */         'status' => 0,
-  /* node-alumni_group-field_children_groups */       ),
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_children_groups */   ),
-  /* node-alumni_group-field_children_groups */   'widget' => array(
-  /* node-alumni_group-field_children_groups */     'active' => 1,
-  /* node-alumni_group-field_children_groups */     'module' => 'entityreference',
-  /* node-alumni_group-field_children_groups */     'settings' => array(
-  /* node-alumni_group-field_children_groups */       'match_operator' => 'CONTAINS',
-  /* node-alumni_group-field_children_groups */       'path' => '',
-  /* node-alumni_group-field_children_groups */       'size' => 60,
-  /* node-alumni_group-field_children_groups */     ),
-  /* node-alumni_group-field_children_groups */     'type' => 'entityreference_autocomplete',
-  /* node-alumni_group-field_children_groups */     'weight' => 14,
-  /* node-alumni_group-field_children_groups */   ),
-  /* node-alumni_group-field_children_groups */ );
-
-  // Exported field_instance: 'node-alumni_group-field_parent_organization'.
-  $field_instances['node-alumni_group-field_parent_organization'] = array(
-  /* node-alumni_group-field_parent_organization */   'bundle' => 'alumni_group',
-  /* node-alumni_group-field_parent_organization */   'default_value' => NULL,
-  /* node-alumni_group-field_parent_organization */   'default_value_function' => '',
-  /* node-alumni_group-field_parent_organization */   'deleted' => 0,
-  /* node-alumni_group-field_parent_organization */   'description' => '',
-  /* node-alumni_group-field_parent_organization */   'display' => array(
-  /* node-alumni_group-field_parent_organization */     'default' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'module' => 'entityreference',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(
-  /* node-alumni_group-field_parent_organization */         'field_formatter_class' => '',
-  /* node-alumni_group-field_parent_organization */         'link' => FALSE,
-  /* node-alumni_group-field_parent_organization */       ),
-  /* node-alumni_group-field_parent_organization */       'type' => 'entityreference_label',
-  /* node-alumni_group-field_parent_organization */       'weight' => 16,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'group_teaser' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'module' => 'entityreference',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(
-  /* node-alumni_group-field_parent_organization */         'field_formatter_class' => '',
-  /* node-alumni_group-field_parent_organization */         'link' => FALSE,
-  /* node-alumni_group-field_parent_organization */       ),
-  /* node-alumni_group-field_parent_organization */       'type' => 'entityreference_label',
-  /* node-alumni_group-field_parent_organization */       'weight' => 16,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'search_teaser' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(),
-  /* node-alumni_group-field_parent_organization */       'type' => 'hidden',
-  /* node-alumni_group-field_parent_organization */       'weight' => 0,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'sidebar_' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(),
-  /* node-alumni_group-field_parent_organization */       'type' => 'hidden',
-  /* node-alumni_group-field_parent_organization */       'weight' => 0,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'sidebar_teaser_v2' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(),
-  /* node-alumni_group-field_parent_organization */       'type' => 'hidden',
-  /* node-alumni_group-field_parent_organization */       'weight' => 0,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'teaser' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(),
-  /* node-alumni_group-field_parent_organization */       'type' => 'hidden',
-  /* node-alumni_group-field_parent_organization */       'weight' => 0,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'teaserthumb' => array(
-  /* node-alumni_group-field_parent_organization */       'label' => 'above',
-  /* node-alumni_group-field_parent_organization */       'settings' => array(),
-  /* node-alumni_group-field_parent_organization */       'type' => 'hidden',
-  /* node-alumni_group-field_parent_organization */       'weight' => 0,
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */   ),
-  /* node-alumni_group-field_parent_organization */   'entity_type' => 'node',
-  /* node-alumni_group-field_parent_organization */   'fences_wrapper' => 'div',
-  /* node-alumni_group-field_parent_organization */   'field_name' => 'field_parent_organization',
-  /* node-alumni_group-field_parent_organization */   'label' => 'Parent Organization',
-  /* node-alumni_group-field_parent_organization */   'required' => 0,
-  /* node-alumni_group-field_parent_organization */   'settings' => array(
-  /* node-alumni_group-field_parent_organization */     'behaviors' => array(
-  /* node-alumni_group-field_parent_organization */       'prepopulate' => array(
-  /* node-alumni_group-field_parent_organization */         'status' => 0,
-  /* node-alumni_group-field_parent_organization */       ),
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'user_register_form' => FALSE,
-  /* node-alumni_group-field_parent_organization */   ),
-  /* node-alumni_group-field_parent_organization */   'widget' => array(
-  /* node-alumni_group-field_parent_organization */     'active' => 1,
-  /* node-alumni_group-field_parent_organization */     'module' => 'options',
-  /* node-alumni_group-field_parent_organization */     'settings' => array(
-  /* node-alumni_group-field_parent_organization */       'apply_chosen' => '',
-  /* node-alumni_group-field_parent_organization */     ),
-  /* node-alumni_group-field_parent_organization */     'type' => 'options_select',
-  /* node-alumni_group-field_parent_organization */     'weight' => 12,
-  /* node-alumni_group-field_parent_organization */   ),
-  /* node-alumni_group-field_parent_organization */ );
-
   // Exported field_instance: 'node-announcement-field_parent_organization'.
   $field_instances['node-announcement-field_parent_organization'] = array(
   /* node-announcement-field_parent_organization */   'bundle' => 'announcement',
@@ -289,6 +126,7 @@ function gn2_og_field_default_field_instances() {
   /* node-announcement-field_parent_organization */       'label' => 'above',
   /* node-announcement-field_parent_organization */       'module' => 'entityreference',
   /* node-announcement-field_parent_organization */       'settings' => array(
+  /* node-announcement-field_parent_organization */         'bypass_access' => FALSE,
   /* node-announcement-field_parent_organization */         'field_formatter_class' => '',
   /* node-announcement-field_parent_organization */         'link' => FALSE,
   /* node-announcement-field_parent_organization */       ),
@@ -350,190 +188,6 @@ function gn2_og_field_default_field_instances() {
   /* node-announcement-field_parent_organization */   ),
   /* node-announcement-field_parent_organization */ );
 
-  // Exported field_instance: 'node-coi-field_children_groups'.
-  $field_instances['node-coi-field_children_groups'] = array(
-  /* node-coi-field_children_groups */   'bundle' => 'coi',
-  /* node-coi-field_children_groups */   'default_value' => NULL,
-  /* node-coi-field_children_groups */   'default_value_function' => '',
-  /* node-coi-field_children_groups */   'deleted' => 0,
-  /* node-coi-field_children_groups */   'description' => '',
-  /* node-coi-field_children_groups */   'display' => array(
-  /* node-coi-field_children_groups */     'default' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'module' => 'entityreference',
-  /* node-coi-field_children_groups */       'settings' => array(
-  /* node-coi-field_children_groups */         'field_formatter_class' => '',
-  /* node-coi-field_children_groups */         'link' => FALSE,
-  /* node-coi-field_children_groups */       ),
-  /* node-coi-field_children_groups */       'type' => 'entityreference_label',
-  /* node-coi-field_children_groups */       'weight' => 16,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'events_list' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'one_column_teaser' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'sidebar_' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'sidebar_teaser_v2' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'teaser' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'teaserthumb' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'time_and_location' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'title_and_time' => array(
-  /* node-coi-field_children_groups */       'label' => 'above',
-  /* node-coi-field_children_groups */       'settings' => array(),
-  /* node-coi-field_children_groups */       'type' => 'hidden',
-  /* node-coi-field_children_groups */       'weight' => 0,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */   ),
-  /* node-coi-field_children_groups */   'entity_type' => 'node',
-  /* node-coi-field_children_groups */   'fences_wrapper' => 'div',
-  /* node-coi-field_children_groups */   'field_name' => 'field_children_groups',
-  /* node-coi-field_children_groups */   'label' => 'Children Groups',
-  /* node-coi-field_children_groups */   'required' => 0,
-  /* node-coi-field_children_groups */   'settings' => array(
-  /* node-coi-field_children_groups */     'behaviors' => array(
-  /* node-coi-field_children_groups */       'prepopulate' => array(
-  /* node-coi-field_children_groups */         'status' => 0,
-  /* node-coi-field_children_groups */       ),
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'user_register_form' => FALSE,
-  /* node-coi-field_children_groups */   ),
-  /* node-coi-field_children_groups */   'widget' => array(
-  /* node-coi-field_children_groups */     'active' => 1,
-  /* node-coi-field_children_groups */     'module' => 'entityreference',
-  /* node-coi-field_children_groups */     'settings' => array(
-  /* node-coi-field_children_groups */       'match_operator' => 'CONTAINS',
-  /* node-coi-field_children_groups */       'path' => '',
-  /* node-coi-field_children_groups */       'size' => 60,
-  /* node-coi-field_children_groups */     ),
-  /* node-coi-field_children_groups */     'type' => 'entityreference_autocomplete',
-  /* node-coi-field_children_groups */     'weight' => 37,
-  /* node-coi-field_children_groups */   ),
-  /* node-coi-field_children_groups */ );
-
-  // Exported field_instance: 'node-coi-field_parent_organization'.
-  $field_instances['node-coi-field_parent_organization'] = array(
-  /* node-coi-field_parent_organization */   'bundle' => 'coi',
-  /* node-coi-field_parent_organization */   'default_value' => NULL,
-  /* node-coi-field_parent_organization */   'default_value_function' => '',
-  /* node-coi-field_parent_organization */   'deleted' => 0,
-  /* node-coi-field_parent_organization */   'description' => '',
-  /* node-coi-field_parent_organization */   'display' => array(
-  /* node-coi-field_parent_organization */     'default' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'module' => 'entityreference',
-  /* node-coi-field_parent_organization */       'settings' => array(
-  /* node-coi-field_parent_organization */         'field_formatter_class' => '',
-  /* node-coi-field_parent_organization */         'link' => FALSE,
-  /* node-coi-field_parent_organization */       ),
-  /* node-coi-field_parent_organization */       'type' => 'entityreference_label',
-  /* node-coi-field_parent_organization */       'weight' => 15,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'events_list' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'one_column_teaser' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'sidebar_' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'sidebar_teaser_v2' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'teaser' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'teaserthumb' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'time_and_location' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'title_and_time' => array(
-  /* node-coi-field_parent_organization */       'label' => 'above',
-  /* node-coi-field_parent_organization */       'settings' => array(),
-  /* node-coi-field_parent_organization */       'type' => 'hidden',
-  /* node-coi-field_parent_organization */       'weight' => 0,
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */   ),
-  /* node-coi-field_parent_organization */   'entity_type' => 'node',
-  /* node-coi-field_parent_organization */   'fences_wrapper' => 'div',
-  /* node-coi-field_parent_organization */   'field_name' => 'field_parent_organization',
-  /* node-coi-field_parent_organization */   'label' => 'Parent Organization',
-  /* node-coi-field_parent_organization */   'required' => 0,
-  /* node-coi-field_parent_organization */   'settings' => array(
-  /* node-coi-field_parent_organization */     'behaviors' => array(
-  /* node-coi-field_parent_organization */       'prepopulate' => array(
-  /* node-coi-field_parent_organization */         'status' => 0,
-  /* node-coi-field_parent_organization */       ),
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'user_register_form' => FALSE,
-  /* node-coi-field_parent_organization */   ),
-  /* node-coi-field_parent_organization */   'widget' => array(
-  /* node-coi-field_parent_organization */     'active' => 1,
-  /* node-coi-field_parent_organization */     'module' => 'options',
-  /* node-coi-field_parent_organization */     'settings' => array(
-  /* node-coi-field_parent_organization */       'apply_chosen' => '',
-  /* node-coi-field_parent_organization */     ),
-  /* node-coi-field_parent_organization */     'type' => 'options_select',
-  /* node-coi-field_parent_organization */     'weight' => 35,
-  /* node-coi-field_parent_organization */   ),
-  /* node-coi-field_parent_organization */ );
-
   // Exported field_instance: 'node-course-field_children_groups'.
   $field_instances['node-course-field_children_groups'] = array(
   /* node-course-field_children_groups */   'bundle' => 'course',
@@ -546,6 +200,7 @@ function gn2_og_field_default_field_instances() {
   /* node-course-field_children_groups */       'label' => 'above',
   /* node-course-field_children_groups */       'module' => 'entityreference',
   /* node-course-field_children_groups */       'settings' => array(
+  /* node-course-field_children_groups */         'bypass_access' => FALSE,
   /* node-course-field_children_groups */         'field_formatter_class' => '',
   /* node-course-field_children_groups */         'link' => FALSE,
   /* node-course-field_children_groups */       ),
@@ -627,6 +282,7 @@ function gn2_og_field_default_field_instances() {
   /* node-course-field_parent_organization */       'label' => 'above',
   /* node-course-field_parent_organization */       'module' => 'entityreference',
   /* node-course-field_parent_organization */       'settings' => array(
+  /* node-course-field_parent_organization */         'bypass_access' => FALSE,
   /* node-course-field_parent_organization */         'field_formatter_class' => '',
   /* node-course-field_parent_organization */         'link' => FALSE,
   /* node-course-field_parent_organization */       ),
@@ -706,6 +362,7 @@ function gn2_og_field_default_field_instances() {
   /* node-course_group-field_children_groups */       'label' => 'above',
   /* node-course_group-field_children_groups */       'module' => 'entityreference',
   /* node-course_group-field_children_groups */       'settings' => array(
+  /* node-course_group-field_children_groups */         'bypass_access' => FALSE,
   /* node-course_group-field_children_groups */         'field_formatter_class' => '',
   /* node-course_group-field_children_groups */         'link' => FALSE,
   /* node-course_group-field_children_groups */       ),
@@ -817,6 +474,7 @@ function gn2_og_field_default_field_instances() {
   /* node-course_group-field_parent_organization */       'label' => 'above',
   /* node-course_group-field_parent_organization */       'module' => 'entityreference',
   /* node-course_group-field_parent_organization */       'settings' => array(
+  /* node-course_group-field_parent_organization */         'bypass_access' => FALSE,
   /* node-course_group-field_parent_organization */         'field_formatter_class' => '',
   /* node-course_group-field_parent_organization */         'link' => FALSE,
   /* node-course_group-field_parent_organization */       ),
@@ -926,6 +584,7 @@ function gn2_og_field_default_field_instances() {
   /* node-event-field_children_groups */       'label' => 'above',
   /* node-event-field_children_groups */       'module' => 'entityreference',
   /* node-event-field_children_groups */       'settings' => array(
+  /* node-event-field_children_groups */         'bypass_access' => FALSE,
   /* node-event-field_children_groups */         'field_formatter_class' => '',
   /* node-event-field_children_groups */         'link' => FALSE,
   /* node-event-field_children_groups */       ),
@@ -1025,6 +684,7 @@ function gn2_og_field_default_field_instances() {
   /* node-event-field_parent_organization */       'label' => 'above',
   /* node-event-field_parent_organization */       'module' => 'entityreference',
   /* node-event-field_parent_organization */       'settings' => array(
+  /* node-event-field_parent_organization */         'bypass_access' => FALSE,
   /* node-event-field_parent_organization */         'field_formatter_class' => '',
   /* node-event-field_parent_organization */         'link' => FALSE,
   /* node-event-field_parent_organization */       ),
@@ -1122,6 +782,7 @@ function gn2_og_field_default_field_instances() {
   /* node-group-field_children_groups */       'label' => 'above',
   /* node-group-field_children_groups */       'module' => 'entityreference',
   /* node-group-field_children_groups */       'settings' => array(
+  /* node-group-field_children_groups */         'bypass_access' => FALSE,
   /* node-group-field_children_groups */         'field_formatter_class' => '',
   /* node-group-field_children_groups */         'link' => FALSE,
   /* node-group-field_children_groups */       ),
@@ -1209,6 +870,7 @@ function gn2_og_field_default_field_instances() {
   /* node-group-field_parent_organization */       'label' => 'above',
   /* node-group-field_parent_organization */       'module' => 'entityreference',
   /* node-group-field_parent_organization */       'settings' => array(
+  /* node-group-field_parent_organization */         'bypass_access' => FALSE,
   /* node-group-field_parent_organization */         'field_formatter_class' => '',
   /* node-group-field_parent_organization */         'link' => FALSE,
   /* node-group-field_parent_organization */       ),
@@ -1294,6 +956,7 @@ function gn2_og_field_default_field_instances() {
   /* node-media_gallery-field_parent_organization */       'label' => 'above',
   /* node-media_gallery-field_parent_organization */       'module' => 'entityreference',
   /* node-media_gallery-field_parent_organization */       'settings' => array(
+  /* node-media_gallery-field_parent_organization */         'bypass_access' => FALSE,
   /* node-media_gallery-field_parent_organization */         'field_formatter_class' => '',
   /* node-media_gallery-field_parent_organization */         'link' => FALSE,
   /* node-media_gallery-field_parent_organization */       ),
@@ -1403,6 +1066,7 @@ function gn2_og_field_default_field_instances() {
   /* node-news-field_parent_organization */       'label' => 'above',
   /* node-news-field_parent_organization */       'module' => 'entityreference',
   /* node-news-field_parent_organization */       'settings' => array(
+  /* node-news-field_parent_organization */         'bypass_access' => FALSE,
   /* node-news-field_parent_organization */         'field_formatter_class' => '',
   /* node-news-field_parent_organization */         'link' => FALSE,
   /* node-news-field_parent_organization */       ),
@@ -1494,6 +1158,7 @@ function gn2_og_field_default_field_instances() {
   /* node-poll-field_parent_organization */       'label' => 'above',
   /* node-poll-field_parent_organization */       'module' => 'entityreference',
   /* node-poll-field_parent_organization */       'settings' => array(
+  /* node-poll-field_parent_organization */         'bypass_access' => FALSE,
   /* node-poll-field_parent_organization */         'field_formatter_class' => '',
   /* node-poll-field_parent_organization */         'link' => FALSE,
   /* node-poll-field_parent_organization */       ),
@@ -1609,6 +1274,7 @@ function gn2_og_field_default_field_instances() {
   /* node-post-field_parent_organization */       'label' => 'above',
   /* node-post-field_parent_organization */       'module' => 'entityreference',
   /* node-post-field_parent_organization */       'settings' => array(
+  /* node-post-field_parent_organization */         'bypass_access' => FALSE,
   /* node-post-field_parent_organization */         'field_formatter_class' => '',
   /* node-post-field_parent_organization */         'link' => FALSE,
   /* node-post-field_parent_organization */       ),
@@ -1694,6 +1360,7 @@ function gn2_og_field_default_field_instances() {
   /* node-program-field_children_groups */       'label' => 'above',
   /* node-program-field_children_groups */       'module' => 'entityreference',
   /* node-program-field_children_groups */       'settings' => array(
+  /* node-program-field_children_groups */         'bypass_access' => FALSE,
   /* node-program-field_children_groups */         'field_formatter_class' => '',
   /* node-program-field_children_groups */         'link' => FALSE,
   /* node-program-field_children_groups */       ),
@@ -1799,6 +1466,7 @@ function gn2_og_field_default_field_instances() {
   /* node-program-field_parent_organization */       'label' => 'above',
   /* node-program-field_parent_organization */       'module' => 'entityreference',
   /* node-program-field_parent_organization */       'settings' => array(
+  /* node-program-field_parent_organization */         'bypass_access' => FALSE,
   /* node-program-field_parent_organization */         'field_formatter_class' => '',
   /* node-program-field_parent_organization */         'link' => FALSE,
   /* node-program-field_parent_organization */       ),
@@ -1902,6 +1570,7 @@ function gn2_og_field_default_field_instances() {
   /* node-publication-field_parent_organization */       'label' => 'above',
   /* node-publication-field_parent_organization */       'module' => 'entityreference',
   /* node-publication-field_parent_organization */       'settings' => array(
+  /* node-publication-field_parent_organization */         'bypass_access' => FALSE,
   /* node-publication-field_parent_organization */         'field_formatter_class' => '',
   /* node-publication-field_parent_organization */         'link' => FALSE,
   /* node-publication-field_parent_organization */       ),

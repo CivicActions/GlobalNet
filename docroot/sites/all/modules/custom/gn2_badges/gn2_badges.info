@@ -1,0 +1,13 @@
+name = GN2 Badges
+description = Provides a system for awarding badges for user interactions.
+core = 7.x
+package = GlobalNET
+configure = admin/config/user-interface/gn2_badges
+
+dependencies[] = userpoints
+
+stylesheets[all][] = gn2_badges.css
+
+files[] = includes/BadgesInterface.php
+files[] = includes/Badges.php
+files[] = views/gn2_badges_handler_level.inc

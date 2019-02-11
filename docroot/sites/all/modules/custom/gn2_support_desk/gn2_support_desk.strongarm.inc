@@ -123,10 +123,10 @@ function gn2_support_desk_strongarm() {
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */         'weight' => '0',
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */       ),
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */       'path' => array(
-  /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */         'weight' => '8',
+  /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */         'weight' => '10',
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */       ),
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */       'redirect' => array(
-  /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */         'weight' => '9',
+  /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */         'weight' => '11',
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */       ),
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */     ),
   /* field_bundle_settings_node__support */  /* field_bundle_settings_node__support */     'display' => array(),
@@ -152,8 +152,15 @@ function gn2_support_desk_strongarm() {
   /* jira_rest_jirainstanceurl */  /* jira_rest_jirainstanceurl */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* jira_rest_jirainstanceurl */  /* jira_rest_jirainstanceurl */ $strongarm->api_version = 1;
   /* jira_rest_jirainstanceurl */  /* jira_rest_jirainstanceurl */ $strongarm->name = 'jira_rest_jirainstanceurl';
-  /* jira_rest_jirainstanceurl */  /* jira_rest_jirainstanceurl */ $strongarm->value = 'https://tbd.com:8080';
+  /* jira_rest_jirainstanceurl */  /* jira_rest_jirainstanceurl */ $strongarm->value = '';
   $export['jira_rest_jirainstanceurl'] = $strongarm;
+
+  /* jira_rest_password */  /* jira_rest_password */ $strongarm = new stdClass();
+  /* jira_rest_password */  /* jira_rest_password */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* jira_rest_password */  /* jira_rest_password */ $strongarm->api_version = 1;
+  /* jira_rest_password */  /* jira_rest_password */ $strongarm->name = 'jira_rest_password';
+  /* jira_rest_password */  /* jira_rest_password */ $strongarm->value = '';
+  $export['jira_rest_password'] = $strongarm;
 
   /* jira_rest_resolve_issue_transition_id */  /* jira_rest_resolve_issue_transition_id */ $strongarm = new stdClass();
   /* jira_rest_resolve_issue_transition_id */  /* jira_rest_resolve_issue_transition_id */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -161,6 +168,13 @@ function gn2_support_desk_strongarm() {
   /* jira_rest_resolve_issue_transition_id */  /* jira_rest_resolve_issue_transition_id */ $strongarm->name = 'jira_rest_resolve_issue_transition_id';
   /* jira_rest_resolve_issue_transition_id */  /* jira_rest_resolve_issue_transition_id */ $strongarm->value = '5';
   $export['jira_rest_resolve_issue_transition_id'] = $strongarm;
+
+  /* jira_rest_username */  /* jira_rest_username */ $strongarm = new stdClass();
+  /* jira_rest_username */  /* jira_rest_username */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* jira_rest_username */  /* jira_rest_username */ $strongarm->api_version = 1;
+  /* jira_rest_username */  /* jira_rest_username */ $strongarm->name = 'jira_rest_username';
+  /* jira_rest_username */  /* jira_rest_username */ $strongarm->value = '';
+  $export['jira_rest_username'] = $strongarm;
 
   /* language_content_type_support */  /* language_content_type_support */ $strongarm = new stdClass();
   /* language_content_type_support */  /* language_content_type_support */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -268,9 +282,7 @@ function gn2_support_desk_strongarm() {
   /* track_field_changes_node_types */  /* track_field_changes_node_types */ $strongarm->value = array(
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'support' => 'support',
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'about_page' => 0,
-  /* track_field_changes_node_types */  /* track_field_changes_node_types */   'alumni_group' => 0,
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'announcement' => 0,
-  /* track_field_changes_node_types */  /* track_field_changes_node_types */   'coi' => 0,
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'course' => 0,
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'course_group' => 0,
   /* track_field_changes_node_types */  /* track_field_changes_node_types */   'program' => 0,

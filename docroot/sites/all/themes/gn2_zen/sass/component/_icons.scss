@@ -22,7 +22,8 @@
 .icon-facebook,
 .icon-email,
 .icon-youtube,
-.icon-google-plus{
+.icon-google-plus,
+.icon-instagram {
   display: inline-block;
   min-height: 25px;
 }
@@ -32,6 +33,7 @@
 .icon-twitter{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-twitter.png));}
 .icon-email{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-email.png));}
 .icon-website{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-website.png));}
+.icon-instagram{@include gn-icon(28px, url(../images/gn-icons/contact-icons/icon-instagram.png));}
 
 .icon-mobile{@include gn-icon(28px, url(../images/gn-icons/icon-mobile.png));}
 .icon-youtube{@include gn-icon(29px, url(../images/gn-icons/icon-youtube.png));}

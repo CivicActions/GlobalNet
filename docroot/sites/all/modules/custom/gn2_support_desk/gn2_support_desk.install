@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the GN2 Support Desk module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_support_desk_schema() {
+  $schema['gn2_support_whitelist'] = [
+    'description' => 'GN2 Support Desk IP whitelist table.',
+    'fields' => [
+      'wid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'updated' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'ip_address' => [
+        'type' => 'varchar',
+        'length' => 45,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'start_date' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'end_date' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'status' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['wid'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Create the whitelist database table, if it doesn't exist.
+ */
+function gn2_support_desk_update_7001() {
+  if (!db_table_exists('gn2_support_whitelist')) {
+    drupal_install_schema('gn2_support_desk');
+  }
+}

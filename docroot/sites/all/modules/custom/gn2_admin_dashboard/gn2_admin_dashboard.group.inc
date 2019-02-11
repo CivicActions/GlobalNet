@@ -68,7 +68,6 @@ function gn2_admin_dashboard_info_form_submit($form, &$form_state) {
 function _gn2_admin_dashboard_get_groups($org_id, $string) {
   $matches = array();
   $types = array(
-    'alumni_group',
     'coi',
     'course',
     'course_group',

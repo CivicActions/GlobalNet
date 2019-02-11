@@ -95,7 +95,8 @@ function gn2_adobe_connect_form_submit($form, &$form_state) {
       $query_req = 'action=login&login=' . $id . '&password=' . $pass . '&session=' . $session;
       $response = drupal_http_request($acct . '/api/xml?' . $query_req);
 
-      if ($response->code == '200') {
+      if ($response->code == '200' && !empty($response->data)) {
+
         // Response is good, start building.
         $logged_in_info = gn2_adobe_connect_parse_xml($acct . '/api/xml?action=common-info&session=' . $session);
         $user_id = '';

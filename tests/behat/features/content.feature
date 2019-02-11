@@ -105,7 +105,6 @@ Feature: Content.feature  3m54.09s
     When I visit "node/add"
     Then I should see the following <texts>
     | texts               |
-    | Alumni Group        |
     | Announcement        |
     | Course              |
     | Course Group        |

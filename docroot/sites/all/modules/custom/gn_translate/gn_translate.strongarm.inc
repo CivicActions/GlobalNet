@@ -129,7 +129,6 @@ function gn_translate_strongarm() {
   /* i18n_string_allowed_formats */  /* i18n_string_allowed_formats */   'plain_text' => 'plain_text',
   /* i18n_string_allowed_formats */  /* i18n_string_allowed_formats */   'filtered_html' => 0,
   /* i18n_string_allowed_formats */  /* i18n_string_allowed_formats */   'full_html' => 0,
-  /* i18n_string_allowed_formats */  /* i18n_string_allowed_formats */   'php_code' => 0,
   /* i18n_string_allowed_formats */  /* i18n_string_allowed_formats */ );
   $export['i18n_string_allowed_formats'] = $strongarm;
 

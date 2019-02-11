@@ -123,10 +123,10 @@ function gn2_library_strongarm() {
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */         'weight' => '0',
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */       ),
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */       'path' => array(
-  /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */         'weight' => '2',
+  /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */         'weight' => '3',
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */       ),
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */       'redirect' => array(
-  /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */         'weight' => '3',
+  /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */         'weight' => '4',
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */       ),
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */     ),
   /* field_bundle_settings_node__resource_item */  /* field_bundle_settings_node__resource_item */     'display' => array(),

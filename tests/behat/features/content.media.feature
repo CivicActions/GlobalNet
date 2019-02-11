@@ -124,9 +124,8 @@ Feature: content.media.feature
     And "Folder Test A" should precede "Folder Test Z" in ".view-resources a"
 
 
-
   @RD-3045 @assignee:richard.gilbert @COMPLETED
-  Scenario: Check help text for media and image uploads
+Scenario: Check help text for media and image uploads
 
     Given I am logged in as "qa-admin" with password "CivicActions3#"
 
@@ -135,24 +134,22 @@ Feature: content.media.feature
     Then I should see the text 'Small Logo'
     And I should see the text 'This logo appears in the right sidebar with the “About” content, as well as on the “GlobalNET Partners” listing page.'
     And I should see the text 'Main Image'
-    And I should see the text 'Please note: The "Main Image" only appears on the GlobalNET home page. In all other organizations, it does not appear on any page. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
+    And I should see the text 'The "Main Image" appears before the text'
     And I should see the text 'Thumbnail Image'
-    And I should see the text 'Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
     And I should see the text 'Logo Image'
     And I should see the text 'This logo appears in the top header for the organization. Files must not exceed 1 MB. Allowed file types: png gif jpg jpeg.'
 
     # Add Main Image to Group
     And I visit the edit form for node with title "A group in GCMC"
     Then I should see the text 'Main Image'
-    And I should see the text 'If you upload a Main Image, it will appear at the top of your group page, below the title. Images will be automatically resized to 810 x 400 px. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
+    And I should see the text 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.'
 
     # Add Associated Files to News
     And I visit the edit form for node with title "Assess your Cyber Security Awareness"
     Then I should see the text 'Main Image'
-    And I should see the text 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.'
+    And I should see the text 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.'
 
     And I should see the text 'Thumbnail Image'
-    And I should see the text 'The "Thumbnail Image" will accompany the teaser for this news item. If you do not upload a thumbnail image, the main image will appear in the teaser. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
 
     And I should see the text 'Additional Images'
     And I should see the text 'You may upload up to three (3) "Additional Images" to accompany your news item. These images will appear at the top of the sidebar. Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
@@ -163,8 +160,7 @@ Feature: content.media.feature
     # Attach Course Image, Schedule, and Syllabus to Course
     And I visit the edit form for node with title 'A Course for "Mark Twain 101"'
     Then I should see the text 'Add Course Image'
-    And I should see the text 'Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.'
-  
+
     # Attach File to Course Session
     And I visit the system path "/entityform/142/edit?course_id=829"
     Then I should see the text 'Associated Media'

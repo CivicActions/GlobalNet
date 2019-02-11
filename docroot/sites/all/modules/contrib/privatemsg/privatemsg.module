@@ -19,6 +19,29 @@ define('PRIVATEMSG_UNREAD', 1);
 define('PRIVATEMSG_UNLIMITED', 'unlimited');
 
 /**
+ * Implements hook_help()
+ */
+function privatemsg_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/help#privatemsg':
+      $output .= '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Privatemsg module is designed to be a flexible and powerful system for sending and receiving internal messages. This includes user-to-user messages, user-to-role messages, messages from the site administrator, and much more. If you want some or all users on your site to have their own "mailbox"--and other users with the proper permissions to be able to message them through this mailbox--then this is the module for you.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<p>' . t('One of the strengths of Privatemsg is that it has a broad feature set and a modular architecture. The core Private Message module includes features such as threaded conversations (making it easier to keep track of messages and replies), search capability, new message alerts (via Drupal messages and blocks), and message tokens (similar to a mail merge).') . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('<h6>Configuration Steps</h6>') . '</dt>';
+      $output .= '<dd>' . t('1. Go to People > Permissions (admin/people/permissions) and find the relevant module permissions underneath the "Private messages" section. If you are not logged in as user #1, you must give at least one role (probably the administrator role) the "Administer privatemsg" permission to configure this module.') . '</dd>';
+      $output .= '<dd>' . t('2. On this same Permissions page, give at least one role the "Read private messages" permission and the "Write new private messages" permission.  This will allow members of that role to read and write private messages.') . '</dd>';
+      $output .= '<dd>' . t('3. Go to Configuration > Private messages (admin/config/messaging/privatemsg) and configure the module settings per your requirements. If you have various sub-modules enabled, their settings pages may appear as tabs on this page. ') . '</dd>';
+      $output .= '<dd>' . t('4. Login as a user with the role we specified in Step #2. Visit /messages to see the user&apos;s mailbox. Visit /messages/new to write a new message.') . '</dd>';
+      $output .= '</dl>';
+  }
+  return $output;
+}
+
+/**
  * Implements hook_permission().
  */
 function privatemsg_permission() {
@@ -522,7 +545,9 @@ function privatemsg_thread_load($thread_id, $account = NULL, $start = NULL, $use
         $conditions['account'] = $account;
       }
 
-      // #2033161 privatemsg_message_load_multiple will load all threads if empty
+      // If the $ids parameter is empty, privatemsg_message_load_multiple will
+      // load all threads.
+      // @see https://drupal.org/node/2033161
       $ids = $query->execute()->fetchCol();
       if (count($ids)) {
         $thread['messages'] = privatemsg_message_load_multiple($ids, $conditions);
@@ -834,16 +859,13 @@ function privatemsg_message_change_status($pmid, $status, $account = NULL) {
  * @ingroup api
  */
 function privatemsg_unread_count($account = NULL) {
-  $counts = &drupal_static(__FUNCTION__, array());
   if (!$account || $account->uid == 0) {
     global $user;
     $account = $user;
   }
-  if (!isset($counts[$account->uid])) {
-    $counts[$account->uid] = _privatemsg_assemble_query('unread_count', $account)
-      ->execute()
-      ->fetchField();
-  }
+  $counts[$account->uid] = _privatemsg_assemble_query('unread_count', $account)
+    ->execute()
+    ->fetchField();
   return $counts[$account->uid];
 }
 
@@ -1218,12 +1240,11 @@ function privatemsg_sql_autocomplete($search, $names) {
  * @see hook_query_privatemsg_deleted_alter()
  */
 function privatemsg_sql_deleted($days, $max) {
-  $query = db_select('pm_message', 'pm');
-  $query->addField('pm', 'mid');
+  $query = db_select('pm_index', 'pmi');
+  $query->addField('pmi', 'mid');
 
-  $query->join('pm_index', 'pmi', 'pmi.mid = pm.mid');
   return $query
-    ->groupBy('pm.mid')
+    ->groupBy('pmi.mid')
     ->having('MIN(pmi.deleted) > 0 AND MAX(pmi.deleted) < :old', array(':old' => REQUEST_TIME - $days * 86400))
     ->range(0, $max);
 }
@@ -1401,6 +1422,14 @@ function privatemsg_account_fieldset_remove_if_empty($element) {
     $element['#access'] = FALSE;
   }
   return $element;
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function privatemsg_user_insert(&$edit, $account, $category) {
+  // Insert and update run the same code.
+  privatemsg_user_update($edit, $account, $category);
 }
 
 /**
@@ -1750,14 +1779,22 @@ function privatemsg_reply($thread_id, $body, $options = array()) {
   $first_message = privatemsg_message_load($thread_id, $message->author);
   if (!$first_message) {
     return array(
-      'success'  => FALSE,
-      'messages'   => array('error' => array(t('Thread %thread_id not found, unable to answer', array('%thread_id' => $thread_id)))),
+      'success' => FALSE,
+      'messages' => array('error' => array(t('Thread %thread_id not found, unable to answer.', array('%thread_id' => $thread_id)))),
     );
   }
 
   // Add the reply_to_mid, so we can mark that message as replied
   $thread = privatemsg_thread_load($thread_id);
-  $message->reply_to_mid = end($thread['messages'])->mid;
+  if (empty($thread)) {
+    return array(
+      'success' => FALSE,
+      'messages' => array('error' => array(t('A thread was not returned for ID %thread_id. The user might not be allowed to participate in it.', array('%thread_id' => $thread_id)))),
+    );
+  }
+  else {
+    $message->reply_to_mid = end($thread['messages'])->mid;
+  }
 
   $message->thread_id = $thread_id;
   // Load participants
@@ -1954,6 +1991,7 @@ function _privatemsg_send($message) {
 
     module_invoke_all('privatemsg_message_insert', $message);
     field_attach_insert('privatemsg_message', $message);
+    cache_clear_all("field:privatemsg_message:{$message->mid}", 'cache_field');
 
   } catch (Exception $exception) {
     $transaction->rollback();
@@ -1966,22 +2004,26 @@ function _privatemsg_send($message) {
 }
 
 /**
- * Returns a link to send message form for a specific users.
+ * Returns a link to the send message form for the specified users.
  *
- * Contains permission checks of author/recipient, blocking and
- * if a anonymous user is involved.
+ * Contains checks for permission of the author and recipient(s), blocking, and
+ * if an anonymous user is involved.
  *
- * @param $recipient
- *   Recipient of the message
- * @param $account
- *   Sender of the message, defaults to the current user
+ * @param mixed $recipients
+ *   The user object, or an array of user objects, who will be the recipient(s)
+ *   of the message.
+ * @param object $account
+ *   The user object who will be the author of the message. If no object is
+ *   provided, the current user will be used.
+ * @param string $subject
+ *   The text for the subject of the message.
  *
- * @return
- *   Either FALSE or a URL string
+ * @return mixed
+ *   Either FALSE or a URL string.
  *
  * @ingroup api
  */
-function privatemsg_get_link($recipients, $account = array(), $subject = NULL) {
+function privatemsg_get_link($recipients, $account = NULL, $subject = NULL) {
   if ($account == NULL) {
     global $user;
     $account = $user;

@@ -61,6 +61,7 @@ function gn2_about_social_media_render($subtype, $conf, $args, $contexts) {
       'linkedin' => t('LinkedIn'),
       'google_plus' => t('Google Plus'),
       'youtube' => t('YouTube'),
+      'instagram' => t('Instagram'),
     );
     foreach ($services as $sn => $name) {
       $field = $about->{"field_$sn"};
@@ -73,6 +74,10 @@ function gn2_about_social_media_render($subtype, $conf, $args, $contexts) {
               'class' => array('class' => "icon-{$sn}"),
               'target' => '_blank',
               'title' => $name,
+              'rel' => [
+                'noopener',
+                'noreferrer',
+              ],
             ),
           )),
         );
@@ -80,7 +85,7 @@ function gn2_about_social_media_render($subtype, $conf, $args, $contexts) {
     }
 
     $block->title = t('Find us on Social Media');
-    $block->content = drupal_render($content);
+    $block->content = '<div class="social-icons">' . drupal_render($content) . '</div>';
 
   }
 

@@ -366,6 +366,13 @@ function pm_email_notify_form_user_profile_form_alter(&$form, &$form_state) {
 }
 
 /**
+ * Implements hook_user_insert().
+ */
+function pm_email_notify_user_insert(&$edit, $account, $category) {
+  pm_email_notify_user_update($edit, $account, $category);
+}
+
+/**
  * Implements hook_user_update().
  */
 function pm_email_notify_user_update(&$edit, $account, $category) {

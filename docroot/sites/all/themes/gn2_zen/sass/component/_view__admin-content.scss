@@ -33,6 +33,48 @@
   }
 }
 
+.view-filters {
+  width: 100%;
+  border-bottom: solid 1px $light-gray;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  #views-exposed-form-search-resources-panel-pane-1 {
+    .views-exposed-form {
+      .views-exposed-widget {
+        .form-submit {
+          margin-top: 1.5em;
+        }
+        &.views-submit-button {
+          clear: left;
+        }
+      }
+    }
+  }
+}
+
+.inside {
+  .views-field-title {
+    h3.field-content {
+      margin: 0.5em 0 0.25em;
+    }
+  }
+}
+
+.view-content {
+  .inline-thumb {
+    display: inline-block;
+    padding: 10px;
+    margin-right: 10px;
+  }
+  .inline-description {
+    display: inline-block;
+    vertical-align: top;
+    h3 {
+      margin: 0 0 5px;
+    }
+  }
+}
+
 /* Responsive Styles */
 
 .view--admin--manage-users {

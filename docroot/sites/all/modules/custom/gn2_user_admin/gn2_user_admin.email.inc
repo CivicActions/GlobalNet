@@ -53,6 +53,18 @@ function gn2_user_admin_email_form($form, &$form_state, $account) {
     );
     $form['#validate'][] = 'user_validate_current_pass';
   }
+  else {
+    // RD-4245: If the current user is editing a different user's profile
+    // see if the current user is a org_manager or hr_manager for any groups
+    // this user profile is a member of.
+    $is_manager = gn2_manager_access_account($user, $account);
+    
+    if($is_manager) {
+      // Temporarily grant 'administer users' permission to bypass confirmation
+      // email requirement from email_confirm module.
+      _gn2_og_give_temporary_administer_users_permission();
+    }
+  }
 
   $form['account']['mail'] = array(
     '#type' => 'textfield',

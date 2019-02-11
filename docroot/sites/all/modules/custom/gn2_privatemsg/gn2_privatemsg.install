@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the gn2_privatemsg module.
+ */
+
+
+/**
+ * Unstick Lisa's pm count.
+ */
+function gn2_privatemsg_update_7000() {
+  db_update('pm_index')
+    ->fields(array(
+      'is_new' => 0,
+    ))->condition('recipient', 299)
+      ->execute();
+}
+
+/**
+ * Unstick 'em all.
+ */
+function gn2_privatemsg_update_7001() {
+  db_update('pm_index')
+    ->fields(array(
+      'is_new' => 0,
+    ))->execute();
+}

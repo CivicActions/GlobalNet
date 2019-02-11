@@ -10,6 +10,13 @@
 function gn2_courses_strongarm() {
   $export = array();
 
+  /* i18n_node_extended_course */  /* i18n_node_extended_course */ $strongarm = new stdClass();
+  /* i18n_node_extended_course */  /* i18n_node_extended_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* i18n_node_extended_course */  /* i18n_node_extended_course */ $strongarm->api_version = 1;
+  /* i18n_node_extended_course */  /* i18n_node_extended_course */ $strongarm->name = 'i18n_node_extended_course';
+  /* i18n_node_extended_course */  /* i18n_node_extended_course */ $strongarm->value = '1';
+  $export['i18n_node_extended_course'] = $strongarm;
+
   /* i18n_node_extended_course_group */  /* i18n_node_extended_course_group */ $strongarm = new stdClass();
   /* i18n_node_extended_course_group */  /* i18n_node_extended_course_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* i18n_node_extended_course_group */  /* i18n_node_extended_course_group */ $strongarm->api_version = 1;
@@ -17,12 +24,26 @@ function gn2_courses_strongarm() {
   /* i18n_node_extended_course_group */  /* i18n_node_extended_course_group */ $strongarm->value = '1';
   $export['i18n_node_extended_course_group'] = $strongarm;
 
+  /* i18n_node_options_course */  /* i18n_node_options_course */ $strongarm = new stdClass();
+  /* i18n_node_options_course */  /* i18n_node_options_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* i18n_node_options_course */  /* i18n_node_options_course */ $strongarm->api_version = 1;
+  /* i18n_node_options_course */  /* i18n_node_options_course */ $strongarm->name = 'i18n_node_options_course';
+  /* i18n_node_options_course */  /* i18n_node_options_course */ $strongarm->value = array();
+  $export['i18n_node_options_course'] = $strongarm;
+
   /* i18n_node_options_course_group */  /* i18n_node_options_course_group */ $strongarm = new stdClass();
   /* i18n_node_options_course_group */  /* i18n_node_options_course_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* i18n_node_options_course_group */  /* i18n_node_options_course_group */ $strongarm->api_version = 1;
   /* i18n_node_options_course_group */  /* i18n_node_options_course_group */ $strongarm->name = 'i18n_node_options_course_group';
   /* i18n_node_options_course_group */  /* i18n_node_options_course_group */ $strongarm->value = array();
   $export['i18n_node_options_course_group'] = $strongarm;
+
+  /* i18n_sync_node_type_course */  /* i18n_sync_node_type_course */ $strongarm = new stdClass();
+  /* i18n_sync_node_type_course */  /* i18n_sync_node_type_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* i18n_sync_node_type_course */  /* i18n_sync_node_type_course */ $strongarm->api_version = 1;
+  /* i18n_sync_node_type_course */  /* i18n_sync_node_type_course */ $strongarm->name = 'i18n_sync_node_type_course';
+  /* i18n_sync_node_type_course */  /* i18n_sync_node_type_course */ $strongarm->value = array();
+  $export['i18n_sync_node_type_course'] = $strongarm;
 
   /* i18n_sync_node_type_course_group */  /* i18n_sync_node_type_course_group */ $strongarm = new stdClass();
   /* i18n_sync_node_type_course_group */  /* i18n_sync_node_type_course_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

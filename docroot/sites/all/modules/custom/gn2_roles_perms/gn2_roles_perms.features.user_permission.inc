@@ -665,60 +665,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* administer panelizer */   'module' => 'panelizer',
   /* administer panelizer */ );
 
-  // Exported permission: 'administer panelizer node alumni_group content'.
-  $permissions['administer panelizer node alumni_group content'] = array(
-  /* administer panelizer node alumni_group content */   'name' => 'administer panelizer node alumni_group content',
-  /* administer panelizer node alumni_group content */   'roles' => array(
-  /* administer panelizer node alumni_group content */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group content */   ),
-  /* administer panelizer node alumni_group content */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group content */ );
-
-  // Exported permission: 'administer panelizer node alumni_group context'.
-  $permissions['administer panelizer node alumni_group context'] = array(
-  /* administer panelizer node alumni_group context */   'name' => 'administer panelizer node alumni_group context',
-  /* administer panelizer node alumni_group context */   'roles' => array(
-  /* administer panelizer node alumni_group context */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group context */   ),
-  /* administer panelizer node alumni_group context */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group context */ );
-
-  // Exported permission: 'administer panelizer node alumni_group defaults'.
-  $permissions['administer panelizer node alumni_group defaults'] = array(
-  /* administer panelizer node alumni_group defaults */   'name' => 'administer panelizer node alumni_group defaults',
-  /* administer panelizer node alumni_group defaults */   'roles' => array(
-  /* administer panelizer node alumni_group defaults */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group defaults */   ),
-  /* administer panelizer node alumni_group defaults */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group defaults */ );
-
-  // Exported permission: 'administer panelizer node alumni_group layout'.
-  $permissions['administer panelizer node alumni_group layout'] = array(
-  /* administer panelizer node alumni_group layout */   'name' => 'administer panelizer node alumni_group layout',
-  /* administer panelizer node alumni_group layout */   'roles' => array(
-  /* administer panelizer node alumni_group layout */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group layout */   ),
-  /* administer panelizer node alumni_group layout */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group layout */ );
-
-  // Exported permission: 'administer panelizer node alumni_group overview'.
-  $permissions['administer panelizer node alumni_group overview'] = array(
-  /* administer panelizer node alumni_group overview */   'name' => 'administer panelizer node alumni_group overview',
-  /* administer panelizer node alumni_group overview */   'roles' => array(
-  /* administer panelizer node alumni_group overview */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group overview */   ),
-  /* administer panelizer node alumni_group overview */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group overview */ );
-
-  // Exported permission: 'administer panelizer node alumni_group settings'.
-  $permissions['administer panelizer node alumni_group settings'] = array(
-  /* administer panelizer node alumni_group settings */   'name' => 'administer panelizer node alumni_group settings',
-  /* administer panelizer node alumni_group settings */   'roles' => array(
-  /* administer panelizer node alumni_group settings */     'administrator' => 'administrator',
-  /* administer panelizer node alumni_group settings */   ),
-  /* administer panelizer node alumni_group settings */   'module' => 'panelizer',
-  /* administer panelizer node alumni_group settings */ );
-
   // Exported permission: 'administer panelizer node announcement content'.
   $permissions['administer panelizer node announcement content'] = array(
   /* administer panelizer node announcement content */   'name' => 'administer panelizer node announcement content',
@@ -1566,15 +1512,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* administer voting api */   'module' => 'votingapi',
   /* administer voting api */ );
 
-  // Exported permission: 'advanced migration information'.
-  $permissions['advanced migration information'] = array(
-  /* advanced migration information */   'name' => 'advanced migration information',
-  /* advanced migration information */   'roles' => array(
-  /* advanced migration information */     'administrator' => 'administrator',
-  /* advanced migration information */   ),
-  /* advanced migration information */   'module' => 'migrate',
-  /* advanced migration information */ );
-
   // Exported permission: 'allow disabling privatemsg'.
   $permissions['allow disabling privatemsg'] = array(
   /* allow disabling privatemsg */   'name' => 'allow disabling privatemsg',
@@ -1716,15 +1653,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* clear topics feeds */   'module' => 'feeds',
   /* clear topics feeds */ );
 
-  // Exported permission: 'create alumni_group content'.
-  $permissions['create alumni_group content'] = array(
-  /* create alumni_group content */   'name' => 'create alumni_group content',
-  /* create alumni_group content */   'roles' => array(
-  /* create alumni_group content */     'administrator' => 'administrator',
-  /* create alumni_group content */   ),
-  /* create alumni_group content */   'module' => 'node',
-  /* create alumni_group content */ );
-
   // Exported permission: 'create announcement content'.
   $permissions['create announcement content'] = array(
   /* create announcement content */   'name' => 'create announcement content',
@@ -1733,15 +1661,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* create announcement content */   ),
   /* create announcement content */   'module' => 'node',
   /* create announcement content */ );
-
-  // Exported permission: 'create coi content'.
-  $permissions['create coi content'] = array(
-  /* create coi content */   'name' => 'create coi content',
-  /* create coi content */   'roles' => array(
-  /* create coi content */     'administrator' => 'administrator',
-  /* create coi content */   ),
-  /* create coi content */   'module' => 'node',
-  /* create coi content */ );
 
   // Exported permission: 'create course content'.
   $permissions['create course content'] = array(
@@ -1926,15 +1845,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* delete 1 relationships */   'module' => 'user_relationships',
   /* delete 1 relationships */ );
 
-  // Exported permission: 'delete any alumni_group content'.
-  $permissions['delete any alumni_group content'] = array(
-  /* delete any alumni_group content */   'name' => 'delete any alumni_group content',
-  /* delete any alumni_group content */   'roles' => array(
-  /* delete any alumni_group content */     'administrator' => 'administrator',
-  /* delete any alumni_group content */   ),
-  /* delete any alumni_group content */   'module' => 'node',
-  /* delete any alumni_group content */ );
-
   // Exported permission: 'delete any announcement content'.
   $permissions['delete any announcement content'] = array(
   /* delete any announcement content */   'name' => 'delete any announcement content',
@@ -1952,15 +1862,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* delete any audio files */   ),
   /* delete any audio files */   'module' => 'file_entity',
   /* delete any audio files */ );
-
-  // Exported permission: 'delete any coi content'.
-  $permissions['delete any coi content'] = array(
-  /* delete any coi content */   'name' => 'delete any coi content',
-  /* delete any coi content */   'roles' => array(
-  /* delete any coi content */     'administrator' => 'administrator',
-  /* delete any coi content */   ),
-  /* delete any coi content */   'module' => 'node',
-  /* delete any coi content */ );
 
   // Exported permission: 'delete any course content'.
   $permissions['delete any course content'] = array(
@@ -2115,15 +2016,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* delete any video files */   'module' => 'file_entity',
   /* delete any video files */ );
 
-  // Exported permission: 'delete own alumni_group content'.
-  $permissions['delete own alumni_group content'] = array(
-  /* delete own alumni_group content */   'name' => 'delete own alumni_group content',
-  /* delete own alumni_group content */   'roles' => array(
-  /* delete own alumni_group content */     'administrator' => 'administrator',
-  /* delete own alumni_group content */   ),
-  /* delete own alumni_group content */   'module' => 'node',
-  /* delete own alumni_group content */ );
-
   // Exported permission: 'delete own announcement content'.
   $permissions['delete own announcement content'] = array(
   /* delete own announcement content */   'name' => 'delete own announcement content',
@@ -2141,15 +2033,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* delete own audio files */   ),
   /* delete own audio files */   'module' => 'file_entity',
   /* delete own audio files */ );
-
-  // Exported permission: 'delete own coi content'.
-  $permissions['delete own coi content'] = array(
-  /* delete own coi content */   'name' => 'delete own coi content',
-  /* delete own coi content */   'roles' => array(
-  /* delete own coi content */     'administrator' => 'administrator',
-  /* delete own coi content */   ),
-  /* delete own coi content */   'module' => 'node',
-  /* delete own coi content */ );
 
   // Exported permission: 'delete own course content'.
   $permissions['delete own course content'] = array(
@@ -2484,15 +2367,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* download own video files */   'module' => 'file_entity',
   /* download own video files */ );
 
-  // Exported permission: 'edit any alumni_group content'.
-  $permissions['edit any alumni_group content'] = array(
-  /* edit any alumni_group content */   'name' => 'edit any alumni_group content',
-  /* edit any alumni_group content */   'roles' => array(
-  /* edit any alumni_group content */     'administrator' => 'administrator',
-  /* edit any alumni_group content */   ),
-  /* edit any alumni_group content */   'module' => 'node',
-  /* edit any alumni_group content */ );
-
   // Exported permission: 'edit any announcement content'.
   $permissions['edit any announcement content'] = array(
   /* edit any announcement content */   'name' => 'edit any announcement content',
@@ -2510,15 +2384,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* edit any audio files */   ),
   /* edit any audio files */   'module' => 'file_entity',
   /* edit any audio files */ );
-
-  // Exported permission: 'edit any coi content'.
-  $permissions['edit any coi content'] = array(
-  /* edit any coi content */   'name' => 'edit any coi content',
-  /* edit any coi content */   'roles' => array(
-  /* edit any coi content */     'administrator' => 'administrator',
-  /* edit any coi content */   ),
-  /* edit any coi content */   'module' => 'node',
-  /* edit any coi content */ );
 
   // Exported permission: 'edit any course content'.
   $permissions['edit any course content'] = array(
@@ -2673,15 +2538,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* edit any video files */   'module' => 'file_entity',
   /* edit any video files */ );
 
-  // Exported permission: 'edit own alumni_group content'.
-  $permissions['edit own alumni_group content'] = array(
-  /* edit own alumni_group content */   'name' => 'edit own alumni_group content',
-  /* edit own alumni_group content */   'roles' => array(
-  /* edit own alumni_group content */     'administrator' => 'administrator',
-  /* edit own alumni_group content */   ),
-  /* edit own alumni_group content */   'module' => 'node',
-  /* edit own alumni_group content */ );
-
   // Exported permission: 'edit own announcement content'.
   $permissions['edit own announcement content'] = array(
   /* edit own announcement content */   'name' => 'edit own announcement content',
@@ -2700,15 +2556,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* edit own audio files */   ),
   /* edit own audio files */   'module' => 'file_entity',
   /* edit own audio files */ );
-
-  // Exported permission: 'edit own coi content'.
-  $permissions['edit own coi content'] = array(
-  /* edit own coi content */   'name' => 'edit own coi content',
-  /* edit own coi content */   'roles' => array(
-  /* edit own coi content */     'administrator' => 'administrator',
-  /* edit own coi content */   ),
-  /* edit own coi content */   'module' => 'node',
-  /* edit own coi content */ );
 
   // Exported permission: 'edit own comments'.
   $permissions['edit own comments'] = array(
@@ -2993,33 +2840,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* execute comment_unpublish_by_keyword_action */   ),
   /* execute comment_unpublish_by_keyword_action */   'module' => 'actions_permissions',
   /* execute comment_unpublish_by_keyword_action */ );
-
-  // Exported permission: 'execute flag_comment_action'.
-  $permissions['execute flag_comment_action'] = array(
-  /* execute flag_comment_action */   'name' => 'execute flag_comment_action',
-  /* execute flag_comment_action */   'roles' => array(
-  /* execute flag_comment_action */     'administrator' => 'administrator',
-  /* execute flag_comment_action */   ),
-  /* execute flag_comment_action */   'module' => 'actions_permissions',
-  /* execute flag_comment_action */ );
-
-  // Exported permission: 'execute flag_node_action'.
-  $permissions['execute flag_node_action'] = array(
-  /* execute flag_node_action */   'name' => 'execute flag_node_action',
-  /* execute flag_node_action */   'roles' => array(
-  /* execute flag_node_action */     'administrator' => 'administrator',
-  /* execute flag_node_action */   ),
-  /* execute flag_node_action */   'module' => 'actions_permissions',
-  /* execute flag_node_action */ );
-
-  // Exported permission: 'execute flag_user_action'.
-  $permissions['execute flag_user_action'] = array(
-  /* execute flag_user_action */   'name' => 'execute flag_user_action',
-  /* execute flag_user_action */   'roles' => array(
-  /* execute flag_user_action */     'administrator' => 'administrator',
-  /* execute flag_user_action */   ),
-  /* execute flag_user_action */   'module' => 'actions_permissions',
-  /* execute flag_user_action */ );
 
   // Exported permission: 'execute gn2_og_unblock_user_action'.
   $permissions['execute gn2_og_unblock_user_action'] = array(
@@ -3511,15 +3331,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* masquerade as user */   'module' => 'masquerade',
   /* masquerade as user */ );
 
-  // Exported permission: 'migration information'.
-  $permissions['migration information'] = array(
-  /* migration information */   'name' => 'migration information',
-  /* migration information */   'roles' => array(
-  /* migration information */     'administrator' => 'administrator',
-  /* migration information */   ),
-  /* migration information */   'module' => 'migrate',
-  /* migration information */ );
-
   // Exported permission: 'moderate userpoints'.
   $permissions['moderate userpoints'] = array(
   /* moderate userpoints */   'name' => 'moderate userpoints',
@@ -3950,15 +3761,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* unlock topics feeds */   'module' => 'feeds',
   /* unlock topics feeds */ );
 
-  // Exported permission: 'use PHP for settings'.
-  $permissions['use PHP for settings'] = array(
-  /* use PHP for settings */   'name' => 'use PHP for settings',
-  /* use PHP for settings */   'roles' => array(
-  /* use PHP for settings */     'administrator' => 'administrator',
-  /* use PHP for settings */   ),
-  /* use PHP for settings */   'module' => 'php',
-  /* use PHP for settings */ );
-
   // Exported permission: 'use bulk exporter'.
   $permissions['use bulk exporter'] = array(
   /* use bulk exporter */   'name' => 'use bulk exporter',
@@ -4058,15 +3860,6 @@ function gn2_roles_perms_user_default_permissions() {
   /* use text format full_html */   ),
   /* use text format full_html */   'module' => 'filter',
   /* use text format full_html */ );
-
-  // Exported permission: 'use text format php_code'.
-  $permissions['use text format php_code'] = array(
-  /* use text format php_code */   'name' => 'use text format php_code',
-  /* use text format php_code */   'roles' => array(
-  /* use text format php_code */     'administrator' => 'administrator',
-  /* use text format php_code */   ),
-  /* use text format php_code */   'module' => 'filter',
-  /* use text format php_code */ );
 
   // Exported permission: 'use tokens in privatemsg'.
   $permissions['use tokens in privatemsg'] = array(

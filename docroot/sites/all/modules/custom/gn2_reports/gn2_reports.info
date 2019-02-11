@@ -4,6 +4,7 @@ core = 7.x
 package = Globalnet
 version = 7.x-1.0
 project = gn2_reports
+dependencies[] = better_exposed_filters
 dependencies[] = datatables
 dependencies[] = gn2_manager_access
 dependencies[] = gn2_metrics
