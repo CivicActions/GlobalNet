@@ -13,6 +13,8 @@
 (function ($, Drupal, window, document, undefined) {
   
   $(document).ready(function() {
+    // Hide empty rows in aggregated announcements view.
+    $('.view-id-news_announcements_posts.view-display-id-panel_pane_10 .view-empty').parent().parent().parent().parent().parent('.gn2-3col.layout-wrapper').css({'display':'none'});
 
     if ($('body').hasClass('not-logged-in')) {
       $('.views-field-nothing .slideshow-attribution').each(function(){		
@@ -75,7 +77,7 @@
 	    'height':pmRecipientsHeight + 'px',
 	  }).removeClass('shut');
 	  $(this).text('Show Less -');
-	  
+	  ('.view-id-news_announcements_posts.view-display-id-panel_pane_10 .view-empty').parent().parent().parent().parent().parent('.gn2-3col.layout-wrapper').css({'display':'none'})
 	}
 	else {
 	  $('#recip-height-wrap').animate({

@@ -36,8 +36,6 @@ function gn2_og_field_default_field_bases() {
   /* field_children_groups */         'type' => 'none',
   /* field_children_groups */       ),
   /* field_children_groups */       'target_bundles' => array(
-  /* field_children_groups */         'alumni_group' => 'alumni_group',
-  /* field_children_groups */         'coi' => 'coi',
   /* field_children_groups */         'course' => 'course',
   /* field_children_groups */         'course_group' => 'course_group',
   /* field_children_groups */         'event' => 'event',

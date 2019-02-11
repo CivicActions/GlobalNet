@@ -22,7 +22,7 @@ function gn2_og_move_users_form($form, &$form_state, $gid) {
     '#title' => t('Choose Group(s)'),
     '#maxlength' => 1024,
     '#multiple' => TRUE,
-    '#autocomplete_path' => 'move/groups/autocomplete',
+    '#autocomplete_path' => 'move/groups/node/' . $gid . '/autocomplete',
     '#required' => TRUE,
     '#description' => t('Enter a comma separated list of groups, or begin typing the name of a group to use the autocomplete functionality.'),
   );

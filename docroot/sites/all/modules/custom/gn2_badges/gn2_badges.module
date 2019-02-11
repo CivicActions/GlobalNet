@@ -1,0 +1,91 @@
+<?php
+/**
+ * @file
+ *   Provides badges for user achievements.
+ */
+
+module_load_include('php', 'gn2_badges', 'includes/BadgesInterface');
+module_load_include('php', 'gn2_badges', 'includes/Badges');
+
+use Drupal\gn2_badges\Badges;
+
+/**
+ * Implements hook_help().
+ */
+function gn2_badges_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#gn2_badges':
+      return '<p>' . t('The GN2  badges.class provides a visual representation of
+      user experience by showing badges for different acheivements') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_badges_menu() {
+  $items['admin/config/user-interface/gn2_badges'] = [
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['gn2_badges_admin_form'],
+    'title' => 'GN2 badges settings',
+    'description' => 'Configuration for the GN2 badges.class module.',
+    'access callback' => 'gn2_badges_access',
+    'file' => 'gn2_badges.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  return $items;
+}
+
+/**
+ * Check if the user can access the config page.
+ *
+ * @return bool
+ *   Return TRUE if the user can access the page, else FALSE.
+ */
+function gn2_badges_access() {
+  global $user;
+  return (in_array('administrator', $user->roles)) ? TRUE : FALSE;
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function gn2_badges_user_login(&$edit, $account) {
+  new Badges($account->uid);
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function gn2_badges_views_api() {
+  return [
+    'api' => 3,
+    'path' => drupal_get_path('module', 'gn2_badges') . '/views',
+  ];
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gn2_badges_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'user_login') {
+    $badges = $implementations['gn2_badges'];
+    unset($implementations['gn2_badges']);
+    $implementations['gn2_badges'] = $badges;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function gn2_badges_theme($existing, $type, $theme, $path) {
+  return [
+    'badges_large' => [
+      'varialbes' => [
+        'badges' => NULL,
+      ],
+      'template' => 'badges'
+    ]
+  ];
+}

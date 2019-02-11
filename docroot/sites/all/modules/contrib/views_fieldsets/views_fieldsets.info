@@ -1,4 +1,3 @@
-
 name = Views fieldsets
 description = Output several Views fields into a fieldset.
 core = 7.x
@@ -8,9 +7,9 @@ dependencies[] = views
 
 files[] = views/views_fieldsets_fieldset_field_handler.inc
 
-; Information added by Drupal.org packaging script on 2015-03-05
-version = "7.x-1.3"
+; Information added by Drupal.org packaging script on 2018-02-18
+version = "7.x-2.3"
 core = "7.x"
 project = "views_fieldsets"
-datestamp = "1425515886"
+datestamp = "1518990184"
 

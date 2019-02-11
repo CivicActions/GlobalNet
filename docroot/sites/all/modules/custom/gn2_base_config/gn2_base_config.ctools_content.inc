@@ -269,7 +269,7 @@ function gn2_base_config_default_ctools_custom_content() {
    /* temp_checkbox */   'admin_title' => 'Checkbox (FPO)',
    /* temp_checkbox */   'title' => '',
    /* temp_checkbox */   'body' => '<input type="checkbox" name="download" value="1">',
-   /* temp_checkbox */   'format' => 'php_code',
+   /* temp_checkbox */   'format' => 'full_html',
    /* temp_checkbox */   'substitute' => 1,
    /* temp_checkbox */ );
   $export['temp_checkbox'] = $content;
@@ -285,7 +285,7 @@ function gn2_base_config_default_ctools_custom_content() {
    /* temp_download_pdf */   'admin_title' => 'Download PDF (FPO)',
    /* temp_download_pdf */   'title' => '',
    /* temp_download_pdf */   'body' => 'Download PDF',
-   /* temp_download_pdf */   'format' => 'php_code',
+   /* temp_download_pdf */   'format' => 'full_html',
    /* temp_download_pdf */   'substitute' => 1,
    /* temp_download_pdf */ );
   $export['temp_download_pdf'] = $content;
@@ -301,7 +301,7 @@ function gn2_base_config_default_ctools_custom_content() {
    /* temp_num_views */   'admin_title' => 'Num Views (FPO)',
    /* temp_num_views */   'title' => '',
    /* temp_num_views */   'body' => '<div class="num_views">87 views</div>',
-   /* temp_num_views */   'format' => 'php_code',
+   /* temp_num_views */   'format' => 'full_html',
    /* temp_num_views */   'substitute' => 1,
    /* temp_num_views */ );
   $export['temp_num_views'] = $content;

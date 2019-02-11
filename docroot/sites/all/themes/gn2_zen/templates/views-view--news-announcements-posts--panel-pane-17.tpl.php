@@ -26,7 +26,7 @@ if (empty($user->uid)) {
 ?>
 
 <span class="teaser-header--parent-org">
-  From <?php print $view->style_plugin->row_tokens[0]['[organization_short]']; ?> |
+  From <?php print !empty($view->style_plugin->row_tokens[0]['[organization_short]']) ? $view->style_plugin->row_tokens[0]['[organization_short]'] : ''; ?> |
 </span>
 
 <span class="teaser-header--author">
@@ -41,5 +41,5 @@ if (empty($user->uid)) {
 </span>
 
 <span class="teaser-header--dateposted">
-  <?php print $view->style_plugin->row_tokens[0]['[created]']; ?>
+  <?php print !empty($view->style_plugin->row_tokens[0]['[created]']) ? $view->style_plugin->row_tokens[0]['[created]'] : ''; ?>
 </span>

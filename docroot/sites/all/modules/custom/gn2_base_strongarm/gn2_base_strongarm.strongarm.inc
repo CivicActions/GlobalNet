@@ -10,20 +10,6 @@
 function gn2_base_strongarm_strongarm() {
   $export = array();
 
-  /* additional_settings__active_tab_alumni_group */  /* additional_settings__active_tab_alumni_group */ $strongarm = new stdClass();
-  /* additional_settings__active_tab_alumni_group */  /* additional_settings__active_tab_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* additional_settings__active_tab_alumni_group */  /* additional_settings__active_tab_alumni_group */ $strongarm->api_version = 1;
-  /* additional_settings__active_tab_alumni_group */  /* additional_settings__active_tab_alumni_group */ $strongarm->name = 'additional_settings__active_tab_alumni_group';
-  /* additional_settings__active_tab_alumni_group */  /* additional_settings__active_tab_alumni_group */ $strongarm->value = 'edit-i18n';
-  $export['additional_settings__active_tab_alumni_group'] = $strongarm;
-
-  /* additional_settings__active_tab_coi */  /* additional_settings__active_tab_coi */ $strongarm = new stdClass();
-  /* additional_settings__active_tab_coi */  /* additional_settings__active_tab_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* additional_settings__active_tab_coi */  /* additional_settings__active_tab_coi */ $strongarm->api_version = 1;
-  /* additional_settings__active_tab_coi */  /* additional_settings__active_tab_coi */ $strongarm->name = 'additional_settings__active_tab_coi';
-  /* additional_settings__active_tab_coi */  /* additional_settings__active_tab_coi */ $strongarm->value = 'edit-panelizer';
-  $export['additional_settings__active_tab_coi'] = $strongarm;
-
   /* additional_settings__active_tab_course */  /* additional_settings__active_tab_course */ $strongarm = new stdClass();
   /* additional_settings__active_tab_course */  /* additional_settings__active_tab_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* additional_settings__active_tab_course */  /* additional_settings__active_tab_course */ $strongarm->api_version = 1;
@@ -139,9 +125,7 @@ function gn2_base_strongarm_strongarm() {
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'post' => 'post',
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'comment' => 'comment',
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'about_page' => 0,
-  /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'alumni_group' => 0,
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'announcement' => 0,
-  /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'coi' => 0,
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'course' => 0,
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'course_group' => 0,
   /* anonymous_publishing_pet_types */  /* anonymous_publishing_pet_types */   'program' => 0,
@@ -163,7 +147,7 @@ function gn2_base_strongarm_strongarm() {
   /* autologout_enforce_admin */  /* autologout_enforce_admin */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* autologout_enforce_admin */  /* autologout_enforce_admin */ $strongarm->api_version = 1;
   /* autologout_enforce_admin */  /* autologout_enforce_admin */ $strongarm->name = 'autologout_enforce_admin';
-  /* autologout_enforce_admin */  /* autologout_enforce_admin */ $strongarm->value = 0;
+  /* autologout_enforce_admin */  /* autologout_enforce_admin */ $strongarm->value = 1;
   $export['autologout_enforce_admin'] = $strongarm;
 
   /* autologout_inactivity_message */  /* autologout_inactivity_message */ $strongarm = new stdClass();
@@ -374,7 +358,6 @@ function gn2_base_strongarm_strongarm() {
   /* betterselect_content_types */  /* betterselect_content_types */ $strongarm->api_version = 1;
   /* betterselect_content_types */  /* betterselect_content_types */ $strongarm->name = 'betterselect_content_types';
   /* betterselect_content_types */  /* betterselect_content_types */ $strongarm->value = array(
-  /* betterselect_content_types */  /* betterselect_content_types */   'alumni_group' => 'alumni_group',
   /* betterselect_content_types */  /* betterselect_content_types */   'announcement' => 'announcement',
   /* betterselect_content_types */  /* betterselect_content_types */   'course' => 'course',
   /* betterselect_content_types */  /* betterselect_content_types */   'event' => 'event',
@@ -423,6 +406,20 @@ function gn2_base_strongarm_strongarm() {
   /* cache */  /* cache */ $strongarm->name = 'cache';
   /* cache */  /* cache */ $strongarm->value = 0;
   $export['cache'] = $strongarm;
+
+  /* chosen_jquery_selector */  /* chosen_jquery_selector */ $strongarm = new stdClass();
+  /* chosen_jquery_selector */  /* chosen_jquery_selector */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* chosen_jquery_selector */  /* chosen_jquery_selector */ $strongarm->api_version = 1;
+  /* chosen_jquery_selector */  /* chosen_jquery_selector */ $strongarm->name = 'chosen_jquery_selector';
+  /* chosen_jquery_selector */  /* chosen_jquery_selector */ $strongarm->value = 'select:visible, select#edit-field-resource-tags, select#edit-field-resource-category, select#edit-field-resource-type';
+  $export['chosen_jquery_selector'] = $strongarm;
+
+  /* chosen_minimum_multiple */  /* chosen_minimum_multiple */ $strongarm = new stdClass();
+  /* chosen_minimum_multiple */  /* chosen_minimum_multiple */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* chosen_minimum_multiple */  /* chosen_minimum_multiple */ $strongarm->api_version = 1;
+  /* chosen_minimum_multiple */  /* chosen_minimum_multiple */ $strongarm->name = 'chosen_minimum_multiple';
+  /* chosen_minimum_multiple */  /* chosen_minimum_multiple */ $strongarm->value = '4';
+  $export['chosen_minimum_multiple'] = $strongarm;
 
   /* clamav_daemon_host */  /* clamav_daemon_host */ $strongarm = new stdClass();
   /* clamav_daemon_host */  /* clamav_daemon_host */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -536,13 +533,6 @@ function gn2_base_strongarm_strongarm() {
   /* colorbox_transition_type */  /* colorbox_transition_type */ $strongarm->value = 'fade';
   $export['colorbox_transition_type'] = $strongarm;
 
-  /* comment_alumni_group */  /* comment_alumni_group */ $strongarm = new stdClass();
-  /* comment_alumni_group */  /* comment_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_alumni_group */  /* comment_alumni_group */ $strongarm->api_version = 1;
-  /* comment_alumni_group */  /* comment_alumni_group */ $strongarm->name = 'comment_alumni_group';
-  /* comment_alumni_group */  /* comment_alumni_group */ $strongarm->value = 2;
-  $export['comment_alumni_group'] = $strongarm;
-
   /* comment_announcement */  /* comment_announcement */ $strongarm = new stdClass();
   /* comment_announcement */  /* comment_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_announcement */  /* comment_announcement */ $strongarm->api_version = 1;
@@ -550,26 +540,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_announcement */  /* comment_announcement */ $strongarm->value = 2;
   $export['comment_announcement'] = $strongarm;
 
-  /* comment_anonymous_alumni_group */  /* comment_anonymous_alumni_group */ $strongarm = new stdClass();
-  /* comment_anonymous_alumni_group */  /* comment_anonymous_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_anonymous_alumni_group */  /* comment_anonymous_alumni_group */ $strongarm->api_version = 1;
-  /* comment_anonymous_alumni_group */  /* comment_anonymous_alumni_group */ $strongarm->name = 'comment_anonymous_alumni_group';
-  /* comment_anonymous_alumni_group */  /* comment_anonymous_alumni_group */ $strongarm->value = 0;
-  $export['comment_anonymous_alumni_group'] = $strongarm;
-
   /* comment_anonymous_announcement */  /* comment_anonymous_announcement */ $strongarm = new stdClass();
   /* comment_anonymous_announcement */  /* comment_anonymous_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_anonymous_announcement */  /* comment_anonymous_announcement */ $strongarm->api_version = 1;
   /* comment_anonymous_announcement */  /* comment_anonymous_announcement */ $strongarm->name = 'comment_anonymous_announcement';
   /* comment_anonymous_announcement */  /* comment_anonymous_announcement */ $strongarm->value = 0;
   $export['comment_anonymous_announcement'] = $strongarm;
-
-  /* comment_anonymous_coi */  /* comment_anonymous_coi */ $strongarm = new stdClass();
-  /* comment_anonymous_coi */  /* comment_anonymous_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_anonymous_coi */  /* comment_anonymous_coi */ $strongarm->api_version = 1;
-  /* comment_anonymous_coi */  /* comment_anonymous_coi */ $strongarm->name = 'comment_anonymous_coi';
-  /* comment_anonymous_coi */  /* comment_anonymous_coi */ $strongarm->value = 0;
-  $export['comment_anonymous_coi'] = $strongarm;
 
   /* comment_anonymous_course */  /* comment_anonymous_course */ $strongarm = new stdClass();
   /* comment_anonymous_course */  /* comment_anonymous_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -662,13 +638,6 @@ function gn2_base_strongarm_strongarm() {
   /* comment_anonymous_publication */  /* comment_anonymous_publication */ $strongarm->value = 0;
   $export['comment_anonymous_publication'] = $strongarm;
 
-  /* comment_coi */  /* comment_coi */ $strongarm = new stdClass();
-  /* comment_coi */  /* comment_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_coi */  /* comment_coi */ $strongarm->api_version = 1;
-  /* comment_coi */  /* comment_coi */ $strongarm->name = 'comment_coi';
-  /* comment_coi */  /* comment_coi */ $strongarm->value = 0;
-  $export['comment_coi'] = $strongarm;
-
   /* comment_course */  /* comment_course */ $strongarm = new stdClass();
   /* comment_course */  /* comment_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_course */  /* comment_course */ $strongarm->api_version = 1;
@@ -676,26 +645,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_course */  /* comment_course */ $strongarm->value = '2';
   $export['comment_course'] = $strongarm;
 
-  /* comment_default_mode_alumni_group */  /* comment_default_mode_alumni_group */ $strongarm = new stdClass();
-  /* comment_default_mode_alumni_group */  /* comment_default_mode_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_default_mode_alumni_group */  /* comment_default_mode_alumni_group */ $strongarm->api_version = 1;
-  /* comment_default_mode_alumni_group */  /* comment_default_mode_alumni_group */ $strongarm->name = 'comment_default_mode_alumni_group';
-  /* comment_default_mode_alumni_group */  /* comment_default_mode_alumni_group */ $strongarm->value = 1;
-  $export['comment_default_mode_alumni_group'] = $strongarm;
-
   /* comment_default_mode_announcement */  /* comment_default_mode_announcement */ $strongarm = new stdClass();
   /* comment_default_mode_announcement */  /* comment_default_mode_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_default_mode_announcement */  /* comment_default_mode_announcement */ $strongarm->api_version = 1;
   /* comment_default_mode_announcement */  /* comment_default_mode_announcement */ $strongarm->name = 'comment_default_mode_announcement';
   /* comment_default_mode_announcement */  /* comment_default_mode_announcement */ $strongarm->value = 1;
   $export['comment_default_mode_announcement'] = $strongarm;
-
-  /* comment_default_mode_coi */  /* comment_default_mode_coi */ $strongarm = new stdClass();
-  /* comment_default_mode_coi */  /* comment_default_mode_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_default_mode_coi */  /* comment_default_mode_coi */ $strongarm->api_version = 1;
-  /* comment_default_mode_coi */  /* comment_default_mode_coi */ $strongarm->name = 'comment_default_mode_coi';
-  /* comment_default_mode_coi */  /* comment_default_mode_coi */ $strongarm->value = 1;
-  $export['comment_default_mode_coi'] = $strongarm;
 
   /* comment_default_mode_course */  /* comment_default_mode_course */ $strongarm = new stdClass();
   /* comment_default_mode_course */  /* comment_default_mode_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -788,26 +743,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_default_mode_publication */  /* comment_default_mode_publication */ $strongarm->value = 1;
   $export['comment_default_mode_publication'] = $strongarm;
 
-  /* comment_default_per_page_alumni_group */  /* comment_default_per_page_alumni_group */ $strongarm = new stdClass();
-  /* comment_default_per_page_alumni_group */  /* comment_default_per_page_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_default_per_page_alumni_group */  /* comment_default_per_page_alumni_group */ $strongarm->api_version = 1;
-  /* comment_default_per_page_alumni_group */  /* comment_default_per_page_alumni_group */ $strongarm->name = 'comment_default_per_page_alumni_group';
-  /* comment_default_per_page_alumni_group */  /* comment_default_per_page_alumni_group */ $strongarm->value = 50;
-  $export['comment_default_per_page_alumni_group'] = $strongarm;
-
   /* comment_default_per_page_announcement */  /* comment_default_per_page_announcement */ $strongarm = new stdClass();
   /* comment_default_per_page_announcement */  /* comment_default_per_page_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_default_per_page_announcement */  /* comment_default_per_page_announcement */ $strongarm->api_version = 1;
   /* comment_default_per_page_announcement */  /* comment_default_per_page_announcement */ $strongarm->name = 'comment_default_per_page_announcement';
   /* comment_default_per_page_announcement */  /* comment_default_per_page_announcement */ $strongarm->value = 50;
   $export['comment_default_per_page_announcement'] = $strongarm;
-
-  /* comment_default_per_page_coi */  /* comment_default_per_page_coi */ $strongarm = new stdClass();
-  /* comment_default_per_page_coi */  /* comment_default_per_page_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_default_per_page_coi */  /* comment_default_per_page_coi */ $strongarm->api_version = 1;
-  /* comment_default_per_page_coi */  /* comment_default_per_page_coi */ $strongarm->name = 'comment_default_per_page_coi';
-  /* comment_default_per_page_coi */  /* comment_default_per_page_coi */ $strongarm->value = 50;
-  $export['comment_default_per_page_coi'] = $strongarm;
 
   /* comment_default_per_page_course */  /* comment_default_per_page_course */ $strongarm = new stdClass();
   /* comment_default_per_page_course */  /* comment_default_per_page_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -914,26 +855,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_folder */  /* comment_folder */ $strongarm->value = 1;
   $export['comment_folder'] = $strongarm;
 
-  /* comment_form_location_alumni_group */  /* comment_form_location_alumni_group */ $strongarm = new stdClass();
-  /* comment_form_location_alumni_group */  /* comment_form_location_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_form_location_alumni_group */  /* comment_form_location_alumni_group */ $strongarm->api_version = 1;
-  /* comment_form_location_alumni_group */  /* comment_form_location_alumni_group */ $strongarm->name = 'comment_form_location_alumni_group';
-  /* comment_form_location_alumni_group */  /* comment_form_location_alumni_group */ $strongarm->value = 1;
-  $export['comment_form_location_alumni_group'] = $strongarm;
-
   /* comment_form_location_announcement */  /* comment_form_location_announcement */ $strongarm = new stdClass();
   /* comment_form_location_announcement */  /* comment_form_location_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_form_location_announcement */  /* comment_form_location_announcement */ $strongarm->api_version = 1;
   /* comment_form_location_announcement */  /* comment_form_location_announcement */ $strongarm->name = 'comment_form_location_announcement';
   /* comment_form_location_announcement */  /* comment_form_location_announcement */ $strongarm->value = 1;
   $export['comment_form_location_announcement'] = $strongarm;
-
-  /* comment_form_location_coi */  /* comment_form_location_coi */ $strongarm = new stdClass();
-  /* comment_form_location_coi */  /* comment_form_location_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_form_location_coi */  /* comment_form_location_coi */ $strongarm->api_version = 1;
-  /* comment_form_location_coi */  /* comment_form_location_coi */ $strongarm->name = 'comment_form_location_coi';
-  /* comment_form_location_coi */  /* comment_form_location_coi */ $strongarm->value = 1;
-  $export['comment_form_location_coi'] = $strongarm;
 
   /* comment_form_location_course */  /* comment_form_location_course */ $strongarm = new stdClass();
   /* comment_form_location_course */  /* comment_form_location_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1082,26 +1009,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_post */  /* comment_post */ $strongarm->value = '2';
   $export['comment_post'] = $strongarm;
 
-  /* comment_preview_alumni_group */  /* comment_preview_alumni_group */ $strongarm = new stdClass();
-  /* comment_preview_alumni_group */  /* comment_preview_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_preview_alumni_group */  /* comment_preview_alumni_group */ $strongarm->api_version = 1;
-  /* comment_preview_alumni_group */  /* comment_preview_alumni_group */ $strongarm->name = 'comment_preview_alumni_group';
-  /* comment_preview_alumni_group */  /* comment_preview_alumni_group */ $strongarm->value = '0';
-  $export['comment_preview_alumni_group'] = $strongarm;
-
   /* comment_preview_announcement */  /* comment_preview_announcement */ $strongarm = new stdClass();
   /* comment_preview_announcement */  /* comment_preview_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_preview_announcement */  /* comment_preview_announcement */ $strongarm->api_version = 1;
   /* comment_preview_announcement */  /* comment_preview_announcement */ $strongarm->name = 'comment_preview_announcement';
   /* comment_preview_announcement */  /* comment_preview_announcement */ $strongarm->value = '0';
   $export['comment_preview_announcement'] = $strongarm;
-
-  /* comment_preview_coi */  /* comment_preview_coi */ $strongarm = new stdClass();
-  /* comment_preview_coi */  /* comment_preview_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_preview_coi */  /* comment_preview_coi */ $strongarm->api_version = 1;
-  /* comment_preview_coi */  /* comment_preview_coi */ $strongarm->name = 'comment_preview_coi';
-  /* comment_preview_coi */  /* comment_preview_coi */ $strongarm->value = '0';
-  $export['comment_preview_coi'] = $strongarm;
 
   /* comment_preview_course */  /* comment_preview_course */ $strongarm = new stdClass();
   /* comment_preview_course */  /* comment_preview_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1208,26 +1121,12 @@ function gn2_base_strongarm_strongarm() {
   /* comment_publication */  /* comment_publication */ $strongarm->value = 2;
   $export['comment_publication'] = $strongarm;
 
-  /* comment_subject_field_alumni_group */  /* comment_subject_field_alumni_group */ $strongarm = new stdClass();
-  /* comment_subject_field_alumni_group */  /* comment_subject_field_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_subject_field_alumni_group */  /* comment_subject_field_alumni_group */ $strongarm->api_version = 1;
-  /* comment_subject_field_alumni_group */  /* comment_subject_field_alumni_group */ $strongarm->name = 'comment_subject_field_alumni_group';
-  /* comment_subject_field_alumni_group */  /* comment_subject_field_alumni_group */ $strongarm->value = 1;
-  $export['comment_subject_field_alumni_group'] = $strongarm;
-
   /* comment_subject_field_announcement */  /* comment_subject_field_announcement */ $strongarm = new stdClass();
   /* comment_subject_field_announcement */  /* comment_subject_field_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* comment_subject_field_announcement */  /* comment_subject_field_announcement */ $strongarm->api_version = 1;
   /* comment_subject_field_announcement */  /* comment_subject_field_announcement */ $strongarm->name = 'comment_subject_field_announcement';
   /* comment_subject_field_announcement */  /* comment_subject_field_announcement */ $strongarm->value = 0;
   $export['comment_subject_field_announcement'] = $strongarm;
-
-  /* comment_subject_field_coi */  /* comment_subject_field_coi */ $strongarm = new stdClass();
-  /* comment_subject_field_coi */  /* comment_subject_field_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* comment_subject_field_coi */  /* comment_subject_field_coi */ $strongarm->api_version = 1;
-  /* comment_subject_field_coi */  /* comment_subject_field_coi */ $strongarm->name = 'comment_subject_field_coi';
-  /* comment_subject_field_coi */  /* comment_subject_field_coi */ $strongarm->value = 1;
-  $export['comment_subject_field_coi'] = $strongarm;
 
   /* comment_subject_field_course */  /* comment_subject_field_course */ $strongarm = new stdClass();
   /* comment_subject_field_course */  /* comment_subject_field_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1324,7 +1223,7 @@ function gn2_base_strongarm_strongarm() {
   /* cron_key */  /* cron_key */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* cron_key */  /* cron_key */ $strongarm->api_version = 1;
   /* cron_key */  /* cron_key */ $strongarm->name = 'cron_key';
-  /* cron_key */  /* cron_key */ $strongarm->value = 'rDEEFl3-rBcoKHxZ-y4H-SHRq_qYzQZkE2Jiebczs9Q';
+  /* cron_key */  /* cron_key */ $strongarm->value = '';
   $export['cron_key'] = $strongarm;
 
   /* cron_last */  /* cron_last */ $strongarm = new stdClass();
@@ -1556,7 +1455,6 @@ Please try the following:
   /* default_field_group */  /* default_field_group */   'group_contact_info|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_settings|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_bigraphy|user|user|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_expertise|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_employers|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_education|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_education_training|user|user|form' => TRUE,
@@ -1572,18 +1470,9 @@ Please try the following:
   /* default_field_group */  /* default_field_group */   'group_language_timezone|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_notifications|user|user|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_event_type|node|event|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_privacy|node|alumni_group|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_basic|node|alumni_group|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_countries|node|alumni_group|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_regions|node|alumni_group|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_topics|node|alumni_group|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_media|node|publication|form' => TRUE,
   /* default_field_group */  /* default_field_group */   'group_regions|node|publication|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_countries|node|publication|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_privacy|node|coi|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_topics|node|coi|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_regions|node|coi|form' => FALSE,
-  /* default_field_group */  /* default_field_group */   'group_countries|node|coi|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_basic_information|node|media_gallery|form' => FALSE,
   /* default_field_group */  /* default_field_group */   'group_display|node|media_gallery|form' => TRUE,
   /* default_field_group */  /* default_field_group */   'group_topics|node|media_gallery|form' => FALSE,
@@ -1615,7 +1504,7 @@ Please try the following:
   /* default_nodes_main */  /* default_nodes_main */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* default_nodes_main */  /* default_nodes_main */ $strongarm->api_version = 1;
   /* default_nodes_main */  /* default_nodes_main */ $strongarm->name = 'default_nodes_main';
-  /* default_nodes_main */  /* default_nodes_main */ $strongarm->value = '10';
+  /* default_nodes_main */  /* default_nodes_main */ $strongarm->value = 10;
   $export['default_nodes_main'] = $strongarm;
 
   /* default_page_manager_handlers */  /* default_page_manager_handlers */ $strongarm = new stdClass();
@@ -1643,26 +1532,12 @@ Please try the following:
   /* diff_enable_revisions_page_node_about_page */  /* diff_enable_revisions_page_node_about_page */ $strongarm->value = 1;
   $export['diff_enable_revisions_page_node_about_page'] = $strongarm;
 
-  /* diff_enable_revisions_page_node_alumni_group */  /* diff_enable_revisions_page_node_alumni_group */ $strongarm = new stdClass();
-  /* diff_enable_revisions_page_node_alumni_group */  /* diff_enable_revisions_page_node_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_enable_revisions_page_node_alumni_group */  /* diff_enable_revisions_page_node_alumni_group */ $strongarm->api_version = 1;
-  /* diff_enable_revisions_page_node_alumni_group */  /* diff_enable_revisions_page_node_alumni_group */ $strongarm->name = 'diff_enable_revisions_page_node_alumni_group';
-  /* diff_enable_revisions_page_node_alumni_group */  /* diff_enable_revisions_page_node_alumni_group */ $strongarm->value = 1;
-  $export['diff_enable_revisions_page_node_alumni_group'] = $strongarm;
-
   /* diff_enable_revisions_page_node_announcement */  /* diff_enable_revisions_page_node_announcement */ $strongarm = new stdClass();
   /* diff_enable_revisions_page_node_announcement */  /* diff_enable_revisions_page_node_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* diff_enable_revisions_page_node_announcement */  /* diff_enable_revisions_page_node_announcement */ $strongarm->api_version = 1;
   /* diff_enable_revisions_page_node_announcement */  /* diff_enable_revisions_page_node_announcement */ $strongarm->name = 'diff_enable_revisions_page_node_announcement';
   /* diff_enable_revisions_page_node_announcement */  /* diff_enable_revisions_page_node_announcement */ $strongarm->value = 1;
   $export['diff_enable_revisions_page_node_announcement'] = $strongarm;
-
-  /* diff_enable_revisions_page_node_coi */  /* diff_enable_revisions_page_node_coi */ $strongarm = new stdClass();
-  /* diff_enable_revisions_page_node_coi */  /* diff_enable_revisions_page_node_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_enable_revisions_page_node_coi */  /* diff_enable_revisions_page_node_coi */ $strongarm->api_version = 1;
-  /* diff_enable_revisions_page_node_coi */  /* diff_enable_revisions_page_node_coi */ $strongarm->name = 'diff_enable_revisions_page_node_coi';
-  /* diff_enable_revisions_page_node_coi */  /* diff_enable_revisions_page_node_coi */ $strongarm->value = 1;
-  $export['diff_enable_revisions_page_node_coi'] = $strongarm;
 
   /* diff_enable_revisions_page_node_course */  /* diff_enable_revisions_page_node_course */ $strongarm = new stdClass();
   /* diff_enable_revisions_page_node_course */  /* diff_enable_revisions_page_node_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1769,26 +1644,12 @@ Please try the following:
   /* diff_show_preview_changes_node_about_page */  /* diff_show_preview_changes_node_about_page */ $strongarm->value = 1;
   $export['diff_show_preview_changes_node_about_page'] = $strongarm;
 
-  /* diff_show_preview_changes_node_alumni_group */  /* diff_show_preview_changes_node_alumni_group */ $strongarm = new stdClass();
-  /* diff_show_preview_changes_node_alumni_group */  /* diff_show_preview_changes_node_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_show_preview_changes_node_alumni_group */  /* diff_show_preview_changes_node_alumni_group */ $strongarm->api_version = 1;
-  /* diff_show_preview_changes_node_alumni_group */  /* diff_show_preview_changes_node_alumni_group */ $strongarm->name = 'diff_show_preview_changes_node_alumni_group';
-  /* diff_show_preview_changes_node_alumni_group */  /* diff_show_preview_changes_node_alumni_group */ $strongarm->value = 1;
-  $export['diff_show_preview_changes_node_alumni_group'] = $strongarm;
-
   /* diff_show_preview_changes_node_announcement */  /* diff_show_preview_changes_node_announcement */ $strongarm = new stdClass();
   /* diff_show_preview_changes_node_announcement */  /* diff_show_preview_changes_node_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* diff_show_preview_changes_node_announcement */  /* diff_show_preview_changes_node_announcement */ $strongarm->api_version = 1;
   /* diff_show_preview_changes_node_announcement */  /* diff_show_preview_changes_node_announcement */ $strongarm->name = 'diff_show_preview_changes_node_announcement';
   /* diff_show_preview_changes_node_announcement */  /* diff_show_preview_changes_node_announcement */ $strongarm->value = 1;
   $export['diff_show_preview_changes_node_announcement'] = $strongarm;
-
-  /* diff_show_preview_changes_node_coi */  /* diff_show_preview_changes_node_coi */ $strongarm = new stdClass();
-  /* diff_show_preview_changes_node_coi */  /* diff_show_preview_changes_node_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_show_preview_changes_node_coi */  /* diff_show_preview_changes_node_coi */ $strongarm->api_version = 1;
-  /* diff_show_preview_changes_node_coi */  /* diff_show_preview_changes_node_coi */ $strongarm->name = 'diff_show_preview_changes_node_coi';
-  /* diff_show_preview_changes_node_coi */  /* diff_show_preview_changes_node_coi */ $strongarm->value = 1;
-  $export['diff_show_preview_changes_node_coi'] = $strongarm;
 
   /* diff_show_preview_changes_node_course */  /* diff_show_preview_changes_node_course */ $strongarm = new stdClass();
   /* diff_show_preview_changes_node_course */  /* diff_show_preview_changes_node_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1895,26 +1756,12 @@ Please try the following:
   /* diff_view_mode_preview_node_about_page */  /* diff_view_mode_preview_node_about_page */ $strongarm->value = '';
   $export['diff_view_mode_preview_node_about_page'] = $strongarm;
 
-  /* diff_view_mode_preview_node_alumni_group */  /* diff_view_mode_preview_node_alumni_group */ $strongarm = new stdClass();
-  /* diff_view_mode_preview_node_alumni_group */  /* diff_view_mode_preview_node_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_view_mode_preview_node_alumni_group */  /* diff_view_mode_preview_node_alumni_group */ $strongarm->api_version = 1;
-  /* diff_view_mode_preview_node_alumni_group */  /* diff_view_mode_preview_node_alumni_group */ $strongarm->name = 'diff_view_mode_preview_node_alumni_group';
-  /* diff_view_mode_preview_node_alumni_group */  /* diff_view_mode_preview_node_alumni_group */ $strongarm->value = '';
-  $export['diff_view_mode_preview_node_alumni_group'] = $strongarm;
-
   /* diff_view_mode_preview_node_announcement */  /* diff_view_mode_preview_node_announcement */ $strongarm = new stdClass();
   /* diff_view_mode_preview_node_announcement */  /* diff_view_mode_preview_node_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* diff_view_mode_preview_node_announcement */  /* diff_view_mode_preview_node_announcement */ $strongarm->api_version = 1;
   /* diff_view_mode_preview_node_announcement */  /* diff_view_mode_preview_node_announcement */ $strongarm->name = 'diff_view_mode_preview_node_announcement';
   /* diff_view_mode_preview_node_announcement */  /* diff_view_mode_preview_node_announcement */ $strongarm->value = '';
   $export['diff_view_mode_preview_node_announcement'] = $strongarm;
-
-  /* diff_view_mode_preview_node_coi */  /* diff_view_mode_preview_node_coi */ $strongarm = new stdClass();
-  /* diff_view_mode_preview_node_coi */  /* diff_view_mode_preview_node_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* diff_view_mode_preview_node_coi */  /* diff_view_mode_preview_node_coi */ $strongarm->api_version = 1;
-  /* diff_view_mode_preview_node_coi */  /* diff_view_mode_preview_node_coi */ $strongarm->name = 'diff_view_mode_preview_node_coi';
-  /* diff_view_mode_preview_node_coi */  /* diff_view_mode_preview_node_coi */ $strongarm->value = '';
-  $export['diff_view_mode_preview_node_coi'] = $strongarm;
 
   /* diff_view_mode_preview_node_course */  /* diff_view_mode_preview_node_course */ $strongarm = new stdClass();
   /* diff_view_mode_preview_node_course */  /* diff_view_mode_preview_node_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -2018,7 +1865,7 @@ Please try the following:
   /* email_confirm_confirmation_email_author */  /* email_confirm_confirmation_email_author */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* email_confirm_confirmation_email_author */  /* email_confirm_confirmation_email_author */ $strongarm->api_version = 1;
   /* email_confirm_confirmation_email_author */  /* email_confirm_confirmation_email_author */ $strongarm->name = 'email_confirm_confirmation_email_author';
-  /* email_confirm_confirmation_email_author */  /* email_confirm_confirmation_email_author */ $strongarm->value = 'admin@globalnetplatform.org';
+  /* email_confirm_confirmation_email_author */  /* email_confirm_confirmation_email_author */ $strongarm->value = '';
   $export['email_confirm_confirmation_email_author'] = $strongarm;
 
   /* email_confirm_confirmation_email_bcc */  /* email_confirm_confirmation_email_bcc */ $strongarm = new stdClass();
@@ -2264,32 +2111,6 @@ within 24 hours.
   /* exclude_node_title_content_type_modes_about_page */  /* exclude_node_title_content_type_modes_about_page */ );
   $export['exclude_node_title_content_type_modes_about_page'] = $strongarm;
 
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ $strongarm = new stdClass();
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ $strongarm->api_version = 1;
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ $strongarm->name = 'exclude_node_title_content_type_modes_alumni_group';
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ $strongarm->value = array(
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'full' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'teaser' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'rss' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'diff_standard' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'teaserthumb' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'events_list' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'one_column_teaser' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'title_and_time' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'time_and_location' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'sidebar_teaser_v2' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'sidebar_' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'search_teaser' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'featured_publication' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'post_teaser_group_landing_page' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'group_teaser' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'media_gallery_block' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'token' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */   'nodeform' => 0,
-  /* exclude_node_title_content_type_modes_alumni_group */  /* exclude_node_title_content_type_modes_alumni_group */ );
-  $export['exclude_node_title_content_type_modes_alumni_group'] = $strongarm;
-
   /* exclude_node_title_content_type_modes_announcement */  /* exclude_node_title_content_type_modes_announcement */ $strongarm = new stdClass();
   /* exclude_node_title_content_type_modes_announcement */  /* exclude_node_title_content_type_modes_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* exclude_node_title_content_type_modes_announcement */  /* exclude_node_title_content_type_modes_announcement */ $strongarm->api_version = 1;
@@ -2315,32 +2136,6 @@ within 24 hours.
   /* exclude_node_title_content_type_modes_announcement */  /* exclude_node_title_content_type_modes_announcement */   'nodeform' => 0,
   /* exclude_node_title_content_type_modes_announcement */  /* exclude_node_title_content_type_modes_announcement */ );
   $export['exclude_node_title_content_type_modes_announcement'] = $strongarm;
-
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ $strongarm = new stdClass();
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ $strongarm->api_version = 1;
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ $strongarm->name = 'exclude_node_title_content_type_modes_coi';
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ $strongarm->value = array(
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'full' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'teaser' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'rss' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'diff_standard' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'teaserthumb' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'events_list' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'one_column_teaser' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'title_and_time' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'time_and_location' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'sidebar_teaser_v2' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'sidebar_' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'search_teaser' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'featured_publication' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'post_teaser_group_landing_page' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'group_teaser' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'media_gallery_block' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'token' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */   'nodeform' => 0,
-  /* exclude_node_title_content_type_modes_coi */  /* exclude_node_title_content_type_modes_coi */ );
-  $export['exclude_node_title_content_type_modes_coi'] = $strongarm;
 
   /* exclude_node_title_content_type_modes_course */  /* exclude_node_title_content_type_modes_course */ $strongarm = new stdClass();
   /* exclude_node_title_content_type_modes_course */  /* exclude_node_title_content_type_modes_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -2713,26 +2508,12 @@ within 24 hours.
   /* exclude_node_title_content_type_value_about_page */  /* exclude_node_title_content_type_value_about_page */ $strongarm->value = 'none';
   $export['exclude_node_title_content_type_value_about_page'] = $strongarm;
 
-  /* exclude_node_title_content_type_value_alumni_group */  /* exclude_node_title_content_type_value_alumni_group */ $strongarm = new stdClass();
-  /* exclude_node_title_content_type_value_alumni_group */  /* exclude_node_title_content_type_value_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* exclude_node_title_content_type_value_alumni_group */  /* exclude_node_title_content_type_value_alumni_group */ $strongarm->api_version = 1;
-  /* exclude_node_title_content_type_value_alumni_group */  /* exclude_node_title_content_type_value_alumni_group */ $strongarm->name = 'exclude_node_title_content_type_value_alumni_group';
-  /* exclude_node_title_content_type_value_alumni_group */  /* exclude_node_title_content_type_value_alumni_group */ $strongarm->value = 'none';
-  $export['exclude_node_title_content_type_value_alumni_group'] = $strongarm;
-
   /* exclude_node_title_content_type_value_announcement */  /* exclude_node_title_content_type_value_announcement */ $strongarm = new stdClass();
   /* exclude_node_title_content_type_value_announcement */  /* exclude_node_title_content_type_value_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* exclude_node_title_content_type_value_announcement */  /* exclude_node_title_content_type_value_announcement */ $strongarm->api_version = 1;
   /* exclude_node_title_content_type_value_announcement */  /* exclude_node_title_content_type_value_announcement */ $strongarm->name = 'exclude_node_title_content_type_value_announcement';
   /* exclude_node_title_content_type_value_announcement */  /* exclude_node_title_content_type_value_announcement */ $strongarm->value = 'all';
   $export['exclude_node_title_content_type_value_announcement'] = $strongarm;
-
-  /* exclude_node_title_content_type_value_coi */  /* exclude_node_title_content_type_value_coi */ $strongarm = new stdClass();
-  /* exclude_node_title_content_type_value_coi */  /* exclude_node_title_content_type_value_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* exclude_node_title_content_type_value_coi */  /* exclude_node_title_content_type_value_coi */ $strongarm->api_version = 1;
-  /* exclude_node_title_content_type_value_coi */  /* exclude_node_title_content_type_value_coi */ $strongarm->name = 'exclude_node_title_content_type_value_coi';
-  /* exclude_node_title_content_type_value_coi */  /* exclude_node_title_content_type_value_coi */ $strongarm->value = 'none';
-  $export['exclude_node_title_content_type_value_coi'] = $strongarm;
 
   /* exclude_node_title_content_type_value_course */  /* exclude_node_title_content_type_value_course */ $strongarm = new stdClass();
   /* exclude_node_title_content_type_value_course */  /* exclude_node_title_content_type_value_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -2845,6 +2626,13 @@ within 24 hours.
   /* exclude_node_title_translation_sync */  /* exclude_node_title_translation_sync */ $strongarm->name = 'exclude_node_title_translation_sync';
   /* exclude_node_title_translation_sync */  /* exclude_node_title_translation_sync */ $strongarm->value = 1;
   $export['exclude_node_title_translation_sync'] = $strongarm;
+
+  /* extlink_css_exclude */  /* extlink_css_exclude */ $strongarm = new stdClass();
+  /* extlink_css_exclude */  /* extlink_css_exclude */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* extlink_css_exclude */  /* extlink_css_exclude */ $strongarm->api_version = 1;
+  /* extlink_css_exclude */  /* extlink_css_exclude */ $strongarm->name = 'extlink_css_exclude';
+  /* extlink_css_exclude */  /* extlink_css_exclude */ $strongarm->value = '.social-icons';
+  $export['extlink_css_exclude'] = $strongarm;
 
   /* extlink_target */  /* extlink_target */ $strongarm = new stdClass();
   /* extlink_target */  /* extlink_target */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -2961,29 +2749,6 @@ within 24 hours.
   /* field_bundle_settings_field_collection_item__field_employers */  /* field_bundle_settings_field_collection_item__field_employers */   ),
   /* field_bundle_settings_field_collection_item__field_employers */  /* field_bundle_settings_field_collection_item__field_employers */ );
   $export['field_bundle_settings_field_collection_item__field_employers'] = $strongarm;
-
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ $strongarm = new stdClass();
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ $strongarm->api_version = 1;
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ $strongarm->name = 'field_bundle_settings_field_collection_item__field_expertise';
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ $strongarm->value = array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */   'view_modes' => array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     'full' => array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */       'custom_settings' => FALSE,
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     ),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     'diff_standard' => array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */       'custom_settings' => FALSE,
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     ),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     'token' => array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */       'custom_settings' => FALSE,
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     ),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */   ),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */   'extra_fields' => array(
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     'form' => array(),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */     'display' => array(),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */   ),
-  /* field_bundle_settings_field_collection_item__field_expertise */  /* field_bundle_settings_field_collection_item__field_expertise */ );
-  $export['field_bundle_settings_field_collection_item__field_expertise'] = $strongarm;
 
   /* field_bundle_settings_field_collection_item__field_telephone */  /* field_bundle_settings_field_collection_item__field_telephone */ $strongarm = new stdClass();
   /* field_bundle_settings_field_collection_item__field_telephone */  /* field_bundle_settings_field_collection_item__field_telephone */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3573,60 +3338,6 @@ within 24 hours.
   /* field_bundle_settings_message__post */  /* field_bundle_settings_message__post */ );
   $export['field_bundle_settings_message__post'] = $strongarm;
 
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ $strongarm = new stdClass();
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ $strongarm->api_version = 1;
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ $strongarm->name = 'field_bundle_settings_node__alumni_group';
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ $strongarm->value = array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */   'view_modes' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'sidebar_' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => TRUE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'events_list' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'one_column_teaser' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'time_and_location' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'title_and_time' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'post_teaser_group_landing_page' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'search_teaser' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => TRUE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'featured_publication' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'group_teaser' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'custom_settings' => TRUE,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */   ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */   'extra_fields' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'form' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'title' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */         'weight' => 1,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'path' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */         'weight' => 8,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'og_menu' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */         'weight' => 5,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       'redirect' => array(
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */         'weight' => 7,
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */       ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */     'display' => array(),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */   ),
-  /* field_bundle_settings_node__alumni_group */  /* field_bundle_settings_node__alumni_group */ );
-  $export['field_bundle_settings_node__alumni_group'] = $strongarm;
-
   /* field_bundle_settings_node__announcement */  /* field_bundle_settings_node__announcement */ $strongarm = new stdClass();
   /* field_bundle_settings_node__announcement */  /* field_bundle_settings_node__announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* field_bundle_settings_node__announcement */  /* field_bundle_settings_node__announcement */ $strongarm->api_version = 1;
@@ -3693,48 +3404,6 @@ within 24 hours.
   /* field_bundle_settings_node__announcement */  /* field_bundle_settings_node__announcement */   ),
   /* field_bundle_settings_node__announcement */  /* field_bundle_settings_node__announcement */ );
   $export['field_bundle_settings_node__announcement'] = $strongarm;
-
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ $strongarm = new stdClass();
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ $strongarm->api_version = 1;
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ $strongarm->name = 'field_bundle_settings_node__coi';
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ $strongarm->value = array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */   'view_modes' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'post_teaser_group_landing_page' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'search_teaser' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'featured_publication' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'group_teaser' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'custom_settings' => FALSE,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */   ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */   'extra_fields' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'form' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'language' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */         'weight' => 6,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'title' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */         'weight' => 7,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'og_menu' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */         'weight' => 13,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'path' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */         'weight' => 11,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       'redirect' => array(
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */         'weight' => 10,
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */       ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */     'display' => array(),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */   ),
-  /* field_bundle_settings_node__coi */  /* field_bundle_settings_node__coi */ );
-  $export['field_bundle_settings_node__coi'] = $strongarm;
 
   /* field_bundle_settings_node__course */  /* field_bundle_settings_node__course */ $strongarm = new stdClass();
   /* field_bundle_settings_node__course */  /* field_bundle_settings_node__course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -4851,6 +4520,48 @@ within 24 hours.
   /* flexslider_version */  /* flexslider_version */ $strongarm->value = '2.2';
   $export['flexslider_version'] = $strongarm;
 
+  /* gn2_badges_level_one */  /* gn2_badges_level_one */ $strongarm = new stdClass();
+  /* gn2_badges_level_one */  /* gn2_badges_level_one */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_one */  /* gn2_badges_level_one */ $strongarm->api_version = 1;
+  /* gn2_badges_level_one */  /* gn2_badges_level_one */ $strongarm->name = 'gn2_badges_level_one';
+  /* gn2_badges_level_one */  /* gn2_badges_level_one */ $strongarm->value = '10';
+  $export['gn2_badges_level_one'] = $strongarm;
+
+  /* gn2_badges_level_one_title */  /* gn2_badges_level_one_title */ $strongarm = new stdClass();
+  /* gn2_badges_level_one_title */  /* gn2_badges_level_one_title */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_one_title */  /* gn2_badges_level_one_title */ $strongarm->api_version = 1;
+  /* gn2_badges_level_one_title */  /* gn2_badges_level_one_title */ $strongarm->name = 'gn2_badges_level_one_title';
+  /* gn2_badges_level_one_title */  /* gn2_badges_level_one_title */ $strongarm->value = 'Bronze';
+  $export['gn2_badges_level_one_title'] = $strongarm;
+
+  /* gn2_badges_level_three */  /* gn2_badges_level_three */ $strongarm = new stdClass();
+  /* gn2_badges_level_three */  /* gn2_badges_level_three */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_three */  /* gn2_badges_level_three */ $strongarm->api_version = 1;
+  /* gn2_badges_level_three */  /* gn2_badges_level_three */ $strongarm->name = 'gn2_badges_level_three';
+  /* gn2_badges_level_three */  /* gn2_badges_level_three */ $strongarm->value = '51';
+  $export['gn2_badges_level_three'] = $strongarm;
+
+  /* gn2_badges_level_three_title */  /* gn2_badges_level_three_title */ $strongarm = new stdClass();
+  /* gn2_badges_level_three_title */  /* gn2_badges_level_three_title */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_three_title */  /* gn2_badges_level_three_title */ $strongarm->api_version = 1;
+  /* gn2_badges_level_three_title */  /* gn2_badges_level_three_title */ $strongarm->name = 'gn2_badges_level_three_title';
+  /* gn2_badges_level_three_title */  /* gn2_badges_level_three_title */ $strongarm->value = 'Gold';
+  $export['gn2_badges_level_three_title'] = $strongarm;
+
+  /* gn2_badges_level_two */  /* gn2_badges_level_two */ $strongarm = new stdClass();
+  /* gn2_badges_level_two */  /* gn2_badges_level_two */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_two */  /* gn2_badges_level_two */ $strongarm->api_version = 1;
+  /* gn2_badges_level_two */  /* gn2_badges_level_two */ $strongarm->name = 'gn2_badges_level_two';
+  /* gn2_badges_level_two */  /* gn2_badges_level_two */ $strongarm->value = '50';
+  $export['gn2_badges_level_two'] = $strongarm;
+
+  /* gn2_badges_level_two_title */  /* gn2_badges_level_two_title */ $strongarm = new stdClass();
+  /* gn2_badges_level_two_title */  /* gn2_badges_level_two_title */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* gn2_badges_level_two_title */  /* gn2_badges_level_two_title */ $strongarm->api_version = 1;
+  /* gn2_badges_level_two_title */  /* gn2_badges_level_two_title */ $strongarm->name = 'gn2_badges_level_two_title';
+  /* gn2_badges_level_two_title */  /* gn2_badges_level_two_title */ $strongarm->value = 'Silver';
+  $export['gn2_badges_level_two_title'] = $strongarm;
+
   /* gn2_base_config_simplify_private_messages_global */  /* gn2_base_config_simplify_private_messages_global */ $strongarm = new stdClass();
   /* gn2_base_config_simplify_private_messages_global */  /* gn2_base_config_simplify_private_messages_global */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* gn2_base_config_simplify_private_messages_global */  /* gn2_base_config_simplify_private_messages_global */ $strongarm->api_version = 1;
@@ -4890,13 +4601,41 @@ within 24 hours.
 
 <p>Responses should be sent to:<br>
 	GlobalNET Outreach and Collaboration Platform<br>
-	ATTN: &nbsp;Paul Will, Program Manager<br>
+	ATTN: Christopher Hannigan, Program Manager<br>
 	Defense Security Cooperation Agency<br>
 	201 12th Street, Suite 203, Arlington, VA 22202-4306&nbsp;</p>
 ',
   /* gn2_reg_tou */  /* gn2_reg_tou */   'format' => 'filtered_html',
   /* gn2_reg_tou */  /* gn2_reg_tou */ );
   $export['gn2_reg_tou'] = $strongarm;
+
+  /* google_analytics_reports_api_client_id */  /* google_analytics_reports_api_client_id */ $strongarm = new stdClass();
+  /* google_analytics_reports_api_client_id */  /* google_analytics_reports_api_client_id */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* google_analytics_reports_api_client_id */  /* google_analytics_reports_api_client_id */ $strongarm->api_version = 1;
+  /* google_analytics_reports_api_client_id */  /* google_analytics_reports_api_client_id */ $strongarm->name = 'google_analytics_reports_api_client_id';
+  /* google_analytics_reports_api_client_id */  /* google_analytics_reports_api_client_id */ $strongarm->value = '406778431158-kq3oacdtgu7d6adl6enod07qgivlh5u8.apps.googleusercontent.com';
+  $export['google_analytics_reports_api_client_id'] = $strongarm;
+
+  /* google_analytics_reports_api_client_secret */  /* google_analytics_reports_api_client_secret */ $strongarm = new stdClass();
+  /* google_analytics_reports_api_client_secret */  /* google_analytics_reports_api_client_secret */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* google_analytics_reports_api_client_secret */  /* google_analytics_reports_api_client_secret */ $strongarm->api_version = 1;
+  /* google_analytics_reports_api_client_secret */  /* google_analytics_reports_api_client_secret */ $strongarm->name = 'google_analytics_reports_api_client_secret';
+  /* google_analytics_reports_api_client_secret */  /* google_analytics_reports_api_client_secret */ $strongarm->value = 'kATzSdNxzlar0IggwGP4CEl7';
+  $export['google_analytics_reports_api_client_secret'] = $strongarm;
+
+  /* google_analytics_reports_api_default_page */  /* google_analytics_reports_api_default_page */ $strongarm = new stdClass();
+  /* google_analytics_reports_api_default_page */  /* google_analytics_reports_api_default_page */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* google_analytics_reports_api_default_page */  /* google_analytics_reports_api_default_page */ $strongarm->api_version = 1;
+  /* google_analytics_reports_api_default_page */  /* google_analytics_reports_api_default_page */ $strongarm->name = 'google_analytics_reports_api_default_page';
+  /* google_analytics_reports_api_default_page */  /* google_analytics_reports_api_default_page */ $strongarm->value = '/';
+  $export['google_analytics_reports_api_default_page'] = $strongarm;
+
+  /* google_analytics_reports_api_profile_id */  /* google_analytics_reports_api_profile_id */ $strongarm = new stdClass();
+  /* google_analytics_reports_api_profile_id */  /* google_analytics_reports_api_profile_id */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* google_analytics_reports_api_profile_id */  /* google_analytics_reports_api_profile_id */ $strongarm->api_version = 1;
+  /* google_analytics_reports_api_profile_id */  /* google_analytics_reports_api_profile_id */ $strongarm->name = 'google_analytics_reports_api_profile_id';
+  /* google_analytics_reports_api_profile_id */  /* google_analytics_reports_api_profile_id */ $strongarm->value = 102202229;
+  $export['google_analytics_reports_api_profile_id'] = $strongarm;
 
   /* in_field_labels_forms */  /* in_field_labels_forms */ $strongarm = new stdClass();
   /* in_field_labels_forms */  /* in_field_labels_forms */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5318,26 +5057,12 @@ within 24 hours.
   /* menu_expanded */  /* menu_expanded */ );
   $export['menu_expanded'] = $strongarm;
 
-  /* menu_options_alumni_group */  /* menu_options_alumni_group */ $strongarm = new stdClass();
-  /* menu_options_alumni_group */  /* menu_options_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* menu_options_alumni_group */  /* menu_options_alumni_group */ $strongarm->api_version = 1;
-  /* menu_options_alumni_group */  /* menu_options_alumni_group */ $strongarm->name = 'menu_options_alumni_group';
-  /* menu_options_alumni_group */  /* menu_options_alumni_group */ $strongarm->value = array();
-  $export['menu_options_alumni_group'] = $strongarm;
-
   /* menu_options_announcement */  /* menu_options_announcement */ $strongarm = new stdClass();
   /* menu_options_announcement */  /* menu_options_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* menu_options_announcement */  /* menu_options_announcement */ $strongarm->api_version = 1;
   /* menu_options_announcement */  /* menu_options_announcement */ $strongarm->name = 'menu_options_announcement';
   /* menu_options_announcement */  /* menu_options_announcement */ $strongarm->value = array();
   $export['menu_options_announcement'] = $strongarm;
-
-  /* menu_options_coi */  /* menu_options_coi */ $strongarm = new stdClass();
-  /* menu_options_coi */  /* menu_options_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* menu_options_coi */  /* menu_options_coi */ $strongarm->api_version = 1;
-  /* menu_options_coi */  /* menu_options_coi */ $strongarm->name = 'menu_options_coi';
-  /* menu_options_coi */  /* menu_options_coi */ $strongarm->value = array();
-  $export['menu_options_coi'] = $strongarm;
 
   /* menu_options_course */  /* menu_options_course */ $strongarm = new stdClass();
   /* menu_options_course */  /* menu_options_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5430,26 +5155,12 @@ within 24 hours.
   /* menu_options_publication */  /* menu_options_publication */ $strongarm->value = array();
   $export['menu_options_publication'] = $strongarm;
 
-  /* menu_parent_alumni_group */  /* menu_parent_alumni_group */ $strongarm = new stdClass();
-  /* menu_parent_alumni_group */  /* menu_parent_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* menu_parent_alumni_group */  /* menu_parent_alumni_group */ $strongarm->api_version = 1;
-  /* menu_parent_alumni_group */  /* menu_parent_alumni_group */ $strongarm->name = 'menu_parent_alumni_group';
-  /* menu_parent_alumni_group */  /* menu_parent_alumni_group */ $strongarm->value = 'main-menu:0';
-  $export['menu_parent_alumni_group'] = $strongarm;
-
   /* menu_parent_announcement */  /* menu_parent_announcement */ $strongarm = new stdClass();
   /* menu_parent_announcement */  /* menu_parent_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* menu_parent_announcement */  /* menu_parent_announcement */ $strongarm->api_version = 1;
   /* menu_parent_announcement */  /* menu_parent_announcement */ $strongarm->name = 'menu_parent_announcement';
   /* menu_parent_announcement */  /* menu_parent_announcement */ $strongarm->value = 'main-menu:0';
   $export['menu_parent_announcement'] = $strongarm;
-
-  /* menu_parent_coi */  /* menu_parent_coi */ $strongarm = new stdClass();
-  /* menu_parent_coi */  /* menu_parent_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* menu_parent_coi */  /* menu_parent_coi */ $strongarm->api_version = 1;
-  /* menu_parent_coi */  /* menu_parent_coi */ $strongarm->name = 'menu_parent_coi';
-  /* menu_parent_coi */  /* menu_parent_coi */ $strongarm->value = 'main-menu:0';
-  $export['menu_parent_coi'] = $strongarm;
 
   /* menu_parent_course */  /* menu_parent_course */ $strongarm = new stdClass();
   /* menu_parent_course */  /* menu_parent_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5549,16 +5260,6 @@ within 24 hours.
   /* node_admin_theme */  /* node_admin_theme */ $strongarm->value = 0;
   $export['node_admin_theme'] = $strongarm;
 
-  /* node_options_alumni_group */  /* node_options_alumni_group */ $strongarm = new stdClass();
-  /* node_options_alumni_group */  /* node_options_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_options_alumni_group */  /* node_options_alumni_group */ $strongarm->api_version = 1;
-  /* node_options_alumni_group */  /* node_options_alumni_group */ $strongarm->name = 'node_options_alumni_group';
-  /* node_options_alumni_group */  /* node_options_alumni_group */ $strongarm->value = array(
-  /* node_options_alumni_group */  /* node_options_alumni_group */   0 => 'status',
-  /* node_options_alumni_group */  /* node_options_alumni_group */   1 => 'promote',
-  /* node_options_alumni_group */  /* node_options_alumni_group */ );
-  $export['node_options_alumni_group'] = $strongarm;
-
   /* node_options_announcement */  /* node_options_announcement */ $strongarm = new stdClass();
   /* node_options_announcement */  /* node_options_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* node_options_announcement */  /* node_options_announcement */ $strongarm->api_version = 1;
@@ -5567,15 +5268,6 @@ within 24 hours.
   /* node_options_announcement */  /* node_options_announcement */   0 => 'revision',
   /* node_options_announcement */  /* node_options_announcement */ );
   $export['node_options_announcement'] = $strongarm;
-
-  /* node_options_coi */  /* node_options_coi */ $strongarm = new stdClass();
-  /* node_options_coi */  /* node_options_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_options_coi */  /* node_options_coi */ $strongarm->api_version = 1;
-  /* node_options_coi */  /* node_options_coi */ $strongarm->name = 'node_options_coi';
-  /* node_options_coi */  /* node_options_coi */ $strongarm->value = array(
-  /* node_options_coi */  /* node_options_coi */   0 => 'status',
-  /* node_options_coi */  /* node_options_coi */ );
-  $export['node_options_coi'] = $strongarm;
 
   /* node_options_course */  /* node_options_course */ $strongarm = new stdClass();
   /* node_options_course */  /* node_options_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5703,26 +5395,12 @@ within 24 hours.
   /* node_options_publication */  /* node_options_publication */ );
   $export['node_options_publication'] = $strongarm;
 
-  /* node_preview_alumni_group */  /* node_preview_alumni_group */ $strongarm = new stdClass();
-  /* node_preview_alumni_group */  /* node_preview_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_preview_alumni_group */  /* node_preview_alumni_group */ $strongarm->api_version = 1;
-  /* node_preview_alumni_group */  /* node_preview_alumni_group */ $strongarm->name = 'node_preview_alumni_group';
-  /* node_preview_alumni_group */  /* node_preview_alumni_group */ $strongarm->value = 1;
-  $export['node_preview_alumni_group'] = $strongarm;
-
   /* node_preview_announcement */  /* node_preview_announcement */ $strongarm = new stdClass();
   /* node_preview_announcement */  /* node_preview_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* node_preview_announcement */  /* node_preview_announcement */ $strongarm->api_version = 1;
   /* node_preview_announcement */  /* node_preview_announcement */ $strongarm->name = 'node_preview_announcement';
   /* node_preview_announcement */  /* node_preview_announcement */ $strongarm->value = 0;
   $export['node_preview_announcement'] = $strongarm;
-
-  /* node_preview_coi */  /* node_preview_coi */ $strongarm = new stdClass();
-  /* node_preview_coi */  /* node_preview_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_preview_coi */  /* node_preview_coi */ $strongarm->api_version = 1;
-  /* node_preview_coi */  /* node_preview_coi */ $strongarm->name = 'node_preview_coi';
-  /* node_preview_coi */  /* node_preview_coi */ $strongarm->value = 0;
-  $export['node_preview_coi'] = $strongarm;
 
   /* node_preview_course */  /* node_preview_course */ $strongarm = new stdClass();
   /* node_preview_course */  /* node_preview_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5815,26 +5493,12 @@ within 24 hours.
   /* node_preview_publication */  /* node_preview_publication */ $strongarm->value = 0;
   $export['node_preview_publication'] = $strongarm;
 
-  /* node_submitted_alumni_group */  /* node_submitted_alumni_group */ $strongarm = new stdClass();
-  /* node_submitted_alumni_group */  /* node_submitted_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_submitted_alumni_group */  /* node_submitted_alumni_group */ $strongarm->api_version = 1;
-  /* node_submitted_alumni_group */  /* node_submitted_alumni_group */ $strongarm->name = 'node_submitted_alumni_group';
-  /* node_submitted_alumni_group */  /* node_submitted_alumni_group */ $strongarm->value = 1;
-  $export['node_submitted_alumni_group'] = $strongarm;
-
   /* node_submitted_announcement */  /* node_submitted_announcement */ $strongarm = new stdClass();
   /* node_submitted_announcement */  /* node_submitted_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* node_submitted_announcement */  /* node_submitted_announcement */ $strongarm->api_version = 1;
   /* node_submitted_announcement */  /* node_submitted_announcement */ $strongarm->name = 'node_submitted_announcement';
   /* node_submitted_announcement */  /* node_submitted_announcement */ $strongarm->value = 1;
   $export['node_submitted_announcement'] = $strongarm;
-
-  /* node_submitted_coi */  /* node_submitted_coi */ $strongarm = new stdClass();
-  /* node_submitted_coi */  /* node_submitted_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* node_submitted_coi */  /* node_submitted_coi */ $strongarm->api_version = 1;
-  /* node_submitted_coi */  /* node_submitted_coi */ $strongarm->name = 'node_submitted_coi';
-  /* node_submitted_coi */  /* node_submitted_coi */ $strongarm->value = 0;
-  $export['node_submitted_coi'] = $strongarm;
 
   /* node_submitted_course */  /* node_submitted_course */ $strongarm = new stdClass();
   /* node_submitted_course */  /* node_submitted_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5927,15 +5591,6 @@ within 24 hours.
   /* node_submitted_publication */  /* node_submitted_publication */ $strongarm->value = 0;
   $export['node_submitted_publication'] = $strongarm;
 
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ $strongarm = new stdClass();
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ $strongarm->api_version = 1;
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ $strongarm->name = 'og_group_manager_default_rids_node_alumni_group';
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ $strongarm->value = array(
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */   21 => 21,
-  /* og_group_manager_default_rids_node_alumni_group */  /* og_group_manager_default_rids_node_alumni_group */ );
-  $export['og_group_manager_default_rids_node_alumni_group'] = $strongarm;
-
   /* og_group_manager_default_rids_node_course */  /* og_group_manager_default_rids_node_course */ $strongarm = new stdClass();
   /* og_group_manager_default_rids_node_course */  /* og_group_manager_default_rids_node_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* og_group_manager_default_rids_node_course */  /* og_group_manager_default_rids_node_course */ $strongarm->api_version = 1;
@@ -5982,20 +5637,6 @@ Groups|search/org/[node:nid]/type/group
 Courses|search/org/[node:nid]/type/course
 Programs|node/[node:nid]';
   $export['og_menu_default_links_node_organization'] = $strongarm;
-
-  /* og_menu_enable_alumni_group */  /* og_menu_enable_alumni_group */ $strongarm = new stdClass();
-  /* og_menu_enable_alumni_group */  /* og_menu_enable_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* og_menu_enable_alumni_group */  /* og_menu_enable_alumni_group */ $strongarm->api_version = 1;
-  /* og_menu_enable_alumni_group */  /* og_menu_enable_alumni_group */ $strongarm->name = 'og_menu_enable_alumni_group';
-  /* og_menu_enable_alumni_group */  /* og_menu_enable_alumni_group */ $strongarm->value = 0;
-  $export['og_menu_enable_alumni_group'] = $strongarm;
-
-  /* og_menu_enable_coi */  /* og_menu_enable_coi */ $strongarm = new stdClass();
-  /* og_menu_enable_coi */  /* og_menu_enable_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* og_menu_enable_coi */  /* og_menu_enable_coi */ $strongarm->api_version = 1;
-  /* og_menu_enable_coi */  /* og_menu_enable_coi */ $strongarm->name = 'og_menu_enable_coi';
-  /* og_menu_enable_coi */  /* og_menu_enable_coi */ $strongarm->value = 0;
-  $export['og_menu_enable_coi'] = $strongarm;
 
   /* og_menu_enable_course */  /* og_menu_enable_course */ $strongarm = new stdClass();
   /* og_menu_enable_course */  /* og_menu_enable_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -6106,7 +5747,10 @@ Programs|node/[node:nid]';
   /* openid_provider_whitelist */  /* openid_provider_whitelist */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* openid_provider_whitelist */  /* openid_provider_whitelist */ $strongarm->api_version = 1;
   /* openid_provider_whitelist */  /* openid_provider_whitelist */ $strongarm->name = 'openid_provider_whitelist';
-  /* openid_provider_whitelist */  /* openid_provider_whitelist */ $strongarm->value = array();
+  /* openid_provider_whitelist */  /* openid_provider_whitelist */ $strongarm->value = array(
+  /* openid_provider_whitelist */  /* openid_provider_whitelist */   0 => '',
+  /* openid_provider_whitelist */  /* openid_provider_whitelist */   1 => '',
+  /* openid_provider_whitelist */  /* openid_provider_whitelist */ );
   $export['openid_provider_whitelist'] = $strongarm;
 
   /* openid_provider_whitelist_only */  /* openid_provider_whitelist_only */ $strongarm = new stdClass();
@@ -6408,52 +6052,6 @@ Programs|node/[node:nid]';
   /* panelizer_defaults_file_video */  /* panelizer_defaults_file_video */ );
   $export['panelizer_defaults_file_video'] = $strongarm;
 
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ $strongarm = new stdClass();
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ $strongarm->api_version = 1;
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ $strongarm->name = 'panelizer_defaults_node_alumni_group';
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ $strongarm->value = array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */   'status' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */   'view modes' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'page_manager' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'default' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'teaser' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'teaserthumb' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'sidebar_teaser_v2' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'sidebar_' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     'search_teaser' => array(
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'status' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'default' => 1,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */       'choice' => 0,
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */     ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */   ),
-  /* panelizer_defaults_node_alumni_group */  /* panelizer_defaults_node_alumni_group */ );
-  $export['panelizer_defaults_node_alumni_group'] = $strongarm;
-
   /* panelizer_defaults_node_announcement */  /* panelizer_defaults_node_announcement */ $strongarm = new stdClass();
   /* panelizer_defaults_node_announcement */  /* panelizer_defaults_node_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* panelizer_defaults_node_announcement */  /* panelizer_defaults_node_announcement */ $strongarm->api_version = 1;
@@ -6499,67 +6097,6 @@ Programs|node/[node:nid]';
   /* panelizer_defaults_node_announcement */  /* panelizer_defaults_node_announcement */   ),
   /* panelizer_defaults_node_announcement */  /* panelizer_defaults_node_announcement */ );
   $export['panelizer_defaults_node_announcement'] = $strongarm;
-
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ $strongarm = new stdClass();
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ $strongarm->api_version = 1;
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ $strongarm->name = 'panelizer_defaults_node_coi';
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ $strongarm->value = array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */   'status' => 1,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */   'view modes' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'page_manager' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 1,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 1,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'default' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'teaser' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'teaserthumb' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'events_list' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'one_column_teaser' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'title_and_time' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'time_and_location' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'sidebar_teaser_v2' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     'sidebar_' => array(
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'status' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'default' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */       'choice' => 0,
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */     ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */   ),
-  /* panelizer_defaults_node_coi */  /* panelizer_defaults_node_coi */ );
-  $export['panelizer_defaults_node_coi'] = $strongarm;
 
   /* panelizer_defaults_node_course */  /* panelizer_defaults_node_course */ $strongarm = new stdClass();
   /* panelizer_defaults_node_course */  /* panelizer_defaults_node_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -7755,11 +7292,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_employers_position' => 'entity_field-field_collection_item:field_employers_position',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_employment_dates' => 'entity_field-field_collection_item:field_employment_dates',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_job_description' => 'entity_field-field_collection_item:field_job_description',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_expertise_availability' => 'entity_field-field_collection_item:field_expertise_availability',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_expertise_experience' => 'entity_field-field_collection_item:field_expertise_experience',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_expertise_level' => 'entity_field-field_collection_item:field_expertise_level',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_expertise_topic' => 'entity_field-field_collection_item:field_expertise_topic',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_expertise_validated_by' => 'entity_field-field_collection_item:field_expertise_validated_by',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_telephone_country_code' => 'entity_field-field_collection_item:field_telephone_country_code',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_telephone_extension' => 'entity_field-field_collection_item:field_telephone_extension',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-field_collection_item:field_telephone_number' => 'entity_field-field_collection_item:field_telephone_number',
@@ -7850,7 +7382,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_date_of_death' => 'entity_field-user:field_date_of_death',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_education' => 'entity_field-user:field_education',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_employers' => 'entity_field-user:field_employers',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_expertise' => 'entity_field-user:field_expertise',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_facebook' => 'entity_field-user:field_facebook',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_linkedin' => 'entity_field-user:field_linkedin',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_field-user:field_name_first' => 'entity_field-user:field_name_first',
@@ -7888,11 +7419,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_employers_position' => 'entity_form_field-field_collection_item:field_employers_position',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_employment_dates' => 'entity_form_field-field_collection_item:field_employment_dates',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_job_description' => 'entity_form_field-field_collection_item:field_job_description',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_expertise_availability' => 'entity_form_field-field_collection_item:field_expertise_availability',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_expertise_experience' => 'entity_form_field-field_collection_item:field_expertise_experience',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_expertise_level' => 'entity_form_field-field_collection_item:field_expertise_level',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_expertise_topic' => 'entity_form_field-field_collection_item:field_expertise_topic',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_expertise_validated_by' => 'entity_form_field-field_collection_item:field_expertise_validated_by',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_telephone_country_code' => 'entity_form_field-field_collection_item:field_telephone_country_code',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_telephone_extension' => 'entity_form_field-field_collection_item:field_telephone_extension',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-field_collection_item:field_telephone_number' => 'entity_form_field-field_collection_item:field_telephone_number',
@@ -7983,7 +7509,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_date_of_death' => 'entity_form_field-user:field_date_of_death',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_education' => 'entity_form_field-user:field_education',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_employers' => 'entity_form_field-user:field_employers',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_expertise' => 'entity_form_field-user:field_expertise',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_facebook' => 'entity_form_field-user:field_facebook',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_linkedin' => 'entity_form_field-user:field_linkedin',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'entity_form_field-user:field_name_first' => 'entity_form_field-user:field_name_first',
@@ -8278,7 +7803,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-date-of-death' => 'token-user:field-date-of-death',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-education' => 'token-user:field-education',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-employers' => 'token-user:field-employers',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-expertise' => 'token-user:field-expertise',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-facebook' => 'token-user:field-facebook',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-linkedin' => 'token-user:field-linkedin',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field-name-first' => 'token-user:field-name-first',
@@ -8310,7 +7834,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_date_of_death' => 'token-user:field_date_of_death',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_education' => 'token-user:field_education',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_employers' => 'token-user:field_employers',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_expertise' => 'token-user:field_expertise',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_facebook' => 'token-user:field_facebook',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_linkedin' => 'token-user:field_linkedin',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-user:field_name_first' => 'token-user:field_name_first',
@@ -8513,11 +8036,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-employers-position' => 'token-field_collection_item:field-employers-position',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-employment-dates' => 'token-field_collection_item:field-employment-dates',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-job-description' => 'token-field_collection_item:field-job-description',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-expertise-availability' => 'token-field_collection_item:field-expertise-availability',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-expertise-experience' => 'token-field_collection_item:field-expertise-experience',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-expertise-level' => 'token-field_collection_item:field-expertise-level',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-expertise-topic' => 'token-field_collection_item:field-expertise-topic',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-expertise-validated-by' => 'token-field_collection_item:field-expertise-validated-by',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-telephone-country-code' => 'token-field_collection_item:field-telephone-country-code',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-telephone-extension' => 'token-field_collection_item:field-telephone-extension',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field-telephone-number' => 'token-field_collection_item:field-telephone-number',
@@ -8538,11 +8056,6 @@ Programs|node/[node:nid]';
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_employers_position' => 'token-field_collection_item:field_employers_position',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_employment_dates' => 'token-field_collection_item:field_employment_dates',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_job_description' => 'token-field_collection_item:field_job_description',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_expertise_availability' => 'token-field_collection_item:field_expertise_availability',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_expertise_experience' => 'token-field_collection_item:field_expertise_experience',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_expertise_level' => 'token-field_collection_item:field_expertise_level',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_expertise_topic' => 'token-field_collection_item:field_expertise_topic',
-  /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_expertise_validated_by' => 'token-field_collection_item:field_expertise_validated_by',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_telephone_country_code' => 'token-field_collection_item:field_telephone_country_code',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_telephone_extension' => 'token-field_collection_item:field_telephone_extension',
   /* panelizer_node:program_allowed_types */  /* panelizer_node:program_allowed_types */   'token-field_collection_item:field_telephone_number' => 'token-field_collection_item:field_telephone_number',
@@ -8990,62 +8503,6 @@ Please go to !edit_uri to change your password.';
   /* pathauto_max_length */  /* pathauto_max_length */ $strongarm->value = 255;
   $export['pathauto_max_length'] = $strongarm;
 
-  /* pathauto_node_alumni_group_de_pattern */  /* pathauto_node_alumni_group_de_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_de_pattern */  /* pathauto_node_alumni_group_de_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_de_pattern */  /* pathauto_node_alumni_group_de_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_de_pattern */  /* pathauto_node_alumni_group_de_pattern */ $strongarm->name = 'pathauto_node_alumni_group_de_pattern';
-  /* pathauto_node_alumni_group_de_pattern */  /* pathauto_node_alumni_group_de_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_de_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_en_pattern */  /* pathauto_node_alumni_group_en_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_en_pattern */  /* pathauto_node_alumni_group_en_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_en_pattern */  /* pathauto_node_alumni_group_en_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_en_pattern */  /* pathauto_node_alumni_group_en_pattern */ $strongarm->name = 'pathauto_node_alumni_group_en_pattern';
-  /* pathauto_node_alumni_group_en_pattern */  /* pathauto_node_alumni_group_en_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_en_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_es_pattern */  /* pathauto_node_alumni_group_es_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_es_pattern */  /* pathauto_node_alumni_group_es_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_es_pattern */  /* pathauto_node_alumni_group_es_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_es_pattern */  /* pathauto_node_alumni_group_es_pattern */ $strongarm->name = 'pathauto_node_alumni_group_es_pattern';
-  /* pathauto_node_alumni_group_es_pattern */  /* pathauto_node_alumni_group_es_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_es_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_fr_pattern */  /* pathauto_node_alumni_group_fr_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_fr_pattern */  /* pathauto_node_alumni_group_fr_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_fr_pattern */  /* pathauto_node_alumni_group_fr_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_fr_pattern */  /* pathauto_node_alumni_group_fr_pattern */ $strongarm->name = 'pathauto_node_alumni_group_fr_pattern';
-  /* pathauto_node_alumni_group_fr_pattern */  /* pathauto_node_alumni_group_fr_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_fr_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_pattern */  /* pathauto_node_alumni_group_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_pattern */  /* pathauto_node_alumni_group_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_pattern */  /* pathauto_node_alumni_group_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_pattern */  /* pathauto_node_alumni_group_pattern */ $strongarm->name = 'pathauto_node_alumni_group_pattern';
-  /* pathauto_node_alumni_group_pattern */  /* pathauto_node_alumni_group_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_pt-br_pattern */  /* pathauto_node_alumni_group_pt-br_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_pt-br_pattern */  /* pathauto_node_alumni_group_pt-br_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_pt-br_pattern */  /* pathauto_node_alumni_group_pt-br_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_pt-br_pattern */  /* pathauto_node_alumni_group_pt-br_pattern */ $strongarm->name = 'pathauto_node_alumni_group_pt-br_pattern';
-  /* pathauto_node_alumni_group_pt-br_pattern */  /* pathauto_node_alumni_group_pt-br_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_pt-br_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_ru_pattern */  /* pathauto_node_alumni_group_ru_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_ru_pattern */  /* pathauto_node_alumni_group_ru_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_ru_pattern */  /* pathauto_node_alumni_group_ru_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_ru_pattern */  /* pathauto_node_alumni_group_ru_pattern */ $strongarm->name = 'pathauto_node_alumni_group_ru_pattern';
-  /* pathauto_node_alumni_group_ru_pattern */  /* pathauto_node_alumni_group_ru_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_ru_pattern'] = $strongarm;
-
-  /* pathauto_node_alumni_group_und_pattern */  /* pathauto_node_alumni_group_und_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_alumni_group_und_pattern */  /* pathauto_node_alumni_group_und_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_alumni_group_und_pattern */  /* pathauto_node_alumni_group_und_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_alumni_group_und_pattern */  /* pathauto_node_alumni_group_und_pattern */ $strongarm->name = 'pathauto_node_alumni_group_und_pattern';
-  /* pathauto_node_alumni_group_und_pattern */  /* pathauto_node_alumni_group_und_pattern */ $strongarm->value = '';
-  $export['pathauto_node_alumni_group_und_pattern'] = $strongarm;
-
   /* pathauto_node_announcement_de_pattern */  /* pathauto_node_announcement_de_pattern */ $strongarm = new stdClass();
   /* pathauto_node_announcement_de_pattern */  /* pathauto_node_announcement_de_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* pathauto_node_announcement_de_pattern */  /* pathauto_node_announcement_de_pattern */ $strongarm->api_version = 1;
@@ -9101,27 +8558,6 @@ Please go to !edit_uri to change your password.';
   /* pathauto_node_announcement_und_pattern */  /* pathauto_node_announcement_und_pattern */ $strongarm->name = 'pathauto_node_announcement_und_pattern';
   /* pathauto_node_announcement_und_pattern */  /* pathauto_node_announcement_und_pattern */ $strongarm->value = '';
   $export['pathauto_node_announcement_und_pattern'] = $strongarm;
-
-  /* pathauto_node_coi_en_pattern */  /* pathauto_node_coi_en_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_coi_en_pattern */  /* pathauto_node_coi_en_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_coi_en_pattern */  /* pathauto_node_coi_en_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_coi_en_pattern */  /* pathauto_node_coi_en_pattern */ $strongarm->name = 'pathauto_node_coi_en_pattern';
-  /* pathauto_node_coi_en_pattern */  /* pathauto_node_coi_en_pattern */ $strongarm->value = '';
-  $export['pathauto_node_coi_en_pattern'] = $strongarm;
-
-  /* pathauto_node_coi_pattern */  /* pathauto_node_coi_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_coi_pattern */  /* pathauto_node_coi_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_coi_pattern */  /* pathauto_node_coi_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_coi_pattern */  /* pathauto_node_coi_pattern */ $strongarm->name = 'pathauto_node_coi_pattern';
-  /* pathauto_node_coi_pattern */  /* pathauto_node_coi_pattern */ $strongarm->value = '';
-  $export['pathauto_node_coi_pattern'] = $strongarm;
-
-  /* pathauto_node_coi_und_pattern */  /* pathauto_node_coi_und_pattern */ $strongarm = new stdClass();
-  /* pathauto_node_coi_und_pattern */  /* pathauto_node_coi_und_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* pathauto_node_coi_und_pattern */  /* pathauto_node_coi_und_pattern */ $strongarm->api_version = 1;
-  /* pathauto_node_coi_und_pattern */  /* pathauto_node_coi_und_pattern */ $strongarm->name = 'pathauto_node_coi_und_pattern';
-  /* pathauto_node_coi_und_pattern */  /* pathauto_node_coi_und_pattern */ $strongarm->value = '';
-  $export['pathauto_node_coi_und_pattern'] = $strongarm;
 
   /* pathauto_node_course_de_pattern */  /* pathauto_node_course_de_pattern */ $strongarm = new stdClass();
   /* pathauto_node_course_de_pattern */  /* pathauto_node_course_de_pattern */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -9963,6 +9399,188 @@ Please go to !edit_uri to change your password.';
   /* path_alias_xt_regex_pattern */  /* path_alias_xt_regex_pattern */ $strongarm->value = '{(^node|^user|^taxonomy/term)/([0-9]+)/(?!revisions|votes)(.+)}';
   $export['path_alias_xt_regex_pattern'] = $strongarm;
 
+  /* print_comments */  /* print_comments */ $strongarm = new stdClass();
+  /* print_comments */  /* print_comments */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_comments */  /* print_comments */ $strongarm->api_version = 1;
+  /* print_comments */  /* print_comments */ $strongarm->name = 'print_comments';
+  /* print_comments */  /* print_comments */ $strongarm->value = 0;
+  $export['print_comments'] = $strongarm;
+
+  /* print_css */  /* print_css */ $strongarm = new stdClass();
+  /* print_css */  /* print_css */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_css */  /* print_css */ $strongarm->api_version = 1;
+  /* print_css */  /* print_css */ $strongarm->name = 'print_css';
+  /* print_css */  /* print_css */ $strongarm->value = '';
+  $export['print_css'] = $strongarm;
+
+  /* print_footer_options */  /* print_footer_options */ $strongarm = new stdClass();
+  /* print_footer_options */  /* print_footer_options */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_footer_options */  /* print_footer_options */ $strongarm->api_version = 1;
+  /* print_footer_options */  /* print_footer_options */ $strongarm->name = 'print_footer_options';
+  /* print_footer_options */  /* print_footer_options */ $strongarm->value = '0';
+  $export['print_footer_options'] = $strongarm;
+
+  /* print_footer_user */  /* print_footer_user */ $strongarm = new stdClass();
+  /* print_footer_user */  /* print_footer_user */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_footer_user */  /* print_footer_user */ $strongarm->api_version = 1;
+  /* print_footer_user */  /* print_footer_user */ $strongarm->name = 'print_footer_user';
+  /* print_footer_user */  /* print_footer_user */ $strongarm->value = '';
+  $export['print_footer_user'] = $strongarm;
+
+  /* print_keep_theme_css */  /* print_keep_theme_css */ $strongarm = new stdClass();
+  /* print_keep_theme_css */  /* print_keep_theme_css */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_keep_theme_css */  /* print_keep_theme_css */ $strongarm->api_version = 1;
+  /* print_keep_theme_css */  /* print_keep_theme_css */ $strongarm->name = 'print_keep_theme_css';
+  /* print_keep_theme_css */  /* print_keep_theme_css */ $strongarm->value = 0;
+  $export['print_keep_theme_css'] = $strongarm;
+
+  /* print_logo_options */  /* print_logo_options */ $strongarm = new stdClass();
+  /* print_logo_options */  /* print_logo_options */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_logo_options */  /* print_logo_options */ $strongarm->api_version = 1;
+  /* print_logo_options */  /* print_logo_options */ $strongarm->name = 'print_logo_options';
+  /* print_logo_options */  /* print_logo_options */ $strongarm->value = '0';
+  $export['print_logo_options'] = $strongarm;
+
+  /* print_logo_upload */  /* print_logo_upload */ $strongarm = new stdClass();
+  /* print_logo_upload */  /* print_logo_upload */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_logo_upload */  /* print_logo_upload */ $strongarm->api_version = 1;
+  /* print_logo_upload */  /* print_logo_upload */ $strongarm->name = 'print_logo_upload';
+  /* print_logo_upload */  /* print_logo_upload */ $strongarm->value = '';
+  $export['print_logo_upload'] = $strongarm;
+
+  /* print_logo_url */  /* print_logo_url */ $strongarm = new stdClass();
+  /* print_logo_url */  /* print_logo_url */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_logo_url */  /* print_logo_url */ $strongarm->api_version = 1;
+  /* print_logo_url */  /* print_logo_url */ $strongarm->name = 'print_logo_url';
+  /* print_logo_url */  /* print_logo_url */ $strongarm->value = '';
+  $export['print_logo_url'] = $strongarm;
+
+  /* print_newwindow */  /* print_newwindow */ $strongarm = new stdClass();
+  /* print_newwindow */  /* print_newwindow */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_newwindow */  /* print_newwindow */ $strongarm->api_version = 1;
+  /* print_newwindow */  /* print_newwindow */ $strongarm->name = 'print_newwindow';
+  /* print_newwindow */  /* print_newwindow */ $strongarm->value = '1';
+  $export['print_newwindow'] = $strongarm;
+
+  /* print_pdf_autoconfig */  /* print_pdf_autoconfig */ $strongarm = new stdClass();
+  /* print_pdf_autoconfig */  /* print_pdf_autoconfig */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_autoconfig */  /* print_pdf_autoconfig */ $strongarm->api_version = 1;
+  /* print_pdf_autoconfig */  /* print_pdf_autoconfig */ $strongarm->name = 'print_pdf_autoconfig';
+  /* print_pdf_autoconfig */  /* print_pdf_autoconfig */ $strongarm->value = 1;
+  $export['print_pdf_autoconfig'] = $strongarm;
+
+  /* print_pdf_cache_enabled */  /* print_pdf_cache_enabled */ $strongarm = new stdClass();
+  /* print_pdf_cache_enabled */  /* print_pdf_cache_enabled */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_cache_enabled */  /* print_pdf_cache_enabled */ $strongarm->api_version = 1;
+  /* print_pdf_cache_enabled */  /* print_pdf_cache_enabled */ $strongarm->name = 'print_pdf_cache_enabled';
+  /* print_pdf_cache_enabled */  /* print_pdf_cache_enabled */ $strongarm->value = 0;
+  $export['print_pdf_cache_enabled'] = $strongarm;
+
+  /* print_pdf_cache_lifetime */  /* print_pdf_cache_lifetime */ $strongarm = new stdClass();
+  /* print_pdf_cache_lifetime */  /* print_pdf_cache_lifetime */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_cache_lifetime */  /* print_pdf_cache_lifetime */ $strongarm->api_version = 1;
+  /* print_pdf_cache_lifetime */  /* print_pdf_cache_lifetime */ $strongarm->name = 'print_pdf_cache_lifetime';
+  /* print_pdf_cache_lifetime */  /* print_pdf_cache_lifetime */ $strongarm->value = '86400';
+  $export['print_pdf_cache_lifetime'] = $strongarm;
+
+  /* print_pdf_content_disposition */  /* print_pdf_content_disposition */ $strongarm = new stdClass();
+  /* print_pdf_content_disposition */  /* print_pdf_content_disposition */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_content_disposition */  /* print_pdf_content_disposition */ $strongarm->api_version = 1;
+  /* print_pdf_content_disposition */  /* print_pdf_content_disposition */ $strongarm->name = 'print_pdf_content_disposition';
+  /* print_pdf_content_disposition */  /* print_pdf_content_disposition */ $strongarm->value = '1';
+  $export['print_pdf_content_disposition'] = $strongarm;
+
+  /* print_pdf_display_sys_urllist */  /* print_pdf_display_sys_urllist */ $strongarm = new stdClass();
+  /* print_pdf_display_sys_urllist */  /* print_pdf_display_sys_urllist */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_display_sys_urllist */  /* print_pdf_display_sys_urllist */ $strongarm->api_version = 1;
+  /* print_pdf_display_sys_urllist */  /* print_pdf_display_sys_urllist */ $strongarm->name = 'print_pdf_display_sys_urllist';
+  /* print_pdf_display_sys_urllist */  /* print_pdf_display_sys_urllist */ $strongarm->value = 0;
+  $export['print_pdf_display_sys_urllist'] = $strongarm;
+
+  /* print_pdf_filename */  /* print_pdf_filename */ $strongarm = new stdClass();
+  /* print_pdf_filename */  /* print_pdf_filename */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_filename */  /* print_pdf_filename */ $strongarm->api_version = 1;
+  /* print_pdf_filename */  /* print_pdf_filename */ $strongarm->name = 'print_pdf_filename';
+  /* print_pdf_filename */  /* print_pdf_filename */ $strongarm->value = '[site:name] - [node:title] - [node:changed:custom:Y-m-d]';
+  $export['print_pdf_filename'] = $strongarm;
+
+  /* print_pdf_images_via_file */  /* print_pdf_images_via_file */ $strongarm = new stdClass();
+  /* print_pdf_images_via_file */  /* print_pdf_images_via_file */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_images_via_file */  /* print_pdf_images_via_file */ $strongarm->api_version = 1;
+  /* print_pdf_images_via_file */  /* print_pdf_images_via_file */ $strongarm->name = 'print_pdf_images_via_file';
+  /* print_pdf_images_via_file */  /* print_pdf_images_via_file */ $strongarm->value = 0;
+  $export['print_pdf_images_via_file'] = $strongarm;
+
+  /* print_pdf_link_text */  /* print_pdf_link_text */ $strongarm = new stdClass();
+  /* print_pdf_link_text */  /* print_pdf_link_text */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_link_text */  /* print_pdf_link_text */ $strongarm->api_version = 1;
+  /* print_pdf_link_text */  /* print_pdf_link_text */ $strongarm->name = 'print_pdf_link_text';
+  /* print_pdf_link_text */  /* print_pdf_link_text */ $strongarm->value = 'PDF version';
+  $export['print_pdf_link_text'] = $strongarm;
+
+  /* print_pdf_link_text_enabled */  /* print_pdf_link_text_enabled */ $strongarm = new stdClass();
+  /* print_pdf_link_text_enabled */  /* print_pdf_link_text_enabled */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_link_text_enabled */  /* print_pdf_link_text_enabled */ $strongarm->api_version = 1;
+  /* print_pdf_link_text_enabled */  /* print_pdf_link_text_enabled */ $strongarm->name = 'print_pdf_link_text_enabled';
+  /* print_pdf_link_text_enabled */  /* print_pdf_link_text_enabled */ $strongarm->value = 0;
+  $export['print_pdf_link_text_enabled'] = $strongarm;
+
+  /* print_pdf_page_orientation */  /* print_pdf_page_orientation */ $strongarm = new stdClass();
+  /* print_pdf_page_orientation */  /* print_pdf_page_orientation */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_page_orientation */  /* print_pdf_page_orientation */ $strongarm->api_version = 1;
+  /* print_pdf_page_orientation */  /* print_pdf_page_orientation */ $strongarm->name = 'print_pdf_page_orientation';
+  /* print_pdf_page_orientation */  /* print_pdf_page_orientation */ $strongarm->value = 'portrait';
+  $export['print_pdf_page_orientation'] = $strongarm;
+
+  /* print_pdf_paper_size */  /* print_pdf_paper_size */ $strongarm = new stdClass();
+  /* print_pdf_paper_size */  /* print_pdf_paper_size */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_paper_size */  /* print_pdf_paper_size */ $strongarm->api_version = 1;
+  /* print_pdf_paper_size */  /* print_pdf_paper_size */ $strongarm->name = 'print_pdf_paper_size';
+  /* print_pdf_paper_size */  /* print_pdf_paper_size */ $strongarm->value = 'A4';
+  $export['print_pdf_paper_size'] = $strongarm;
+
+  /* print_pdf_pdf_tool */  /* print_pdf_pdf_tool */ $strongarm = new stdClass();
+  /* print_pdf_pdf_tool */  /* print_pdf_pdf_tool */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_pdf_pdf_tool */  /* print_pdf_pdf_tool */ $strongarm->api_version = 1;
+  /* print_pdf_pdf_tool */  /* print_pdf_pdf_tool */ $strongarm->name = 'print_pdf_pdf_tool';
+  /* print_pdf_pdf_tool */  /* print_pdf_pdf_tool */ $strongarm->value = 'print_pdf_dompdf|sites/all/libraries/dompdf/dompdf_config.inc.php';
+  $export['print_pdf_pdf_tool'] = $strongarm;
+
+  /* print_sourceurl_date */  /* print_sourceurl_date */ $strongarm = new stdClass();
+  /* print_sourceurl_date */  /* print_sourceurl_date */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_sourceurl_date */  /* print_sourceurl_date */ $strongarm->api_version = 1;
+  /* print_sourceurl_date */  /* print_sourceurl_date */ $strongarm->name = 'print_sourceurl_date';
+  /* print_sourceurl_date */  /* print_sourceurl_date */ $strongarm->value = 0;
+  $export['print_sourceurl_date'] = $strongarm;
+
+  /* print_sourceurl_enabled */  /* print_sourceurl_enabled */ $strongarm = new stdClass();
+  /* print_sourceurl_enabled */  /* print_sourceurl_enabled */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_sourceurl_enabled */  /* print_sourceurl_enabled */ $strongarm->api_version = 1;
+  /* print_sourceurl_enabled */  /* print_sourceurl_enabled */ $strongarm->name = 'print_sourceurl_enabled';
+  /* print_sourceurl_enabled */  /* print_sourceurl_enabled */ $strongarm->value = 0;
+  $export['print_sourceurl_enabled'] = $strongarm;
+
+  /* print_sourceurl_forcenode */  /* print_sourceurl_forcenode */ $strongarm = new stdClass();
+  /* print_sourceurl_forcenode */  /* print_sourceurl_forcenode */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_sourceurl_forcenode */  /* print_sourceurl_forcenode */ $strongarm->api_version = 1;
+  /* print_sourceurl_forcenode */  /* print_sourceurl_forcenode */ $strongarm->name = 'print_sourceurl_forcenode';
+  /* print_sourceurl_forcenode */  /* print_sourceurl_forcenode */ $strongarm->value = 0;
+  $export['print_sourceurl_forcenode'] = $strongarm;
+
+  /* print_urls */  /* print_urls */ $strongarm = new stdClass();
+  /* print_urls */  /* print_urls */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_urls */  /* print_urls */ $strongarm->api_version = 1;
+  /* print_urls */  /* print_urls */ $strongarm->name = 'print_urls';
+  /* print_urls */  /* print_urls */ $strongarm->value = 1;
+  $export['print_urls'] = $strongarm;
+
+  /* print_urls_anchors */  /* print_urls_anchors */ $strongarm = new stdClass();
+  /* print_urls_anchors */  /* print_urls_anchors */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  /* print_urls_anchors */  /* print_urls_anchors */ $strongarm->api_version = 1;
+  /* print_urls_anchors */  /* print_urls_anchors */ $strongarm->name = 'print_urls_anchors';
+  /* print_urls_anchors */  /* print_urls_anchors */ $strongarm->value = 0;
+  $export['print_urls_anchors'] = $strongarm;
+
   /* privatemsg_display_loginmessage */  /* privatemsg_display_loginmessage */ $strongarm = new stdClass();
   /* privatemsg_display_loginmessage */  /* privatemsg_display_loginmessage */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* privatemsg_display_loginmessage */  /* privatemsg_display_loginmessage */ $strongarm->api_version = 1;
@@ -10176,13 +9794,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_default_time */  /* scheduler_default_time */ $strongarm->value = '00:00:00';
   $export['scheduler_default_time'] = $strongarm;
 
-  /* scheduler_expand_fieldset_alumni_group */  /* scheduler_expand_fieldset_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_expand_fieldset_alumni_group */  /* scheduler_expand_fieldset_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_expand_fieldset_alumni_group */  /* scheduler_expand_fieldset_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_expand_fieldset_alumni_group */  /* scheduler_expand_fieldset_alumni_group */ $strongarm->name = 'scheduler_expand_fieldset_alumni_group';
-  /* scheduler_expand_fieldset_alumni_group */  /* scheduler_expand_fieldset_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_expand_fieldset_alumni_group'] = $strongarm;
-
   /* scheduler_expand_fieldset_announcement */  /* scheduler_expand_fieldset_announcement */ $strongarm = new stdClass();
   /* scheduler_expand_fieldset_announcement */  /* scheduler_expand_fieldset_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_expand_fieldset_announcement */  /* scheduler_expand_fieldset_announcement */ $strongarm->api_version = 1;
@@ -10260,13 +9871,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_field_type */  /* scheduler_field_type */ $strongarm->value = 'date_popup';
   $export['scheduler_field_type'] = $strongarm;
 
-  /* scheduler_publish_enable_alumni_group */  /* scheduler_publish_enable_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_publish_enable_alumni_group */  /* scheduler_publish_enable_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_publish_enable_alumni_group */  /* scheduler_publish_enable_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_publish_enable_alumni_group */  /* scheduler_publish_enable_alumni_group */ $strongarm->name = 'scheduler_publish_enable_alumni_group';
-  /* scheduler_publish_enable_alumni_group */  /* scheduler_publish_enable_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_publish_enable_alumni_group'] = $strongarm;
-
   /* scheduler_publish_enable_announcement */  /* scheduler_publish_enable_announcement */ $strongarm = new stdClass();
   /* scheduler_publish_enable_announcement */  /* scheduler_publish_enable_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_publish_enable_announcement */  /* scheduler_publish_enable_announcement */ $strongarm->api_version = 1;
@@ -10329,13 +9933,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_publish_enable_publication */  /* scheduler_publish_enable_publication */ $strongarm->name = 'scheduler_publish_enable_publication';
   /* scheduler_publish_enable_publication */  /* scheduler_publish_enable_publication */ $strongarm->value = 0;
   $export['scheduler_publish_enable_publication'] = $strongarm;
-
-  /* scheduler_publish_past_date_alumni_group */  /* scheduler_publish_past_date_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_publish_past_date_alumni_group */  /* scheduler_publish_past_date_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_publish_past_date_alumni_group */  /* scheduler_publish_past_date_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_publish_past_date_alumni_group */  /* scheduler_publish_past_date_alumni_group */ $strongarm->name = 'scheduler_publish_past_date_alumni_group';
-  /* scheduler_publish_past_date_alumni_group */  /* scheduler_publish_past_date_alumni_group */ $strongarm->value = 'error';
-  $export['scheduler_publish_past_date_alumni_group'] = $strongarm;
 
   /* scheduler_publish_past_date_announcement */  /* scheduler_publish_past_date_announcement */ $strongarm = new stdClass();
   /* scheduler_publish_past_date_announcement */  /* scheduler_publish_past_date_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -10400,13 +9997,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_publish_past_date_publication */  /* scheduler_publish_past_date_publication */ $strongarm->value = 'error';
   $export['scheduler_publish_past_date_publication'] = $strongarm;
 
-  /* scheduler_publish_required_alumni_group */  /* scheduler_publish_required_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_publish_required_alumni_group */  /* scheduler_publish_required_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_publish_required_alumni_group */  /* scheduler_publish_required_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_publish_required_alumni_group */  /* scheduler_publish_required_alumni_group */ $strongarm->name = 'scheduler_publish_required_alumni_group';
-  /* scheduler_publish_required_alumni_group */  /* scheduler_publish_required_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_publish_required_alumni_group'] = $strongarm;
-
   /* scheduler_publish_required_announcement */  /* scheduler_publish_required_announcement */ $strongarm = new stdClass();
   /* scheduler_publish_required_announcement */  /* scheduler_publish_required_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_publish_required_announcement */  /* scheduler_publish_required_announcement */ $strongarm->api_version = 1;
@@ -10470,13 +10060,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_publish_required_publication */  /* scheduler_publish_required_publication */ $strongarm->value = 0;
   $export['scheduler_publish_required_publication'] = $strongarm;
 
-  /* scheduler_publish_revision_alumni_group */  /* scheduler_publish_revision_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_publish_revision_alumni_group */  /* scheduler_publish_revision_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_publish_revision_alumni_group */  /* scheduler_publish_revision_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_publish_revision_alumni_group */  /* scheduler_publish_revision_alumni_group */ $strongarm->name = 'scheduler_publish_revision_alumni_group';
-  /* scheduler_publish_revision_alumni_group */  /* scheduler_publish_revision_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_publish_revision_alumni_group'] = $strongarm;
-
   /* scheduler_publish_revision_announcement */  /* scheduler_publish_revision_announcement */ $strongarm = new stdClass();
   /* scheduler_publish_revision_announcement */  /* scheduler_publish_revision_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_publish_revision_announcement */  /* scheduler_publish_revision_announcement */ $strongarm->api_version = 1;
@@ -10539,13 +10122,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_publish_revision_publication */  /* scheduler_publish_revision_publication */ $strongarm->name = 'scheduler_publish_revision_publication';
   /* scheduler_publish_revision_publication */  /* scheduler_publish_revision_publication */ $strongarm->value = 0;
   $export['scheduler_publish_revision_publication'] = $strongarm;
-
-  /* scheduler_publish_touch_alumni_group */  /* scheduler_publish_touch_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_publish_touch_alumni_group */  /* scheduler_publish_touch_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_publish_touch_alumni_group */  /* scheduler_publish_touch_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_publish_touch_alumni_group */  /* scheduler_publish_touch_alumni_group */ $strongarm->name = 'scheduler_publish_touch_alumni_group';
-  /* scheduler_publish_touch_alumni_group */  /* scheduler_publish_touch_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_publish_touch_alumni_group'] = $strongarm;
 
   /* scheduler_publish_touch_announcement */  /* scheduler_publish_touch_announcement */ $strongarm = new stdClass();
   /* scheduler_publish_touch_announcement */  /* scheduler_publish_touch_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -10617,13 +10193,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_time_only_format */  /* scheduler_time_only_format */ $strongarm->value = 'H:i';
   $export['scheduler_time_only_format'] = $strongarm;
 
-  /* scheduler_unpublish_enable_alumni_group */  /* scheduler_unpublish_enable_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_unpublish_enable_alumni_group */  /* scheduler_unpublish_enable_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_unpublish_enable_alumni_group */  /* scheduler_unpublish_enable_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_unpublish_enable_alumni_group */  /* scheduler_unpublish_enable_alumni_group */ $strongarm->name = 'scheduler_unpublish_enable_alumni_group';
-  /* scheduler_unpublish_enable_alumni_group */  /* scheduler_unpublish_enable_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_unpublish_enable_alumni_group'] = $strongarm;
-
   /* scheduler_unpublish_enable_announcement */  /* scheduler_unpublish_enable_announcement */ $strongarm = new stdClass();
   /* scheduler_unpublish_enable_announcement */  /* scheduler_unpublish_enable_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_unpublish_enable_announcement */  /* scheduler_unpublish_enable_announcement */ $strongarm->api_version = 1;
@@ -10686,13 +10255,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_unpublish_enable_publication */  /* scheduler_unpublish_enable_publication */ $strongarm->name = 'scheduler_unpublish_enable_publication';
   /* scheduler_unpublish_enable_publication */  /* scheduler_unpublish_enable_publication */ $strongarm->value = 0;
   $export['scheduler_unpublish_enable_publication'] = $strongarm;
-
-  /* scheduler_unpublish_required_alumni_group */  /* scheduler_unpublish_required_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_unpublish_required_alumni_group */  /* scheduler_unpublish_required_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_unpublish_required_alumni_group */  /* scheduler_unpublish_required_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_unpublish_required_alumni_group */  /* scheduler_unpublish_required_alumni_group */ $strongarm->name = 'scheduler_unpublish_required_alumni_group';
-  /* scheduler_unpublish_required_alumni_group */  /* scheduler_unpublish_required_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_unpublish_required_alumni_group'] = $strongarm;
 
   /* scheduler_unpublish_required_announcement */  /* scheduler_unpublish_required_announcement */ $strongarm = new stdClass();
   /* scheduler_unpublish_required_announcement */  /* scheduler_unpublish_required_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -10757,13 +10319,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_unpublish_required_publication */  /* scheduler_unpublish_required_publication */ $strongarm->value = 0;
   $export['scheduler_unpublish_required_publication'] = $strongarm;
 
-  /* scheduler_unpublish_revision_alumni_group */  /* scheduler_unpublish_revision_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_unpublish_revision_alumni_group */  /* scheduler_unpublish_revision_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_unpublish_revision_alumni_group */  /* scheduler_unpublish_revision_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_unpublish_revision_alumni_group */  /* scheduler_unpublish_revision_alumni_group */ $strongarm->name = 'scheduler_unpublish_revision_alumni_group';
-  /* scheduler_unpublish_revision_alumni_group */  /* scheduler_unpublish_revision_alumni_group */ $strongarm->value = 0;
-  $export['scheduler_unpublish_revision_alumni_group'] = $strongarm;
-
   /* scheduler_unpublish_revision_announcement */  /* scheduler_unpublish_revision_announcement */ $strongarm = new stdClass();
   /* scheduler_unpublish_revision_announcement */  /* scheduler_unpublish_revision_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* scheduler_unpublish_revision_announcement */  /* scheduler_unpublish_revision_announcement */ $strongarm->api_version = 1;
@@ -10826,13 +10381,6 @@ Please go to !edit_uri to change your password.';
   /* scheduler_unpublish_revision_publication */  /* scheduler_unpublish_revision_publication */ $strongarm->name = 'scheduler_unpublish_revision_publication';
   /* scheduler_unpublish_revision_publication */  /* scheduler_unpublish_revision_publication */ $strongarm->value = 0;
   $export['scheduler_unpublish_revision_publication'] = $strongarm;
-
-  /* scheduler_use_vertical_tabs_alumni_group */  /* scheduler_use_vertical_tabs_alumni_group */ $strongarm = new stdClass();
-  /* scheduler_use_vertical_tabs_alumni_group */  /* scheduler_use_vertical_tabs_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* scheduler_use_vertical_tabs_alumni_group */  /* scheduler_use_vertical_tabs_alumni_group */ $strongarm->api_version = 1;
-  /* scheduler_use_vertical_tabs_alumni_group */  /* scheduler_use_vertical_tabs_alumni_group */ $strongarm->name = 'scheduler_use_vertical_tabs_alumni_group';
-  /* scheduler_use_vertical_tabs_alumni_group */  /* scheduler_use_vertical_tabs_alumni_group */ $strongarm->value = 1;
-  $export['scheduler_use_vertical_tabs_alumni_group'] = $strongarm;
 
   /* scheduler_use_vertical_tabs_announcement */  /* scheduler_use_vertical_tabs_announcement */ $strongarm = new stdClass();
   /* scheduler_use_vertical_tabs_announcement */  /* scheduler_use_vertical_tabs_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -11012,20 +10560,6 @@ Please go to !edit_uri to change your password.';
   /* statistics_flush_accesslog_timer */  /* statistics_flush_accesslog_timer */ $strongarm->value = '9676800';
   $export['statistics_flush_accesslog_timer'] = $strongarm;
 
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ $strongarm = new stdClass();
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ $strongarm->api_version = 1;
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ $strongarm->name = 'subscriptions_default_workflow_coi';
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ $strongarm->value = array(
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'n_new' => 'n_new',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'n_unpub' => 'n_unpub',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'n_pub' => 'n_pub',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'c_new' => 'c_new',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'c_unpub' => 'c_unpub',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */   'c_pub' => 'c_pub',
-  /* subscriptions_default_workflow_coi */  /* subscriptions_default_workflow_coi */ );
-  $export['subscriptions_default_workflow_coi'] = $strongarm;
-
   /* subscriptions_default_workflow_course */  /* subscriptions_default_workflow_course */ $strongarm = new stdClass();
   /* subscriptions_default_workflow_course */  /* subscriptions_default_workflow_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* subscriptions_default_workflow_course */  /* subscriptions_default_workflow_course */ $strongarm->api_version = 1;
@@ -11102,20 +10636,6 @@ Please go to !edit_uri to change your password.';
   /* subscriptions_privatemsg */  /* subscriptions_privatemsg */ $strongarm->name = 'subscriptions_privatemsg';
   /* subscriptions_privatemsg */  /* subscriptions_privatemsg */ $strongarm->value = 1;
   $export['subscriptions_privatemsg'] = $strongarm;
-
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ $strongarm = new stdClass();
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ $strongarm->api_version = 1;
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ $strongarm->name = 'subscriptions_workflow_coi';
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ $strongarm->value = array(
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   0 => 'n_new',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   1 => 'n_unpub',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   2 => 'n_pub',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   3 => 'c_new',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   4 => 'c_unpub',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */   5 => 'c_pub',
-  /* subscriptions_workflow_coi */  /* subscriptions_workflow_coi */ );
-  $export['subscriptions_workflow_coi'] = $strongarm;
 
   /* subscriptions_workflow_course */  /* subscriptions_workflow_course */ $strongarm = new stdClass();
   /* subscriptions_workflow_course */  /* subscriptions_workflow_course */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -11808,8 +11328,8 @@ Your account on [site:name] has been canceled.
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */ $strongarm->api_version = 1;
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */ $strongarm->name = 'usfedgov_google_analytics__settings';
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */ $strongarm->value = array(
-  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */   'agency' => '1234',
-  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */   'subagency' => '1234',
+  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */   'agency' => 'DSCA',
+  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */   'subagency' => 'GlobalNET',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */   'extra' => array(
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'sp' => '',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'exts' => '',
@@ -11817,7 +11337,7 @@ Your account on [site:name] has been canceled.
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'sdor' => '0',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'dclink' => '0',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'aip' => '1',
-  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'pua' => '',
+  /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'pua' => 'UA-62879620-1',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'enhlink' => '0',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'autotracker' => '1',
   /* usfedgov_google_analytics__settings */  /* usfedgov_google_analytics__settings */     'forcessl' => '1',

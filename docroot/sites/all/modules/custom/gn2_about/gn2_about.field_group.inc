@@ -67,6 +67,7 @@ function gn2_about_field_group_info() {
    /* group_org_info|node|about_page|form */     4 => 'field_twitter',
    /* group_org_info|node|about_page|form */     5 => 'field_google_plus',
    /* group_org_info|node|about_page|form */     6 => 'field_youtube',
+   /* group_org_info|node|about_page|form */     7 => 'field_instagram',
    /* group_org_info|node|about_page|form */   ),
    /* group_org_info|node|about_page|form */   'format_type' => 'fieldset',
    /* group_org_info|node|about_page|form */   'format_settings' => array(

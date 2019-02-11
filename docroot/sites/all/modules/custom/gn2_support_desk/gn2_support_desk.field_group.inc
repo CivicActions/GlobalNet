@@ -21,7 +21,7 @@ function gn2_support_desk_field_group_info() {
    /* group_admin|node|support|form */ $field_group->parent_name = '';
    /* group_admin|node|support|form */ $field_group->data = array(
    /* group_admin|node|support|form */   'label' => 'Admin Use Only',
-   /* group_admin|node|support|form */   'weight' => '7',
+   /* group_admin|node|support|form */   'weight' => '9',
    /* group_admin|node|support|form */   'children' => array(
    /* group_admin|node|support|form */     0 => 'field_admin_note',
    /* group_admin|node|support|form */     1 => 'field_parent_organization',

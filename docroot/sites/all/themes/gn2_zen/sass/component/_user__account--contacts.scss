@@ -79,3 +79,17 @@ $zen-column-count: 6 !global;
   vertical-align: bottom;
 }
 
+form#privatemsg-list {
+  padding-top: 15px;
+  #edit-filter,
+  #edit-tag-add,
+  #edit-tag-add-submit,
+  #edit-tag-remove-submit,
+  .form-item-operation,
+  .form-item-tag-remove{
+    display: none;
+  }
+  table {
+    width: 100%;
+  }
+}

@@ -13,8 +13,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -40,8 +38,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -67,8 +63,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -94,8 +88,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -121,8 +113,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -148,8 +138,6 @@ Feature: entityforms.permissions.feature
       | administrator | session         | 200      |
       | authenticated | userreg         | 403      |
       | administrator | userreg         | 200      |
-      | authenticated | contact_support | 403      |
-      | administrator | contact_support | 200      |
       | authenticated | course_feedback | 403      |
       | administrator | course_feedback | 200      |
       | authenticated | reject_request  | 403      |
@@ -175,8 +163,6 @@ Feature: entityforms.permissions.feature
       | uorgmanager1 | session         | 200      |
       | umember1     | userreg         | 403      |
       | uorgmanager1 | userreg         | 200      |
-      | umember1     | contact_support | 403      |
-      | uorgmanager1 | contact_support | 200      |
       | umember1     | course_feedback | 403      |
       | uorgmanager1 | course_feedback | 200      |
       | umember1     | reject_request  | 403      |
@@ -200,7 +186,6 @@ Feature: entityforms.permissions.feature
       | join_org        |
       | session         |
       | userreg         |
-      | contact_support |
       | course_feedback |
       | reject_request  |
       | feedback        |
@@ -223,7 +208,6 @@ Feature: entityforms.permissions.feature
       | join_org        |
       | session         |
       | userreg         |
-      | contact_support |
       | course_feedback |
       | reject_request  |
       | feedback        |

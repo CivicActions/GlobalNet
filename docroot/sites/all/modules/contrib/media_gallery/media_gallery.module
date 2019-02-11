@@ -186,19 +186,15 @@ function media_gallery_menu_alter(&$items) {
   // Take over taxonomy term list pages by substituting our own callback.
   // TODO: Use hook_entity_info_alter() to change the entity uri callback for
   // gallery collections only.
-  $skip_node_override = FALSE;
-  if (module_exists('page_manager')) {
-    if ($task = page_manager_get_task('term_view')) {
-      if (isset($task['disabled']) && !$task['disabled']) {
-        $skip_node_override = TRUE;
-      }
-    }
-  }
-  if (!$skip_node_override) {
-    $items['taxonomy/term/%taxonomy_term']['page callback'] = 'media_gallery_list_galleries';
-    $items['taxonomy/term/%taxonomy_term']['file'] = 'media_gallery.pages.inc';
-    $items['taxonomy/term/%taxonomy_term']['module'] = 'media_gallery';
-  }
+  $items['taxonomy/term/%taxonomy_term']['file'] = 'media_gallery.pages.inc';
+  $items['taxonomy/term/%taxonomy_term']['module'] = 'media_gallery';
+
+  // If you're viewing a media item in context somewhere (which we do inside
+  // media gallery nodes), that means it's being used on your site, which means
+  // you won't be allowed to delete it anyway. Therefore, do not show
+  // contextual links there.
+  // @todo Perhaps this should be changed in the media module itself?
+  $items['media/%file/delete']['context'] = MENU_CONTEXT_PAGE;
 }
 
 /**
@@ -316,7 +312,6 @@ function media_gallery_view($node, $view_mode) {
     }
 
     // Enable the "Add media" link to launch the media browser.
-    module_load_include('inc', 'media', 'includes/media.browser');
     $node->content['add_media_link']['#attached']['library'][] = array('media', 'media_browser');
     $node->content['add_media_link']['#attached']['library'][] = array('media', 'media_browser_settings');
     $node->content['add_media_link']['#attached']['js'][] = drupal_get_path('module', 'media_gallery') . '/media_gallery.addimage.js';

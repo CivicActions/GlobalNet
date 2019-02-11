@@ -10,6 +10,41 @@
 function gn2_courses_field_group_info() {
   $field_groups = array();
 
+   /* group_course_managers|node|course_group|form */ $field_group = new stdClass();
+   /* group_course_managers|node|course_group|form */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+   /* group_course_managers|node|course_group|form */ $field_group->api_version = 1;
+   /* group_course_managers|node|course_group|form */ $field_group->identifier = 'group_course_managers|node|course_group|form';
+   /* group_course_managers|node|course_group|form */ $field_group->group_name = 'group_course_managers';
+   /* group_course_managers|node|course_group|form */ $field_group->entity_type = 'node';
+   /* group_course_managers|node|course_group|form */ $field_group->bundle = 'course_group';
+   /* group_course_managers|node|course_group|form */ $field_group->mode = 'form';
+   /* group_course_managers|node|course_group|form */ $field_group->parent_name = '';
+   /* group_course_managers|node|course_group|form */ $field_group->data = array(
+   /* group_course_managers|node|course_group|form */   'label' => 'Course Managers',
+   /* group_course_managers|node|course_group|form */   'weight' => '1',
+   /* group_course_managers|node|course_group|form */   'children' => array(
+   /* group_course_managers|node|course_group|form */     0 => 'field_alumni_specialist',
+   /* group_course_managers|node|course_group|form */     1 => 'field_course_director',
+   /* group_course_managers|node|course_group|form */     2 => 'field_course_event_coordinator',
+   /* group_course_managers|node|course_group|form */     3 => 'field_course_faculty',
+   /* group_course_managers|node|course_group|form */     4 => 'field_course_seminar_leader',
+   /* group_course_managers|node|course_group|form */     5 => 'field_course_support_staff',
+   /* group_course_managers|node|course_group|form */     6 => 'field_deputy_course_director',
+   /* group_course_managers|node|course_group|form */   ),
+   /* group_course_managers|node|course_group|form */   'format_type' => 'fieldset',
+   /* group_course_managers|node|course_group|form */   'format_settings' => array(
+   /* group_course_managers|node|course_group|form */     'label' => 'Course Managers',
+   /* group_course_managers|node|course_group|form */     'instance_settings' => array(
+   /* group_course_managers|node|course_group|form */       'required_fields' => 1,
+   /* group_course_managers|node|course_group|form */       'id' => '',
+   /* group_course_managers|node|course_group|form */       'classes' => 'group-course-managers field-group-fieldset',
+   /* group_course_managers|node|course_group|form */       'description' => '',
+   /* group_course_managers|node|course_group|form */     ),
+   /* group_course_managers|node|course_group|form */     'formatter' => 'collapsed',
+   /* group_course_managers|node|course_group|form */   ),
+   /* group_course_managers|node|course_group|form */ );
+  $field_groups['group_course_managers|node|course_group|form'] = $field_group;
+
    /* group_ind_items_level2|field_collection_item|field_session_day|default */ $field_group = new stdClass();
    /* group_ind_items_level2|field_collection_item|field_session_day|default */ $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
    /* group_ind_items_level2|field_collection_item|field_session_day|default */ $field_group->api_version = 1;
@@ -105,6 +140,7 @@ function gn2_courses_field_group_info() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Course Managers');
   t('Ind Items level2');
   t('Ind Items level3');
   t('Level1');

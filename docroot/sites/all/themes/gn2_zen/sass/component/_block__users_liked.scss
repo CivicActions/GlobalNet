@@ -1,0 +1,11 @@
+.pane-gn2-admin-dashboard-gn2-content-rating-users {
+  h2 {
+    @include h3_default;
+    @include subheading_full;
+  }
+  a {
+    font-weight: bold;
+  }
+}
+
+

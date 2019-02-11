@@ -39,7 +39,7 @@
    */
   function store_classes_ids(menuElement) {
     if (!$(menuElement).attr('id')) {
-      $(menuElement).attr('id', 'rm-no-id');
+      $(menuElement).attr('id', 'rm-no-id-main');
     }
     if (!$(menuElement).attr('class')) {
       $(menuElement).attr('class', 'rm-no-class');
@@ -48,10 +48,12 @@
       .data('rmids', $(menuElement).attr('id'))
       .data('rmclasses', $(menuElement).attr('class'));
     // Handle ULs if selector is parent div.
+    var incr = 0;
     $(menuElement).find('ul').each(function() {
+      incr++;
       // Prevent error if there is no id.
       if (!$(this).attr('id')) {
-        $(this).attr('id', 'rm-no-id');
+        $(this).attr('id', 'rm-no-id-' + incr);
       }
       // Prevent error if there is no class.
       if (!$(this).attr('class')) {

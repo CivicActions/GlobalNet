@@ -1,0 +1,20 @@
+diff --git uif/uif.admin.inc uif/uif.admin.inc
+index 4ab59f3..8cf1e63 100755
+--- uif/uif.admin.inc
++++ uif/uif.admin.inc
+@@ -474,7 +474,14 @@ function uif_batch_import_users_finished($success, $results, $operations) {
+     $updated = $results['updated'] ? 
+       ' ' . format_plural($results['updated'], 'One user was updated.', '@count users were updated.') . ' ' : 
+       '';
+-    $more = t('View the <a href="@url">user list</a>.', array('@url' => url('admin/people')));
++    $more = "";
++    $gid = gn2_context_get_org_id();
++    $manager_roles = array('org_manager', 'hr_manager');
++    $og_roles = og_get_user_roles('node', $gid, $user->uid);
++    $is_manager = array_intersect($manager_roles, $og_roles);
++    if (!$is_manager) {
++      $more = t('View the <a href="@url">user list</a>.', array('@url' => url('admin/people')));
++    }
+     drupal_set_message($done . $created . $updated . $more);
+   }
+   else {

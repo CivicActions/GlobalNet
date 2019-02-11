@@ -32,7 +32,7 @@ function gn2_support_desk_views_api($module = NULL, $api = NULL) {
 function gn2_support_desk_node_info() {
   $items = array(
     'support' => array(
-      'name' => t('Support'),
+      'name' => t('Help Desk Ticket'),
       'base' => 'node_content',
       'description' => t('Help desk.'),
       'has_title' => '1',

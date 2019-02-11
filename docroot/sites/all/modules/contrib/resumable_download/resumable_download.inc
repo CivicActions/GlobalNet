@@ -39,7 +39,7 @@ function _resumable_download($source, $headers, $max_speed = NULL) {
   if (ob_get_level()) {
     ob_end_clean();
   }
-
+  
   // IE cannot download private files because it cannot store files downloaded
   // over https in the browser cache. The problem can be solved by sending
   // custom headers to IE. See http://support.microsoft.com/kb/323308/en-us
@@ -47,7 +47,7 @@ function _resumable_download($source, $headers, $max_speed = NULL) {
     resumable_download_drupal_add_http_header('Cache-Control','private');
     resumable_download_drupal_add_http_header('Pragma','private');
   }
-
+  
   foreach ($headers as $key => $header) {
     // To prevent HTTP header injection, we delete new lines that are
     // not followed by a space or a tab.
@@ -55,7 +55,7 @@ function _resumable_download($source, $headers, $max_speed = NULL) {
     //$header = preg_replace('/\r?\n(?!\t| )/', '', $header);
     resumable_download_drupal_add_http_header($key, $header);
   }
-
+  
   if ($fd = fopen($source, 'rb')) {
     // Get file size.
     $filesize = filesize($source);
@@ -64,20 +64,20 @@ function _resumable_download($source, $headers, $max_speed = NULL) {
     $filemtime = filemtime($source);
     resumable_download_drupal_add_http_header('Last-Modified', gmdate('D, d M Y H:i:s', $filemtime) . ' GMT');
     resumable_download_drupal_add_http_header('ETag', dechex(fileinode($source)) . '-' . dechex($filemtime) . '-' . dechex($filesize));
-	//resumable_download_drupal_add_http_header('Content-Disposition', 'attachment; filename="' . basename($filesize) . '"');
+	//resumable_download_drupal_add_http_header('Content-Disposition', 'attachment; filename="' . basename($filesize) . '"'); 
 	//resumable_download_drupal_add_http_header('Content-type', 'application/octet-stream');
-
+   
     // Tell client that we accept byte ranges.
     resumable_download_drupal_add_http_header('Accept-Ranges', 'bytes');
-
+	
     $valid = FALSE;
     $satisfiable = FALSE;
     // Is this a partial request?
-
+	
     if (isset($_SERVER['HTTP_RANGE'])) {
       preg_match('/^bytes=(\S+)$/i', $_SERVER['HTTP_RANGE'], $ranges);
       $ranges = explode(',', array_pop($ranges));
-
+	  			
       // Check for valid ranges.
       foreach ($ranges as $key => $range) {
         if (substr_count($range, '-') == 1) {
@@ -131,10 +131,10 @@ function _resumable_download($source, $headers, $max_speed = NULL) {
         }
       }
     }
-
+	
     if ($satisfiable) {
       resumable_download_drupal_add_http_header('Status', '206 Partial Content');
-
+	  
       if (count($ranges) == 1) {
         $range = array_shift($ranges);
         resumable_download_drupal_add_http_header('Content-Range' , sprintf('bytes %d-%d/%d', $range['from'], $range['to'], $filesize));
@@ -201,20 +201,20 @@ function resumable_download_transfer_range($fd, $length, $byte = 0, $max_speed =
   if ($max_speed == 0) {
     $max_speed = NULL;
   }
-
+  
   if (!is_null($max_speed)) {
     $sleepTime = RESUMABLE_DOWNLOAD_SLEEP_NUMERATOR / $max_speed;
     $sleepTime = max($sleepTime, RESUMABLE_DOWNLOAD_MINIMUM_SLEEP_TIME);    // limit stress on server
-
+   
     $expectedreads = ceil($length / RESUMABLE_DOWNLOAD_BYTES_PER_READ);
 
     $reads_per_second = $max_speed / RESUMABLE_DOWNLOAD_KB_PER_READ;
     $reads_until_flush = $reads_per_second;
     set_time_limit(0);                // we do not want to time out from our end
-
+   
     // Move file pointer to starting byte.
     fseek($fd, $byte);
-
+  
     for (
     $numreads = $expectedreads;
     !(connection_aborted() || connection_status() == 1) && ($numreads>0);
@@ -235,7 +235,7 @@ function resumable_download_transfer_range($fd, $length, $byte = 0, $max_speed =
       $read = min(1024, $length);
       print fread($fd, $read);
       $length -= $read;
-    }
+    }  
   }
 }
 
@@ -243,5 +243,5 @@ function resumable_download_transfer_range($fd, $length, $byte = 0, $max_speed =
 * For compatiblity with Drupal 6 and 7
 */
 function resumable_download_drupal_add_http_header($name, $value, $append = FALSE) {
-  return drupal_add_http_header($name, $value, $append);
+  return drupal_add_http_header($name, $value, $append);  
 }

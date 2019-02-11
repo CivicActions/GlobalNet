@@ -39,3 +39,10 @@ function jira_rest_requirements($phase) {
   }
   return $requirements;
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function jira_rest_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'jira_rest_%'");
+}

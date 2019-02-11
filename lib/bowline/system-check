@@ -70,7 +70,6 @@ if [[ "$OSTYPE" == linux* && -z "$DOCKER_HOST" && -z "$FORCE_VAGRANT" ]]; then
   echo_pass "Using local linux host. Vagrant not needed."
 else
   echo_check "Checking vagrant status"
-  cd "${GIT_ROOT}/.."
   VS=$(vagrant status | grep boot2docker)
   EXIT=$?
   echo -e "$VS"
@@ -86,7 +85,6 @@ else
   else
     echo_pass "Vagrant VM running"
   fi
-  cd "${GIT_ROOT}"
   echo_check "Docker environment variables"
   env | grep -i docker
   if [ -z "$DOCKER_HOST" ] || [ "$DOCKER_HOST" != "tcp://localhost:2375" ]; then

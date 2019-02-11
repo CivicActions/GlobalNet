@@ -1,5 +1,277 @@
 This file should record the version history of the globalNET builds. Use tag-ids to mark build milestones.
 
+v2.58.1 1/18/2019
+------------------
+RD-RD-4753: Drupal core security update
+
+v2.58.0 1/15/2019
+------------------
+RD-4708: Update responsive_menus to 7.x-1.7
+RD-4707: Update password policy module to 7.x-1.6
+RD-4663: Reapply pki_authentication changes from RD-3457, create patch.
+
+v2.57.0 12/18/2018
+---------------------
+RD-4693: Update Main Image microtext and modify related tests
+RD-46597: Update course group panes to add seminar leaders
+
+v2.56.0 12/04/2018
+-------------------
+RD-4634: Change "student" to "participant" in org_role field
+RD-4625: Add query constraints to OG role reports, fix bad user names.
+
+v2.55.0 11/20/2018
+---------------------
+RD-4486 "Php upgrade"
+
+v2.54.0 11/6/2018
+------------------
+RD-4607: Add medium-square image size back to quash odd log error message
+
+v2.53.1 & v2.53.2 Hotfixes
+---------------------------
+RD-4616: Security update: Print module
+RD-4630: Updgrading core to 7.60 - no db updates.
+RD-4590: Unsitcking private message indicators
+RD-4625: Role grants report: fix db query to return correct names.
+RD-4485: Adding strict type check for group admin menu dropdown
+RD-4596: Changing privacy text.
+RD-4595: Fixing duplicate welcome email
+RD-4624: Security update: Solr api & Solr api Overrides
+
+v2.53.0 10/16/2018
+-------------------
+There were backend tickets unrelated to the codebase that were pushed during this period as well, but that are not listed here.
+
+RD-4596: Update privacy statement
+RD-4587: Contact-support form deleted in code
+RD-4595: Fixing broken org join workflow.
+RD-4590: Fix private message count anomoly
+RD-4487: Adding validation check for Adobe Connect creation.
+RD-4586: Add OG Roles report to Admin dashboard and move all role report to new Roles category in dashboard
+RD-2685: Removing the include from the .module file.
+RD-2685: Remove Community of Interest and Alumni Group content types
+RD-4600: Make Country field appear after entry in user account 
+RD-4199: Removing $group parameter.
+RD-4116: Remove "Recent activity" block from landing page
+RD-4066: Remove Expertise fields in code
+RD-3531: Fixing Strict warnings.
+RD-4585: Remove tests for /move/groups/autocomplete which are not longer valid
+RD-3145: Remove PHP text format
+RD-4520: Add basic Code Climate report, updating update hook to manually disable text format
+RD-4538: Add a captcha to the help desk form for anonymous users
+RD-4438: Create role report listing og roles and the number of people in each organization that have those roles
+RD-4414: Updating dashboard link perms for Administrators.
+
+v2.52.1 9/04/2018
+------------------
+RD-4554: Unable to access edit tab for any of the GCMC library resource content pages
+RD-4432: Fix Help Desk page typos for IP whitelisting line item
+RD-4492: Course groups need a group leader field and block
+RD-3389: Messages indicator is one to four off from the actual number unread messages
+RD-4558: Expose the attributes fields for org mgrs for folders
+RD-2992: Add Instagram to the Social Media Options for About Content Types
+RD-4559: Contact info in users profile: Missing country code- Kosovo
+RD-4543: Adjust the IP whitelisting form to submit in UTC
+RD-4569: Fix failing tests to get an accurate picture of the status of code changes.
+
+v2.50.0 7/03/2018
+------------------
+RD-4522: Remove alumni_group-org_mgr perm conflict in gn2_roles_perms
+RD-4493: Badges implementation
+RD-4463: Adding ksort to days and units.
+RD-4422: Address cyrilic character problems when generating course syllabus .pdf's
+RD-4383: Adding remove media to units.
+RD-4511: Adding check for redirect loop.
+RD-4509: Fix for PDF issues.
+RD-4484: Media security update.
+RD-4506: Fixing strict warning.
+RD-356: Tweak css and refactor user link in staff directory
+
+
+v2.49.0 6/19/2018
+------------------
+RD-4440: Fixing country population on new user form
+RD-4417: Removing bad redirects
+RD-356: Change role from a field in user profile to an OG role; modify view to accept that as a filtering argument
+RD-4445: Removing group perm check for scheduled publishing
+RD-4435: Fix topics page layout
+RD-4439: Image embedded in sessions does not show up for member, only admins
+RD-4272: Adding js check to remove empty announcement rows
+RD-4470: Resolve Watchdog Errors- OG Sessions Warning
+
+v2.48.0 5/31/2018
+------------------
+Rd-4471 Update Rules module to 2.11
+RD-4452: Autologout security update
+RD-4452: Updating CAPTCHA.
+RD-4452: Updating Taxonomy Term Reference Tree Widget
+RD-4452: Updating Legal.
+RD-4473: Updating Views Fieldsets.
+RD-356: Add staff directory function
+
+v2.47.0 5/11/2018
+------------------
+RD-4457: Change phone number, url, and pw for Clickatell connection
+RD-4460 core update
+RD-4452 : "A" commit, update gn2_courses, gn2_roles_perms and comment out a line in apc conf file to let tests pass
+RD-4460 Media module patch
+RD-4452: Update autocomplete deluxe using contrib.make
+GN-1009: Update views to 3.20
+GN-1108: Update entity api
+
+v2.46.0 3/28/2018
+------------------
+Drupal core security update
+GN-1009 Updates entityreference module
+RD-4446 revert .htaccess to fix failing tests
+RD-4448: Change array lookup in template.php for presenters
+RD-4433: Rewrite hook gn_unblock_update_7002 that was failing to complete.
+GN-1114 make.contrib cleanup
+GN-1112 Core Update
+
+v2.45.1
+---------
+RD-4443: Drush updb not completing upon code deployment. Fixes this and updates config.make file
+
+v2.45.0 1/22/2018
+--------------------
+Small team. Focus on Ilias debugging and EZProxy config
+RD-4354: Fixing broken toggle for group admin menu
+RD-4413: Check email address when generating unique usernames.
+RD-4387: Auth user pdf bug fix
+
+v2.44.0 1/8/2018
+-------------------
+Small team/holidays.
+RD-4394: Allow parent group faculty to see recommended links on courses.
+RD-4388: Fix referenced user in node edit notifications.
+RD-4373 Re-point course links
+RD-4385: Fixing background color regression on revisions link
+
+v2.43.0 12/19/2017
+-------------------
+Focus on Ilias dev server, Ilias update troubleshooting not reflected in committed code.
+RD-4396: Remove hardcoded drag link from sessions view.
+RD-4405 Update drupal-driver to v1.3.2 and composer udpate M
+RD-4361: Changing password form text
+RD-4392: Hide PDF settings on node add/edit forms.
+RD-4336 Fix 500 error when changing author of content
+DevOps: Correcting sandbox build scripts
+RD-4222: Change file edit view via edit files tab in a folder to match edit link view RD-4371: Changing content type from Support to Help Desk Ticket.
+RD-4344: Adding path check to prevent readmore on guide pages
+
+v2.42.0 12/4/2017
+-----------------
+Short week to synch with server update cycle
+RD-4383: Strip Media tags from Course Syllabus PDFs.
+RD-3389: Removing drupal_static function for message count.
+RD-4379: Removing request message from active users in Group View.
+RD-4381: Clarify Member count in Admin Member list.
+RD-4324: Changing topics extractions method
+
+
+v2.41.0 11/21/2017
+------------------
+First push since resumption of development work, plus some security updates
+
+RD-4362: Hide groups audience field on new account request form MERGED  2
+RD-4358: Fix trash empty function for private messages MERGED  2
+RD-4364: Remove Track tab from content viewed by anon users MERGED  2
+RD-4357: Adding new View for Public and Sitewide News. MERGED  2
+RD-4360: Errors when trying perform bulk file deletion MERGED  9
+RD-4373 Correctly populate "See all courses" link in Current Courses block on Org home page
+RD-4366: Changing pm subject field to required
+GN-1054 Correcting web container name for QA builds
+RD-4369 Fix comment threading in Posts
+RD-4363: Adding default user notification to user approval form.
+RD-4356: Group mgrs should have access to the Metrics tab in courses or groups
+RD-4043: Privileged users can request IP address whitelisting. Part 1
+RD-4355: Add ability for group mgr to export the syllabus into a PDF
+RD-4367: jQuery clean up to fix issues with course session editor in IE11/Windows
+RD-4359: Fix issues with HR_manager role combined with Faculty role where certain functions aren't permitted when they should be appearing.
+Resolve failing media gallery tests
+GN-1025 New docker/sandbox build system
+GN-1008 Update Views
+GN-1013 New Docker Sync function
+GN-1009: Entity Reference module security update
+GN-1020: Security update for Captcha module
+GN-1008: Views security update v.2
+Fix message.feature
+
+
+v2.40.0 7/17/2017
+-----------------
+GN-997: Change Support link in /guide to link to Help Desk
+RD-4124: Add modified Watchdog report to Admin dashboard
+
+v2.39.0 7/5/2017
+-----------------
+RD-4324: Migrated Data topic being added to new content automatically, remove function and ensure that topic hook uses node revisions.
+RD-4171: Expose TRACK tab for all content in a course
+RD-4335 Security Update: Drupal core
+RD-1178: removing news and post node_edit panel variants.
+RD-4130: Remove migration perms from features
+RD-4071 - Addressing multiple notification features requests / bugs
+RD-4180: Adding Folder tracking.
+RD-4315 - Fixing notification send logic for events
+RD-4316: Correcting Admin Menu access for Content Specialist
+
+v2.38.0 6/19/2017
+-----------------
+RD-4330 - Fixing session create bug associated with level 2 and 3 items HOTFIX
+RD-3274: Fixing broken query string issue. HOTFIX
+RD-2794: Ensuring correct country code is displayed.
+RD-4323: removing GA Reporting tokens.
+RD-4085: Access fix for autocomplete.
+RD-4225: Removing empty text for Subgroup/Course Group tabs.
+RD-4322 - Fixing user display in courses
+RD-4221: Adding CRM ID to members View.
+RD-4313: Faculty role is supposed give user view only of a course
+RD-3308: changing Subgroup to Course Groups.
+RD-4320 - Adding delete confirmation to prevent users from wiping out of work..
+RD-4312: Changing style for session hyperlinks.
+RD-4314: Changes to description of events, courses, and groups
+RD-3335 - Adding trash removal form and logic for pm's
+RD-4201 - Adding level 1 sort by date added to view
+RD-4289 - Updating font-style to match screenshot in ticket
+RD-4082: Group Manager should be able to access bulk unsubscribe.
+RD-1909: Creating cron job to remove older notifications.
+RD-4078: Removing limit for data export of Support tickets
+RD-4310 - Fixing file drag sort in course sessions
+RD-3077: Adding static caching to priv_fetch.
+RD-4298 Remove Migration modules and Tables
+RD-4285 Courses - hide new session button and session reorder from non-grp mgr
+
+v2.37.0 6/01/2017
+-----------------
+RD-4253: Custom course tracking, menu bug fix
+RD-4007 - Adding exposed filters to user import view
+RD-4072 - Removing pathauto override that was preventing users from changing nod…
+RD-3372 - Adding logic to notify org admins when org content is created.
+RD-4293 Faculty Role can't operate on sessions bug fix
+RD-4108 - Adding perm check before outputting 'add subgroup' button
+RD-4284: reset bug fix.
+RD-4287: Library improvements
+RD-4279: Broken header image on some GNET org subpages
+Removing custom migrate code
+
+
+v2.36.0 5/19/2017
+------------------
+RD-4084: Fixing multiple email send for node updates in support tickets
+RD-4064: Create Content Specialist role for privileged users to add News etc to all locations in an organization without being an org_manager
+RD-4273 Security update, Media module
+RD-4129: Fix reversion: only show jira ticket button to admins
+RD-4245: gn2_user_admin - org/hr manager cannot successfully update user email address
+RD-4228: Library improvements
+RD-4280 - Fixing level 1 removal logic
+RD-4275 - Fixing tabs display for courses in groups
+RD-4223: Remove Support Tickets report from user profile page
+RD-4184: gn2_captcha - remove captcha requirement from comment_node_support_form
+RD-4276: Security update for Legal module
+
+
 v2.35.0 5/9/2017
 ----------------------
 RD-4170: updating click to work with AJAX.
@@ -29,18 +301,18 @@ v2.34.0 4/20/2017
 ----------------------
 Small team; focus on session and reporting work.
 
-RD-4230: Setting default tab on groups to show posts 
-RD-4170: Add session js 
-RD-4218: Clean up the Analytics tab on the Metrics page, styles the exposed filter submit and adds User status to the Page views tab. 
-RD-4217: Consolidating organization metrics. 
-RD-4136 Open closed dates support dashboard 
-RD-4193 main menu active state 
-RD-4170: Course metrics 
-RD-4098 Visual regression testing suite without LFS 
-RD-4187 Help text anon comments 
-RD-3535 post prod-update updates; also, documentation-updates section [skip ci] 
-RD-4165: modifications to gn2_support_desk.module file 
-RD-4122 Resources content type 
+RD-4230: Setting default tab on groups to show posts
+RD-4170: Add session js
+RD-4218: Clean up the Analytics tab on the Metrics page, styles the exposed filter submit and adds User status to the Page views tab.
+RD-4217: Consolidating organization metrics.
+RD-4136 Open closed dates support dashboard
+RD-4193 main menu active state
+RD-4170: Course metrics
+RD-4098 Visual regression testing suite without LFS
+RD-4187 Help text anon comments
+RD-3535 post prod-update updates; also, documentation-updates section [skip ci]
+RD-4165: modifications to gn2_support_desk.module file
+RD-4122 Resources content type
 
 v2.33.0, 4/6/2017
 -------------------

@@ -101,13 +101,6 @@ function gn2_base_config_strongarm() {
   /* field_bundle_settings_node__course_group */  /* field_bundle_settings_node__course_group */ );
   $export['field_bundle_settings_node__course_group'] = $strongarm;
 
-  /* i18n_node_extended_alumni_group */  /* i18n_node_extended_alumni_group */ $strongarm = new stdClass();
-  /* i18n_node_extended_alumni_group */  /* i18n_node_extended_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* i18n_node_extended_alumni_group */  /* i18n_node_extended_alumni_group */ $strongarm->api_version = 1;
-  /* i18n_node_extended_alumni_group */  /* i18n_node_extended_alumni_group */ $strongarm->name = 'i18n_node_extended_alumni_group';
-  /* i18n_node_extended_alumni_group */  /* i18n_node_extended_alumni_group */ $strongarm->value = '1';
-  $export['i18n_node_extended_alumni_group'] = $strongarm;
-
   /* i18n_node_extended_announcement */  /* i18n_node_extended_announcement */ $strongarm = new stdClass();
   /* i18n_node_extended_announcement */  /* i18n_node_extended_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* i18n_node_extended_announcement */  /* i18n_node_extended_announcement */ $strongarm->api_version = 1;
@@ -142,15 +135,6 @@ function gn2_base_config_strongarm() {
   /* i18n_node_extended_page */  /* i18n_node_extended_page */ $strongarm->name = 'i18n_node_extended_page';
   /* i18n_node_extended_page */  /* i18n_node_extended_page */ $strongarm->value = '1';
   $export['i18n_node_extended_page'] = $strongarm;
-
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ $strongarm = new stdClass();
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ $strongarm->api_version = 1;
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ $strongarm->name = 'i18n_node_options_alumni_group';
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ $strongarm->value = array(
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */   0 => 'current',
-  /* i18n_node_options_alumni_group */  /* i18n_node_options_alumni_group */ );
-  $export['i18n_node_options_alumni_group'] = $strongarm;
 
   /* i18n_node_options_announcement */  /* i18n_node_options_announcement */ $strongarm = new stdClass();
   /* i18n_node_options_announcement */  /* i18n_node_options_announcement */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

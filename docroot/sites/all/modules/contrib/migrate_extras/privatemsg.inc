@@ -104,7 +104,7 @@ class MigrateDestinationPrivateMsg extends MigrateDestinationEntity {
     // The two user_load() calls here could by slow. If so, one could experiment
     // with entity cache module - http://drupal.org/project/entitycache.
     $options = array();
-    if (isset($entity->timestamp)) $options['timestamp'] = \Migration::timestamp($entity->timestamp);
+    if (isset($entity->timestamp)) $options['timestamp'] = Migration::timestamp($entity->timestamp);
     if (isset($entity->author)) $options['author'] = user_load($entity->author);
     if (isset($entity->format)) $options['format'] = $entity->format;
 
@@ -132,7 +132,7 @@ class MigrateDestinationPrivateMsg extends MigrateDestinationEntity {
       return array($mid);
     }
     else {
-      $migration = \Migration::currentMigration();
+      $migration = Migration::currentMigration();
       $migration->saveMessage(reset($return['messages']['error']));
       return FALSE;
     }

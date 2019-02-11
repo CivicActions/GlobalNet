@@ -14,7 +14,7 @@ Feature: content.course.sessions.feature
     And I press the "Save" button
     And I should see the text "has been created"
 
-  @javascript @ettest7
+  @javascript
   Scenario: Course Ajax tabs and Sessions UI
     Given I am logged in as "qa-admin" with password "CivicActions3#"
     And I visit the node with title "Course with New Sessions"
@@ -26,12 +26,7 @@ Feature: content.course.sessions.feature
     And I wait for AJAX to finish
     And I click "Another Level 1 Session"
     And I wait for AJAX to finish
-    And I click "Another Level 1 Session"
-    And I click on the element with xpath "//div[contains(@class, 'field field-name-field-session-day field-type-field-collection field-label-hidden')]/div[contains(@class, 'sessions-buttons-wrap')]/span[contains(@class, 'edit-session editatron')]"
-    And I wait for AJAX to finish
-    Then I should see the text "Session Presenter"
-    And  I should see the text "Title"
-    Then I visit the node with title "Course with New Sessions"
+    Then I should see the text "Another Level 1 Session"
     And I click "Participants"
     And I wait for AJAX to finish
     And I wait for 2 seconds

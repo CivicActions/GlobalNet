@@ -2,12 +2,13 @@
 
 echo "Ready to git clone drupal [Y/n]?"
 read answer
-if [ "${answer,,}" = "n" ];then
+answer="$(echo ${answer} | tr 'A-Z' 'a-z')"
+if [ "${answer}" = "n" ];then
   exit
 fi
 
 # Make sure we have latest drush for D8.
-composer global require drush/drush:dev-master
+composer require drush/drush:8.*
 
 [ -e docroot ] && mv -v docroot docroot.backup-$$
 git clone --branch 8.0.x http://git.drupal.org/project/drupal.git docroot

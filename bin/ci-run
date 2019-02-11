@@ -8,7 +8,21 @@ echo using docker project name: $COMPOSE_PROJECT_NAME
 
 cd $WORKSPACE
 
-echo "# Enabling VW test mode"
-cp default.xml logs/xml/batch1
+if [ ! -d ".composer" ]; then
+  echo Copying .composer directory with auth code for downloads:
+  cp -av ../.composer .
+fi
 
-echo "done."
+source bin/activate
+echo Pulling latest snapshot from devtest.
+pull db
+cp -v .snapshot.sql.gz docker/database/snapshot.sql.gz
+pull files
+
+echo Building images
+build-images $BUILD_NUMBER
+echo Testing
+test-images $COMPOSE_PROJECT_NAME $BUILD_NUMBER
+echo Cleanup
+ci-namespace-clear $COMPOSE_PROJECT_NAME
+

@@ -6,32 +6,6 @@ core = 7.x
 ; -----------
 api = 2
 
-; Core
-; ----
-projects[drupal][type] = core
-projects[drupal][version] = "7.54"
-projects[drupal][patch][] = https://www.drupal.org/files/issues/core-mime-fix_nosniff-462950-61.patch
-projects[drupal][patch][] = https://www.drupal.org/files/issues/2176623.patch
-; https://www.drupal.org/node/1891228
-projects[drupal][patch][] = https://www.drupal.org/files/issues/image_style_deliver_shouldnt_use_module_invoke_all-6.patch
-; Performance patches:
-; https://www.drupal.org/node/1443308#comment-10329229
-projects[drupal][patch][] = https://www.drupal.org/files/issues/drupal-1443308-49-module_load_include-static-cache.patch
-; https://www.drupal.org/node/2339447#comment-10354975
-projects[drupal][patch][] = https://www.drupal.org/files/issues/2339447-73-optimize_drupal_find_theme_functions.patch
-; https://www.drupal.org/node/106721#comment-9694275
-projects[drupal][patch][] = https://www.drupal.org/files/issues/drupal-106721-optimize_node_access_queries-115.patch
-; https://www.drupal.org/node/2199001#comment-8495029
-projects[drupal][patch][] = https://www.drupal.org/files/issues/node_access_grants-static-cache-11.patch
-; https://www.drupal.org/node/1677026#comment-10509446
-projects[drupal][patch][] = https://www.drupal.org/files/issues/1677026_0_3.patch
-; https://www.drupal.org/node/2506349#comment-10047204
-projects[drupal][patch][] = https://www.drupal.org/files/issues/unnecessary_looping_in-2506349-17.patch
-; https://www.drupal.org/node/1209226#comment-7409542
-projects[drupal][patch][] = https://www.drupal.org/files/path-alias-whitelist-1209226-145.patch
-; https://www.drupal.org/node/2433955
-projects[drupal][patch][] = https://www.drupal.org/files/issues/drupal_7_34_statistics_exclude_bots.patch
-
 ; Contrib Modules
 ;
 ; Note: ../patches/merge-assist/*.patch required for gn2_base_config feature
@@ -57,11 +31,11 @@ projects[advanced_help][version] = "1.2"
 projects[apc][version] = "1.0-beta6"
 projects[apc][patch][] = "https://www.drupal.org/files/issues/apc-lock-2332725-1.patch"
 
-projects[autocomplete_deluxe][version] =  "2.2"
+projects[autocomplete_deluxe][version] =  "2.3"
 
-projects[autologout][version] =  "4.3"
-projects[autologout][patch][] = ../patches/automated_logout_error-2764407-2.patch
-
+projects[autologout][version] =  "4.5"
+; https://www.drupal.org/project/autologout/issues/2764407
+projects[autologout][patch][] = "https://www.drupal.org/files/issues/2018-05-31/automated_logout_error-2764407-4_0.patch"
 
 
 projects[better_exposed_filters][version] = "3.4"
@@ -77,7 +51,7 @@ projects[browscap_ctools][version] ="1.0"
 
 projects[calendar][version] = "3.5"
 
-projects[captcha][version] = "1.3"
+projects[captcha][version] = "1.5"
 
 projects[charts][version] = "2.0-rc1"
 
@@ -85,7 +59,7 @@ projects[chosen][version] = "2.0-beta4"
 
 projects[colorbox][version] = "2.10"
 
-projects[ctools][version] = "1.9"
+projects[ctools][version] = "1.14"
 projects[ctools][patch][] = ../patches/merge-assist/ctools_includes_export.inc.patch
 
 projects[clean_markup][version] = "2.7"
@@ -114,8 +88,7 @@ projects[email][version] = "1.3"
 
 projects[email_confirm][version] = "1.2"
 
-projects[entity][version] = "1.6"
-projects[entity][patch][] = https://www.drupal.org/files/issues/2636332-entity_api_performance-1_0.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2018-06-04/2636332-entity_api_performance-12.patch
 
 projects[entity_bulk_delete][version] = "1.x-dev"
 projects[entity_bulk_delete][download][type] = "git"
@@ -128,8 +101,10 @@ projects[entitycache][version] = "1.5"
 projects[entityform][version] = "2.0-rc1"
 projects[entityform][patch][] = https://www.drupal.org/files/issues/entityform-clone-fields.patch
 
-projects[entityreference][version] = "1.1"
-projects[entityreference][patch][] = https://www.drupal.org/files/issues/2497435-pass-og-pid-as-arg-to-view-2.patch
+projects[entity_delete_log][version] = "1.1"
+
+projects[entityreference][version] = "1.5"
+projects[entityreference][patch][] = https://www.drupal.org/files/issues/2018-03-09/2497435-pass-og-pid-as-arg-to-view-3.patch
 projects[entityreference][patch][] = https://www.drupal.org/files/issues/2151631-getReferencableEntities-node-users-23.patch
 
 projects[entityreference_prepopulate][version] = "1.5"
@@ -207,19 +182,19 @@ projects[job_scheduler][version] = "2.0-alpha3"
 
 projects[jquery_update][version] = "2.7"
 
-projects[legal][version] = "1.5"
+projects[legal][version] = "1.10"
 
 projects[link][version] = "1.3"
 
 projects[login_tracker][version] = "1.0"
 projects[login_tracker][patch][] = https://www.drupal.org/files/issues/login_tracker-fix_permission-2680599-2.patch
 
-projects[media][version] = "2.0-beta14"
+projects[media][version] = "2.19"
+projects[media][patch][] = https://www.drupal.org/files/issues/media_wysiwyg_filter-broken_filter.patch
 projects[media][patch][] = ../patches/media_bulk_upload-file-upload.patch
-projects[media][patch][] = https://www.drupal.org/files/issues/media_wysiwyg_filter-broken_filter-2423803-8.patch
 
 projects[media_gallery][version] = "2.x-dev"
-projects[media_gallery][patch][] = https://www.drupal.org/files/issues/media_gallery-taxonomy_page_callback_overwrite-1811860-2.patch
+projects[media_gallery][patch][] = https://www.drupal.org/files/issues/2018-06-07/media_gallery-issue-2978201.patch
 
 projects[media_livestream][version] = "1.x-dev"
 
@@ -229,9 +204,7 @@ projects[media_vimeo][version] = "2.1"
 
 projects[menu_token][version] = "1.0-beta5"
 
-projects[message][version] = "1.10"
-
-projects[message_notify][version] = "2.5"
+projects[message][version] = "1.12"
 
 projects[migrate][version] = "2.8"
 
@@ -247,7 +220,6 @@ projects[og][patch][] = ../patches/merge-assist/og_features_permission.features.
 projects[og][patch][] = ../patches/merge-assist/og_features_role.features.inc.patch
 projects[og][patch][] = https://www.drupal.org/files/issues/1892606-vbo-roles-change-13.patch
 projects[og][patch][] = https://www.drupal.org/files/issues/og_vbo_and_og_2561507-6.patch
-projects[og][patch][] = https://www.drupal.org/files/issues/2642124-specialized-entityreference-selection-classes-6.patch
 projects[og][patch][] = ../patches/og_ui_subscription_text.patch
 projects[og][patch][] = ../patches/og_ui_subscription_role_status.patch
 projects[og][patch][] = https://www.drupal.org/files/issues/2134365-og-is-group-remove-5.patch
@@ -270,7 +242,7 @@ projects[panels][version] = "3.7"
 
 projects[panels_tabs][version] = "1.x-dev"
 
-projects[password_policy][version] = "1.11"
+projects[password_policy][version] = "1.16"
 projects[password_policy][patch][] = https://www.drupal.org/files/issues/password_policy-reset_password-2681237-2.patch
 projects[password_policy][patch][] = "https://www.drupal.org/files/issues/password_policy-985758-53.patch"
 
@@ -296,8 +268,11 @@ projects[pki_authentication][download][url] = "http://git.drupal.org/sandbox/ric
 projects[pki_authentication][download][revision] = "a0f5e07e101bd741b7e70f692487c6f1dc4dc652"
 projects[pki_authentication][patch][] = ../patches/pki_changes.patch
 projects[pki_authentication][patch][] = ../patches/pki_redirect.patch
+projects[pki_authentication][patch][] = ../patches/pki_cac_password.patch
 
 projects[plupload][version] = "1.7"
+
+projects[print][patch][] = https://www.drupal.org/files/issues/2018-06-11/print-dompdf-unicode-entities-font-2085169-8.patch
 
 projects[privatemsg][version] = "2.x-dev"
 projects[privatemsg][patch][] = "https://www.drupal.org/files/issues/privatemsg-add-exclude-option-2196537-5.patch"
@@ -316,7 +291,7 @@ projects[redirect][patch][] = "https://www.drupal.org/files/redirect-migrate-sup
 
 projects[replicate][version] =  "1.1"
 
-projects[responsive_menus][version] = "1.x-dev"
+projects[responsive_menus][version] = "1.7"
 
 projects[resumable_download][version] = "1.0-beta1"
 projects[resumable_download][patch][] = "https://www.drupal.org/files/issues/resumable_download-do_not_use_module_invoke_all_for_hook_file_download-2295897-8.patch"
@@ -328,18 +303,14 @@ projects[role_watchdog][patch][] = "https://www.drupal.org/files/og_role_watchdo
 projects[role_watchdog][patch][] = ../patches/og_role_watchdog.patch
 
 
-projects[rules][version] = "2.9"
+projects[rules][version] = "2.11"
 projects[rules][patch][] = "https://www.drupal.org/files/issues/rules-revert-2474577.patch"
 
 projects[rules_link][version] = "2.0"
 
 projects[save_draft][version] = "1.4"
 
-projects[secure_permissions][version] = "1.6"
-
 projects[security_review][version] = "1.2"
-
-projects[session_limit][version] = "2.0"
 
 projects[simplify][version] = "3.3"
 projects[simplify][patch][] = "https://www.drupal.org/files/issues/add_form_element_checks-2483393-2.patch"
@@ -358,6 +329,8 @@ projects[search_api_solr][version] = "1.9"
 
 projects[strongarm][version] = "2.0"
 projects[strongarm][patch][] = ../patches/merge-assist/strongarm.module.patch
+
+projects[term_reference_tree][version] = "1.11"
 
 projects [timezone_detect] = "1.2"
 
@@ -393,8 +366,8 @@ projects[user_revision][download][revision] = "cce42174aec453e6652da8738e397df20
 
 projects[usfedgov_google_analytics][version] = "1.1"
 
-projects[views][version] = "3.15"
-projects[views][patch][] = "https://www.drupal.org/files/issues/2178287.views_.views_handler_field_date-datetime.patch"
+projects[views][version] = "3.18"
+projects[views][patch][] = "https://www.drupal.org/files/issues/2018-05-11/allow-datetime-format-2178287-11.patch"
 projects[views][patch][] = ../patches/merge-assist/view.inc.patch
 
 projects[views_accordion][version] = "1.1"
@@ -408,7 +381,7 @@ projects[views_data_export][version] = "3.1"
 projects[views_field_view][version] = "1.1"
 projects[views_field_view][patch][] = https://www.drupal.org/files/issues/views_field_view-recursion_fix-2008724-7.patch
 
-projects[views_fieldsets][version] = "1.3"
+projects[views_fieldsets][version] = "2.3"
 
 projects[views_load_more][version] = "1.5"
 
@@ -420,9 +393,4 @@ projects[views_tree][version] = "2.0"
 
 projects[votingapi][version] = "2.12"
 
-projects[wysiwyg][version] = "2.x-dev"
-projects[wysiwyg][patch][] = ../patches/merge-assist/wysiwyg.features.inc.patch
 
-projects[entity_delete_log][version] = "1.1"
-
-projects[autocomplete_deluxe][version] = "2.1"

@@ -1,0 +1,52 @@
+#user-report,
+#course-report {
+  width: 100%;
+  td {
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    em {
+      font-weight: bold;
+    }
+  }
+  .level1 {
+    padding-left: 0.5em;
+    text-align: left;
+  }
+  .level2 {
+    padding-left: 1.5em;
+    text-align: left;
+    &.file {
+      padding-left: 3.5em;
+    }
+  }
+  .level3 {
+    padding-left: 2.5em;
+    text-align: left;
+    &.file {
+      padding-left: 4.5em;
+    }
+  }
+  .complete {
+    color: green;
+  }
+  .incomplete {
+    color: red;
+  }
+}
+
+#interaction-report {
+  margin-bottom: 20px;
+  .complete {
+    color: green;
+    &:before {
+      content: "\2713";
+    }
+  }
+  .incomplete {
+    color: red;
+    &:before {
+      content: "\2715";
+    }
+  }
+}

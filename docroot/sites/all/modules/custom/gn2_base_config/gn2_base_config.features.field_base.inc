@@ -2023,130 +2023,6 @@ function gn2_base_config_field_default_field_bases() {
   /* field_event_type */   'type' => 'list_text',
   /* field_event_type */ );
 
-  // Exported field_base: 'field_expertise'.
-  $field_bases['field_expertise'] = array(
-  /* field_expertise */   'active' => 1,
-  /* field_expertise */   'cardinality' => -1,
-  /* field_expertise */   'deleted' => 0,
-  /* field_expertise */   'entity_types' => array(),
-  /* field_expertise */   'field_name' => 'field_expertise',
-  /* field_expertise */   'indexes' => array(
-  /* field_expertise */     'revision_id' => array(
-  /* field_expertise */       0 => 'revision_id',
-  /* field_expertise */     ),
-  /* field_expertise */     'value' => array(
-  /* field_expertise */       0 => 'value',
-  /* field_expertise */     ),
-  /* field_expertise */   ),
-  /* field_expertise */   'locked' => 0,
-  /* field_expertise */   'module' => 'field_collection',
-  /* field_expertise */   'settings' => array(
-  /* field_expertise */     'hide_blank_items' => 1,
-  /* field_expertise */     'hide_initial_item' => FALSE,
-  /* field_expertise */     'path' => '',
-  /* field_expertise */   ),
-  /* field_expertise */   'translatable' => 0,
-  /* field_expertise */   'type' => 'field_collection',
-  /* field_expertise */ );
-
-  // Exported field_base: 'field_expertise_availability'.
-  $field_bases['field_expertise_availability'] = array(
-  /* field_expertise_availability */   'active' => 1,
-  /* field_expertise_availability */   'cardinality' => 1,
-  /* field_expertise_availability */   'deleted' => 0,
-  /* field_expertise_availability */   'entity_types' => array(),
-  /* field_expertise_availability */   'field_name' => 'field_expertise_availability',
-  /* field_expertise_availability */   'indexes' => array(
-  /* field_expertise_availability */     'value' => array(
-  /* field_expertise_availability */       0 => 'value',
-  /* field_expertise_availability */     ),
-  /* field_expertise_availability */   ),
-  /* field_expertise_availability */   'locked' => 0,
-  /* field_expertise_availability */   'module' => 'list',
-  /* field_expertise_availability */   'settings' => array(
-  /* field_expertise_availability */     'allowed_values' => array(
-  /* field_expertise_availability */       'Contact me directly' => 'Contact me directly',
-  /* field_expertise_availability */       'Contact my institution' => 'Contact my institution',
-  /* field_expertise_availability */       'Not available' => 'Not available',
-  /* field_expertise_availability */     ),
-  /* field_expertise_availability */     'allowed_values_function' => '',
-  /* field_expertise_availability */   ),
-  /* field_expertise_availability */   'translatable' => 0,
-  /* field_expertise_availability */   'type' => 'list_text',
-  /* field_expertise_availability */ );
-
-  // Exported field_base: 'field_expertise_experience'.
-  $field_bases['field_expertise_experience'] = array(
-  /* field_expertise_experience */   'active' => 1,
-  /* field_expertise_experience */   'cardinality' => 1,
-  /* field_expertise_experience */   'deleted' => 0,
-  /* field_expertise_experience */   'entity_types' => array(),
-  /* field_expertise_experience */   'field_name' => 'field_expertise_experience',
-  /* field_expertise_experience */   'indexes' => array(
-  /* field_expertise_experience */     'format' => array(
-  /* field_expertise_experience */       0 => 'format',
-  /* field_expertise_experience */     ),
-  /* field_expertise_experience */   ),
-  /* field_expertise_experience */   'locked' => 0,
-  /* field_expertise_experience */   'module' => 'text',
-  /* field_expertise_experience */   'settings' => array(),
-  /* field_expertise_experience */   'translatable' => 0,
-  /* field_expertise_experience */   'type' => 'text_long',
-  /* field_expertise_experience */ );
-
-  // Exported field_base: 'field_expertise_level'.
-  $field_bases['field_expertise_level'] = array(
-  /* field_expertise_level */   'active' => 1,
-  /* field_expertise_level */   'cardinality' => 1,
-  /* field_expertise_level */   'deleted' => 0,
-  /* field_expertise_level */   'entity_types' => array(),
-  /* field_expertise_level */   'field_name' => 'field_expertise_level',
-  /* field_expertise_level */   'indexes' => array(
-  /* field_expertise_level */     'value' => array(
-  /* field_expertise_level */       0 => 'value',
-  /* field_expertise_level */     ),
-  /* field_expertise_level */   ),
-  /* field_expertise_level */   'locked' => 0,
-  /* field_expertise_level */   'module' => 'list',
-  /* field_expertise_level */   'settings' => array(
-  /* field_expertise_level */     'allowed_values' => array(
-  /* field_expertise_level */       'Familiar with' => 'Familiar with:',
-  /* field_expertise_level */       'Experienced in' => 'Experienced in:',
-  /* field_expertise_level */       'Expert in' => 'Expert in:',
-  /* field_expertise_level */     ),
-  /* field_expertise_level */     'allowed_values_function' => '',
-  /* field_expertise_level */   ),
-  /* field_expertise_level */   'translatable' => 0,
-  /* field_expertise_level */   'type' => 'list_text',
-  /* field_expertise_level */ );
-
-  // Exported field_base: 'field_expertise_topic'.
-  $field_bases['field_expertise_topic'] = array(
-  /* field_expertise_topic */   'active' => 1,
-  /* field_expertise_topic */   'cardinality' => 1,
-  /* field_expertise_topic */   'deleted' => 0,
-  /* field_expertise_topic */   'entity_types' => array(),
-  /* field_expertise_topic */   'field_name' => 'field_expertise_topic',
-  /* field_expertise_topic */   'indexes' => array(
-  /* field_expertise_topic */     'tid' => array(
-  /* field_expertise_topic */       0 => 'tid',
-  /* field_expertise_topic */     ),
-  /* field_expertise_topic */   ),
-  /* field_expertise_topic */   'locked' => 0,
-  /* field_expertise_topic */   'module' => 'taxonomy',
-  /* field_expertise_topic */   'settings' => array(
-  /* field_expertise_topic */     'allowed_values' => array(
-  /* field_expertise_topic */       0 => array(
-  /* field_expertise_topic */         'vocabulary' => 'topics',
-  /* field_expertise_topic */         'parent' => 0,
-  /* field_expertise_topic */       ),
-  /* field_expertise_topic */     ),
-  /* field_expertise_topic */     'options_list_callback' => NULL,
-  /* field_expertise_topic */   ),
-  /* field_expertise_topic */   'translatable' => 0,
-  /* field_expertise_topic */   'type' => 'taxonomy_term_reference',
-  /* field_expertise_topic */ );
-
   // Exported field_base: 'field_facebook'.
   $field_bases['field_facebook'] = array(
   /* field_facebook */   'active' => 1,
@@ -3286,9 +3162,10 @@ function gn2_base_config_field_default_field_bases() {
   /* field_org_role */   'module' => 'list',
   /* field_org_role */   'settings' => array(
   /* field_org_role */     'allowed_values' => array(
-  /* field_org_role */       'Student' => 'Student',
+  /* field_org_role */       'Participant' => 'Participant',
   /* field_org_role */       'Faculty' => 'Faculty',
   /* field_org_role */       'Alumni' => 'Alumni',
+  /* field_org_role */       'Staff' => 'Staff',
   /* field_org_role */     ),
   /* field_org_role */     'allowed_values_function' => '',
   /* field_org_role */   ),
@@ -4083,6 +3960,7 @@ function gn2_base_config_field_default_field_bases() {
   /* field_telephone_country_code */       '+962' => 'Jordan +962',
   /* field_telephone_country_code */       '+254' => 'Kenya +254',
   /* field_telephone_country_code */       '+686' => 'Kiribati +686',
+  /* field_telephone_country_code */       '+383' => 'Kosovo +383',
   /* field_telephone_country_code */       '+965' => 'Kuwait +965',
   /* field_telephone_country_code */       '+996' => 'Kyrgyzstan +996',
   /* field_telephone_country_code */       '+856' => 'Laos +856',
@@ -4721,40 +4599,6 @@ function gn2_base_config_field_default_field_bases() {
   /* field_user_title */   'translatable' => 0,
   /* field_user_title */   'type' => 'text',
   /* field_user_title */ );
-
-  // Exported field_base: 'field_validated_by'.
-  $field_bases['field_validated_by'] = array(
-  /* field_validated_by */   'active' => 1,
-  /* field_validated_by */   'cardinality' => 1,
-  /* field_validated_by */   'deleted' => 0,
-  /* field_validated_by */   'entity_types' => array(),
-  /* field_validated_by */   'field_name' => 'field_validated_by',
-  /* field_validated_by */   'indexes' => array(
-  /* field_validated_by */     'target_id' => array(
-  /* field_validated_by */       0 => 'target_id',
-  /* field_validated_by */     ),
-  /* field_validated_by */   ),
-  /* field_validated_by */   'locked' => 0,
-  /* field_validated_by */   'module' => 'entityreference',
-  /* field_validated_by */   'settings' => array(
-  /* field_validated_by */     'handler' => 'views',
-  /* field_validated_by */     'handler_settings' => array(
-  /* field_validated_by */       'behaviors' => array(
-  /* field_validated_by */         'views-select-list' => array(
-  /* field_validated_by */           'status' => 0,
-  /* field_validated_by */         ),
-  /* field_validated_by */       ),
-  /* field_validated_by */       'view' => array(
-  /* field_validated_by */         'args' => array(),
-  /* field_validated_by */         'display_name' => 'entityreference_1',
-  /* field_validated_by */         'view_name' => 'validator',
-  /* field_validated_by */       ),
-  /* field_validated_by */     ),
-  /* field_validated_by */     'target_type' => 'user',
-  /* field_validated_by */   ),
-  /* field_validated_by */   'translatable' => 0,
-  /* field_validated_by */   'type' => 'entityreference',
-  /* field_validated_by */ );
 
   // Exported field_base: 'field_visitor_information'.
   $field_bases['field_visitor_information'] = array(

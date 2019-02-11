@@ -1,21 +1,20 @@
 @api
-Feature: Viewing User Profiles
-  As the user
-  I should be able to see the profile
+Feature: user.profile.view.feature
+  As a user  I should be able to see my profile
 
   @user @profile @view @links
   Scenario: A user can see certain links on their profile.
     Given I am logged in as "umember1" with password "civicactions"
     Then I should see the following <links>
-    | links      |
-    | umember1 |
-    | Log out    |
+    | links        |
+    | My GlobalNET |
+    | Log out      |
     When I visit "/account"
     Then I should see the following <links>
-    | links              |
-    | Log out            |
-    | Edit My Profile    |
-    | Change My Password |
+    | links                         |
+    | Log out                       |
+    | Edit My Profile & Settings    |
+    | Change My Password            |
 
   @user @profile @hr_manager @view
   Scenario: An HR Manager can view a blocked user's profile.

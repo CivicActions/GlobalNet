@@ -1,0 +1,13 @@
+name = gn2_staff_directory
+description = Function that provides a staff and faculty directory
+core = 7.x
+package = GlobalNet
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = ctools_custom_content
+dependencies[] = views
+features[ctools][] = ctools_custom_content:ctools_content:1
+features[ctools][] = views:views_default:3.0
+features[ctools_custom_content][] = staff_directory
+features[features_api][] = api:2
+features[views_view][] = staff_directory

@@ -19,4 +19,4 @@ cmd='bash'
 [[ "$@" ]] && cmd=$@
 [ "${cmd}" == "bash" ] && EXEC_OPTS='-ti'
 
-docker exec --user www-data $EXEC_OPTS ${web} ${cmd}
+docker exec --user apache $EXEC_OPTS ${web} ${cmd}

@@ -10,21 +10,13 @@
 function gn2_og_og_features_default_roles() {
   $roles = array();
 
-  // Exported OG Role: 'node:alumni_group:org_manager'.
-  $roles['node:alumni_group:org_manager'] = array(
-  /* node:alumni_group:org_manager */   'gid' => 0,
-  /* node:alumni_group:org_manager */   'group_type' => 'node',
-  /* node:alumni_group:org_manager */   'group_bundle' => 'alumni_group',
-  /* node:alumni_group:org_manager */   'name' => 'org_manager',
-  /* node:alumni_group:org_manager */ );
-
-  // Exported OG Role: 'node:coi:org_manager'.
-  $roles['node:coi:org_manager'] = array(
-  /* node:coi:org_manager */   'gid' => 0,
-  /* node:coi:org_manager */   'group_type' => 'node',
-  /* node:coi:org_manager */   'group_bundle' => 'coi',
-  /* node:coi:org_manager */   'name' => 'org_manager',
-  /* node:coi:org_manager */ );
+  // Exported OG Role: 'node:course:Content Specialist'.
+  $roles['node:course:Content Specialist'] = array(
+  /* node:course:Content Specialist */   'gid' => 0,
+  /* node:course:Content Specialist */   'group_type' => 'node',
+  /* node:course:Content Specialist */   'group_bundle' => 'course',
+  /* node:course:Content Specialist */   'name' => 'Content Specialist',
+  /* node:course:Content Specialist */ );
 
   // Exported OG Role: 'node:course:course_presenter'.
   $roles['node:course:course_presenter'] = array(
@@ -42,6 +34,14 @@ function gn2_og_og_features_default_roles() {
   /* node:course:org_manager */   'name' => 'org_manager',
   /* node:course:org_manager */ );
 
+  // Exported OG Role: 'node:course_group:Content Specialist'.
+  $roles['node:course_group:Content Specialist'] = array(
+  /* node:course_group:Content Specialist */   'gid' => 0,
+  /* node:course_group:Content Specialist */   'group_type' => 'node',
+  /* node:course_group:Content Specialist */   'group_bundle' => 'course_group',
+  /* node:course_group:Content Specialist */   'name' => 'Content Specialist',
+  /* node:course_group:Content Specialist */ );
+
   // Exported OG Role: 'node:course_group:org_manager'.
   $roles['node:course_group:org_manager'] = array(
   /* node:course_group:org_manager */   'gid' => 0,
@@ -49,6 +49,14 @@ function gn2_og_og_features_default_roles() {
   /* node:course_group:org_manager */   'group_bundle' => 'course_group',
   /* node:course_group:org_manager */   'name' => 'org_manager',
   /* node:course_group:org_manager */ );
+
+  // Exported OG Role: 'node:event:Content Specialist'.
+  $roles['node:event:Content Specialist'] = array(
+  /* node:event:Content Specialist */   'gid' => 0,
+  /* node:event:Content Specialist */   'group_type' => 'node',
+  /* node:event:Content Specialist */   'group_bundle' => 'event',
+  /* node:event:Content Specialist */   'name' => 'Content Specialist',
+  /* node:event:Content Specialist */ );
 
   // Exported OG Role: 'node:event:org_manager'.
   $roles['node:event:org_manager'] = array(
@@ -58,6 +66,14 @@ function gn2_og_og_features_default_roles() {
   /* node:event:org_manager */   'name' => 'org_manager',
   /* node:event:org_manager */ );
 
+  // Exported OG Role: 'node:group:Content Specialist'.
+  $roles['node:group:Content Specialist'] = array(
+  /* node:group:Content Specialist */   'gid' => 0,
+  /* node:group:Content Specialist */   'group_type' => 'node',
+  /* node:group:Content Specialist */   'group_bundle' => 'group',
+  /* node:group:Content Specialist */   'name' => 'Content Specialist',
+  /* node:group:Content Specialist */ );
+
   // Exported OG Role: 'node:group:org_manager'.
   $roles['node:group:org_manager'] = array(
   /* node:group:org_manager */   'gid' => 0,
@@ -65,6 +81,14 @@ function gn2_og_og_features_default_roles() {
   /* node:group:org_manager */   'group_bundle' => 'group',
   /* node:group:org_manager */   'name' => 'org_manager',
   /* node:group:org_manager */ );
+
+  // Exported OG Role: 'node:organization:Content Specialist'.
+  $roles['node:organization:Content Specialist'] = array(
+  /* node:organization:Content Specialist */   'gid' => 0,
+  /* node:organization:Content Specialist */   'group_type' => 'node',
+  /* node:organization:Content Specialist */   'group_bundle' => 'organization',
+  /* node:organization:Content Specialist */   'name' => 'Content Specialist',
+  /* node:organization:Content Specialist */ );
 
   // Exported OG Role: 'node:organization:PA Specialist'.
   $roles['node:organization:PA Specialist'] = array(
@@ -97,6 +121,22 @@ function gn2_og_og_features_default_roles() {
   /* node:organization:org_manager */   'group_bundle' => 'organization',
   /* node:organization:org_manager */   'name' => 'org_manager',
   /* node:organization:org_manager */ );
+
+  // Exported OG Role: 'node:organization:staff'.
+  $roles['node:organization:staff'] = array(
+  /* node:organization:staff */   'gid' => 0,
+  /* node:organization:staff */   'group_type' => 'node',
+  /* node:organization:staff */   'group_bundle' => 'organization',
+  /* node:organization:staff */   'name' => 'staff',
+  /* node:organization:staff */ );
+
+  // Exported OG Role: 'node:program:Content Specialist'.
+  $roles['node:program:Content Specialist'] = array(
+  /* node:program:Content Specialist */   'gid' => 0,
+  /* node:program:Content Specialist */   'group_type' => 'node',
+  /* node:program:Content Specialist */   'group_bundle' => 'program',
+  /* node:program:Content Specialist */   'name' => 'Content Specialist',
+  /* node:program:Content Specialist */ );
 
   // Exported OG Role: 'node:program:org_manager'.
   $roles['node:program:org_manager'] = array(

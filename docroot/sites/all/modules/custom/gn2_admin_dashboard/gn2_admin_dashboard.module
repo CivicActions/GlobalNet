@@ -94,6 +94,7 @@ function gn2_admin_dashboard_access($org) {
     $manager_roles = array('org_manager', 'hr_manager');
     $og_roles = og_get_user_roles('node', $org->nid, $user->uid);
     $is_manager = array_intersect($manager_roles, $og_roles);
+
     return (!empty($is_manager)) ? TRUE : FALSE;
   }
 
@@ -105,14 +106,20 @@ function gn2_admin_dashboard_access($org) {
  *
  * @param object $org
  *   The Organization node object.
+ *
+ * @return string
+ *   Returns an HTML unorder list of links.
  */
 function _gn2_admin_dashboard_page($org) {
   drupal_set_title(t("Manager's Dashboard for !title", array('!title' => $org->title)));
   global $user;
   $items = array();
-  $short_title = $org->field_org_short_title[LANGUAGE_NONE][0]['safe_value'];
   $og_roles = og_get_user_roles('node', $org->nid, $user->uid);
-  if (!in_array('faculty', $og_roles)) {
+  $roles_can_access = [
+    'org_manager',
+    'hr_manager',
+  ];
+  if (array_intersect($roles_can_access, $og_roles) || in_array('administrator', $user->roles)) {
     $items[] = l(t('Support Desk'), 'node/' . $org->nid . '/dashboard/support');
     $items[] = l(t('Manage Members'), 'node/' . $org->nid . '/dashboard/bulk-users');
     $items[] = l(t('Add New User'), 'admin/manage/users/add/user',
@@ -132,18 +139,26 @@ function _gn2_admin_dashboard_page($org) {
     );
     $items[] = l(t('Bulk Import Report'), 'node/' . $org->nid . '/dashboard/bulk-import-report');
   }
-
+  if (in_array('administrator', $user->roles)) {
+    $items[] = l(t('Watchdog Log'), '/admin/manage/report-watchdog');
+    $items[] = l(t('OG Roles Report'), '/admin/reports/og-roles');
+  }
   if (in_array('org_manager', $og_roles) || in_array('administrator', $user->roles)) {
     $items[] = l(t('Manage Content'), 'node/' . $org->nid . '/dashboard/content');
     $items[] = l(t('Organization Hierarchy'), 'node/' . $org->nid . '/dashboard/organization-hierarchy');
     $items[] = l(t('Get Group Information'), 'node/' . $org->nid . '/dashboard/get-group-info');
     $items[] = l(t('View Role Grants Report'), 'node/' . $org->nid . '/role_watchdog', array('query' => array('org' => $org->nid)));
+
   }
   if (in_array('hr_manager', $og_roles) || in_array('administrator', $user->roles)) {
     // View updated user profiles; see RD-1967.
     $items[] = l(t('View Updated User Profiles'), 'node/' . $org->nid . '/dashboard/user-profile-updates');
   }
-  if (array_intersect(array('hr_manager', 'org_manager'), $og_roles) || in_array('administrator', $user->roles)) {
+  if (array_intersect(array(
+      'hr_manager',
+      'org_manager',
+    ), $og_roles) || in_array('administrator', $user->roles)
+  ) {
     $items[] = l(t('View Account Requests'), 'node/' . $org->nid . '/dashboard/userforms/submissions/userreg');
     // View Form Submissions link; see RD-3420.
     $items[] = l(t('View Form Submissions'), '/admin/manage/forms');
@@ -277,7 +292,7 @@ function gn2_admin_dashboard_form_alter(&$form, &$form_state, $form_id) {
         ),
       ));
       $form['account']['pass']['#description'] = $help . '<br />' .
-          $form['account']['pass']['#description'];
+                                                 $form['account']['pass']['#description'];
       break;
     case "views_form_user_bulk_block_page":
       // Fixing form action for Org dashboard exposed filter - RD-3412.
@@ -344,10 +359,10 @@ function gn2_admin_dashboard_manager_access($account = NULL) {
     $short_title = arg(0);
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'organization')
-        ->propertyCondition('status', NODE_PUBLISHED)
-        ->fieldCondition('field_org_short_title', 'value', $short_title, '=')
-        ->range(0, 1);
+          ->entityCondition('bundle', 'organization')
+          ->propertyCondition('status', NODE_PUBLISHED)
+          ->fieldCondition('field_org_short_title', 'value', $short_title, '=')
+          ->range(0, 1);
     $result = $query->execute();
 
     if (isset($result['node'])) {
@@ -395,7 +410,7 @@ function gn2_admin_dashboard_add_user($form, &$form_state) {
         'membership type' => OG_MEMBERSHIP_TYPE_DEFAULT,
       ));
       drupal_set_message(t('%user added to Organization %title',
-          array('%user' => $user->name, '%title' => $org->title)));
+        array('%user' => $user->name, '%title' => $org->title)));
     }
   }
 }
@@ -422,6 +437,7 @@ function gn2_admin_dashboard_block_view($delta = '') {
     case 'gn2_content_rating_users':
       $node = menu_get_object();
       if ($node) {
+        $block['content'] = '';
         $gid = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
         // Check permission to view this block
         if (og_user_access('node', $gid, 'view all voters') || (og_user_access('node', $gid, 'view own voters') && $node->uid == $user->uid)) {
@@ -430,22 +446,43 @@ function gn2_admin_dashboard_block_view($delta = '') {
           $query = db_select('votingapi_vote', 'v');
           $query->join('users', 'u', 'v.uid = u.uid');
           $query->fields('v', array('uid'))
-            ->fields('u', array('name'))
-            ->condition('entity_id', $node->nid, '=');
-
-          $voters = $query->execute();
-
+                ->condition('entity_id', $node->nid, '=');
+          $voters_raw = $query->execute()->fetchAll();
+          $users = array();
+          foreach ($voters_raw as $voter_raw) {
+            $users[] = $voter_raw->uid;
+          }
+          $voters = user_load_multiple($users);
           foreach ($voters as $voter) {
-            $block['content'] .= l($voter->name, '/user/' . $voter->uid) . '<br />';
+
+            if (!empty($voter->field_name_first[LANGUAGE_NONE][0]['safe_value']) && !empty($voter->field_name_last[LANGUAGE_NONE][0]['safe_value'])) {
+              $name = $voter->field_name_first[LANGUAGE_NONE][0]['safe_value'] . ' ' . $voter->field_name_last[LANGUAGE_NONE][0]['safe_value'];
+            }
+            else {
+              $name = $voter->name;
+            }
+
+            $block['content'] .= '<div class="sidebar--image-text-block--item">';
+            $block['content'] .= '<div class="gn2-2col-v2 layout-wrapper gn2-2col-v2">';
+            if (!empty($voter->picture->uri)) {
+              $picture = l('<img src="' . image_style_url('news_author_thumbnail', $voter->picture->uri) . '" />', '/user/' . $voter->uid, array('html' => TRUE));
+              $block['content'] .= '<div class="gn2-2col-v2--col1 col first"><div class="inner"><div><div class="sidebar--image-text-block--image">' . $picture . '</div></div></div></div>';
+              $block['content'] .= '<div class="gn2-2col-v2--col2 col last"><div class="inner"><div><div class="sidebar--image-text-block--title">' . l($name, '/user/' . $voter->uid) . '</div></div></div></div>';
+            }
+            else {
+              $block['content'] .= '<div class="gn2-2col-v2--col1 col first"><div class="inner"><div><div class="sidebar--image-text-block--title">' . l($name, '/user/' . $voter->uid) . '</div></div></div></div>';
+            }
+            $block['content'] .= '</div></div>';
           }
 
         }
         else {
-          $block['content'] = 'There was an error retrieving voting information for this page.';
+          $block['content'] .= 'There was an error retrieving voting information for this page.';
         }
       }
       break;
   }
+
   return $block;
 }
 
@@ -505,4 +542,18 @@ function gn2_admin_dashboard_entity_metadata_user_access($op, $entity = NULL, $a
   }
 
   return $return;
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function gn2_admin_dashboard_views_pre_render(&$view) {
+  if ($view->name === 'og_members_admin_override' && !empty($view->result)) {
+    foreach ($view->result as &$result) {
+      if ($result->og_membership_users_state === '1'
+        && isset($result->field_og_membership_request[0])) {
+        unset($result->field_og_membership_request[0]);
+      }
+    }
+  }
 }

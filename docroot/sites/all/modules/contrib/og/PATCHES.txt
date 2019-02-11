@@ -3,7 +3,6 @@ The following patches have been applied to this project:
 - og_features_role.features.inc.patch
 - https://www.drupal.org/files/issues/1892606-vbo-roles-change-13.patch
 - https://www.drupal.org/files/issues/og_vbo_and_og_2561507-6.patch
-- https://www.drupal.org/files/issues/2642124-specialized-entityreference-selection-classes-6.patch
 - og_ui_subscription_text.patch
 - og_ui_subscription_role_status.patch
 - https://www.drupal.org/files/issues/2134365-og-is-group-remove-5.patch

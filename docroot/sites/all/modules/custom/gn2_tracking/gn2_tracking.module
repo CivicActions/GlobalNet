@@ -1,0 +1,434 @@
+<?php
+
+/**
+ * @file
+ * A module for tracking Course interactions.
+ */
+
+/**
+ * Implements hook_ctools_render_alter().
+ */
+function gn2_tracking_ctools_render_alter(&$info, &$page, &$context) {
+  $add_js = FALSE;
+  $nid = 0;
+  if (isset($context['contexts']['argument_entity_id:node_1'])
+    && $context['contexts']['argument_entity_id:node_1']->data->type === 'course'
+    && $context['handler']->name === 'node_view_panelizer'
+    && og_is_member('node', arg(1))) {
+    $add_js = TRUE;
+    $nid = arg(1);
+  }
+  elseif (isset($context['contexts']['argument_entity_id:node_1'])
+    && $context['contexts']['argument_entity_id:node_1']->data->type === 'media_gallery'
+    && $context['handler']->name === 'node_view_panelizer') {
+    $node = node_load(arg(1));
+    $nid = $node->nid;
+    if (isset($node->og_group_ref)) {
+      $parent_group = field_get_items('node', $node, 'og_group_ref');
+      $gid = $parent_group[0]['target_id'];
+    }
+    if ($gid && og_is_member('node', $gid)) {
+      $add_js = TRUE;
+    }
+  }
+
+  if ($add_js) {
+    global $user;
+    drupal_add_js([
+      'gn2Track' => [
+        'uid' => $user->uid,
+        'nid' => $nid,
+      ],
+    ], 'setting');
+    drupal_add_js(drupal_get_path('module', 'gn2_tracking') . '/js/gn2_tracking.js',
+      ['every_page' => FALSE]);
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gn2_tracking_menu() {
+  // Tracking AJAX callback.
+  $items['gn2track/insert'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_insert_record',
+    'access callback' => TRUE,
+  ];
+  // Course instructors report.
+  $items['node/%node/metrics/progress'] = [
+    'type' => MENU_LOCAL_TASK,
+    'title' => 'Progress Report',
+    'page callback' => 'gn2_tracking_course_report',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'course'],
+    'file' => 'gn2_tracking.reports.inc',
+    'weight' => 3,
+  ];
+  // Course interactions report.
+  $items['node/%node/metrics/progress/%'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_interactions_report',
+    'page arguments' => [1, 4],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'course'],
+    'file' => 'gn2_tracking.interactions.inc',
+  ];
+  // Course members progress report.
+  $items['node/%node/metrics/member/progress'] = [
+    'type' => MENU_LOCAL_TASK,
+    'title' => 'Member Progress',
+    'page callback' => 'gn2_tracking_users_main_page',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'course'],
+    'file' => 'gn2_tracking.users.inc',
+    'weight' => 4,
+  ];
+  // Course individual members report.
+  $items['node/%node/metrics/member/progress/%'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_users_progress_report',
+    'page arguments' => [1, 5],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'course'],
+    'file' => 'gn2_tracking.users.inc',
+  ];
+  // Course individual members report.
+  $items['node/%node/metrics/download/%/%'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_download',
+    'page arguments' => [1, 4, 5],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'course'],
+    'file' => 'gn2_tracking.download.inc',
+  ];
+  // Folder file download report.
+  $items['node/%node/file-metrics'] = [
+    'type' => MENU_LOCAL_TASK,
+    'title' => 'Metrics',
+    'page callback' => 'gn2_tracking_folder_report',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.files.inc',
+  ];
+  // Folder file download report.
+  $items['node/%node/file-metrics/main'] = [
+    'type' => MENU_LOCAL_TASK,
+    'title' => 'Files',
+    'page callback' => 'gn2_tracking_folder_report',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.files.inc',
+  ];
+  // Folder file report download.
+  $items['node/%node/file-metrics/download'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_folder_report_download',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.files.inc',
+  ];
+  // Folder file user download report.
+  $items['node/%node/file-metrics/users'] = [
+    'type' => MENU_LOCAL_TASK,
+    'title' => 'Users',
+    'page callback' => 'gn2_tracking_folder_user_report',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.usersfiles.inc',
+  ];
+  // Folder file user download report download.
+  $items['node/%node/file-metrics/users/download'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_folder_user_report_download',
+    'page arguments' => [1],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.usersfiles.inc',
+  ];
+  // Folder file individual user download report.
+  $items['node/%node/file-metrics/user/%user'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_folder_individual',
+    'page arguments' => [1, 4],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.userfiles.inc',
+  ];
+  // Folder file individual user download report download.
+  $items['node/%node/file-metrics/user/%user/download'] = [
+    'type' => MENU_CALLBACK,
+    'page callback' => 'gn2_tracking_folder_individual_download',
+    'page arguments' => [1, 4],
+    'access callback' => 'gn2_tracking_access',
+    'access arguments' => [1, 'media_gallery'],
+    'file' => 'gn2_tracking.userfiles.inc',
+  ];
+
+  return $items;
+}
+
+/**
+ * Access call back for the GN2 Track module.
+ *
+ * @param object $node
+ *   The Course node object.
+ *
+ * @return bool
+ */
+function gn2_tracking_access($node, $type) {
+  switch ($type) {
+    case 'course':
+      $access = ($node->type === $type) ? gn2_tracking_check_access($node) :
+        FALSE;
+      break;
+
+    case 'media_gallery':
+      $access = ($node->type === $type) ? gn2_tracking_check_access($node) :
+        FALSE;
+      break;
+
+    default:
+      $access = FALSE;
+  }
+
+  return $access;
+}
+
+function gn2_tracking_check_access($node) {
+  $access = FALSE;
+  if (is_object($node)) {
+    global $user;
+
+    // Check if the user is an Administrator.
+    if (in_array('administrator', $user->roles)) {
+      return TRUE;
+    }
+
+    // If the node isn't a group, load the parent group.
+    if (!og_is_group('node', $node) && isset($node->og_group_ref)) {
+      $parent_group = field_get_items('node', $node, 'og_group_ref');
+      $group = node_load($parent_group[0]['target_id']);
+      $node = $group;
+    }
+
+    // Check if the user is a Group Manager for this Course.
+    $course_roles = og_get_user_roles('node', $node->nid, $user->uid);
+    $is_group_manager = in_array('group_manager', $course_roles);
+
+    // Check if the user is an Org Manager for the Parent Organization.
+    $parent_org = field_get_items('node', $node, 'field_parent_organization');
+    $pid = ($parent_org) ? $parent_org[0]['target_id'] : NULL;
+    $org_roles = ($pid) ? og_get_user_roles('node', $pid, $user->uid) : [];
+    $is_org_manager = in_array('org_manager', $org_roles);
+
+    if ($is_group_manager || $is_org_manager) {
+      $access = TRUE;
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Insert the interaction into the database.
+ *
+ * @param int $uid
+ *   The user's ID.
+ * @param int $nid
+ *   The Course node ID.
+ * @param int $sid
+ *   The Session entity ID.
+ * @param string $action
+ *   The action that the user has taken.
+ * @param string $item
+ *   An identifier for the item that was clicked.
+ */
+function gn2_tracking_insert_record() {
+  $uid = filter_input(INPUT_GET, 'uid');
+  $nid = filter_input(INPUT_GET, 'nid');
+  $sid = filter_input(INPUT_GET, 'sid');
+  $action = check_plain(urldecode(filter_input(INPUT_GET, 'action')));
+  $item = check_plain(urldecode(filter_input(INPUT_GET, 'item')));
+
+  $type = db_query('SELECT type FROM {node} WHERE nid = :nid', [':nid' => $nid])->fetchField();
+  $types_to_track = [
+    'course',
+    'media_gallery',
+  ];
+
+  if (in_array($type, $types_to_track)) {
+    $existing = _gn2_tracking_check_existing($uid, $nid, $sid, $action, $item);
+    if (!$existing) {
+      db_insert('gn2_tracking')
+        ->fields([
+          'uid' => $uid,
+          'nid' => $nid,
+          'sid' => $sid,
+          'action' => $action,
+          'item' => ($item) ? $item : 'undefined',
+          'created' => REQUEST_TIME,
+        ])
+      ->execute();
+    }
+  }
+}
+
+/**
+ * Check to see if we have already tracked this user interaction.
+ *
+ * @param int $uid
+ *   The user's ID.
+ * @param int $nid
+ *   The Course node ID.
+ * @param int $sid
+ *   The Session entity ID.
+ * @param string $action
+ *   The action that the user has taken.
+ * @param string $item
+ *   An identifier for the item that was clicked.
+ *
+ * @return mixed
+ *   Returns the transaction ID if it exists, else NULL.
+ */
+function _gn2_tracking_check_existing($uid, $nid, $sid, $action, $item) {
+  $tid = db_query('SELECT tid FROM {gn2_tracking} WHERE uid = :uid AND nid = :nid AND sid = :sid AND action = :action AND item = :item',
+    [':uid' => $uid, ':nid' => $nid, ':sid' => $sid, ':action' => $action, ':item' => $item])
+    ->fetchField();
+
+  return $tid;
+}
+
+/**
+ * Collates the Course sessions into an array.
+ *
+ * @param object $node
+ *   The Course node object.
+ *
+ * @return array
+ */
+function gn2_tracking_get_session_data($node) {
+  $sessions = [];
+  // Collate the Course sessions.
+  if (isset($node->field_session)) {
+    $session_references = field_get_items('node', $node, 'field_session');
+    foreach ($session_references as $sess) {
+      $current_session = field_collection_item_load($sess['value']);
+      $sessions[$sess['value']]['session'] = $current_session;
+      $sessions[$sess['value']]['children'] = gn2_tracking_parse_children($current_session, 'field_session_day');
+
+      if (!empty($sessions[$sess['value']]['children'])) {
+        foreach($sessions[$sess['value']]['children'] as $key => $value) {
+          $sessions[$sess['value']]['children'][$key]['children'] = gn2_tracking_parse_children($value['session'], 'field_unit');
+        }
+      }
+    }
+  }
+  return $sessions;
+}
+
+/**
+ * Parses the level 2 and 3 session field collections.
+ *
+ * @param object $session
+ *   The session field collection.
+ * @param string $field
+ *   The field collection name.
+ *
+ * @return array
+ *   Returns the session data in an array.
+ */
+function gn2_tracking_parse_children($session, $field) {
+  $sids = [];
+  $children = [];
+  $session_references = field_get_items('field_collection_item', $session, $field);
+
+  if ($session_references) {
+    foreach ($session_references as $value) {
+      $sids[] = $value['value'];
+    }
+  }
+  if (!empty($sids)) {
+    $child_sessions = field_collection_item_load_multiple($sids);
+    foreach ($child_sessions as $key => $value) {
+      $children[$key]['session'] = $value;
+    }
+  }
+
+  return $children;
+}
+
+function gn2_tracking_get_total_interactions($sessions) {
+  // Start the counting with Level 1 sessions.
+  $session_count = count($sessions);
+  if (!empty($sessions)) {
+    foreach ($sessions as $session) {
+      // Count Level 2 interactions.
+      if (!empty($session['children'])) {
+        $session_count += count($session['children']);
+        foreach ($session['children'] as $child) {
+          // Count the files.
+          if (!empty($child['session']->field_media)) {
+            $files = field_get_items('field_collection_item', $child['session'], 'field_media');
+            $session_count += count($files);
+            // Count the Level 3 interactions.
+            if (!empty($child['children'])) {
+              $session_count += count($child['children']);
+              foreach ($child['children'] as $third) {
+                // Count the Level 3 files.
+                if (!empty($third['session']->field_media)) {
+                  $files = field_get_items('field_collection_item', $third['session'], 'field_media');
+                  $session_count += count($files);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return $session_count;
+}
+
+/**
+ * Queries for all the Course members.
+ *
+ * @param int $nid
+ *   The Course node/group ID.
+ *
+ * @return mixed
+ */
+function gn2_tracking_get_course_members($nid) {
+  $query = db_select('og_membership', 'ogm');
+  $query->fields('ogm', ['etid']);
+  $query->join('users', 'u', 'u.uid = ogm.etid');
+  $query->addField('u', 'name');
+  $query->join('field_data_field_name_first', 'fn', 'fn.entity_id = u.uid');
+  $query->addField('fn', 'field_name_first_value', 'first');
+  $query->join('field_data_field_name_last', 'ln', 'ln.entity_id = u.uid');
+  $query->addField('ln', 'field_name_last_value', 'last');
+  $query->condition('ogm.gid', $nid);
+  $query->condition('ogm.entity_type', 'user');
+  $members = $query->execute()->fetchAll();
+
+  return $members;
+}
+
+/**
+ * Creates the CSV icon for download links.
+ */
+function gn2_tracking_csv_icon() {
+  return theme_image([
+      'path' => 'sites/all/modules/contrib/views_data_export/images/csv.png',
+      'alt' => 'Download CSV file',
+      'title' => 'Download CSV file of this report',
+      'attributes' => []
+    ]
+  );
+}

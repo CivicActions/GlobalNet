@@ -43,28 +43,6 @@ Feature: group.feature
       | post         | "Create Post"         |
 
 
-  @RD-2378 @assignee:iris.ibekwe @version:OT_Release @COMPLETED @administrator @api
-  Scenario: Courses tab should have View all Courses link
-
-    Given I have accepted terms and am logged in as a user with the "administrator" role
-    And I visit the node with title "A group in GCMC"
-    Then I should see "Global Warming"
-    And I should see "View all courses"
-    Given I click "View all courses"
-    Then I should see "You are searching for content. Looking for GlobalNET members?"
-
-
-  @RD-2378 @assignee:iris.ibekwe @version:OT_Release @COMPLETED @administrator @api
-  Scenario: Publications tab should have View all Publications link
-
-    Given I have accepted terms and am logged in as a user with the "administrator" role
-    And I visit the node with title "A group in GCMC"
-    And I click "Publications"
-    And I should see "View all publications"
-    Given I click "View all publications"
-    Then I should see "You are searching for content. Looking for GlobalNET members?"
-
-
   @RD-1242 @assignee:richard.gilbert @version:OT_Release @COMPLETED @uorgmanager1
   Scenario: Posts sorting functionality on Group Landing page
 
@@ -119,28 +97,6 @@ Feature: group.feature
       Then I verify the "edit-field-parent-organization-und" select is not found on the page
 
 
-  @RD-2460 @assignee:alexis.saransig @version:3/22_Launch_Release @COMPLETED @uorgmanager2
-  Scenario: Group members should see the Recent Activity block
-
-    Given I am logged in as "uorgmanager2" with password "civicactions"
-    And I go to create "post" content for the "Or2 Gr9SI" group
-    And I should see the text "Create Post"
-    And I fill in "edit-title" with "Test - Post content"
-    And I fill in "edit-body-und-0-value" with "Test - Post description"
-    And I check the box "Peace"
-    And I select the radio button "Group - Can be viewed only by members of the group." with the id "edit-field-gn2-simple-access-und-group"
-    And I press the "Save" button
-    And I should see the text "has been created"
-    And I visit the system path "user/logout"
-    And I am logged in as "umember2" with password "civicactions"
-    And I visit "or2/or2-gr9si"
-    And I should see the CSS selector ".block-recent-activity"
-    And I visit the system path "user/logout"
-    And I am logged in as "umember1" with password "civicactions"
-    And I visit "or2/or2-gr9si"
-    And I should not see the CSS selector ".block-recent-activity"
-
-
   @RD-2625 @assignee:ethan.teague @version:3/22_Launch_Release @COMPLETED @administrator
   Scenario: Dashboard Links
 
@@ -173,13 +129,12 @@ Feature: group.feature
       Then I should see the text "Membership Settings"
 
 
-  @RD-2269 @assignee:alexis.saransig @version:OT_Release @COMPLETED @uadmin
-  Scenario: Should not see wysiwyd in Body field, should see updated hel texts.
+  @RD-2269 @test @assignee:alexis.saransig @version:OT_Release @COMPLETED @uadmin
+  Scenario: Should not see wysiwyd in Body field, should see updated help texts.
 
     Given I am logged in as "uadmin" with password "civicactions"
     And I go to "node/add/group?gid={node:title:George C. Marshall Center}"
-    Then I should see the text "he Group Description will overlay"
-    And I should see the text "If you upload a Main Image"
+    Then I should see the text "The Group Description will be displayed below"
     And I should not see the text "Rich Text Editor"
 
 
@@ -246,7 +201,7 @@ Feature: group.feature
       | content_type  | text         |
       | group         | "NewGroup"   |
       | course        | "NewCourse"  |
-      
+
 
   @RD-2627 @assignee:alexis.saransig @version:3/22_Launch_Release @COMPLETED @create @qa-admin
   Scenario: Course with Membership setting as "closed" - should display "This is a closed course...." message
@@ -395,7 +350,6 @@ Feature: group.feature
             And I visit "/or1"
             Then I should see "Test Course 1"
             And I should see "Current Courses"
-            And I should not see the CSS selector "li.pager-current"
 
 
   @RD-2419 @assignee:richard.gilbert @version:3/22_Launch_Release @COMPLETED @administrator
@@ -429,46 +383,6 @@ Feature: group.feature
     And I press "Save"
     Then I should see the text "ORC: Or1 Gr1PU Co20PR"
 
-
-#   @RD-3251 @assignee:ethan.teague @WIP
-#   Scenario: Hide the Syllabus Tab, Recommended Links, Presenters Tab on course to non-members
-#
-#     Given I have accepted terms and am logged in as a user with the "administrator" role
-#     And I visit the system path "gcmc/group-in-gcmc/course-for-group-in-gcmc/edit"
-#     And I select the radio button "Sitewide - Can be viewed by anyone with a GlobalNET account." with the id "edit-field-gn2-simple-access-und-sitewide"
-#     And I select "Yes" from "edit-field-display-all-fields-und"
-#     And I click the element with CSS selector "#edit-submit"
-#     Then I visit "/user/logout"
-#     Given I am logged in as "umember1" with password "civicactions"
-#     And I visit the system path "gcmc/group-in-gcmc/course-for-group-in-gcmc"
-#     Then I should see the link "Course Groups"
-#     Then I visit "/user/logout"
-#     Given I have accepted terms and am logged in as a user with the "administrator" role
-#     And I visit the system path "gcmc/group-in-gcmc/course-for-group-in-gcmc/edit"
-#     And I select "No" from "edit-field-display-all-fields-und"
-#     And I click the element with CSS selector "#edit-submit"
-#     Then I visit "/user/logout"
-#     Given I am logged in as "umember1" with password "civicactions"
-#     And I visit the system path "gcmc/group-in-gcmc/course-for-group-in-gcmc"
-#     Then I should not see the link "Course Groups"
-#     Then I visit "/user/logout"
-#     Given I have accepted terms and am logged in as a user with the "administrator" role
-#     And I visit the system path "group/node/819/admin/people/add-user"
-#     And I enter "umember1" for "User name"
-#     And I press the "Add users" button
-#     Then I visit "/user/logout"
-#     Given I am logged in as "umember1" with password "civicactions"
-#     And I visit the system path "gcmc/group-in-gcmc/course-for-group-in-gcmc"
-#     Then I should see the link "Course Groups"
-
-#   @RD-2690 @assignee:alaine.karoleff @OPEN @create @qa-admin @wip
-#   Scenario: Ability to send messages or request contact with members
-#
-#     Given I am logged in as "qa-admin" with password "CivicActions3#"
-#     And I visit the node with title "A group in GCMC"
-#     Then I should see the text "Qualia Admin"
-#     And I should see the text "Quain Memberski"
-#     #this test was testing for something that is no longer true. This test will need to be re-evaluated for what should be true, and then specified accordingly.
 
   @RD-2360 @ana.willem
   Scenario: Topics from parent automatically populate child.

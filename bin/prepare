@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+DRUSH="/var/www/vendor/bin/drush --root=/var/www/docroot --uri=http://localhost"
+
+source $(dirname $0)/reload-config-inc
+
+# Change some settings for nicer sandbox environment:
+$DRUSH vset autologout_enforce_admin 0
+$DRUSH vset autologout_timeout 86400
+
+$DRUSH cc all
+$DRUSH search-api-clear
+$DRUSH search-api-index

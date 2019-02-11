@@ -41,7 +41,6 @@ $session--legend--padding-vertical: ceil(($session--buttons-wrapper--height - $s
   * {
     line-height: inherit;
     font-size: inherit;
-    font-weight: inherit;
     text-transform: inherit;
     padding-top: 0;
     padding-right: 0;
@@ -596,7 +595,7 @@ html.js .page-course-session-form #content,
 }
 
 .special-ajax-link {
-  a {
+  > a {
     display: block;
     padding: .3em .6em;
     background: $level1;

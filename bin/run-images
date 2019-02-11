@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+BASE_NAME="${1}gn2"
+IMAGE="${2}gn2"
+echo base container name: ${BASE_NAME}
+echo base image name: ${IMAGE}
+
+ci-namespace-clear ${BASE_NAME}
+
+# If more than 2G of ram available then use tmpfs.
+DB_TMPFS=''; [ "$(grep MemAvailable /proc/meminfo |awk '{print $2}')" -gt 2000000 ] && DB_TMPFS='--tmpfs /var/lib/mysql:rw'
+
+docker run -d --name=${BASE_NAME}_db ${DB_TMPFS} ${IMAGE}_db
+docker run -d --name=${BASE_NAME}_solr ${IMAGE}_solr
+echo waiting for db to start
+sleep 10  # wait for db to start
+
+docker run -d --link=${BASE_NAME}_solr:solr --link=${BASE_NAME}_db:dbhost --name=${BASE_NAME} ${IMAGE}
+
+# Wait for web to start
+docker exec ${BASE_NAME} bin/wait-web

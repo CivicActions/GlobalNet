@@ -71,15 +71,6 @@ function gn2_metrics_menu() {
     'weight' => 1,
   );
 
-  $items['node/%node/file-metrics'] = array(
-    'title' => 'Metrics',
-    'page callback' => 'gn2_file_metrics_tab',
-    'page arguments' => array(1),
-    'access callback' => 'gn2_file_metrics_access',
-    'access arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-  );
-
   return $items;
 }
 
@@ -111,24 +102,19 @@ function gn2_metrics_access($node) {
     elseif (isset($node->field_parent_organization)) {
       $parent = field_get_items('node', $node, 'field_parent_organization');
       $access = ($parent && in_array('org_manager', og_get_user_roles('node', $parent[0]['target_id']))) ? TRUE : $access;
+
+      // Allow Group Manager access on Groups and Courses.
+      $other_node_types = [
+        'group',
+        'course',
+      ];
+      $group_roles = og_get_user_roles('node', $node->nid);
+      if (in_array($node->type, $other_node_types)) {
+        $access = (in_array('group_manager', $group_roles)) ? TRUE : $access;
+      }
     }
   }
   return $access;
-}
-
-/**
- * Menu access callback for file metrics.
- *
- * @param object $node
- *   Node to check access for.
- *
- * @return bool
- *   Indicates user has access or not.
- */
-function gn2_file_metrics_access($node) {
-  if ($node->type == 'media_gallery') {
-    return user_access('access metrics');
-  }
 }
 
 /**
@@ -436,8 +422,6 @@ function _gn2_metrics_build_group_access_stats_queue($force_rebuild = FALSE) {
 
   // Node types we will include in statistics.
   $group_types = array(
-    'alumni_group',
-    'coi',
     'course',
     'course-group',
     'event',
@@ -530,112 +514,6 @@ function _gn2_metrics_group_access_queue_worker($data) {
     cache_set("gn2_metrics_group_access_stats_{$nid}", $result);
   }
 
-}
-
-/**
- * Page callback for the file metrics menu entry.
- *
- * @param object $node
- *   Node to fetch file metrics for. Should be of type media-gallery.
- */
-function gn2_file_metrics_tab($node) {
-  drupal_set_title(t('File metrics for !title', array('!title' => $node->title)));
-
-  $content = array();
-
-  // Gets country data for login events.
-  $params = array(
-    'dimensions' => array('ga:eventLabel'),
-    'metrics' => array('ga:totalEvents'),
-    'sort_metric' => array('ga:totalEvents'),
-    'filters' => "ga:eventCategory==gallery-{$node->nid};ga:eventAction==download-file",
-    'start_date' => strtotime('today'),
-    'end_date' => strtotime('tomorrow'),
-  );
-
-  // Current list of files.
-  $files = array();
-  foreach ($node->media_gallery_file[LANGUAGE_NONE] as $file) {
-    $files[$file['filename']] = $file['fid'];
-  }
-  ksort($files);
-
-  // Table header.
-  $table_header = array(
-    array('data' => t('File')),
-    array('data' => t('Downloads')),
-  );
-
-  // Periods to generate data tables for.
-  $periods = array(
-    'last_month' => array(
-      'caption' => 'Last Month',
-      'start_date' => strtotime('-1 month'),
-    ),
-    'last_quarter' => array(
-      'caption' => 'Last Quarter',
-      'start_date' => strtotime('-3 month'),
-    ),
-    'last_year' => array(
-      'caption' => 'Last Year',
-      'start_date' => strtotime('-1 year'),
-    ),
-  );
-
-  // Generates each data table.
-  foreach ($periods as $period_id => $period) {
-
-    // Changes caption to include start and end dates.
-    $period['caption'] = $period['caption'] . ' (' . format_date($period['start_date'], 'medium') . ' - ' . format_date($params['end_date'], 'medium') . ')';
-    $params['start_date'] = $period['start_date'];
-
-    // Queries data.
-    $feed = google_analytics_reports_api_report_data($params);
-    if ($feed->error) {
-      continue;
-    }
-
-    // Converts analytics results.
-    $analytics_data = array();
-    if (!empty($feed->results->rows)) {
-      foreach ($feed->results->rows as $row) {
-        $analytics_data[$row['eventLabel']] = $row['totalEvents'];
-      }
-    }
-
-    // Builds data in a table.
-    $rows = array();
-    foreach ($files as $file_name => $fid) {
-      $rows[] = array(
-        array(
-          'data' => $file_name,
-        ),
-        array(
-          'data' => isset($analytics_data[$fid]) ? $analytics_data[$fid] : 0,
-        ),
-      );
-    }
-
-    // Sets rendereable structure.
-    $content[$period_id] = array(
-      'data' => array(
-        '#theme' => 'table',
-        '#attributes' => array(
-          'class' => array(
-            'table',
-            'file-metrics-table',
-            'file-metrics-table--' . str_replace('_', '-', $period_id),
-          ),
-        ),
-        '#header' => $table_header,
-        '#rows' => $rows,
-        '#caption' => $period['caption'],
-      ),
-    );
-
-  }
-
-  return $content;
 }
 
 /**

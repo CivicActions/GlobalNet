@@ -24,4 +24,7 @@ else
   export PS1="${PS1} (${BOWLINE}) \$ "
 fi
 
-echo "Bowline activated. Enter 'bowline' command to get started."
+export HOST_UID=$(id -u)
+export HOST_GID=$(id -g)
+export HOST_OS=$(uname)
+echo "Bowline activated. Enter 'bowline' command for basic information"

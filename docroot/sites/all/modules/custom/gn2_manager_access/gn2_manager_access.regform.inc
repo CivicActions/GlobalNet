@@ -33,7 +33,8 @@ function gn2_manager_access_regform($form, &$form_state, $eid) {
 
     global $user;
     $org = $wrapper->field_organization->value();
-    $roles = og_get_user_roles('node', $org->nid);
+    $roles = (is_object($org)) ? og_get_user_roles('node', $org->nid) :
+    [];
 
     // Check to see if the request has already been approved or denied.
     $status_id = $wrapper->field_status->value();
@@ -169,6 +170,9 @@ function gn2_manager_access_regform_approve_new($form, &$form_state) {
       'init' => 'email address',
       'field_name_first' => $submission->field_name_first,
       'field_name_last' => $submission->field_name_last,
+      'field_country_of_residence' => $submission->field_country_of_residence,
+      'field_nationality' => $submission->field_nationality,
+      'field_country_of_representation' => $submission->field_country_of_representation,
       'roles' => array(
         DRUPAL_AUTHENTICATED_RID => 'authenticated user',
       ),
@@ -179,6 +183,15 @@ function gn2_manager_access_regform_approve_new($form, &$form_state) {
       $link = l($new_user->name, 'user/' . $new_user->uid);
       drupal_set_message(t('New user !link was created using email address !mail',
           array('!link' => $link, '!mail' => $mail)), 'message', FALSE);
+
+      // Send account creation email.
+      $op = 'status_activated';
+      $account = $new_user;
+      _user_mail_notify($op, $account);
+      
+      watchdog('GN Manager Access', 'Account %username created.', [
+        '%username' => $new_user->name,
+      ], WATCHDOG_NOTICE, l('View', 'user/' . $new_user->uid));
     }
   }
 

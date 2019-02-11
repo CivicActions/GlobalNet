@@ -90,6 +90,27 @@ function gn2_support_desk_field_default_field_bases() {
   /* field_expected_functionality */   'type' => 'text_long',
   /* field_expected_functionality */ );
 
+  // Exported field_base: 'field_ip_address_range'.
+  $field_bases['field_ip_address_range'] = array(
+  /* field_ip_address_range */   'active' => 1,
+  /* field_ip_address_range */   'cardinality' => 1,
+  /* field_ip_address_range */   'deleted' => 0,
+  /* field_ip_address_range */   'entity_types' => array(),
+  /* field_ip_address_range */   'field_name' => 'field_ip_address_range',
+  /* field_ip_address_range */   'indexes' => array(
+  /* field_ip_address_range */     'format' => array(
+  /* field_ip_address_range */       0 => 'format',
+  /* field_ip_address_range */     ),
+  /* field_ip_address_range */   ),
+  /* field_ip_address_range */   'locked' => 0,
+  /* field_ip_address_range */   'module' => 'text',
+  /* field_ip_address_range */   'settings' => array(
+  /* field_ip_address_range */     'max_length' => 50,
+  /* field_ip_address_range */   ),
+  /* field_ip_address_range */   'translatable' => 0,
+  /* field_ip_address_range */   'type' => 'text',
+  /* field_ip_address_range */ );
+
   // Exported field_base: 'field_json_capture'.
   $field_bases['field_json_capture'] = array(
   /* field_json_capture */   'active' => 1,
@@ -130,6 +151,7 @@ function gn2_support_desk_field_default_field_bases() {
   /* field_support_category */       3 => 'My account has been blocked',
   /* field_support_category */       4 => 'I need access to a specific group, course or information',
   /* field_support_category */       5 => 'I would like to schedule a specific training',
+  /* field_support_category */       7 => 'Whitelist an IP address',
   /* field_support_category */       6 => 'Other',
   /* field_support_category */     ),
   /* field_support_category */     'allowed_values_function' => '',
@@ -251,6 +273,36 @@ function gn2_support_desk_field_default_field_bases() {
   /* field_support_status */   'translatable' => 0,
   /* field_support_status */   'type' => 'list_text',
   /* field_support_status */ );
+
+  // Exported field_base: 'field_whitelist_dates'.
+  $field_bases['field_whitelist_dates'] = array(
+  /* field_whitelist_dates */   'active' => 1,
+  /* field_whitelist_dates */   'cardinality' => 1,
+  /* field_whitelist_dates */   'deleted' => 0,
+  /* field_whitelist_dates */   'entity_types' => array(),
+  /* field_whitelist_dates */   'field_name' => 'field_whitelist_dates',
+  /* field_whitelist_dates */   'indexes' => array(),
+  /* field_whitelist_dates */   'locked' => 0,
+  /* field_whitelist_dates */   'module' => 'date',
+  /* field_whitelist_dates */   'settings' => array(
+  /* field_whitelist_dates */     'cache_count' => 4,
+  /* field_whitelist_dates */     'cache_enabled' => 0,
+  /* field_whitelist_dates */     'granularity' => array(
+  /* field_whitelist_dates */       'day' => 'day',
+  /* field_whitelist_dates */       'hour' => 'hour',
+  /* field_whitelist_dates */       'minute' => 'minute',
+  /* field_whitelist_dates */       'month' => 'month',
+  /* field_whitelist_dates */       'second' => 0,
+  /* field_whitelist_dates */       'year' => 'year',
+  /* field_whitelist_dates */     ),
+  /* field_whitelist_dates */     'repeat' => 0,
+  /* field_whitelist_dates */     'timezone_db' => 'UTC',
+  /* field_whitelist_dates */     'todate' => 'optional',
+  /* field_whitelist_dates */     'tz_handling' => 'site',
+  /* field_whitelist_dates */   ),
+  /* field_whitelist_dates */   'translatable' => 0,
+  /* field_whitelist_dates */   'type' => 'datestamp',
+  /* field_whitelist_dates */ );
 
   return $field_bases;
 }

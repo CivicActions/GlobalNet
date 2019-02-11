@@ -132,7 +132,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_link */     'module' => 'link',
   /* node-resource_item-field_link */     'settings' => array(),
   /* node-resource_item-field_link */     'type' => 'link_field',
-  /* node-resource_item-field_link */     'weight' => 4,
+  /* node-resource_item-field_link */     'weight' => 5,
   /* node-resource_item-field_link */   ),
   /* node-resource_item-field_link */ );
 
@@ -229,7 +229,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_category */   'fences_wrapper' => 'div',
   /* node-resource_item-field_resource_category */   'field_name' => 'field_resource_category',
   /* node-resource_item-field_resource_category */   'label' => 'Resource Category',
-  /* node-resource_item-field_resource_category */   'required' => 1,
+  /* node-resource_item-field_resource_category */   'required' => 0,
   /* node-resource_item-field_resource_category */   'settings' => array(
   /* node-resource_item-field_resource_category */     'user_register_form' => FALSE,
   /* node-resource_item-field_resource_category */   ),
@@ -241,7 +241,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_category */       'size' => 60,
   /* node-resource_item-field_resource_category */     ),
   /* node-resource_item-field_resource_category */     'type' => 'taxonomy_autocomplete',
-  /* node-resource_item-field_resource_category */     'weight' => 6,
+  /* node-resource_item-field_resource_category */     'weight' => 7,
   /* node-resource_item-field_resource_category */   ),
   /* node-resource_item-field_resource_category */ );
 
@@ -344,7 +344,6 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_description */       'allowed_formats' => array(
   /* node-resource_item-field_resource_description */         'filtered_html' => 'filtered_html',
   /* node-resource_item-field_resource_description */         'full_html' => 'full_html',
-  /* node-resource_item-field_resource_description */         'php_code' => 'php_code',
   /* node-resource_item-field_resource_description */         'plain_text' => 'plain_text',
   /* node-resource_item-field_resource_description */         'sessions_wysiwyg' => 'sessions_wysiwyg',
   /* node-resource_item-field_resource_description */       ),
@@ -357,9 +356,6 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_description */           ),
   /* node-resource_item-field_resource_description */           'full_html' => array(
   /* node-resource_item-field_resource_description */             'weight' => -8,
-  /* node-resource_item-field_resource_description */           ),
-  /* node-resource_item-field_resource_description */           'php_code' => array(
-  /* node-resource_item-field_resource_description */             'weight' => -7,
   /* node-resource_item-field_resource_description */           ),
   /* node-resource_item-field_resource_description */           'plain_text' => array(
   /* node-resource_item-field_resource_description */             'weight' => -9,
@@ -380,7 +376,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_description */       'rows' => 5,
   /* node-resource_item-field_resource_description */     ),
   /* node-resource_item-field_resource_description */     'type' => 'text_textarea',
-  /* node-resource_item-field_resource_description */     'weight' => 1,
+  /* node-resource_item-field_resource_description */     'weight' => 2,
   /* node-resource_item-field_resource_description */   ),
   /* node-resource_item-field_resource_description */ );
 
@@ -489,7 +485,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_language */       'size' => 60,
   /* node-resource_item-field_resource_language */     ),
   /* node-resource_item-field_resource_language */     'type' => 'taxonomy_autocomplete',
-  /* node-resource_item-field_resource_language */     'weight' => 9,
+  /* node-resource_item-field_resource_language */     'weight' => 10,
   /* node-resource_item-field_resource_language */   ),
   /* node-resource_item-field_resource_language */ );
 
@@ -586,7 +582,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_tags */   'fences_wrapper' => 'div',
   /* node-resource_item-field_resource_tags */   'field_name' => 'field_resource_tags',
   /* node-resource_item-field_resource_tags */   'label' => 'Resource Topic',
-  /* node-resource_item-field_resource_tags */   'required' => 1,
+  /* node-resource_item-field_resource_tags */   'required' => 0,
   /* node-resource_item-field_resource_tags */   'settings' => array(
   /* node-resource_item-field_resource_tags */     'user_register_form' => FALSE,
   /* node-resource_item-field_resource_tags */   ),
@@ -598,9 +594,144 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_tags */       'size' => 60,
   /* node-resource_item-field_resource_tags */     ),
   /* node-resource_item-field_resource_tags */     'type' => 'taxonomy_autocomplete',
-  /* node-resource_item-field_resource_tags */     'weight' => 5,
+  /* node-resource_item-field_resource_tags */     'weight' => 6,
   /* node-resource_item-field_resource_tags */   ),
   /* node-resource_item-field_resource_tags */ );
+
+  // Exported field_instance: 'node-resource_item-field_resource_thumbnail'.
+  $field_instances['node-resource_item-field_resource_thumbnail'] = array(
+  /* node-resource_item-field_resource_thumbnail */   'bundle' => 'resource_item',
+  /* node-resource_item-field_resource_thumbnail */   'deleted' => 0,
+  /* node-resource_item-field_resource_thumbnail */   'description' => 'The "Thumbnail Image" will accompany the teaser for this post.  If you do not upload a thumbnail image, the main image will appear in the teaser.<br> Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.',
+  /* node-resource_item-field_resource_thumbnail */   'display' => array(
+  /* node-resource_item-field_resource_thumbnail */     'default' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'module' => 'image',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(
+  /* node-resource_item-field_resource_thumbnail */         'field_formatter_class' => '',
+  /* node-resource_item-field_resource_thumbnail */         'image_link' => '',
+  /* node-resource_item-field_resource_thumbnail */         'image_style' => '',
+  /* node-resource_item-field_resource_thumbnail */       ),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'image',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 8,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'events_list' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'featured_publication' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'group_teaser' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'one_column_teaser' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'post_teaser_group_landing_page' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'search_teaser' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'sidebar_' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'sidebar_teaser_v2' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'teaser' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'teaserthumb' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'time_and_location' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'title_and_time' => array(
+  /* node-resource_item-field_resource_thumbnail */       'label' => 'above',
+  /* node-resource_item-field_resource_thumbnail */       'settings' => array(),
+  /* node-resource_item-field_resource_thumbnail */       'type' => 'hidden',
+  /* node-resource_item-field_resource_thumbnail */       'weight' => 0,
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */   ),
+  /* node-resource_item-field_resource_thumbnail */   'entity_type' => 'node',
+  /* node-resource_item-field_resource_thumbnail */   'fences_wrapper' => 'div',
+  /* node-resource_item-field_resource_thumbnail */   'field_name' => 'field_resource_thumbnail',
+  /* node-resource_item-field_resource_thumbnail */   'label' => 'Thumbnail Image',
+  /* node-resource_item-field_resource_thumbnail */   'required' => 0,
+  /* node-resource_item-field_resource_thumbnail */   'settings' => array(
+  /* node-resource_item-field_resource_thumbnail */     'alt_field' => 0,
+  /* node-resource_item-field_resource_thumbnail */     'default_image' => 0,
+  /* node-resource_item-field_resource_thumbnail */     'file_directory' => '',
+  /* node-resource_item-field_resource_thumbnail */     'file_extensions' => 'png gif jpg jpeg',
+  /* node-resource_item-field_resource_thumbnail */     'max_filesize' => '8 MB',
+  /* node-resource_item-field_resource_thumbnail */     'max_resolution' => '',
+  /* node-resource_item-field_resource_thumbnail */     'min_resolution' => '',
+  /* node-resource_item-field_resource_thumbnail */     'title_field' => 0,
+  /* node-resource_item-field_resource_thumbnail */     'user_register_form' => FALSE,
+  /* node-resource_item-field_resource_thumbnail */   ),
+  /* node-resource_item-field_resource_thumbnail */   'widget' => array(
+  /* node-resource_item-field_resource_thumbnail */     'active' => 1,
+  /* node-resource_item-field_resource_thumbnail */     'module' => 'media',
+  /* node-resource_item-field_resource_thumbnail */     'settings' => array(
+  /* node-resource_item-field_resource_thumbnail */       'allowed_schemes' => array(
+  /* node-resource_item-field_resource_thumbnail */         'livestream' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'private' => 'private',
+  /* node-resource_item-field_resource_thumbnail */         'public' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'vimeo' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'youtube' => 0,
+  /* node-resource_item-field_resource_thumbnail */       ),
+  /* node-resource_item-field_resource_thumbnail */       'allowed_types' => array(
+  /* node-resource_item-field_resource_thumbnail */         'audio' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'document' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'image' => 'image',
+  /* node-resource_item-field_resource_thumbnail */         'video' => 0,
+  /* node-resource_item-field_resource_thumbnail */       ),
+  /* node-resource_item-field_resource_thumbnail */       'browser_plugins' => array(
+  /* node-resource_item-field_resource_thumbnail */         'media_default--media_browser_1' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'media_default--media_browser_my_files' => 'media_default--media_browser_my_files',
+  /* node-resource_item-field_resource_thumbnail */         'media_internet' => 0,
+  /* node-resource_item-field_resource_thumbnail */         'upload' => 'upload',
+  /* node-resource_item-field_resource_thumbnail */       ),
+  /* node-resource_item-field_resource_thumbnail */     ),
+  /* node-resource_item-field_resource_thumbnail */     'type' => 'media_generic',
+  /* node-resource_item-field_resource_thumbnail */     'weight' => 1,
+  /* node-resource_item-field_resource_thumbnail */   ),
+  /* node-resource_item-field_resource_thumbnail */ );
 
   // Exported field_instance: 'node-resource_item-field_resource_type'.
   $field_instances['node-resource_item-field_resource_type'] = array(
@@ -707,7 +838,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-field_resource_type */       'size' => 60,
   /* node-resource_item-field_resource_type */     ),
   /* node-resource_item-field_resource_type */     'type' => 'taxonomy_autocomplete',
-  /* node-resource_item-field_resource_type */     'weight' => 7,
+  /* node-resource_item-field_resource_type */     'weight' => 8,
   /* node-resource_item-field_resource_type */   ),
   /* node-resource_item-field_resource_type */ );
 
@@ -808,10 +939,10 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-og_group_ref */       'og_widget' => array(
   /* node-resource_item-og_group_ref */         'access_override' => 0,
   /* node-resource_item-og_group_ref */         'admin' => array(
-  /* node-resource_item-og_group_ref */           'widget_type' => 'options_select',
+  /* node-resource_item-og_group_ref */           'widget_type' => 'entityreference_autocomplete',
   /* node-resource_item-og_group_ref */         ),
   /* node-resource_item-og_group_ref */         'default' => array(
-  /* node-resource_item-og_group_ref */           'widget_type' => 'options_select',
+  /* node-resource_item-og_group_ref */           'widget_type' => 'entityreference_autocomplete',
   /* node-resource_item-og_group_ref */         ),
   /* node-resource_item-og_group_ref */         'status' => TRUE,
   /* node-resource_item-og_group_ref */       ),
@@ -834,7 +965,7 @@ function gn2_library_field_default_field_instances() {
   /* node-resource_item-og_group_ref */     'module' => 'og',
   /* node-resource_item-og_group_ref */     'settings' => array(),
   /* node-resource_item-og_group_ref */     'type' => 'og_complex',
-  /* node-resource_item-og_group_ref */     'weight' => 8,
+  /* node-resource_item-og_group_ref */     'weight' => 9,
   /* node-resource_item-og_group_ref */   ),
   /* node-resource_item-og_group_ref */ );
 
@@ -847,6 +978,8 @@ function gn2_library_field_default_field_instances() {
   t('Resource Language');
   t('Resource Topic');
   t('Resource Type');
+  t('The "Thumbnail Image" will accompany the teaser for this post.  If you do not upload a thumbnail image, the main image will appear in the teaser.<br> Files must not exceed 8 MB. Allowed file types: png gif jpg jpeg.');
+  t('Thumbnail Image');
   t('You may enter multiple values by placing comma at end of each term.');
 
   return $field_instances;

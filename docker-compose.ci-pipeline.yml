@@ -1,0 +1,29 @@
+version: "3"
+services:
+  db:
+    build: docker/database
+    hostname: dbhost
+    expose:
+      - "3306"
+    network_mode: bridge
+  solr:
+    build:
+      context: ./
+      dockerfile: docker/solr/Dockerfile
+    hostname: solr
+    expose:
+      - "8983"
+    network_mode: bridge
+  web:
+    build:
+      context: ./
+      dockerfile: docker/apache-php/Dockerfile.ci-pipeline
+    expose:
+      - "80"
+    links:
+      - db:dbhost
+      - solr:solr
+    labels:
+      - traefik.backend=${COMPOSE_PROJECT_NAME}
+      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}gn2.ci.civicactions.net
+    network_mode: bridge

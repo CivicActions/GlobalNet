@@ -260,7 +260,25 @@ function gn2_coi_panelizer_defaults() {
    /* node:coi:default 4be32183 */ $pane->type = 'panels_mini';
    /* node:coi:default 4be32183 */ $pane->subtype = 'group_admin_menu';
    /* node:coi:default 4be32183 */ $pane->shown = TRUE;
-   /* node:coi:default 4be32183 */ $pane->access = array();
+   /* node:coi:default 4be32183 */ $pane->access = array(
+   /* node:coi:default 4be32183 */   'plugins' => array(
+   /* node:coi:default 4be32183 */     0 => array(
+   /* node:coi:default 4be32183 */       'name' => 'gn2_og_role',
+   /* node:coi:default 4be32183 */       'settings' => array(
+   /* node:coi:default 4be32183 */         'gn2_og_access_settings' => array(
+   /* node:coi:default 4be32183 */           'org_manager' => 'org_manager',
+   /* node:coi:default 4be32183 */           'group_manager' => 'group_manager',
+   /* node:coi:default 4be32183 */           'PA Specialist' => 'PA Specialist',
+   /* node:coi:default 4be32183 */           'Content Specialist' => 'Content Specialist',
+   /* node:coi:default 4be32183 */           'hr_manager' => 0,
+   /* node:coi:default 4be32183 */           'member' => 0,
+   /* node:coi:default 4be32183 */         ),
+   /* node:coi:default 4be32183 */       ),
+   /* node:coi:default 4be32183 */       'context' => 'logged-in-user',
+   /* node:coi:default 4be32183 */       'not' => FALSE,
+   /* node:coi:default 4be32183 */     ),
+   /* node:coi:default 4be32183 */   ),
+   /* node:coi:default 4be32183 */ );
    /* node:coi:default 4be32183 */ $pane->configuration = array(
    /* node:coi:default 4be32183 */   'override_title' => 1,
    /* node:coi:default 4be32183 */   'override_title_text' => '',
@@ -408,55 +426,6 @@ function gn2_coi_panelizer_defaults() {
    /* node:coi:default dcecbfd1 */ $pane->uuid = 'dcecbfd1-2456-41bc-b0b1-91b1b89cf1e7';
   $display->content['new-dcecbfd1-2456-41bc-b0b1-91b1b89cf1e7'] = $pane;
   $display->panels['group_sidebar'][4] = 'new-dcecbfd1-2456-41bc-b0b1-91b1b89cf1e7';
-   /* node:coi:default 92b4dfdd */ $pane = new stdClass();
-   /* node:coi:default 92b4dfdd */ $pane->pid = 'new-92b4dfdd-ff06-4ea6-81a6-bf5b47cb9b08';
-   /* node:coi:default 92b4dfdd */ $pane->panel = 'group_sidebar';
-   /* node:coi:default 92b4dfdd */ $pane->type = 'views';
-   /* node:coi:default 92b4dfdd */ $pane->subtype = 'activity_default_page';
-   /* node:coi:default 92b4dfdd */ $pane->shown = TRUE;
-   /* node:coi:default 92b4dfdd */ $pane->access = array();
-   /* node:coi:default 92b4dfdd */ $pane->configuration = array(
-   /* node:coi:default 92b4dfdd */   'override_pager_settings' => 0,
-   /* node:coi:default 92b4dfdd */   'use_pager' => 0,
-   /* node:coi:default 92b4dfdd */   'nodes_per_page' => '2',
-   /* node:coi:default 92b4dfdd */   'pager_id' => '0',
-   /* node:coi:default 92b4dfdd */   'offset' => '0',
-   /* node:coi:default 92b4dfdd */   'more_link' => 0,
-   /* node:coi:default 92b4dfdd */   'feed_icons' => 0,
-   /* node:coi:default 92b4dfdd */   'panel_args' => 0,
-   /* node:coi:default 92b4dfdd */   'link_to_view' => 0,
-   /* node:coi:default 92b4dfdd */   'args' => '',
-   /* node:coi:default 92b4dfdd */   'url' => '',
-   /* node:coi:default 92b4dfdd */   'display' => 'block_1',
-   /* node:coi:default 92b4dfdd */   'context' => array(
-   /* node:coi:default 92b4dfdd */     0 => 'panelizer.nid',
-   /* node:coi:default 92b4dfdd */   ),
-   /* node:coi:default 92b4dfdd */   'override_title' => 1,
-   /* node:coi:default 92b4dfdd */   'override_title_text' => 'Latest Activity',
-   /* node:coi:default 92b4dfdd */   'override_title_heading' => 'h3',
-   /* node:coi:default 92b4dfdd */ );
-   /* node:coi:default 92b4dfdd */ $pane->cache = array();
-   /* node:coi:default 92b4dfdd */ $pane->style = array(
-   /* node:coi:default 92b4dfdd */   'settings' => array(
-   /* node:coi:default 92b4dfdd */     'clean_markup' => array(
-   /* node:coi:default 92b4dfdd */       'pane_wrapper' => 'div',
-   /* node:coi:default 92b4dfdd */       'additional_pane_classes' => 'panel-pane sidebar-subheading',
-   /* node:coi:default 92b4dfdd */       'additional_pane_attributes' => '',
-   /* node:coi:default 92b4dfdd */       'enable_inner_div' => 0,
-   /* node:coi:default 92b4dfdd */       'title_wrapper' => 'h3',
-   /* node:coi:default 92b4dfdd */       'title_hide' => 0,
-   /* node:coi:default 92b4dfdd */       'content_wrapper' => 'none',
-   /* node:coi:default 92b4dfdd */     ),
-   /* node:coi:default 92b4dfdd */   ),
-   /* node:coi:default 92b4dfdd */   'style' => 'clean_element',
-   /* node:coi:default 92b4dfdd */ );
-   /* node:coi:default 92b4dfdd */ $pane->css = array();
-   /* node:coi:default 92b4dfdd */ $pane->extras = array();
-   /* node:coi:default 92b4dfdd */ $pane->position = 5;
-   /* node:coi:default 92b4dfdd */ $pane->locks = array();
-   /* node:coi:default 92b4dfdd */ $pane->uuid = '92b4dfdd-ff06-4ea6-81a6-bf5b47cb9b08';
-  $display->content['new-92b4dfdd-ff06-4ea6-81a6-bf5b47cb9b08'] = $pane;
-  $display->panels['group_sidebar'][5] = 'new-92b4dfdd-ff06-4ea6-81a6-bf5b47cb9b08';
    /* node:coi:default 0117e4fd */ $pane = new stdClass();
    /* node:coi:default 0117e4fd */ $pane->pid = 'new-0117e4fd-86c8-4706-a370-ad28e397979b';
    /* node:coi:default 0117e4fd */ $pane->panel = 'group_sidebar';
@@ -486,11 +455,11 @@ function gn2_coi_panelizer_defaults() {
    /* node:coi:default 0117e4fd */ );
    /* node:coi:default 0117e4fd */ $pane->css = array();
    /* node:coi:default 0117e4fd */ $pane->extras = array();
-   /* node:coi:default 0117e4fd */ $pane->position = 6;
+   /* node:coi:default 0117e4fd */ $pane->position = 5;
    /* node:coi:default 0117e4fd */ $pane->locks = array();
    /* node:coi:default 0117e4fd */ $pane->uuid = '0117e4fd-86c8-4706-a370-ad28e397979b';
   $display->content['new-0117e4fd-86c8-4706-a370-ad28e397979b'] = $pane;
-  $display->panels['group_sidebar'][6] = 'new-0117e4fd-86c8-4706-a370-ad28e397979b';
+  $display->panels['group_sidebar'][5] = 'new-0117e4fd-86c8-4706-a370-ad28e397979b';
    /* node:coi:default 71dd8b8f */ $pane = new stdClass();
    /* node:coi:default 71dd8b8f */ $pane->pid = 'new-71dd8b8f-f701-4c52-9b34-891d53793ec2';
    /* node:coi:default 71dd8b8f */ $pane->panel = 'group_sidebar';
@@ -529,11 +498,11 @@ function gn2_coi_panelizer_defaults() {
    /* node:coi:default 71dd8b8f */ );
    /* node:coi:default 71dd8b8f */ $pane->css = array();
    /* node:coi:default 71dd8b8f */ $pane->extras = array();
-   /* node:coi:default 71dd8b8f */ $pane->position = 7;
+   /* node:coi:default 71dd8b8f */ $pane->position = 6;
    /* node:coi:default 71dd8b8f */ $pane->locks = array();
    /* node:coi:default 71dd8b8f */ $pane->uuid = '71dd8b8f-f701-4c52-9b34-891d53793ec2';
   $display->content['new-71dd8b8f-f701-4c52-9b34-891d53793ec2'] = $pane;
-  $display->panels['group_sidebar'][7] = 'new-71dd8b8f-f701-4c52-9b34-891d53793ec2';
+  $display->panels['group_sidebar'][6] = 'new-71dd8b8f-f701-4c52-9b34-891d53793ec2';
    /* node:coi:default c5c5e9fb */ $pane = new stdClass();
    /* node:coi:default c5c5e9fb */ $pane->pid = 'new-c5c5e9fb-5625-48d8-9f73-61ae44145a86';
    /* node:coi:default c5c5e9fb */ $pane->panel = 'group_sidebar';
@@ -559,11 +528,11 @@ function gn2_coi_panelizer_defaults() {
    /* node:coi:default c5c5e9fb */ );
    /* node:coi:default c5c5e9fb */ $pane->css = array();
    /* node:coi:default c5c5e9fb */ $pane->extras = array();
-   /* node:coi:default c5c5e9fb */ $pane->position = 8;
+   /* node:coi:default c5c5e9fb */ $pane->position = 7;
    /* node:coi:default c5c5e9fb */ $pane->locks = array();
    /* node:coi:default c5c5e9fb */ $pane->uuid = 'c5c5e9fb-5625-48d8-9f73-61ae44145a86';
   $display->content['new-c5c5e9fb-5625-48d8-9f73-61ae44145a86'] = $pane;
-  $display->panels['group_sidebar'][8] = 'new-c5c5e9fb-5625-48d8-9f73-61ae44145a86';
+  $display->panels['group_sidebar'][7] = 'new-c5c5e9fb-5625-48d8-9f73-61ae44145a86';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $panelizer->display = $display;

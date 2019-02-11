@@ -64,8 +64,7 @@ function gn2_file_download_block_info() {
  * Implements hook_form_alter().
  */
 function gn2_file_download_form_alter(&$form, &$form_state, $form_id) {
-
-  if (substr($form_id, 0, 11) === "media_edit_") {
+  if (substr($form_id, 0, 11) === "media_edit_" || $form_id === 'file_entity_edit') {
     if (!empty($form['field_file_image_title_text'])) {
       $form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
       $form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#default_value'] = $form['filename']['#default_value'];
@@ -94,7 +93,7 @@ function gn2_file_download_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'radios',
       '#options' => $options,
       '#default_value' => 0,
-      '#weight' => 110,
+      '#weight' => 50,
     );
     // We don't want vert tabs with multiples.
     $form['additional_settings'] = array();
@@ -181,6 +180,28 @@ function gn2_file_download_menu_local_tasks_alter(&$data, $router_item, $root_pa
 }
 
 /**
+ * Implements hook_file_entity_access().
+ */
+function gn2_file_download_file_entity_access($op, $file, $account) {
+  if (arg(0) === 'file' && $_GET['destination']) {
+    global $user;
+    $param = filter_input(INPUT_GET, 'destination', FILTER_SANITIZE_STRING);
+    $nid = explode('/', $param);
+    $node = node_load($nid[1]);
+    if ($node->uid === $user->uid || in_array('administrator', $user->roles)) {
+      return FILE_ENTITY_ACCESS_ALLOW;
+    }
+    else {
+      $gid = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+      $roles = og_get_user_roles('node', $gid);
+      if (in_array('org_manager', $roles) || in_array('group_manager', $roles)) {
+        return FILE_ENTITY_ACCESS_ALLOW;
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_block_view().
  */
 function gn2_file_download_block_view($delta = '') {
@@ -217,7 +238,8 @@ function gn2_file_download_form($form, &$form_state, $eid = NULL) {
 
   $form = array();
   if ($eid != NULL) {
-    $entity = reset(entity_load('field_collection_item', array($eid)));
+    $entity_array = entity_load('field_collection_item', array($eid));
+    $entity = reset($entity_array);
     $files = !empty($entity->field_media[LANGUAGE_NONE]) ? $entity->field_media[LANGUAGE_NONE] : '';
   }
   else {
@@ -242,18 +264,23 @@ function gn2_file_download_form($form, &$form_state, $eid = NULL) {
         '#type' => 'checkbox',
         '#title' => l($filename, file_create_url($file['uri']),
           array(
-            'attributes' =>
-              array(
-                'target' => '_blank',
-              ),
+            'attributes' => array(
+              'target' => '_blank',
+            ),
           )
+        ),
+        '#attributes' => array(
+          'data-fid' => $file['fid'],
         ),
         '#suffix' => '<div class="gn2_file_download_link file"><div class="inner">' . l(t('View'), file_create_url($file['uri']),
             array(
-              'attributes' =>
-                array(
-                  'target' => '_blank',
+              'attributes' => array(
+                'target' => '_blank',
+                'data-fid' => $file['fid'],
+                'class' => array(
+                  'single-download',
                 ),
+              ),
             )
           ) . $size_info . '</div></div></div>',
       );
@@ -350,11 +377,11 @@ function gn2_file_download_media_form($form, &$form_state, $files) {
       $form['gn2_file_download']['options']['#prefix'] .= t('Select All');
       $form['gn2_file_download']['options']['#prefix'] .= '</label>';
       $form['gn2_file_download']['options']['#prefix'] .= '<div class="gn2_file_download_link-wrap">' .
-        '<div class="form-type-checkbox"><a href="#" data-field="filename" data-sort="DESC" class="sort filename">File Name</a></div>' .
-        '<div class="gn2_file_upload_date"><a href="#" data-field="timestamp"  data-sort="DESC" class="sort timestamp">Date Created</a></div>' .
-        '<div class="gn2_file_edit_link"></div>' .
-        '<div class="gn2_file_info sorter"><a href="#" data-field="filesize"  data-sort="DESC" class="sort size">File Size</a></div>' .
-        '<span class="node-nid" data-nid="' . $node->nid . '"></span></div>';
+                                                          '<div class="form-type-checkbox"><a href="#" data-field="filename" data-sort="DESC" class="sort filename">File Name</a></div>' .
+                                                          '<div class="gn2_file_upload_date"><a href="#" data-field="timestamp"  data-sort="DESC" class="sort timestamp">Date Created</a></div>' .
+                                                          '<div class="gn2_file_edit_link"></div>' .
+                                                          '<div class="gn2_file_info sorter"><a href="#" data-field="filesize"  data-sort="DESC" class="sort size">File Size</a></div>' .
+                                                          '<span class="node-nid" data-nid="' . $node->nid . '"></span></div>';
 
       _gn2_file_download_list_layout_item($file, $node, $can_edit, $form);
     }
@@ -374,6 +401,9 @@ function gn2_file_download_media_form($form, &$form_state, $files) {
   $form['gn2_file_download']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Download selected'),
+    '#attributes' => [
+      'id' => 'bulk-list-form-submit',
+    ],
   );
   $form['#submit'][] = 'gn2_file_download_form_submit';
 
@@ -416,7 +446,7 @@ function _gn2_file_download_list_layout_item($file, $node, $can_edit, &$form) {
   $file = file_load($file->field_data_media_gallery_file_media_gallery_file_fid);
   $file_info = format_size($file->filesize);
   $path = file_create_url($file->uri);
-  
+
   $edit_link = l(t('Edit'), 'admin/content/file/edit-multiple/' . $file->fid, array(
     'query' => array(
       'destination' => 'node/' . $node->nid,
@@ -428,12 +458,15 @@ function _gn2_file_download_list_layout_item($file, $node, $can_edit, &$form) {
     $date = $file->timestamp;
     $real_date = date('M j, Y', $date);
     $link_options = array('html' => TRUE);
+    // Open PDFs in new window, but automagically download all others.
     if ($file->filemime === 'application/pdf') {
       $link_options['attributes']['target'] = '_blank';
     }
     else {
-      $link_options['attributes']['download'] = '';
+      $link_options['attributes']['download'] = $file->filename;
     }
+    // Add fid data attribute.
+    $link_options['attributes']['data-fid'] = $file->fid;
     $form['gn2_file_download']['options'][$file->fid] = array(
       '#prefix' => '<div class="gn2_file_download_link-wrap">',
       '#type' => 'checkbox',
@@ -442,7 +475,7 @@ function _gn2_file_download_list_layout_item($file, $node, $can_edit, &$form) {
         '<div class="gn2_file_upload_date">' . $real_date . '</div>' .
         '<div class="gn2_file_info">' . $file_info . '</div>' .
         '<div class="gn2_file_edit_link">' . $edit . '</div>' .
-      '</div>',
+        '</div>',
     );
   }
 }
@@ -465,11 +498,8 @@ function gn2_file_download_file_download_access_alter(&$grants, $file_item, $ent
  * @see gn2_file_download_media_download()
  */
 function gn2_file_download_media_form_submit($form, $form_state) {
-
   $options = $form_state['values']['options'];
-
   gn2_file_download_create_zip($options);
-
 }
 
 /**
@@ -497,7 +527,7 @@ function gn2_file_download_create_zip(array $options) {
 }
 
 /**
- * Helper function to Update the parent Gallery after an Intem is removed.
+ * Helper function to Update the parent Gallery after an Item is removed.
  */
 function _gn2_file_download_update_media_gallery($form, &$form_state) {
   $node = node_load($form['nid']['#value']);
@@ -511,7 +541,7 @@ function _gn2_file_download_grid_bulk_files($ids) {
   $ids = explode('-', $ids);
   $fixed_ids = array();
   if (isset($ids)) {
-    for ($i = 0; $i <= count($ids); $i++) {
+    for ($i = 0; $i < count($ids); $i++) {
       $temp = $ids[$i];
       $fixed_ids[$temp] = array('#value' => 1);
     }

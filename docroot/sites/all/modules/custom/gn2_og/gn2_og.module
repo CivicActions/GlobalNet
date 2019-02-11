@@ -136,17 +136,16 @@ function gn2_og_form_alter(&$form, &$form_state, $form_id) {
   // If there is a parent, get an array of it's topics, and set the
   // default value for the topics field with it if it's already empty.
   if (isset($parent)) {
-    $topics_query = db_select('field_data_field_topic', 't')
-      ->fields('t', array('field_topic_tid'))
-      ->condition('entity_id', $parent, '=');
-    $results = $topics_query->execute();
-    $parent_topics = array();
+    $p_node = node_load($parent);
+    $results = array();
+    if (!empty($p_node->field_topic[LANGUAGE_NONE])) {
+      foreach ($p_node->field_topic[LANGUAGE_NONE] as $term) {
+        $results[] = $term['tid'];
+      }
 
-    foreach ($results as $result) {
-      $parent_topics[$result->field_topic_tid] = $result->field_topic_tid;
-    }
-    if (empty($form['field_topic']['und']['#default_value'])) {
-      $form['field_topic']['und']['#default_value'] = $parent_topics;
+      if (empty($form['field_topic'][LANGUAGE_NONE]['#default_value']) && $results) {
+        $form['field_topic'][LANGUAGE_NONE]['#default_value'] = drupal_map_assoc($results);
+      }
     }
   }
 
@@ -204,7 +203,7 @@ function gn2_og_form_alter(&$form, &$form_state, $form_id) {
     $admin =
       og_user_access('node', $parent, 'bypass node access')
       || og_user_access('node', $parent, 'edit any poll content')
-      || (og_user_access('node', $parent, 'edit own poll content') && $user->uid == $node->uid);
+      || (og_user_access('node', $parent, 'edit own poll content') && $user->uid === $form['#node']->uid);
     $form['settings']['#access'] = $admin;
     $form['settings']['active']['#access'] = $admin;
   }
@@ -311,6 +310,11 @@ function gn2_og_block_info() {
     'cache' => DRUPAL_NO_CACHE,
   );
 
+  $blocks['gn2-og-group-title'] = [
+    'info' => t('GN2 Group title'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+
   return $blocks;
 }
 
@@ -330,6 +334,10 @@ function gn2_og_block_view($delta) {
       $block['content'] = gn2_og_active_efq();
       break;
 
+    case 'gn2-og-group-title':
+      $block['subject'] = t('GN2 Group title');
+      $block['content'] = '<h1>' . gn2_og_get_group_title() . '</h1>';
+      break;
   }
 
   return $block;
@@ -560,21 +568,23 @@ function gn2_og_views_pre_view(&$view, &$display_id, &$args) {
     unset($gid);
     if (!user_is_anonymous()) {
       $gid = (arg(0) == 'node' && is_numeric(arg(1))) ? arg(1) : NULL;
-      $her = l(t('Add Subgroup'), 'node/add/course-group', array(
-        'query' => array('gid' => $gid),
-        'attributes' => array('class' => array('teaser-header-add-new-link')),
-      ));
-      if (isset($gid)) {
-        $view->display_handler->options['header']['area'] = array(
-          'id' => 'area',
-          'table' => 'views',
-          'field' => 'area',
-          'label' => '',
-          'content' => $her,
-          'format' => 'full_html',
-          'tokenize' => TRUE,
-          'empty' => 1,
-        );
+      if (og_user_access('node', $gid, 'administer group')) {
+        $her = l(t('Add Course Group'), 'node/add/course-group', array(
+          'query' => array('gid' => $gid),
+          'attributes' => array('class' => array('teaser-header-add-new-link')),
+        ));
+        if (isset($gid)) {
+          $view->display_handler->options['header']['area'] = array(
+            'id' => 'area',
+            'table' => 'views',
+            'field' => 'area',
+            'label' => '',
+            'content' => $her,
+            'format' => 'full_html',
+            'tokenize' => TRUE,
+            'empty' => 1,
+          );
+        }
       }
     }
   }
@@ -759,6 +769,45 @@ function gn2_og_views_pre_view(&$view, &$display_id, &$args) {
         'empty' => 1,
       );
     }
+  }
+  // Hide manager link from non-managers; @see RD-4082.
+  if ($view->name === 'groups_display' && $display_id === 'panel_pane_3') {
+    $is_manager = gn2_og_manager_has_access(['org_manager', 'group_manager']);
+    if (!$is_manager) {
+      $view->display_handler->options['header']['area']['content'] = '<div class="toggler-container"><span class="list"></span><span class="thumbnail"></span></div>';
+    }
+  }
+  /**
+   * The $add_button_array is an array keyed by the View name and containing the
+   * display for which to add the Add Post button.
+   */
+  $add_button_array = [
+    'news_announcements_posts' => [
+      'panel_pane_23',
+    ],
+  ];
+  if (array_key_exists($view->name, $add_button_array) && in_array($display_id, $add_button_array[$view->name])) {
+    $current_header = $view->get_item($display_id, 'header', 'area');
+    $nid = arg(1);
+    $button = _gn2_og_get_add_new_post_button($nid);
+    $header = (!empty($current_header['content'])) ?
+      $button . $current_header['content'] : $button;
+    $item = array(
+      'id' => 'area',
+      'table' => 'views',
+      'field' => 'area',
+      'relationship' => 'none',
+      'group_type' => 'group',
+      'ui_name' => '',
+      'label' => '',
+      'empty' => 0,
+      'content' => $header,
+      'format' => 'full_html',
+      'tokenize' => 0,
+    );
+    // Render the header.
+    $view->set_item($display_id, 'header', 'area', $item);
+
   }
 }
 
@@ -979,10 +1028,11 @@ function gn2_og_menu() {
     'weight' => 10,
   );
   // Autocomplete function to list groups in Move members tab.
-  $items['move/groups/autocomplete'] = array(
+  $items['move/groups/%/%/autocomplete'] = array(
     'title' => 'Autocomplete for groups',
     'page callback' => '_groups_autocomplete',
-    'access arguments' => array('administer users'),
+    'access callback' => '_gn2_og_move_members_access',
+    'access arguments' => ['manage members', 2, 3],
     'file' => 'gn2_og.groupadd.inc',
     'file path' => drupal_get_path('module', 'gn2_og') . '/includes',
     'type' => MENU_CALLBACK,
@@ -1781,6 +1831,32 @@ function gn2_og_init() {
   // RD-2297 alter Send Message menu link.
   drupal_add_js(drupal_get_path('module', 'gn2_og') . '/js/message.js');
 
+  if (arg(0) == 'node' && is_numeric(arg(1)) || arg(0) == 'course-session-form' || arg(0) == 'gn2_sessions_fc-minipanel') {
+
+    $node = node_load(arg(1));
+
+    if ($node) {
+      global $user;
+      $gid = arg(1);
+      $role = user_role_load_by_name('file admin');
+
+      // Allow group admin to edit files.
+      if (og_user_access('node', $gid, 'administer group') && !user_has_role($role->rid)) {
+        $query = db_insert('users_roles')
+          ->fields(array(
+            'uid' => $user->uid,
+            'rid' => $role->rid,
+          ));
+        $query->execute();
+      }
+      else {
+        $query = db_delete('users_roles')
+          ->condition('uid', $user->uid)
+          ->condition('rid', $role->rid)
+          ->execute();
+      }
+    }
+  }
 }
 
 /**
@@ -1842,8 +1918,10 @@ function gn2_og_panels_pane_content_alter($content, $pane, $args, $contexts) {
       $node = ($gid) ? node_load($gid) : NULL;
       // This is only to occur on course nodes.
       if (is_object($node) && $node->type == 'course') {
-        // Bypass check for groups members.
-        if (!og_is_member('node', $gid)) {
+        // Bypass check for groups members or parent group faculty.
+        $parent_org_id = $node->field_parent_organization[LANGUAGE_NONE][0]['target_id'];
+        $parent_org_roles = ($parent_org_id) ? og_get_user_roles('node', $parent_org_id) : NULL;
+        if (!og_is_member('node', $gid) && !in_array('faculty', $parent_org_roles)) {
           if ($pane->panel == 'group_maintabs' || isset($contexts['panelizer']->data)) {
             // Unset if value set to No.
             if (isset($node->field_display_all_fields[LANGUAGE_NONE][0]['value'])) {
@@ -1926,7 +2004,7 @@ function _gn2_og_get_add_folder_button($gid = 0) {
 
     $is_admin = (in_array('administrator', $user->roles));
     $group_roles = og_get_user_roles('node', $gid);
-    if (in_array('group_manager', $group_roles) || in_array('org_manager', $group_roles) || $is_admin) {
+    if (in_array('group_manager', $group_roles) || in_array('org_manager', $group_roles) || in_array('Content Specialist', $group_roles) || $is_admin) {
       $response = l(t('Add Folder'), 'node/add/media-gallery', array(
         'query' => array('gid' => $gid),
         'attributes' => array('class' => array('teaser-header-add-new-link')),
@@ -2231,4 +2309,68 @@ function gn2_og_ctools_plugin_directory($owner, $plugin_type) {
   if ($owner == 'ctools') {
     return 'plugins/' . $plugin_type;
   }
+}
+
+/**
+ * Check that a user has the given roles.
+ *
+ * @param array $roles
+ *   An array of roles to check.
+ * @param object $account
+ *   The user to check.
+ *
+ * @return int
+ */
+function gn2_og_manager_has_access($roles, $account = NULL) {
+  // Checks permission.
+  if (user_access('access all views')) {
+    return TRUE;
+  }
+
+  // If account not set, uses current user.
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  // Checks if the users has any membership as manager.
+  $query = db_select('og_membership', 'ogm');
+  $query->join('og_users_roles', 'ogur', 'ogm.gid = ogur.gid AND ogm.etid = ogur.uid');
+  $query->join('og_role', 'ogr', 'ogur.rid = ogr.rid');
+  $query->join('node', 'n', 'ogm.gid = n.nid');
+  $query
+    ->fields('n', array('nid'))
+    ->condition('ogm.etid', $account->uid)
+    ->condition('ogm.entity_type', 'user')
+    ->condition('ogm.group_type', 'node')
+    ->condition('ogm.state', OG_STATE_ACTIVE)
+    ->condition('ogr.name', $roles, 'IN');
+
+  $query->countQuery();
+
+  // It is a group manager if at least a result is found.
+  return $query->execute()->fetchField() > 0;
+}
+
+/**
+ * Creates the Group title with short name.
+ */
+function gn2_og_get_group_title() {
+  $title = '';
+  if (arg(0) === 'node' && is_numeric(arg(1))) {
+    $nid = arg(1);
+    $query = db_select('node', 'n');
+    $query->fields('n', ['title']);
+    $query->leftJoin('field_data_field_org_short_title', 's', 's.revision_id = n.vid');
+    $query->addField('s', 'field_org_short_title_value', 'shortname');
+    $query->condition('n.nid', $nid);
+    $query->condition('n.type', 'group');
+    $result = $query->execute()->fetchAssoc();
+
+    if ($result) {
+      $title = ($result['shortname']) ? $result['shortname'] . ': ' . $result['title'] :
+        $result['title'];
+    }
+  }
+  return $title;
 }

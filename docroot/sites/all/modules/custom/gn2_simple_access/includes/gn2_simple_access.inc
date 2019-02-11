@@ -52,18 +52,18 @@ function gn2_simple_access_fixing_og_group_ref($entity) {
   // not exist if this is a new entity.
   // @todo Remove after the Drupal driver is fixed.
   $created_by_behat_drupal_driver = isset($entity->is_new) && $entity->is_new == 1
-    && isset($entity->original) && isset($entity->og_group_ref);
+                                    && isset($entity->original) && isset($entity->og_group_ref);
 
   // For some reason, in some cases the og_group_ref field is empty in editing
   // ops, this is/should be an impossible situation.
   $messed_up_og_reference = isset($entity->is_new) && $entity->is_new == 0
-    && isset($entity->original) && isset($entity->og_group_ref)
-    && empty($entity->og_group_ref[LANGUAGE_NONE]);
+                            && isset($entity->original) && isset($entity->og_group_ref)
+                            && empty($entity->og_group_ref[LANGUAGE_NONE]);
 
   if ($created_by_behat_drupal_driver) {
     $gids = $entity->og_group_ref + $entity->original->og_group_ref;
     foreach ($gids as $gid) {
-      $entity->og_group_ref[LANGUAGE_NONE][] = array('target_id' => $gid);
+      $entity->og_group_ref[LANGUAGE_NONE][] = ['target_id' => $gid];
     }
   }
 
@@ -80,7 +80,7 @@ function gn2_simple_access_fixing_og_group_ref($entity) {
  *   value being the group_id.
  */
 function gn2_simple_access_correct_group_and_org(array $group_ids) {
-  $flip_flop = array(0 => 1, 1 => 0);
+  $flip_flop = [0 => 1, 1 => 0];
   foreach ($flip_flop as $group1 => $group2) {
     $gid = $group_ids[$group1]['target_id'];
     $node = node_load($gid);
@@ -166,15 +166,19 @@ function gn2_simple_access_set_og_perms_for_organization($entity) {
   $gid_extractor = new GN2GroupIDExtractor();
   $gid_extractor->setNode($entity);
   $gid = $gid_extractor->extract();
-
-  // There is no need to check for the existance of gid, as
-  // gn2_simple_access_set_og_perms_for_group() would have failed already.
-  $org_id = gn2_simple_access_get_organization($gid);
-  if ($org_id) {
-    $entity->og_group_ref[LANGUAGE_NONE][1] = array('target_id' => $org_id, 'field_mode' => 'default');
-  }
-  else {
-    throw new Exception("The given group does not belong to an organization.");
+  if (empty($entity->publish_on) && empty($entity->unpublish_on)) {
+    // There is no need to check for the existance of gid, as
+    // gn2_simple_access_set_og_perms_for_group() would have failed already.
+    $org_id = gn2_simple_access_get_organization($gid);
+    if ($org_id) {
+      $entity->og_group_ref[LANGUAGE_NONE][1] = [
+        'target_id' => $org_id,
+        'field_mode' => 'default',
+      ];
+    }
+    else {
+      throw new Exception("The given group does not belong to an organization.");
+    }
   }
 }
 
@@ -190,22 +194,24 @@ function gn2_simple_access_set_og_perms_for_group($entity) {
     $gid_extractor->setNode($entity);
     $gid = $gid_extractor->extract();
 
-    if (isset($gid)) {
-      $entity->og_group_ref = array(
-        LANGUAGE_NONE =>
-          array(
-            0 =>
-              array(
-                'target_id' => $gid,
-                'field_mode' => 'default',
-              ),
-          ),
-      );
-    }
-    else {
-      throw new Exception("No node managed by simple access can be saved
+    if (empty($entity->publish_on) && empty($entity->unpublish_on)) {
+      if (isset($gid)) {
+        $entity->og_group_ref = [
+          LANGUAGE_NONE =>
+            [
+              0 =>
+                [
+                  'target_id' => $gid,
+                  'field_mode' => 'default',
+                ],
+            ],
+        ];
+      }
+      else {
+        throw new Exception("No node managed by simple access can be saved
     without the context of a group. Node id {$entity->nid} does not have a 
     group.");
+      }
     }
   }
 }

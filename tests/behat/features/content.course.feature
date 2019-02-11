@@ -24,7 +24,7 @@ Feature: content.course.feature
     And I fill in "edit-title" with "Create Course"
     And I fill in "edit-body-und-0-value" with "Create Course"
     And I fill in "edit-field-course-director-und-0-target-id" with "umember1 (203)"
-    And I fill in "edit-field-alumni-specialist-und-0-target-id" with "Lisa.Berry (57)"
+    And I fill in "edit-field-alumni-specialist-und-0-target-id" with "umember1b (204)"
     And I check the box "Peace"
     And I select the radio button "Public - Can be viewed by anyone on the World Wide Web." with the id "edit-field-gn2-simple-access-und-public"
     And I select "open" from "edit-gn2-og-form-options"
@@ -70,21 +70,21 @@ Feature: content.course.feature
 #      Then I should see "fid"
 #      And I should see "view_mode"
 #      And I should see "original_version"
-  
+
   Scenario: Displays Help block for Courses; RD-3438
 
     Given I am logged in as "ugroupmanager2" with password "civicactions"
-      And I go to create "course" content for the "Or2 Gr9SI" group
-      Then I should see the text "Create Course"
-        And I fill in "edit-title" with "Create Course"
-        And I fill in "edit-body-und-0-value" with "Create Course"
-        And I fill in "edit-field-group-help-und-0-value" with "Help text in Course"
-        And I check the box "Peace"
-        And I select the radio button "Group - Can be viewed only by members of the group." with the id "edit-field-gn2-simple-access-und-group"
-        And I select "open" from "edit-gn2-og-form-options"
-        And I press the "Save" button
-        Then I should see the text "has been created"
-        And I should see the text "Help text in Course"
+    And I go to create "course" content for the "Or2 Gr9SI" group
+    Then I should see the text "Create Course"
+    And I fill in "edit-title" with "Create Course"
+    And I fill in "edit-body-und-0-value" with "Create Course"
+    And I fill in "edit-field-group-help-und-0-value" with "Help text in Course"
+    And I check the box "Peace"
+    And I select the radio button "Group - Can be viewed only by members of the group." with the id "edit-field-gn2-simple-access-und-group"
+    And I select "open" from "edit-gn2-og-form-options"
+    And I press the "Save" button
+    Then I should see the text "has been created"
+    And I should see the text "Help text in Course"
 
   @RD-4018
   Scenario: A member of an organization should not see the course syllabus for a course with 'organization'-wide visibility if they are not enrolled in the course. @RD-4018
@@ -109,3 +109,42 @@ Feature: content.course.feature
     And I should see the text "Test Course 11"
     And I should see the text "Course Leadership"
     And I should see the text "This is a closed course"
+
+
+  @RD-4072
+  Scenario: An organization manager should be able to update the path alias for a course by changing the course title. @RD-4072
+
+    Given I am logged in as "uorgmanager2" with password "civicactions"
+    And I visit the node with title "Test Course 11"
+    And I click "Edit"
+    Then the url should match "/or2/or2-gr9si/test-course-11/edit"
+    And I fill in "edit-title" with "Test Course 12"
+    And I press the "Save" button
+    Then I should see the text "Test Course 12"
+    And the url should match "/or2/or2-gr9si/test-course-12"
+
+  Scenario: An organization manager should be able to update the path alias for a group by changing the group title. @RD-4072
+
+    Given I am logged in as "uorgmanager2" with password "civicactions"
+    And I go to create "group" content for the "Or2 Gr9SI" group
+    Then I should see the text "Create Group"
+    And I fill in "edit-title" with "New Group"
+    And I fill in "edit-body-und-0-value" with "New Group"
+    And I check the box "Peace"
+    And I select the radio button "Group - Can be viewed only by members of the group." with the id "edit-field-gn2-simple-access-und-group"
+    And I select "open" from "edit-gn2-og-form-options"
+    And I press the "Save" button
+    Then I should see the text "has been created"
+    And the url should match "/or2/or2-gr9si/new-group"
+    And I click "Edit"
+    Then the url should match "/or2/or2-gr9si/new-group/edit"
+    And I fill in "edit-title" with "Test Group 12"
+    And I press the "Save" button
+    Then I should see the text "Test Group 12"
+    And the url should match "/or2/or2-gr9si/test-group-12"
+
+  Scenario: A Course member should be able to download the syllabus. @RD-4355
+
+    Given I am logged in as "umember1" with password "civicactions"
+    And I visit the node with title "Or1 Co7PR"
+    Then I should see the text "Download syllabus"

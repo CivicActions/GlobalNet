@@ -16,6 +16,34 @@ function gn2_privatemsg_views_pre_render(&$view) {
 }
 
 /**
+ * Wipes messages from trash.
+ */
+function gn2_privatemsg_empty_trash_form($form, &$form_state) {
+  global $user;
+  $form = array();
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Empty Trash'),
+  );
+
+  return $form;
+}
+
+/**
+ * Wipes messages from trash callback.
+ */
+function gn2_privatemsg_empty_trash_form_submit($form, &$form_state) {
+  global $user;
+  db_query('DELETE FROM pm_index, pm_message
+USING pm_index INNER JOIN pm_message ON pm_index.mid = pm_message.mid 
+WHERE pm_index.recipient = :uid AND pm_index.deleted > 0', array(
+    ':uid' => $user->uid,
+  ));
+
+  drupal_set_message('Trash emptied');
+}
+
+/**
  * Implements a Privatemsg actions.
  */
 function gn2_privatemsg_action_info() {
@@ -60,12 +88,12 @@ function vbo_privatemsg_delete_item($entity, $context) {
 
     // Delete recipients of the message.
     db_delete('pm_index')
-        ->condition('mid', $mid)
-        ->execute();
+      ->condition('mid', $mid)
+      ->execute();
     // Delete message itself.
     db_delete('pm_message')
-        ->condition('mid', $mid)
-        ->execute();
+      ->condition('mid', $mid)
+      ->execute();
   }
 }
 
@@ -104,12 +132,12 @@ function vbo_privatemsg_unmark_as_deleted_item($entity, $context) {
  */
 function gn2_privatemsg_menu_alter(&$items) {
   $items['messages/delete/%'] = array(
-    'title'            => 'Delete message',
-    'page callback'    => 'drupal_get_form',
-    'page arguments'   => array('gn2_privatemsg_delete', 2),
-    'access callback'  => 'privatemsg_user_access',
+    'title' => 'Delete message',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gn2_privatemsg_delete', 2),
+    'access callback' => 'privatemsg_user_access',
     'access arguments' => array('delete privatemsg'),
-    'type'             => MENU_CALLBACK,
+    'type' => MENU_CALLBACK,
   );
 }
 
@@ -122,14 +150,22 @@ function gn2_privatemsg_delete() {
   $time = $date->getTimestamp();
   db_update('pm_index')
     ->fields(array(
-    'deleted' => $time,
-  ))
+      'deleted' => $time,
+    ))
     ->condition('recipient', $user->uid, '=')
     ->condition('thread_id', arg(2), '=')
     ->execute();
 
   drupal_set_message(t('Message Deleted'));
   drupal_goto('inbox/messages');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function gn2_privatemsg_form_privatemsg_list_alter(&$form, &$form_state, $form_id) {
+  unset($form['updated']['actions']['operation']);
+  unset($form['updated']['actions']['submit']);
 }
 
 /**
@@ -153,6 +189,7 @@ function gn2_privatemsg_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($form_id == 'privatemsg_new') {
+    $form['subject']['#required'] = TRUE;
     array_unshift($form['actions']['submit']['#validate'], 'gn2_privatemsg_form_validate');
 
     $form['field_notification']['und']['#default_value'] = 0;
@@ -184,13 +221,13 @@ function gn2_privatemsg_form_alter(&$form, &$form_state, $form_id) {
     $image = !empty($loaded_user->picture->uri) ? '<img src="' . image_style_url('tiny50x50', $loaded_user->picture->uri) . '"/>' : '<img src ="/sites/all/themes/gn2_zen/images/generic-head.jpg">';
     $image = '<span class="message-author-image">' . $image . '</span>';
     $form['user_image'] = array(
-        '#type' => 'markup',
-        '#markup' => $image,
-        '#weight' => -100
+      '#type' => 'markup',
+      '#markup' => $image,
+      '#weight' => -100,
     );
     $form['message_delete'] = array(
-        '#type' => 'markup',
-        '#markup' =>l(t('Delete'), '/messages/delete/' . $form['thread_id']['#value'], array('attributes' => array('class' => array('message-delete-link'))))
+      '#type' => 'markup',
+      '#markup' => l(t('Delete'), '/messages/delete/' . $form['thread_id']['#value'], array('attributes' => array('class' => array('message-delete-link')))),
     );
   }
 }
@@ -307,6 +344,7 @@ function gn2_privatemsg_block_view($delta) {
       break;
 
   }
+
   return $block;
 }
 
@@ -330,6 +368,7 @@ function gn2_privatemsg_block_configure($delta = '') {
       '#default_value' => variable_get('privatemsg_no_messages_notification', 0),
       '#description' => t('Enable this to have this block always displayed, even if there are no unread messages'),
     );
+
     return $form;
   }
 }
@@ -337,13 +376,9 @@ function gn2_privatemsg_block_configure($delta = '') {
 /**
  * Callback function.
  */
-function _gn2_privatemsg_title_callback($title = NULL) {
-  $count = privatemsg_unread_count();
-
-  if ($count > 0) {
-    return format_plural($count, '1', '@count');
-  }
-  return '';
+function _gn2_privatemsg_title_callback() {
+  $count = gn2_privatemsg_unread_count();
+  return ($count > 0) ? $count : '';
 }
 
 /**
@@ -360,6 +395,7 @@ function _gn2_privatemsg_block_menu() {
       'content' => theme('item_list', array('items' => $links)),
     );
   }
+
   return $block;
 }
 
@@ -373,15 +409,33 @@ function _gn2_privatemsg_block_new() {
     return $block;
   }
 
-  $count = privatemsg_unread_count();
+  $count = gn2_privatemsg_unread_count();
   if ($count || variable_get('privatemsg_no_messages_notification', 0)) {
     $block = array(
       'subject' => $count ? format_plural($count, 'Unread message', 'Unread messages') : t('No unread messages'),
       'content' => theme('privatemsg_new_block', array('count' => $count)),
     );
+
     return $block;
   }
+
   return array();
+}
+
+/**
+ * Callback function to show unread count.
+ */
+function gn2_privatemsg_unread_count() {
+  global $user;
+  $uid = $user->uid;
+  $query = db_select('pm_index', 'pm')
+    ->fields('pm')
+    ->condition('recipient', $uid)
+    ->condition('is_new', 1)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  return $query;
 }
 
 /**
@@ -399,7 +453,7 @@ function _gn2_privatemsg_block_inbox_menu() {
   $block = array(
     'subject' => t('Inbox Menu'),
     'content' => theme('item_list', array('items' => $links)),
-    'title'   => '<none>',
+    'title' => '<none>',
   );
 
   return $block;
@@ -410,7 +464,8 @@ function _gn2_privatemsg_block_inbox_menu() {
  */
 function _gn2_privatemsg_block_inbox_menu_links() {
   global $user;
-  $messages = db_query('SELECT pi.is_new FROM pm_index pi JOIN pm_message pm ON pm.mid = pi.mid WHERE pi.recipient = :uid AND pi.is_new = :one AND pi.recipient != pm.author', array(':uid' => $user->uid, ':one' => 1))->rowCount();
+  $message_count = _gn2_privatemsg_title_callback();
+  $messages = ($message_count) ? $message_count : 0;
 
   $notifications = db_query('SELECT count FROM subscriptions_notifications_count WHERE uid = :uid', array(
     ':uid' => $user->uid,
@@ -515,6 +570,7 @@ function _gn2_privatemsg_user_autocomplete($fragment, $names, $limit) {
       return $suggestions;
     }
   }
+
   return $suggestions;
 }
 
@@ -556,6 +612,7 @@ function _gn2_privatemsg_groups_autocomplete($fragment, $names, $limit, $type) {
       $suggestions[privatemsg_recipient_key($recipient)] = $recipient;
     }
   }
+
   return $suggestions;
 }
 
@@ -584,7 +641,11 @@ function _gn2_privatemsg_recipient_validate($form, &$form_state) {
           ->condition('u.uid', $recipient->uid, '=')
           ->fields('r', array('name'));
         $roles = $query->execute();
-        $admin_roles = array('org_manager', 'group_manager', 'course_presenter');
+        $admin_roles = array(
+          'org_manager',
+          'group_manager',
+          'course_presenter',
+        );
         foreach ($roles as $role) {
           if (in_array($role->name, $admin_roles)) {
             $relationship = TRUE;

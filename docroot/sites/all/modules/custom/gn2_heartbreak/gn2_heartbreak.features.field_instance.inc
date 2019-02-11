@@ -178,7 +178,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course */       'allowed_formats' => array(
   /* entityform-join_org-field_which_course */         'filtered_html' => 'filtered_html',
   /* entityform-join_org-field_which_course */         'full_html' => 'full_html',
-  /* entityform-join_org-field_which_course */         'php_code' => 'php_code',
   /* entityform-join_org-field_which_course */         'plain_text' => 'plain_text',
   /* entityform-join_org-field_which_course */       ),
   /* entityform-join_org-field_which_course */       'allowed_formats_toggle' => 0,
@@ -190,9 +189,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course */           ),
   /* entityform-join_org-field_which_course */           'full_html' => array(
   /* entityform-join_org-field_which_course */             'weight' => -8,
-  /* entityform-join_org-field_which_course */           ),
-  /* entityform-join_org-field_which_course */           'php_code' => array(
-  /* entityform-join_org-field_which_course */             'weight' => -7,
   /* entityform-join_org-field_which_course */           ),
   /* entityform-join_org-field_which_course */           'plain_text' => array(
   /* entityform-join_org-field_which_course */             'weight' => -9,
@@ -249,7 +245,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course_did_you */       'allowed_formats' => array(
   /* entityform-join_org-field_which_course_did_you */         'filtered_html' => 'filtered_html',
   /* entityform-join_org-field_which_course_did_you */         'full_html' => 'full_html',
-  /* entityform-join_org-field_which_course_did_you */         'php_code' => 'php_code',
   /* entityform-join_org-field_which_course_did_you */         'plain_text' => 'plain_text',
   /* entityform-join_org-field_which_course_did_you */       ),
   /* entityform-join_org-field_which_course_did_you */       'allowed_formats_toggle' => 0,
@@ -261,9 +256,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course_did_you */           ),
   /* entityform-join_org-field_which_course_did_you */           'full_html' => array(
   /* entityform-join_org-field_which_course_did_you */             'weight' => -8,
-  /* entityform-join_org-field_which_course_did_you */           ),
-  /* entityform-join_org-field_which_course_did_you */           'php_code' => array(
-  /* entityform-join_org-field_which_course_did_you */             'weight' => -7,
   /* entityform-join_org-field_which_course_did_you */           ),
   /* entityform-join_org-field_which_course_did_you */           'plain_text' => array(
   /* entityform-join_org-field_which_course_did_you */             'weight' => -9,
@@ -320,7 +312,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course_teach */       'allowed_formats' => array(
   /* entityform-join_org-field_which_course_teach */         'filtered_html' => 'filtered_html',
   /* entityform-join_org-field_which_course_teach */         'full_html' => 'full_html',
-  /* entityform-join_org-field_which_course_teach */         'php_code' => 'php_code',
   /* entityform-join_org-field_which_course_teach */         'plain_text' => 'plain_text',
   /* entityform-join_org-field_which_course_teach */       ),
   /* entityform-join_org-field_which_course_teach */       'allowed_formats_toggle' => 0,
@@ -332,9 +323,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_course_teach */           ),
   /* entityform-join_org-field_which_course_teach */           'full_html' => array(
   /* entityform-join_org-field_which_course_teach */             'weight' => -8,
-  /* entityform-join_org-field_which_course_teach */           ),
-  /* entityform-join_org-field_which_course_teach */           'php_code' => array(
-  /* entityform-join_org-field_which_course_teach */             'weight' => -7,
   /* entityform-join_org-field_which_course_teach */           ),
   /* entityform-join_org-field_which_course_teach */           'plain_text' => array(
   /* entityform-join_org-field_which_course_teach */             'weight' => -9,
@@ -391,7 +379,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_event_attend */       'allowed_formats' => array(
   /* entityform-join_org-field_which_event_attend */         'filtered_html' => 'filtered_html',
   /* entityform-join_org-field_which_event_attend */         'full_html' => 'full_html',
-  /* entityform-join_org-field_which_event_attend */         'php_code' => 'php_code',
   /* entityform-join_org-field_which_event_attend */         'plain_text' => 'plain_text',
   /* entityform-join_org-field_which_event_attend */       ),
   /* entityform-join_org-field_which_event_attend */       'allowed_formats_toggle' => 0,
@@ -403,9 +390,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_which_event_attend */           ),
   /* entityform-join_org-field_which_event_attend */           'full_html' => array(
   /* entityform-join_org-field_which_event_attend */             'weight' => -8,
-  /* entityform-join_org-field_which_event_attend */           ),
-  /* entityform-join_org-field_which_event_attend */           'php_code' => array(
-  /* entityform-join_org-field_which_event_attend */             'weight' => -7,
   /* entityform-join_org-field_which_event_attend */           ),
   /* entityform-join_org-field_which_event_attend */           'plain_text' => array(
   /* entityform-join_org-field_which_event_attend */             'weight' => -9,
@@ -462,7 +446,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_who_teaches */       'allowed_formats' => array(
   /* entityform-join_org-field_who_teaches */         'filtered_html' => 'filtered_html',
   /* entityform-join_org-field_who_teaches */         'full_html' => 'full_html',
-  /* entityform-join_org-field_who_teaches */         'php_code' => 'php_code',
   /* entityform-join_org-field_who_teaches */         'plain_text' => 'plain_text',
   /* entityform-join_org-field_who_teaches */       ),
   /* entityform-join_org-field_who_teaches */       'allowed_formats_toggle' => 0,
@@ -474,9 +457,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-join_org-field_who_teaches */           ),
   /* entityform-join_org-field_who_teaches */           'full_html' => array(
   /* entityform-join_org-field_who_teaches */             'weight' => -8,
-  /* entityform-join_org-field_who_teaches */           ),
-  /* entityform-join_org-field_who_teaches */           'php_code' => array(
-  /* entityform-join_org-field_who_teaches */             'weight' => -7,
   /* entityform-join_org-field_who_teaches */           ),
   /* entityform-join_org-field_who_teaches */           'plain_text' => array(
   /* entityform-join_org-field_who_teaches */             'weight' => -9,
@@ -779,7 +759,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-session-field_description */       'allowed_formats' => array(
   /* entityform-session-field_description */         'filtered_html' => 'filtered_html',
   /* entityform-session-field_description */         'full_html' => 'full_html',
-  /* entityform-session-field_description */         'php_code' => 'php_code',
   /* entityform-session-field_description */         'plain_text' => 'plain_text',
   /* entityform-session-field_description */       ),
   /* entityform-session-field_description */       'allowed_formats_toggle' => 0,
@@ -791,9 +770,6 @@ function gn2_heartbreak_field_default_field_instances() {
   /* entityform-session-field_description */           ),
   /* entityform-session-field_description */           'full_html' => array(
   /* entityform-session-field_description */             'weight' => -8,
-  /* entityform-session-field_description */           ),
-  /* entityform-session-field_description */           'php_code' => array(
-  /* entityform-session-field_description */             'weight' => -7,
   /* entityform-session-field_description */           ),
   /* entityform-session-field_description */           'plain_text' => array(
   /* entityform-session-field_description */             'weight' => -9,
@@ -1306,7 +1282,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_anything_else */       'allowed_formats' => array(
   /* entityform-userreg-field_anything_else */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_anything_else */         'full_html' => 'full_html',
-  /* entityform-userreg-field_anything_else */         'php_code' => 'php_code',
   /* entityform-userreg-field_anything_else */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_anything_else */       ),
   /* entityform-userreg-field_anything_else */       'allowed_formats_toggle' => 0,
@@ -1318,9 +1293,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_anything_else */           ),
   /* entityform-userreg-field_anything_else */           'full_html' => array(
   /* entityform-userreg-field_anything_else */             'weight' => -8,
-  /* entityform-userreg-field_anything_else */           ),
-  /* entityform-userreg-field_anything_else */           'php_code' => array(
-  /* entityform-userreg-field_anything_else */             'weight' => -7,
   /* entityform-userreg-field_anything_else */           ),
   /* entityform-userreg-field_anything_else */           'plain_text' => array(
   /* entityform-userreg-field_anything_else */             'weight' => -9,
@@ -1510,7 +1482,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_name_first */       'allowed_formats' => array(
   /* entityform-userreg-field_name_first */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_name_first */         'full_html' => 'full_html',
-  /* entityform-userreg-field_name_first */         'php_code' => 'php_code',
   /* entityform-userreg-field_name_first */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_name_first */       ),
   /* entityform-userreg-field_name_first */       'allowed_formats_toggle' => 0,
@@ -1522,9 +1493,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_name_first */           ),
   /* entityform-userreg-field_name_first */           'full_html' => array(
   /* entityform-userreg-field_name_first */             'weight' => -8,
-  /* entityform-userreg-field_name_first */           ),
-  /* entityform-userreg-field_name_first */           'php_code' => array(
-  /* entityform-userreg-field_name_first */             'weight' => -7,
   /* entityform-userreg-field_name_first */           ),
   /* entityform-userreg-field_name_first */           'plain_text' => array(
   /* entityform-userreg-field_name_first */             'weight' => -9,
@@ -1581,7 +1549,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_name_last */       'allowed_formats' => array(
   /* entityform-userreg-field_name_last */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_name_last */         'full_html' => 'full_html',
-  /* entityform-userreg-field_name_last */         'php_code' => 'php_code',
   /* entityform-userreg-field_name_last */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_name_last */       ),
   /* entityform-userreg-field_name_last */       'allowed_formats_toggle' => 0,
@@ -1593,9 +1560,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_name_last */           ),
   /* entityform-userreg-field_name_last */           'full_html' => array(
   /* entityform-userreg-field_name_last */             'weight' => -8,
-  /* entityform-userreg-field_name_last */           ),
-  /* entityform-userreg-field_name_last */           'php_code' => array(
-  /* entityform-userreg-field_name_last */             'weight' => -7,
   /* entityform-userreg-field_name_last */           ),
   /* entityform-userreg-field_name_last */           'plain_text' => array(
   /* entityform-userreg-field_name_last */             'weight' => -9,
@@ -1883,7 +1847,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course */       'allowed_formats' => array(
   /* entityform-userreg-field_which_course */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_which_course */         'full_html' => 'full_html',
-  /* entityform-userreg-field_which_course */         'php_code' => 'php_code',
   /* entityform-userreg-field_which_course */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_which_course */       ),
   /* entityform-userreg-field_which_course */       'allowed_formats_toggle' => 0,
@@ -1895,9 +1858,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course */           ),
   /* entityform-userreg-field_which_course */           'full_html' => array(
   /* entityform-userreg-field_which_course */             'weight' => -8,
-  /* entityform-userreg-field_which_course */           ),
-  /* entityform-userreg-field_which_course */           'php_code' => array(
-  /* entityform-userreg-field_which_course */             'weight' => -7,
   /* entityform-userreg-field_which_course */           ),
   /* entityform-userreg-field_which_course */           'plain_text' => array(
   /* entityform-userreg-field_which_course */             'weight' => -9,
@@ -1954,7 +1914,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course_did_you */       'allowed_formats' => array(
   /* entityform-userreg-field_which_course_did_you */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_which_course_did_you */         'full_html' => 'full_html',
-  /* entityform-userreg-field_which_course_did_you */         'php_code' => 'php_code',
   /* entityform-userreg-field_which_course_did_you */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_which_course_did_you */       ),
   /* entityform-userreg-field_which_course_did_you */       'allowed_formats_toggle' => 0,
@@ -1966,9 +1925,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course_did_you */           ),
   /* entityform-userreg-field_which_course_did_you */           'full_html' => array(
   /* entityform-userreg-field_which_course_did_you */             'weight' => -8,
-  /* entityform-userreg-field_which_course_did_you */           ),
-  /* entityform-userreg-field_which_course_did_you */           'php_code' => array(
-  /* entityform-userreg-field_which_course_did_you */             'weight' => -7,
   /* entityform-userreg-field_which_course_did_you */           ),
   /* entityform-userreg-field_which_course_did_you */           'plain_text' => array(
   /* entityform-userreg-field_which_course_did_you */             'weight' => -9,
@@ -2025,7 +1981,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course_teach */       'allowed_formats' => array(
   /* entityform-userreg-field_which_course_teach */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_which_course_teach */         'full_html' => 'full_html',
-  /* entityform-userreg-field_which_course_teach */         'php_code' => 'php_code',
   /* entityform-userreg-field_which_course_teach */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_which_course_teach */       ),
   /* entityform-userreg-field_which_course_teach */       'allowed_formats_toggle' => 0,
@@ -2037,9 +1992,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_course_teach */           ),
   /* entityform-userreg-field_which_course_teach */           'full_html' => array(
   /* entityform-userreg-field_which_course_teach */             'weight' => -8,
-  /* entityform-userreg-field_which_course_teach */           ),
-  /* entityform-userreg-field_which_course_teach */           'php_code' => array(
-  /* entityform-userreg-field_which_course_teach */             'weight' => -7,
   /* entityform-userreg-field_which_course_teach */           ),
   /* entityform-userreg-field_which_course_teach */           'plain_text' => array(
   /* entityform-userreg-field_which_course_teach */             'weight' => -9,
@@ -2096,7 +2048,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_event_attend */       'allowed_formats' => array(
   /* entityform-userreg-field_which_event_attend */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_which_event_attend */         'full_html' => 'full_html',
-  /* entityform-userreg-field_which_event_attend */         'php_code' => 'php_code',
   /* entityform-userreg-field_which_event_attend */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_which_event_attend */       ),
   /* entityform-userreg-field_which_event_attend */       'allowed_formats_toggle' => 0,
@@ -2108,9 +2059,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_which_event_attend */           ),
   /* entityform-userreg-field_which_event_attend */           'full_html' => array(
   /* entityform-userreg-field_which_event_attend */             'weight' => -8,
-  /* entityform-userreg-field_which_event_attend */           ),
-  /* entityform-userreg-field_which_event_attend */           'php_code' => array(
-  /* entityform-userreg-field_which_event_attend */             'weight' => -7,
   /* entityform-userreg-field_which_event_attend */           ),
   /* entityform-userreg-field_which_event_attend */           'plain_text' => array(
   /* entityform-userreg-field_which_event_attend */             'weight' => -9,
@@ -2167,7 +2115,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_who_teaches */       'allowed_formats' => array(
   /* entityform-userreg-field_who_teaches */         'filtered_html' => 'filtered_html',
   /* entityform-userreg-field_who_teaches */         'full_html' => 'full_html',
-  /* entityform-userreg-field_who_teaches */         'php_code' => 'php_code',
   /* entityform-userreg-field_who_teaches */         'plain_text' => 'plain_text',
   /* entityform-userreg-field_who_teaches */       ),
   /* entityform-userreg-field_who_teaches */       'allowed_formats_toggle' => 0,
@@ -2179,9 +2126,6 @@ Before Adding Units, at least one Day must be created for Unit placement.',
   /* entityform-userreg-field_who_teaches */           ),
   /* entityform-userreg-field_who_teaches */           'full_html' => array(
   /* entityform-userreg-field_who_teaches */             'weight' => -8,
-  /* entityform-userreg-field_who_teaches */           ),
-  /* entityform-userreg-field_who_teaches */           'php_code' => array(
-  /* entityform-userreg-field_who_teaches */             'weight' => -7,
   /* entityform-userreg-field_who_teaches */           ),
   /* entityform-userreg-field_who_teaches */           'plain_text' => array(
   /* entityform-userreg-field_who_teaches */             'weight' => -9,

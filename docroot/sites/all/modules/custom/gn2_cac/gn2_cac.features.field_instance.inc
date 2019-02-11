@@ -73,7 +73,6 @@ function gn2_cac_field_default_field_instances() {
   /* user-user-pki_authentication_pki_string */       'allowed_formats' => array(
   /* user-user-pki_authentication_pki_string */         'filtered_html' => 'filtered_html',
   /* user-user-pki_authentication_pki_string */         'full_html' => 'full_html',
-  /* user-user-pki_authentication_pki_string */         'php_code' => 'php_code',
   /* user-user-pki_authentication_pki_string */         'plain_text' => 'plain_text',
   /* user-user-pki_authentication_pki_string */       ),
   /* user-user-pki_authentication_pki_string */       'allowed_formats_toggle' => 0,
@@ -85,9 +84,6 @@ function gn2_cac_field_default_field_instances() {
   /* user-user-pki_authentication_pki_string */           ),
   /* user-user-pki_authentication_pki_string */           'full_html' => array(
   /* user-user-pki_authentication_pki_string */             'weight' => -8,
-  /* user-user-pki_authentication_pki_string */           ),
-  /* user-user-pki_authentication_pki_string */           'php_code' => array(
-  /* user-user-pki_authentication_pki_string */             'weight' => -7,
   /* user-user-pki_authentication_pki_string */           ),
   /* user-user-pki_authentication_pki_string */           'plain_text' => array(
   /* user-user-pki_authentication_pki_string */             'weight' => -9,

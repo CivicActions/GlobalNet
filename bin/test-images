@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/..
+
+echo "Cleaning up previous test results."
+rm -rfv logs/xml/*/*.xml
+
+BASE_NAME="${1}gn2"
+IMG_NAME="${2}gn2"
+echo -e " base image name: ${IMG_NAME}\n base container name: ${BASE_NAME}"
+STACK_FILE=/tmp/bowline.behat.$BASHPID
+
+ls tests/behat/features/*feature > ${STACK_FILE}
+
+run_behat_tests () {
+  filename=$(flock -w10 $STACK_FILE head -1 $STACK_FILE) && sed -i '1d' $STACK_FILE
+  while [ -n "${filename}" ]; do
+    NUM=$(wc -l $STACK_FILE | awk '{print $1}')
+    CBN="${BASE_NAME}_${NUM}" # Container Base Name
+
+    # If more than 1G of ram available then use tmpfs for db.
+    DB_TMPFS=''; [ "$(grep MemAvailable /proc/meminfo |awk '{print $2}')" -gt 1000000 ] && DB_TMPFS='--tmpfs /var/lib/mysql:rw'
+    # Start containers
+    docker run -d --name=${CBN}_db ${DB_TMPFS} ${IMG_NAME}_db
+    docker run -d --name=${CBN}_solr ${IMG_NAME}_solr
+    sleep 2 ; echo ${CBN}: waiting for db to start
+    docker run -d --link=${CBN}_solr:solr --link=${CBN}_db:dbhost --name=${CBN}_web ${IMG_NAME}
+    # Wait for web to start
+    docker exec --user=apache ${CBN}_web bin/wait-web
+
+    # Run tests
+    EXCLUDE_TAGS='~@javascript&&~@wip&&~@WIP&&~@OPEN&&~@ORPHAN&&~@long'
+    BEHAT="/var/www/vendor/bin/behat -c /var/www/tests/behat/local.yml"
+    CMD="$BEHAT -f junit --out logs/xml/batch${NUM} --tags=\"${EXCLUDE_TAGS}\""
+    echo -e "${CBN}: running tests: $NUM $filename\n"
+    docker exec --user=apache ${CBN}_web /bin/bash -c "${CMD} -- /var/www/${filename}"
+
+    # Copy results
+    docker cp ${CBN}_web:/var/www/logs/xml/batch${NUM} logs/xml
+
+    # Stop container set
+    ci-namespace-clear ${CBN}_
+
+    echo -e "done: $NUM $filename\n"
+    filename=$(flock -w10 $STACK_FILE head -1 $STACK_FILE) && sed -i '1d' $STACK_FILE
+  done
+}
+
+
+CONCURRENT_SETS=5
+PIDs=''
+for i in `seq 1 ${CONCURRENT_SETS}`; do
+  run_behat_tests &
+  PIDs="$PIDs $!"
+  sleep 3
+done
+
+# Javascript tagged tests
+CBN="${BASE_NAME}_js" # Container Base Name
+ci-namespace-clear ${CBN}
+
+DB_TMPFS=''; [ "$(grep MemAvailable /proc/meminfo |awk '{print $2}')" -gt 1000000 ] && DB_TMPFS='--tmpfs /var/lib/mysql:rw'
+docker run -d --name=${CBN}_db ${DB_TMPFS} ${IMG_NAME}_db
+docker run -d --name=${CBN}_solr ${IMG_NAME}_solr
+sleep 2 ; echo ${CBN}: waiting for db to start
+docker run -d --link=${CBN}_solr:solr --link=${CBN}_db:dbhost --name=${CBN}_web ${IMG_NAME}
+docker exec --user=apache ${CBN}_web bin/wait-web # Wait for web to start
+echo "Starting phantomjs container"
+docker run -d --link=${CBN}_web:web --name=${CBN}_phantomjs wernight/phantomjs phantomjs --webdriver=8910 >/dev/null
+export BEHAT_PARAMS='{"extensions":{"Behat\\MinkExtension":{"base_url":"http://web/","selenium2":{"wd_host":"http://driver:8910/wd/hub/"}}}}'
+EXCLUDE_TAGS='~@wip&&~@WIP&&~@OPEN&&~@ORPHAN&&~@long'
+BEHAT="/var/www/vendor/bin/behat -c tests/behat/local.yml"
+OPTS="--user=apache -e BEHAT_PARAMS --link=${CBN}_web:web --link=${CBN}_phantomjs:driver --link=${CBN}_db:dbhost"
+CMD="$BEHAT -f junit --out logs/xml/batch_js --tags=\"@javascript&&${EXCLUDE_TAGS}\""
+docker run ${OPTS} --name=${CBN}_behat ${IMG_NAME} /bin/bash -c "${CMD}"
+echo ${CBN}: copying results from javascript tests
+docker cp ${CBN}_behat:/var/www/logs/xml/batch_js logs/xml
+ci-namespace-clear ${CBN}
+echo -e "done: @javascript tests\n"
+
+wait $PIDs
+echo finished all tests.
+
+rm ${STACK_FILE}
+

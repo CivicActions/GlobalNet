@@ -19,10 +19,10 @@ $metadata['__DYNAMIC:1__'] = array(
   'certificate' => '/var/www/certs/client-cert.pem',
 
   'OrganizationName' => array(
-    'en' => 'GlobalNET',
+    'en' => '',
   ),
 
-  'OrganizationURL' => 'https://www.globalnetplatform.org',
+  'OrganizationURL' => '',
 
 	/*
 	 * Authentication source to use. Must be one that is configured in

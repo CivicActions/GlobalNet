@@ -1,0 +1,59 @@
+---
+version: "2"
+checks:
+  argument-count:
+    enabled: false
+  complex-logic:
+    enabled: false
+  file-lines:
+    enabled: false
+  method-complexity:
+    enabled: false
+  method-count:
+    enabled: false
+  method-lines:
+    enabled: false
+  nested-control-flow:
+    enabled: false
+  return-statements:
+    enabled: false
+  similar-code:
+    enabled: false
+  identical-code:
+    enabled: true
+plugins:
+  csslint:
+    enabled: false
+  duplication:
+    enabled: false
+    config:
+      languages:
+      - javascript
+      - php
+  eslint:
+    enabled: false
+  fixme:
+    enabled: false
+  phpmd:
+    enabled: false
+    config:
+      file_extensions: "php,module,inc,test,profile,theme,engine"
+      rulesets: "phpmd.xml"
+  markdownlint:
+    enabled: false
+  phan:
+    enabled: true
+    config:
+      quick: true
+      ignore-undeclared: true
+  phpcodesniffer:
+    enabled: false
+    config:
+      file_extensions: "php,module,inc,install,test,theme,engine,js,css,info"
+      standard: "Drupal,DrupalPractice"
+  scss-lint:
+    enabled: false
+exclude_patterns:
+  - "tests/behat/features/bootstrap/**"
+  - "docroot/**"
+  - "!docroot/sites/all/modules/custom/**"

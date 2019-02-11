@@ -24,7 +24,7 @@ function googleTranslateElementInit() {
 
   $fe_block_boxes = new stdClass();
   $fe_block_boxes->info = 'GlobalNET Logo';
-  $fe_block_boxes->format = 'php_code';
+  $fe_block_boxes->format = 'full_html';
   $fe_block_boxes->machine_name = 'header_logo';
   $fe_block_boxes->body = '<div class="header__logo">
 <a href="/"><img src="/sites/all/themes/gn2_zen/images/org-logos/logo_globalnet.png"></a>

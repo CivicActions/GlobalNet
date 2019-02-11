@@ -61,9 +61,7 @@ function gn2_solr_search_facetapi_default_facet_settings() {
    /* search_api@default_node_index::field_event_start_date */     'bundle_selected' => array(
    /* search_api@default_node_index::field_event_start_date */       'event' => 'event',
    /* search_api@default_node_index::field_event_start_date */       'about_page' => 0,
-   /* search_api@default_node_index::field_event_start_date */       'alumni_group' => 0,
    /* search_api@default_node_index::field_event_start_date */       'announcement' => 0,
-   /* search_api@default_node_index::field_event_start_date */       'coi' => 0,
    /* search_api@default_node_index::field_event_start_date */       'course' => 0,
    /* search_api@default_node_index::field_event_start_date */       'course_group' => 0,
    /* search_api@default_node_index::field_event_start_date */       'program' => 0,

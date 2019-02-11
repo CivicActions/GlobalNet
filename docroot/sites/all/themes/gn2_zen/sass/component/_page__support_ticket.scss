@@ -110,3 +110,9 @@
   border: thin solid #999;
   background: #ccc;
 }
+
+#field-whitelist-dates-add-more-wrapper {
+  .end-date-wrapper {
+    display: block;
+  }
+}

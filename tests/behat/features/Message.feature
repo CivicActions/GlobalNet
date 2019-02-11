@@ -19,15 +19,46 @@ Feature: message.feature
     And I press the "Send message" button
     Then I should see the text <text>
     Examples:
-      | user               | text                                            |
-      | "uadmin"           | "A message has been sent"                       |
-      | "umember1"         | "Cannot send a private message to non-contacts" |
-      | "ugroupmanager1"   | "Cannot send a private message to non-contacts" |
-      | "uorgmanager1"     | "Cannot send a private message to non-contacts" |
+      | user             | text                                            |
+      | "uadmin"         | "A message has been sent"                       |
+      | "umember1"       | "Cannot send a private message to non-contacts" |
+      | "ugroupmanager1" | "Cannot send a private message to non-contacts" |
+      | "uorgmanager1"   | "Cannot send a private message to non-contacts" |
 
 
-  @send @authenticated @message @inboxcheck @testerooni
-  Scenario: Users interact with one another and system generated messages are evaluated.
+  @javascript @long
+  Scenario: 1 Send Message link loads the New Message form and after send redirects to previous page  @RD-2624 @RD-3150 @RD-2920
+
+    Given I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit the system path "gcmc"
+    And I visit the system path "messages/new?destination=/gcmc/group-in-gcmc/&to=16&admin=admin&name=GCMC"
+    And I fill in "edit-subject" with "Message to A group in GCMC"
+    And I click the element with CSS selector "#wysiwyg-toggle-edit-body-value"
+    And I wait for 2 seconds
+    And I fill in "edit-body-value" with "Some text"
+    And I click the element with CSS selector "#edit-submit"
+    And I should see "message has been sent"
+    Then the url should match "/gcmc"
+    Then I am logged out
+    Then I am logged in as "qa-member1" with password "CivicActions3#"
+    And I visit the system path "inbox/messages"
+    And I wait for 5 seconds
+    And I click "Message to A group in GCMC"
+    And I wait for 2 seconds
+    And I press the "Send message" button
+    And I wait for 2 seconds
+    And I click the element with CSS selector "#wysiwyg-toggle-edit-body-value"
+    And I fill in "edit-body-value" with "Some text as a reply"
+    And I click the element with CSS selector "#edit-submit"
+    Then I am logged out
+    And I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit the system path "inbox/messages"
+    Then I should see the text "Messages (1)"
+    And I should see the text "1"
+
+  @send
+  Scenario: 2 Users interact with one another and system generated messages are evaluated.
+
     Given I am logged in as "umember2" with password "civicactions"
     And I go to create "post" content for the "Or2 Gr10OR" group
     And I fill in "edit-title" with "mephistopheles 11:11"
@@ -74,8 +105,7 @@ Feature: message.feature
     Then I should see the link "3"
 
 
-  @RD-1959 @RD-2354 @assignee:ethan.teague @version:3/22_Launch_Release @version:OT_Release @COMPLETED @hillary @uorgmanager2
-  Scenario: Disallow users from sending messages to non-contacts
+  Scenario: 3 Disallow users from sending messages to non-contacts  @RD-1959 @RD-2354
 
     Given I am logged in as "uorgmanager2" with password "civicactions"
     And I visit the system path "messages/new"
@@ -83,12 +113,11 @@ Feature: message.feature
     And I fill in "edit-subject" with "Test - subject"
     And I fill in "edit-body-value" with "Test - message content"
     And I press the "Send message" button
-    #fails here
+   #fails here
     Then I should see the text "Cannot send a private message to non-contacts"
 
 
-  @RD-2346 @assignee:iris.ibekwe @version:OT_Release @COMPLETED @qa-admin
-  Scenario: Previous & Next links should not appear
+  Scenario: 4 Previous & Next links should not appear   @RD-2346
 
     #if the user changed poorly the test will fail.
     Given I am logged in as "qa-admin" with password "CivicActions3#"
@@ -104,8 +133,7 @@ Feature: message.feature
     Then I should not see "Prev | Next"
 
 
-  @RD-2471 @assignee:ana.willem @version:3/22_Launch_Release @COMPLETED @hillary @qa-admin
-  Scenario: After send a message should not see the Message tags
+  Scenario: 5 After send a message should not see the Message tags   @RD-2471
 
     #if the user is not qa_admin the test will fail.
     Given I am logged in as "qa-admin" with password "CivicActions3#"
@@ -121,8 +149,7 @@ Feature: message.feature
     And I should not see the text "modify tags"
 
 
-  @RD-2522 @assignee:iris.ibekwe @version:OT_Release @COMPLETED @qa-admin
-  Scenario: As a user, should not see sent messages in inbox messages list
+  Scenario: 6 As a user, should not see sent messages in inbox messages list  @RD-2522
 
     #if the user changed poorly the test will fail.
     Given I am logged in as "qa-admin" with password "CivicActions3#"
@@ -138,8 +165,7 @@ Feature: message.feature
     Then I should not see the text "Test - subject"
 
 
-  @RD-2555 @assignee:ethan.teague @version:3/22_Launch_Release @COMPLETED @uadmin
-  Scenario: Form errors
+  Scenario: 7 Form errors   @RD-2555
 
     Given I am logged in as "uadmin" with password "civicactions"
     And I visit "/messages/new?to=16&admin=admin&name=George%20C.%20Marshall%20Center"
@@ -150,8 +176,7 @@ Feature: message.feature
     Then I should not see "Cannot send a private message to non-contacts"
 
 
-  @RD-2297 @assignee:bob.schmitt @version:OT_Release @COMPLETED @uadmin
-  Scenario: Send message link in Group Admin Menu should work and populate the recipient
+  Scenario: 8 Send message link in Group Admin Menu should work and populate the recipient  @RD-2297
 
     Given I am logged in as "uadmin" with password "civicactions"
     And I visit "gcmc/group-in-gcmc"
@@ -159,65 +184,30 @@ Feature: message.feature
     And I should see the text "A group in gcmc"
 
 
-  @RD-1966 @assignee:alexis.saransig @version:OT_Release @COMPLETED @ugroupmanager2
-  Scenario: Should see the updated help text below the TO field
+  Scenario: 9 Should see the updated help text below the TO field   @RD-1966
 
     Given I am logged in as "ugroupmanager2" with password "civicactions"
     And I go to "messages/new"
     And I should see the text "Start typing a username to write a message to another GlobalNET member"
 
-
-  @RD-2624 @RD-3150 @OPEN @RD-2920 @javascript @jen_general @review
-  Scenario: Send Message link loads the New Message form and after send redirects to previous page
-
-    Given I am logged in as "qa-admin" with password "CivicActions3#"
-    And I visit the system path "gcmc/group-in-gcmc"
-    And I visit the system path "messages/new?destination=/gcmc/group-in-gcmc&to={node:title:A group in GCMC}&admin=admin&name=A group in GCMC"
-    And print current URL
-    Then I should see the text "A group in GCMC"
-    And I fill in "edit-subject" with "Message to A group in GCMC"
-    And I click the element with CSS selector "#wysiwyg-toggle-edit-body-value"
-    And I wait for 2 seconds
-    And I fill in "edit-body-value" with "Some text"
-    And I click the element with CSS selector "#edit-submit"
-    And I should see "message has been sent"
-    Then the url should match "/gcmc/group-in-gcmc"
-    Then I am logged out
-    Then I am logged in as "qa-member1" with password "CivicActions3#"
-    And I visit the system path "inbox/messages"
-    And I wait for 2 seconds
-    And I click "Some text"
-    And I wait for 2 seconds
-    And I click "Reply"
-    And I wait for 2 seconds
-    And I click the element with CSS selector "#wysiwyg-toggle-edit-body-value"
-    And I fill in "edit-body-value" with "Some text as a reply"
-    And I click the element with CSS selector "#edit-submit"
-    Then I am logged out
-    And I am logged in as "qa-admin" with password "CivicActions3#"
-    And I visit the system path "inbox/messages"
-    Then I should see the text "Messages (1)"
-    And I should see the text "1"
-
-
-  Scenario: After send a message should see the Group name in recipients list.   @RD-2469 @RD-2989
+  Scenario: 10 After send a message should see the Group name in recipients list.   @RD-2469 @RD-2989
 
         #if the user is not qa_admin the test will fail.
-        Given I am logged in as "qa-admin" with password "CivicActions3#"
-        And I visit the system path "messages/new"
-        Then I should get a 200 HTTP response
-        And I should see the text "Write new message"
-        And I fill in "edit-recipient" with "umember1, Or2 Gr10OR"
-        And I fill in "edit-subject" with "Test - subject"
-        And I fill in "edit-body-value" with "Test - message content"
-        And I press the "Send message" button
+    Given I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit the system path "messages/new"
+    Then I should get a 200 HTTP response
+    And I should see the text "Write new message"
+    And I fill in "edit-recipient" with "umember1, Or2 Gr10OR"
+    And I fill in "edit-subject" with "Test - subject"
+    And I fill in "edit-body-value" with "Test - message content"
+    And I press the "Send message" button
         #fails here
-        Then I should see the text "A message has been sent"
-        And I should see the text "Or2 Gr10OR"
-        And I should not see the following "Error"
+    Then I should see the text "A message has been sent"
+    And I should see the text "Or2 Gr10OR"
+    And I should not see the following "Error"
 
 
-  Scenario: Reply to message   @RD-2984
+  Scenario: 11 Reply to message   @RD-2984
 
     Given I am logged in as "qa-member1" with password "CivicActions3#"
     And I visit the system path "/inbox/messages"
@@ -225,18 +215,16 @@ Feature: message.feature
     Then the url should match "/messages/view/122"
 
 
-  Scenario: Private Message Autocomplete  @RD-2366 @RD-2997
+  Scenario: 12 Private Message Autocomplete  @RD-2366 @RD-2997
 
-      Given I am logged in as "qa-admin" with password "CivicActions3#"
-        And I visit the system path "messages/new"
-        And I fill in "a" for "recipient"
-        Then I should not see "An AJAX HTTP error occurred. HTTP Result code: 503"
+    Given I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit the system path "messages/new"
+    And I fill in "a" for "recipient"
+    Then I should not see "An AJAX HTTP error occurred. HTTP Result code: 503"
 
 
-  Scenario: Confirm removal of extra private message block from header @RD-2486
+  Scenario: 13 Confirm removal of extra private message block from header @RD-2486
 
     Given I am logged in as "umember1" with password "civicactions"
-        And I visit "/globalnet"
-        Then I should not see the CSS selector "#block-gn2-base-config-privatemsg-menu"
-
-
+    And I visit "/globalnet"
+    Then I should not see the CSS selector "#block-gn2-base-config-privatemsg-menu"

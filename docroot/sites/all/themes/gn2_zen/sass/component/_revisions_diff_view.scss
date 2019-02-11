@@ -14,7 +14,7 @@
   }
   th input.form-submit {
     @include button-as-link;
-
+    background-color: rgba(44, 44, 44, 0.9);
   }
 }
 

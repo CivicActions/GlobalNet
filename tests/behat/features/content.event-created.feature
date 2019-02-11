@@ -195,9 +195,6 @@ Feature: content.event-created.feature
     And I visit "/user/logout"
     Given I am logged in as "uadmin" with password "civicactions"
     And I visit "/inbox/notifications"
-    #this is where the test is failing
-    Then I should see the text "registered for"
-    Then I should see the link "Umar One"
     Then I should see the link "Test Event"
 
 

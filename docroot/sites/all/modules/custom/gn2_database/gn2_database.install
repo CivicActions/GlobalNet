@@ -275,8 +275,8 @@ function gn2_database_update_7034(&$sandbox) {
   if (module_exists('userpoints_og')) {
     module_disable(array('userpoints_og'));
     $deleted = db_delete('taxonomy_term_data')
-            ->condition('name', 'Points')
-            ->execute();
+      ->condition('name', 'Points')
+      ->execute();
   }
 }
 
@@ -285,8 +285,8 @@ function gn2_database_update_7034(&$sandbox) {
  */
 function gn2_database_update_7035(&$sandbox) {
   $nodes = db_query('SELECT nid FROM {node} n '
-          . 'JOIN {field_data_group_access} ga ON ga.entity_id = n.nid '
-          . 'WHERE type = :type', array(':type' => 'organization'))->fetchAll();
+                    . 'JOIN {field_data_group_access} ga ON ga.entity_id = n.nid '
+                    . 'WHERE type = :type', array(':type' => 'organization'))->fetchAll();
   if (!empty($nodes)) {
     foreach ($nodes as $nid) {
       $org = node_load($nid->nid);
@@ -314,6 +314,7 @@ function gn2_database_update_7037() {
     'entity_bulk_delete',
   );
   $message = HookUpdateDeployTools\Modules::enable($modules);
+
   return $message;
 }
 
@@ -329,6 +330,7 @@ function gn2_database_update_7038() {
     'gn2_base_config',
   );
   $message .= HookUpdateDeployTools\Features::revert($features);
+
   return $message;
 }
 
@@ -390,7 +392,7 @@ function gn2_database_update_7044() {
  */
 function gn2_database_update_7055() {
   db_query('DELETE FROM {userpoints} WHERE tid NOT IN'
-      . ' (125, 128, 129, 130, 131, 132, 133)');
+           . ' (125, 128, 129, 130, 131, 132, 133)');
 }
 
 /**
@@ -417,6 +419,7 @@ function gn2_database_update_7058() {
     'gn2_report_user_changes',
   );
   $message = HookUpdateDeployTools\Modules::enable($modules);
+
   return $message;
 }
 
@@ -446,6 +449,7 @@ function gn2_database_update_7060() {
 function gn2_database_update_7061() {
   $modules = array('easy_breadcrumb');
   $message = HookUpdateDeployTools\Modules::disableAndUninstall($modules);
+
   return $message;
 }
 
@@ -455,6 +459,7 @@ function gn2_database_update_7061() {
 function gn2_database_update_7062() {
   $modules = array('gn2_context');
   $message = HookUpdateDeployTools\Modules::enable($modules);
+
   return $message;
 }
 
@@ -540,6 +545,7 @@ function gn2_database_update_7068() {
 function gn2_database_update_7069() {
   if (module_exists('hook_update_deploy_tools')) {
     $message = HookUpdateDeployTools\Modules::enable(array('linkit'));
+
     return $message;
   }
 }
@@ -550,6 +556,7 @@ function gn2_database_update_7069() {
 function gn2_database_update_7070() {
   if (module_exists('hook_update_deploy_tools')) {
     $message = HookUpdateDeployTools\Modules::disableAndUninstall(array('linkit'));
+
     return $message;
   }
 }
@@ -567,7 +574,8 @@ function gn2_database_update_7071() {
 function gn2_database_update_7072() {
   // All the titles.
   $nodes1 = node_load_multiple(array(), array(
-    'title' => array('GlobalNET Site Admin Collaboration',
+    'title' => array(
+      'GlobalNET Site Admin Collaboration',
       'Governance and Security COI',
       'Crisis Management COI',
       'CCM 09-1 Content',
@@ -695,6 +703,7 @@ function gn2_database_update_7072() {
     ->condition('gid', ($all_nids), 'NOT IN')
     ->execute();
 }
+
 /**
  * Removing fields from Event and Organization bundles only.
  */
@@ -702,6 +711,7 @@ function gn2_database_update_7073(&$sandbox) {
   field_delete_instance(field_info_instance("node", "field_group_short_title", "event"));
   field_delete_instance(field_info_instance("node", "field_thumbnail_image", "organization"));
 }
+
 /**
  * Dispabling pki_authentication_cac; see @see RD-1214.
  */
@@ -710,8 +720,10 @@ function gn2_database_update_7074(&$sandbox) {
     'pki_authentication_cac',
   );
   $message = HookUpdateDeployTools\Modules::uninstall($modules);
+
   return $message;
 }
+
 /**
  * Disabling gn2_support module. RD-3840
  */
@@ -720,18 +732,21 @@ function gn2_database_update_7075(&$sandbox) {
     module_disable(array('gn2_support'));
   }
 }
+
 /**
  * Enables the feature with the field for simplified node access management.
  */
 function gn2_database_update_7076(&$sandbox) {
   module_enable(array("gn2_support_desk"));
 }
+
 /**
  * Removing fields from Event and Organization bundles only. RD-3840
  */
 function gn2_database_update_7077(&$sandbox) {
   field_delete_instance(field_info_instance("node", "field_how_can_we_help_you_", "support"));
 }
+
 /**
  * Removing fields from Support content type. RD-3888
  */
@@ -748,6 +763,7 @@ function gn2_database_update_7079(&$sandbox) {
     'gn2_support_desk',
   );
   $message = HookUpdateDeployTools\Features::revert($features);
+
   return $message;
 }
 
@@ -761,7 +777,11 @@ function gn2_database_update_7080(&$sandbox) {
   $num_revisions = db_update('field_revision_media_gallery_rows')
     ->fields(array('media_gallery_rows_value' => 99))
     ->execute();
-  return t('!node nodes and !rev revisions updated', array('!node' => $num_nodes, '!rev' => $num_revisions));
+
+  return t('!node nodes and !rev revisions updated', array(
+    '!node' => $num_nodes,
+    '!rev' => $num_revisions,
+  ));
 }
 
 /**
@@ -777,9 +797,12 @@ function gn2_database_update_7081(&$sandbox) {
 function gn2_database_update_7082(&$sandbox) {
   // Get GlobalNET org ID.
   $pid = db_query('SELECT nid FROM {node} WHERE title = :gnet AND type = :type',
-    array(':gnet' => 'GlobalNET Platform', ':type' => 'organization'))->fetchField();
+    array(
+      ':gnet' => 'GlobalNET Platform',
+      ':type' => 'organization',
+    ))->fetchField();
   $uid = db_query('SELECT uid FROM {users} WHERE name = :name', array(':name' => 'lisa.berry'))->fetchField();
-  if ($pid && $uid ) {
+  if ($pid && $uid) {
     $values = array(
       'type' => 'group',
       'uid' => $uid,
@@ -810,7 +833,14 @@ function gn2_database_update_7083(&$sandbox) {
   $pid = db_query('SELECT nid FROM {node} WHERE title = :title', array(':title' => 'Orphaned Groups'))->fetchField();
   $uid = db_query('SELECT uid FROM {users} WHERE name = :name', array(':name' => 'lisa.berry'))->fetchField();
   if ($pid) {
-    $group_types = array('group', 'event', 'course', 'course_group', 'alumni_group', 'program');
+    $group_types = array(
+      'group',
+      'event',
+      'course',
+      'course_group',
+      'alumni_group',
+      'program',
+    );
     $subquery = db_select('og_membership', 'om')
       ->fields('om', array('etid'))
       ->condition('om.entity_type', 'node');
@@ -832,6 +862,7 @@ function gn2_database_update_7083(&$sandbox) {
     }
   }
 }
+
 /**
  * Group nodes are not translatable, but content on them is.
  * Set groups to be language-neutral.
@@ -876,7 +907,20 @@ function gn2_database_update_7085(&$sandbox) {
   // Reinsert that data into the Users table.
   $delete = array();
   $query = db_insert('users')->fields(array(
-    'uid', 'vid', 'name', 'mail', 'theme', 'signature', 'signature_format', 'status', 'timezone', 'language', 'picture', 'data','ip'));
+    'uid',
+    'vid',
+    'name',
+    'mail',
+    'theme',
+    'signature',
+    'signature_format',
+    'status',
+    'timezone',
+    'language',
+    'picture',
+    'data',
+    'ip',
+  ));
   foreach ($result as $record) {
     $user = array(
       'uid' => $record->uid,
@@ -917,7 +961,8 @@ function gn2_database_update_7085(&$sandbox) {
  */
 function gn2_database_update_7086(&$sandbox) {
   if (module_exists('hook_update_deploy_tools')) {
-    $modules = array('betterselect',
+    $modules = array(
+      'betterselect',
       'crumbs',
       'label_help',
       'easy_breadcrumb',
@@ -934,7 +979,8 @@ function gn2_database_update_7086(&$sandbox) {
       'gn2_searching',
       'gn2_support',
       'gn2_yandex',
-      'gn_file_download_feature');
+      'gn_file_download_feature',
+    );
   }
   $message = HookUpdateDeployTools\Modules::disableAndUninstall($modules);
 
@@ -943,10 +989,11 @@ function gn2_database_update_7086(&$sandbox) {
 
 /**
  * Updating all gn2_base_config; @see RD-4000.
-  */
+ */
 function gn2_database_update_7087(&$sandbox) {
   $features = array('gn2_support_desk');
   $message = HookUpdateDeployTools\Features::revert($features);
+
   return $message;
 }
 
@@ -964,3 +1011,364 @@ function gn2_database_update_7088(&$sandbox) {
   return $message;
 }
 
+/**
+ * Enables the Views Content Cache module; @see RD-3078.
+ */
+function gn2_database_update_7089(&$sandbox) {
+  if (module_exists('hook_update_deploy_tools')) {
+    $modules = [
+      'views_content_cache',
+      'views_row_cache',
+    ];
+    $message = HookUpdateDeployTools\Modules::enable($modules);
+
+    return $message;
+  }
+}
+
+/**
+ * Enabling gn2_tracking; @see RD-4253.
+ */
+function gn2_database_update_7090() {
+  $modules = array('gn2_tracking');
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::enable($modules);
+
+    return $message;
+  }
+}
+
+/**
+ * Removing migration modules and tables @see RD-4298.
+ */
+function gn2_database_update_7091() {
+  // Only doing once, so not worried about writing a fancier / more performant query.
+  $baddies = array(
+    'migrate_field_mapping',
+    'migrate_group',
+    'migrate_log',
+    'migrate_map_demoannouncementconnections',
+    'migrate_map_demoannouncementcontent',
+    'migrate_map_democourseconnections',
+    'migrate_map_democoursecontent',
+    'migrate_map_democoursegroupconnections',
+    'migrate_map_democoursegroupcontent',
+    'migrate_map_demoeventconnections',
+    'migrate_map_demoeventcontent',
+    'migrate_map_demogroupconnections',
+    'migrate_map_demogroupcontent',
+    'migrate_map_demonewsconnections',
+    'migrate_map_demonewscontent',
+    'migrate_map_demoorganizationconnections',
+    'migrate_map_demoorganizationcontent',
+    'migrate_map_demoorganizationcontentupdate',
+    'migrate_map_demopollconnections',
+    'migrate_map_demopollcontent',
+    'migrate_map_demopostconnections',
+    'migrate_map_demopostcontent',
+    'migrate_map_demoprogramconnections',
+    'migrate_map_demoprogramcontent',
+    'migrate_map_demopublicationconnections',
+    'migrate_map_demopublicationcontent',
+    'migrate_map_demouser',
+    'migrate_map_demouserogmembership',
+    'migrate_map_gn2commentattachmentnews',
+    'migrate_map_gn2commentattachmentpostdiscussion',
+    'migrate_map_gn2commentnews',
+    'migrate_map_gn2commentpoll',
+    'migrate_map_gn2commentpostdiscussion',
+    'migrate_map_gn2commentpostopinionarticle',
+    'migrate_map_gn2commentpublicationsjournalarticle',
+    'migrate_map_gn2connectioncourse',
+    'migrate_map_gn2connectionevent',
+    'migrate_map_gn2connectiongroup',
+    'migrate_map_gn2connectionmediagallery',
+    'migrate_map_gn2connectionnews',
+    'migrate_map_gn2connectionpoll',
+    'migrate_map_gn2connectionpostdiscussion',
+    'migrate_map_gn2connectionpostopinionarticle',
+    'migrate_map_gn2connectionpublicationsjournalarticle',
+    'migrate_map_gn2contact',
+    'migrate_map_gn2country',
+    'migrate_map_gn2course',
+    'migrate_map_gn2education',
+    'migrate_map_gn2employers',
+    'migrate_map_gn2event',
+    'migrate_map_gn2expertise',
+    'migrate_map_gn2group',
+    'migrate_map_gn2mediagallery',
+    'migrate_map_gn2news',
+    'migrate_map_gn2organization',
+    'migrate_map_gn2poll',
+    'migrate_map_gn2postdiscussion',
+    'migrate_map_gn2postopinionarticle',
+    'migrate_map_gn2privatemessage',
+    'migrate_map_gn2publicationsjournalarticle',
+    'migrate_map_gn2redirect',
+    'migrate_map_gn2region',
+    'migrate_map_gn2resourceaudio',
+    'migrate_map_gn2resourcedocument',
+    'migrate_map_gn2resourcefolderaudio',
+    'migrate_map_gn2resourcefolderdocument',
+    'migrate_map_gn2resourcefolderimage',
+    'migrate_map_gn2resourcefoldervideo',
+    'migrate_map_gn2resourceimage',
+    'migrate_map_gn2resourcevideo',
+    'migrate_map_gn2telephone',
+    'migrate_map_gn2topic',
+    'migrate_map_gn2trainingcert',
+    'migrate_map_gn2user',
+    'migrate_map_gn2usercontactinfo',
+    'migrate_map_gn2usergroup',
+    'migrate_map_gn2userinterests',
+    'migrate_map_gn2usernamebio',
+    'migrate_map_gn2userpicture',
+    'migrate_message_demoannouncementconnections',
+    'migrate_message_demoannouncementcontent',
+    'migrate_message_democourseconnections',
+    'migrate_message_democoursecontent',
+    'migrate_message_democoursegroupconnections',
+    'migrate_message_democoursegroupcontent',
+    'migrate_message_demoeventconnections',
+    'migrate_message_demoeventcontent',
+    'migrate_message_demogroupconnections',
+    'migrate_message_demogroupcontent',
+    'migrate_message_demonewsconnections',
+    'migrate_message_demonewscontent',
+    'migrate_message_demoorganizationconnections',
+    'migrate_message_demoorganizationcontent',
+    'migrate_message_demoorganizationcontentupdate',
+    'migrate_message_demopollconnections',
+    'migrate_message_demopollcontent',
+    'migrate_message_demopostconnections',
+    'migrate_message_demopostcontent',
+    'migrate_message_demoprogramconnections',
+    'migrate_message_demoprogramcontent',
+    'migrate_message_demopublicationconnections',
+    'migrate_message_demopublicationcontent',
+    'migrate_message_demouser',
+    'migrate_message_demouserogmembership',
+    'migrate_message_gn2commentattachmentnews',
+    'migrate_message_gn2commentattachmentpostdiscussion',
+    'migrate_message_gn2commentnews',
+    'migrate_message_gn2commentpoll',
+    'migrate_message_gn2commentpostdiscussion',
+    'migrate_message_gn2commentpostopinionarticle',
+    'migrate_message_gn2commentpublicationsjournalarticle',
+    'migrate_message_gn2connectioncourse',
+    'migrate_message_gn2connectionevent',
+    'migrate_message_gn2connectiongroup',
+    'migrate_message_gn2connectionmediagallery',
+    'migrate_message_gn2connectionnews',
+    'migrate_message_gn2connectionpoll',
+    'migrate_message_gn2connectionpostdiscussion',
+    'migrate_message_gn2connectionpostopinionarticle',
+    'migrate_message_gn2connectionpublicationsjournalarticle',
+    'migrate_message_gn2contact',
+    'migrate_message_gn2country',
+    'migrate_message_gn2course',
+    'migrate_message_gn2education',
+    'migrate_message_gn2employers',
+    'migrate_message_gn2event',
+    'migrate_message_gn2expertise',
+    'migrate_message_gn2group',
+    'migrate_message_gn2mediagallery',
+    'migrate_message_gn2news',
+    'migrate_message_gn2organization',
+    'migrate_message_gn2poll',
+    'migrate_message_gn2postdiscussion',
+    'migrate_message_gn2postopinionarticle',
+    'migrate_message_gn2privatemessage',
+    'migrate_message_gn2publicationsjournalarticle',
+    'migrate_message_gn2redirect',
+    'migrate_message_gn2region',
+    'migrate_message_gn2resourceaudio',
+    'migrate_message_gn2resourcedocument',
+    'migrate_message_gn2resourcefolderaudio',
+    'migrate_message_gn2resourcefolderdocument',
+    'migrate_message_gn2resourcefolderimage',
+    'migrate_message_gn2resourcefoldervideo',
+    'migrate_message_gn2resourceimage',
+    'migrate_message_gn2resourcevideo',
+    'migrate_message_gn2telephone',
+    'migrate_message_gn2topic',
+    'migrate_message_gn2trainingcert',
+    'migrate_message_gn2user',
+    'migrate_message_gn2usercontactinfo',
+    'migrate_message_gn2usergroup',
+    'migrate_message_gn2userinterests',
+    'migrate_message_gn2usernamebio',
+    'migrate_message_gn2userpicture',
+    'migrate_status',
+  );
+  foreach ($baddies as $baddie) {
+    db_drop_table($baddie);
+  }
+}
+
+/**
+ * Removing GA tokens; @see RD-4323.
+ */
+function gn2_database_update_7092() {
+  variable_del('google_analytics_reports_api_access_token');
+  variable_del('google_analytics_reports_api_expires_at');
+  variable_del('google_analytics_reports_api_refresh_token');
+}
+
+/**
+ * Enabling gn2_tracking; @see RD-4253.
+ */
+function gn2_database_update_7093() {
+  $modules = [
+    'print',
+    'print_pdf',
+    'print_pdf_dompdf',
+  ];
+  $message = t('Hook Update Deploy Tools is missing.');
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::enable($modules);
+  }
+
+  return $message;
+}
+
+/**
+ * Remove broken user redirects.
+ */
+function gn2_database_update_7094() {
+  $users = array(
+    'users/cesar.arias',
+    'users/richard.bush',
+    'users/jonathan.shaw',
+    'users/karen.jenkins',
+    'users/karl.anderson',
+    'users/cesararias',
+    'users/richardbush',
+    'users/jonathanshaw',
+    'users/karenjenkins',
+    'users/karlanderson',
+    'users/cesararias1',
+    'users/richardbush1',
+    'users/jonathanshaw1',
+    'users/karenjenkins1',
+    'users/karlanderson1',
+  );
+
+  foreach ($users as $user) {
+    db_delete('redirect')
+      ->condition('source', $user, 'LIKE')
+      ->execute();
+  }
+}
+
+function gn2_database_update_7095() {
+  $modules = [
+    'gn2_badges',
+  ];
+  $message = t('Hook Update Deploy Tools is missing.');
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::enable($modules);
+  }
+
+  return $message;
+}
+
+function gn2_database_update_7096() {
+  $message = '';
+  if (module_exists('hook_update_deploy_tools')) {
+    $modules = [
+      'migrate',
+      'migrate_extras',
+      'migrate_d2d',
+      'migrate_ui',
+      'gn2_migrate',
+      'gn2_migrate_demo',
+      'clone',
+      'subscriptions_mail',
+      'gn2_cdn_bypass',
+      'user_relationship_mailer',
+      'userpoints_og',
+    ];
+    $all_disabled = HookUpdateDeployTools\Modules::checkDisabled($modules);
+
+    if ($all_disabled) {
+      $message = HookUpdateDeployTools\Modules::uninstall($modules);
+    }
+  }
+  return $message;
+}
+
+/**
+ * Disabling the PHP module; @see RD-3145.
+ */
+function gn2_database_update_7097() {
+  $message = '';
+  $update = db_query('UPDATE {filter_format} SET status = 0 WHERE format = :format', [
+    ':format' => 'php_code',
+  ]);
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::uninstall(['php']);
+  }
+  return $message;
+}
+
+/**
+ * Removing Expertise fields:
+ * - field_expertise (field_collection field)
+ *   - field_expertise_level
+ *   - field_expertise_topic
+ *   - field_expertise_experience
+ *   - field_expertise_availability
+ *   - field_validated_by
+ */
+function gn2_database_update_9098() {
+  field_delete_field("field_expertise_level");
+  field_delete_field("field_expertise_topic");
+  field_delete_field("field_expertise_experience");
+  field_delete_field("field_expertise_availability");
+  field_delete_field("field_validated_by");
+  field_delete_field("field_expertise");
+  if ($group = field_group_load_field_group('group_expertise', 'user', 'account', 'form')) {
+    ctools_include('export');
+    field_group_group_export_delete($group, FALSE);
+  }
+}
+
+/**
+ * Remove the Community of Interest content type.
+ */
+function gn2_database_update_9099() {
+  $coi_nids = db_query('SELECT nid FROM {node} WHERE type = :coi', [
+    ':coi' => 'coi'
+  ])->fetchCol();
+  if (isset($coi_nids)) {
+    node_delete_multiple($coi_nids);
+  }
+  if (module_exists('hook_update_deploy_tools')) {
+    $message = HookUpdateDeployTools\Modules::uninstall(['gn2_coi']);
+  }
+  node_type_delete('coi');
+  return $message;
+}
+
+/**
+ * Remove the Alumni Group content type.
+ */
+function gn2_database_update_9100() {
+  $alumni_nids = db_query('SELECT nid FROM {node} WHERE type = :alum', [
+    ':alum' => 'alumni_group'
+  ])->fetchCol();
+  if (isset($alumni_nids)) {
+    node_delete_multiple($alumni_nids);
+  }
+  node_type_delete('alumni_group');
+}
+
+/**
+ * Remove contact form.
+ */
+function gn2_database_update_9101() {
+  db_delete('entityform_type')
+    ->condition('type', 'contact_support')
+    ->execute();
+}

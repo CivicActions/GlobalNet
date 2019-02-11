@@ -3,7 +3,7 @@
  */
 @import "breakpoint";
 // Breakpoint control variables
-$breakpoint-to-ems: true; // converts percentage-based media queries to em's
+@include breakpoint-set('to ems', true);
 
 $breakpoint0: 330px;
 $breakpoint1: 480px;
@@ -20,11 +20,11 @@ $small-screen-and-up: $breakpoint1;
 $small-screen-and-down: 0px ($breakpoint2 - 1);
 
 $medium-screen: $breakpoint2 ($breakpoint3 - 1);
-$medium-screen-and-up: $breakpoint2; 
+$medium-screen-and-up: $breakpoint2;
 $medium-screen-and-down: 0px ($breakpoint3 - 1);
 
 $large-screen: $breakpoint3 ($breakpoint4 - 1);
-$large-screen-and-up: $breakpoint3; 
+$large-screen-and-up: $breakpoint3;
 $large-screen-and-down: 0px ($breakpoint4 - 1);
 
 $larger-screen: $breakpoint4;

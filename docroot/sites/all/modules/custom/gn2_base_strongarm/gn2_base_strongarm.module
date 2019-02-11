@@ -87,4 +87,10 @@ function gn2_base_strongarm_init() {
 
   // RD-2185 fixing media icons
   drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/media_icon.js');
+
+  // RD-4344 we don't want this on guide paths
+  if (arg(0) !== 'guide') {
+    // This file no longer exists, so comment out to prevent blocking.
+    // drupal_add_js(drupal_get_path('module', 'gn2_base_config') . '/js/description.js');
+  }
 }

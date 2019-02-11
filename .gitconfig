@@ -1,0 +1,2 @@
+[lfs]
+	fetchexclude = ./docroot ./samplesamlphp ./docs ./.dummy

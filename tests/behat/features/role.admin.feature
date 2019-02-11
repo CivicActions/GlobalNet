@@ -7,17 +7,18 @@ Feature: role.admin.feature
   @smoke
   Scenario: Add new user  @RD-2418
 
-        Given I visit "/gcmc"
-        And I am logged in as "qa-admin" with password "CivicActions3#"
-        And I visit the system path "admin/people/create"
-        And I fill in "Bob" for "field_name_first[und][0][value]"
-        And I fill in "Smith" for "field_name_last[und][0][value]"
-        And I fill in "1234@1234.com" for "edit-mail"
-        And I click "submit"
-        Then I should not see "Your feedback was submitted successfully"
+    Given I visit "/gcmc"
+    And I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit the system path "admin/people/create"
+    And I fill in "Bob" for "field_name_first[und][0][value]"
+    And I fill in "Smith" for "field_name_last[und][0][value]"
+    And I fill in "1234@1234.com" for "edit-mail"
+    And I click "submit"
+    Then I should not see "Your feedback was submitted successfully"
 
 
   Scenario Outline: Administrators and Org Managers can access content management pages.
+
     Given I am logged in as <user> with password "civicactions"
     And I am at <path>
     Then I should get a 200 HTTP response
@@ -70,8 +71,7 @@ Feature: role.admin.feature
 
     Given I am logged in as "qa-admin" with password "CivicActions3#"
     And I visit "admin/manage/forms"
-      Then I should see the text "Contact GlobalNET"
-      And I should see the text "Technical Support"
+      Then I should see the text "Technical Support"
 
 
   Scenario: Update field privacy settings upon user creation  @RD-2340 @uadmin

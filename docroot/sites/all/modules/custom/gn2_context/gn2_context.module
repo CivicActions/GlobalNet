@@ -204,13 +204,16 @@ function gn2_context_get_trail() {
   }
   // Formulate the trail up the group hierarchy to the organization.
   $node = node_load(gn2_context_get_group_id());
-  $trail['node/' . $node->nid] = $node->title;
-  while ($group = GN2PathToOrganization::nextGroupUp($node)) {
-    $trail['node/' . $group->nid] = $group->title;
-    $node = $group;
+  if (!empty($node->nid) && !empty($node->title)) {
+    $trail['node/' . $node->nid] = $node->title;
+    while ($group = GN2PathToOrganization::nextGroupUp($node)) {
+      $trail['node/' . $group->nid] = $group->title;
+      $node = $group;
+    }
+    _gn2_context_trim_breadcrumb_texts($trail);
+    return array_reverse($trail);
   }
-  _gn2_context_trim_breadcrumb_texts($trail);
-  return array_reverse($trail);
+
 }
 
 /**

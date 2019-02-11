@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+i=0
+while [ "$(curl -s -o /dev/null -I -w %{http_code} http://localhost/)" -ne 200 ]; do
+  sleep 5 ; echo waiting for site to become available ...
+  i=$(($i+1))
+  if [ "$i" -gt 10 ]; then
+    echo "Time out. Site did not start."
+    exit 1;
+  fi
+done
+
+echo ready.

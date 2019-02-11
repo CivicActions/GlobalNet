@@ -1,0 +1,67 @@
+<?php
+/**
+ * @file
+ * Install file for the GN2 Track module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function gn2_tracking_schema() {
+  $schema['gn2_tracking'] = [
+    'description' => 'The base table for Course tracking',
+    'fields' => [
+      'tid' => [
+        'description' => 'Unique ID for tracking event',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'description' => 'The Course participant\'s {users}.uid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'nid' => [
+        'description' => 'The Course {nodes}.nid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'sid' => [
+        'description' => 'The Course Session {entity}.eid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'action' => [
+        'description' => 'The action that the user has taken.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'item' => [
+        'description' => 'The unique identifier for the interacted item.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when interaction was created.',
+      ),
+    ],
+    'indexes' => [
+      'uid' => ['uid'],
+      'nid' => ['nid'],
+    ],
+    'primary key' => ['tid'],
+  ];
+
+  return $schema;
+}

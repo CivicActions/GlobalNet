@@ -454,7 +454,11 @@ function gn2_og_views_default_views() {
   /* groups_manage_unsubscribe */  /* Master */ $handler = $view->new_display('default', 'Master', 'default');
   /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['use_ajax'] = TRUE;
   /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['use_more_always'] = FALSE;
-  /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['access']['type'] = 'gn2_admin_dashboard_manager_access';
+  /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['access']['type'] = 'gn2_og_manager_has_access';
+  /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['access']['roles'] = array(
+  /* groups_manage_unsubscribe */  /* Master */   'org_manager' => 'org_manager',
+  /* groups_manage_unsubscribe */  /* Master */   'group_manager' => 'group_manager',
+  /* groups_manage_unsubscribe */  /* Master */ );
   /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['cache']['type'] = 'none';
   /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['query']['type'] = 'views_query';
   /* groups_manage_unsubscribe */  /* Master */ $handler->display->display_options['query']['options']['query_comment'] = FALSE;
@@ -710,7 +714,6 @@ function gn2_og_views_default_views() {
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */ $handler->display->display_options['filters']['type_1']['field'] = 'type';
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */ $handler->display->display_options['filters']['type_1']['relationship'] = 'og_membership_related_node_group';
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */ $handler->display->display_options['filters']['type_1']['value'] = array(
-  /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */   'alumni_group' => 'alumni_group',
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */   'course' => 'course',
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */   'course_group' => 'course_group',
   /* groups_manage_unsubscribe */  /* Manage and Unsubscribe From Groups */   'program' => 'program',

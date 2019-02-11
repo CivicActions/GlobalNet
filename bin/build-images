@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/..
+
+IMG_NAME="${1}gn2"
+BASE_NAME="building_${IMG_NAME}"
+date
+echo base image name: ${IMG_NAME}
+echo base container name: ${BASE_NAME}
+
+ci-namespace-clear ${BASE_NAME}
+
+# Build the images, first iteration.
+docker build -t "${IMG_NAME}_solr" -f docker/solr/Dockerfile .
+docker build -t "${IMG_NAME}_db" docker/database
+docker build -t "${IMG_NAME}" -f docker/apache-php/Dockerfile.ci-pipeline .
+
+# If more than 1G of ram available then use tmpfs for db.
+DB_TMPFS=''; [ "$(grep MemAvailable /proc/meminfo |awk '{print $2}')" -gt 1000000 ] && DB_TMPFS='--tmpfs /var/lib/mysql:rw'
+
+# Start containers
+docker run -d --name=${BASE_NAME}_db ${DB_TMPFS} ${IMG_NAME}_db
+docker run -d --name=${BASE_NAME}_solr ${IMG_NAME}_solr
+sleep 10 ; echo waiting for db to start
+docker run -d --link=${BASE_NAME}_solr:solr --link=${BASE_NAME}_db:dbhost --name=${BASE_NAME}_web ${IMG_NAME}
+
+# Wait for web to start
+docker exec --user=apache ${BASE_NAME}_web bin/wait-web
+
+date
+
+# Prepare images by reloading config
+docker exec --user=apache ${BASE_NAME}_web /var/www/bin/prepare
+
+# Save snapshot and rebuild db image.
+db_snapshot=.prepared.sql.gz
+docker exec ${BASE_NAME}_db mysqldump --user=dbuser --password=dbpass drupal | gzip > $db_snapshot
+cp $db_snapshot docker/database/snapshot.sql.gz
+docker build -t "${IMG_NAME}_db" docker/database
+
+# Snapshot of indexed solr
+docker commit ${BASE_NAME}_solr ${IMG_NAME}_solr:latest
+
+# Tag images with git commit
+TAG=$(git rev-parse --short HEAD)
+docker tag ${IMG_NAME}_solr:latest ${IMG_NAME}_solr:${TAG}
+docker tag ${IMG_NAME}_db:latest ${IMG_NAME}_db:${TAG}
+docker tag ${IMG_NAME}:latest ${IMG_NAME}:${TAG}
+
+date
+
+# Clean up containers.
+ci-namespace-clear ${BASE_NAME}

@@ -9,4 +9,4 @@ if [ -t 1 ]; then
 else
   EXEC_OPTS=''
 fi
-docker exec $EXEC_OPTS --user www-data ${web} /var/www/vendor/drush/drush/drush --root=/var/www/docroot --uri=${WEB_DOMAIN} "$@"
+docker exec $EXEC_OPTS --user apache ${web} /var/www/vendor/drush/drush/drush --root=/var/www/docroot --uri=${WEB_DOMAIN} "$@"

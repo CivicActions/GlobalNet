@@ -5,9 +5,8 @@ Feature: taxonomy.topics.feature
   Scenario: Confirm text that appears when no folders or files found   @RD-2466
 
     Given I am logged in as "qa-admin" with password "CivicActions3#"
-    And I visit the system path "/topics/action-learning"
-    Then I should see the text "No folders found."
-    And I should see the text "No files found."
+    And I visit the system path "/topics/test-term-1"
+    Then I should see the text "No results found."
 
 
   Scenario: Should work "topics" for url instead "gn-topics"   @RD-2490
@@ -56,24 +55,18 @@ Feature: taxonomy.topics.feature
 
   Scenario: confirm removal of inline media information from topics teasers @RD-2399
 
-        Given I am logged in as "qa-admin" with password "CivicActions3#"
-        And I visit "/topics/Action-Learning"
-        Then I should not see "media_description[und][0]"
+    Given I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit "/topics/Action-Learning"
+    Then I should not see "media_description[und][0]"
 
 
   Scenario: Confirm taxonomy terms link to correct taxonomy pages   @RD-2102
 
-        Given I am logged in as "qa-admin" with password "CivicActions3#"
-        And I visit the node with title "George C. Marshall Center Adds Ski Resort"
-        Then I should see the link "Civic-Military Relations" in the "sidebar" region
-        And I click "Civic-Military Relations"
-        Then I should see "Civic-Military Relations"
-        # Visual regression tests -->And it should look good
-
-        And I visit "/topics"
-        Then I should see the link "Action Learning"
-        And I should see the link "Administrative"
-        And I should see the link "Anti-Corruption"
-        When I click "Administrative"
-        Then I should see "Administrative"
-        # And it should look good
+    Given I am logged in as "qa-admin" with password "CivicActions3#"
+    And I visit "/topics"
+    Then I should see the link "Action Learning"
+    And I should see the link "Administrative"
+    And I should see the link "Anti-Corruption"
+    When I click "Administrative"
+    Then I should see "Administrative"
+    # And it should look good

@@ -43,10 +43,14 @@ function jira_rest_get_curl_resource(&$options, $url) {
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $options['jira_url'] . $url);
-  curl_setopt($ch, CURLOPT_USERPWD, $options['username'] . ':' . $options['password']);
+  // Allow anonymous access
+  if ($options['username'] != ''){
+    curl_setopt($ch, CURLOPT_USERPWD, $options['username'] . ':' . $options['password']);
+  }
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, $options['curl_returntransfer']);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $options['curl_ssl_verifyhost']);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $options['curl_ssl_verifypeer']);
+  curl_setopt($ch, CURLOPT_TIMEOUT, $options['curl_timeout']);
   return $ch;
 }
 
@@ -71,6 +75,7 @@ function jira_rest_default_curl_options(&$options) {
     'curl_returntransfer' => 1,
     'curl_ssl_verifyhost' => 0,
     'curl_ssl_verifypeer' => FALSE,
+    'curl_timeout' => variable_get('jira_curl_timeout', 30),
   );
 }
 
@@ -129,6 +134,7 @@ function jira_rest_curl_execute($ch, $options = array()) {
 
 /**
  * Searches JIRA issues filtered by the given JQL string.
+ *
  * This function returns all query results and performs multiple REST calls
  * if the number of results exceeds the given maxResults size.
  * In contrast to jira_rest_searchissue() an array of all issues is returned!
@@ -204,6 +210,61 @@ function jira_rest_issue_search($jql_string, $options = array()) {
  */
 function jira_rest_issue_get($issue_key, $options = array()) {
   $ch = jira_rest_get_curl_resource($options, '/issue/' . urlencode($issue_key));
+  return jira_rest_curl_execute($ch, $options);
+}
+
+/**
+ * Searches JIRA users by user name or email.
+ *
+ * @param $user_name
+ * @param array $options
+ *
+ * @return array
+ *
+ * @throws JiraRestException
+ */
+function jira_rest_user_search($user_name, $options = array()) {
+  $jira_users = array();
+
+  // default options
+  $options += array(
+    'maxResults' => 999,
+    'startAt' => 0,
+    'includeActive' => 'true',
+    'includeInactive' => 'false',
+    'allowMultipleCalls' => TRUE,
+  );
+
+  // retrieve all query results with multiple requests
+  do {
+    // build rest query
+    $jira_query = '/user/search?username=' . urlencode($user_name) . '&maxResults=' . $options['maxResults'] . '&startAt=' . $options['startAt'] . '&includeActive=' . $options['includeActive'] . '&includeInactive=' . $options['includeInactive'];
+
+    $ch = jira_rest_get_curl_resource($options, $jira_query);
+    $jira_response = jira_rest_curl_execute($ch, $options);
+
+    $jira_users = array_merge($jira_users, $jira_response);
+
+    $options['startAt'] = count($jira_users);
+  } while (count($jira_response) == $options['maxResults'] && $options['allowMultipleCalls']);
+
+  return $jira_users;
+}
+
+/**
+ * Returns a full representation of the user.
+ *
+ * @see https://docs.atlassian.com/jira/REST/6.2.4/#d2e3822
+ *
+ * @param $issue_key string
+ *   the issue id or key
+ * @param array $options
+ * @return object
+ *   an object representing all metadata for the given id or key
+ * @throws JiraRestException
+ */
+function jira_rest_user_get($user_name, $options = array()) {
+  $ch = jira_rest_get_curl_resource($options, '/user?username=' . urlencode($user_name));
   return jira_rest_curl_execute($ch, $options);
 }
 
@@ -551,7 +612,10 @@ function jira_rest_project_get($options = array()) {
 
   $jira_query = '/project';
 
-  if ($options['id'] != -1) {
+  if (isset($options['key'])) {
+    $jira_query .= '/' . urlencode($options['key']);
+  }
+  elseif($options['id'] != -1) {
     $jira_query .= '/' . (int) $options['id'];
   }
 

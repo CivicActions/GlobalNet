@@ -70,6 +70,7 @@ function gn2_og_og_role_settins_form(&$form, &$form_state, $conf) {
     'group_manager',
     'PA Specialist',
     'member',
+    'Content Specialist',
   );
   $form['settings']['gn2_og_access_settings'] = array(
     '#type' => 'checkboxes',

@@ -28,7 +28,7 @@ docker rm -f ${QA}_db
 docker run --name=${QA}_db ${QA}_db chown -R mysql:mysql /var/lib/mysql
 docker commit -p -a "${AUTHOR}" \
   --change='ENV MYSQL_DATABASE=drupal MYSQL_PASSWORD=dbpass MYSQL_HOME=/etc MYSQL_USER=dbuser MYSQL_ROOT_PASSWORD=root' \
-  --change='USER mysql' --change='CMD ["/usr/local/mysql/bin/mysqld"]' \
+  --change='USER mysql' --change='CMD ["/usr/sbin/mysqld"]' \
   ${QA}_db ${QA}_db:latest
 docker tag ${QA}_db:latest ${QA}_db:${TAG}
 docker rm -f ${QA}_db
@@ -43,9 +43,9 @@ docker cp -L ${GIT_ROOT}/. ${QA}_web:/var/www
 echo "Committing and tagging web image"
 docker commit -p -a "${AUTHOR}" ${QA}_web ${QA}_web:latest
 docker rm -f ${QA}_web
-docker run --name=${QA}_web ${QA}_web chown -R www-data:www-data /var/www
+docker run --name=${QA}_web ${QA}_web chown -R apache:apache /var/www
 docker commit -p -a "${AUTHOR}" \
-  --change='EXPOSE 80' --change='CMD ["/start.sh"]' \
+  --change='EXPOSE 80' \
   ${QA}_web ${QA}_web:latest
 docker tag ${QA}_web:latest ${QA}_web:${TAG}
 docker rm -f ${QA}_web

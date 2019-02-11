@@ -22,8 +22,8 @@ done
 case ${BROWSER} in
   firefox|chrome)
     echo -e "\033[32mStarting ${BROWSER} Docker container"
-    WEBDRIVER_CONTAINER=$(docker run -v /dev/shm:/dev/shm -d selenium/standalone-${BROWSER}-debug:2.50.0)
-    WEBDRIVER_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
+    WEBDRIVER_CONTAINER=$(docker run --network container:${web} -v /dev/shm:/dev/shm -d selenium/standalone-${BROWSER}-debug:2.50.0)
+    WEBDRIVER_IP="$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${WEBDRIVER_CONTAINER})"
     WEBDRIVER_HOST="${WEBDRIVER_IP}:4444/wd/hub"
     echo -e "\033[32mTo view browser go to vnc://${WEBDRIVER_IP} with a VNC client and the password 'secret'"
     ;;
@@ -33,11 +33,7 @@ case ${BROWSER} in
     WEBDRIVER_HOST="${WEBDRIVER_IP}:4444/wd/hub"
     ;;
   *)
-    BROWSER=phantomjs
-    echo -e "\033[32mStarting ${BROWSER} Docker container"
-    WEBDRIVER_CONTAINER=$(docker run -d wernight/phantomjs phantomjs --webdriver=8910)
-    WEBDRIVER_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${WEBDRIVER_CONTAINER})
-    WEBDRIVER_HOST="${WEBDRIVER_IP}:8910"
+    WEBDRIVER_HOST="${selenium_ip}:8910/wd/hub"
     ;;
 esac
 echo -e "\033[m"
@@ -51,7 +47,7 @@ if [ -t 1 ]; then
 else
   EXEC_OPTS='-i'
 fi
-docker exec --user www-data $EXEC_OPTS ${web}  /bin/bash -c "${COMMAND}"
+docker exec --user apache $EXEC_OPTS ${web}  /bin/bash -c "${COMMAND}"
 EXIT=$?
 
 if [[ -n "${WEBDRIVER_CONTAINER}" ]]; then

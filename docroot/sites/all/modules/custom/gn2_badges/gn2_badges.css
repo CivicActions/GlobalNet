@@ -1,0 +1,19 @@
+span.badge {
+  background: url(icons/badge-unachieved.png) no-repeat;
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+  margin: 5px;
+}
+
+span.badge.bronze {
+  background: url(icons/badge-bronze.png) no-repeat;
+}
+
+span.badge.silver {
+  background: url(icons/badge-silver.png) no-repeat;
+}
+
+span.badge.gold {
+  background: url(icons/badge-gold.png) no-repeat;
+}

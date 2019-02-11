@@ -135,6 +135,29 @@ function _gn2_bulk_delete_get_files($did) {
 }
 
 /**
+ * Get the submitters data for a bulk deletion request.
+ *
+ * @param int $did
+ *   The deletion ID.
+ *
+ * @return mixed array|FALSE
+ *   Returns the user data and creation date for a given deletion request.
+ */
+function _gn2_bulk_delete_get_request_data($did) {
+  $query = db_select('bulk_delete', 'bd');
+  $query->fields('bd', ['uid', 'date']);
+  $query->join('users', 'u', 'u.uid = bd.uid');
+  $query->addField('u', 'name', 'username');
+  $query->join('field_data_field_name_first', 'f', 'f.revision_id = u.vid');
+  $query->addField('f', 'field_name_first_value', 'first_name');
+  $query->join('field_data_field_name_last', 'l', 'l.revision_id = u.vid');
+  $query->addField('l', 'field_name_last_value', 'last_name');
+  $query->condition('bd.did', $did);
+  $request_data = $query->execute()->fetchAssoc();
+  return $request_data;
+}
+
+/**
  * Get the email addresses for all admin users.
  */
 function _gn2_bulk_delete_get_admins() {
@@ -153,25 +176,52 @@ function _gn2_bulk_delete_get_admins() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_views_query_alter().
  */
-function gn2_bulk_delete_form_views_form_folder_bulk_delete_page_alter(&$form, &$form_state, $form_id) {
-  if (filter_input(INPUT_GET, 'did')) {
+function gn2_bulk_delete_views_query_alter(&$view, &$query) {
+  if ($view->name === 'folder_bulk_delete' && filter_input(INPUT_GET, 'did')) {
     $did = filter_input(INPUT_GET, 'did');
-    // Get the files to be deleted.
-    $request_data = _gn2_bulk_delete_get_files($did);
-    // Load the user object for the user that requested the deletions.
-    $request_user = (isset($request_data['info']['uid'])) ? user_load($request_data['info']['uid']) : NULL;
-    if (isset($form['views_bulk_operations']) && isset($request_user)) {
-      foreach ($form['views_bulk_operations'] as $key => $value) {
-        if ($key !== '#tree') {
-          $form['views_bulk_operations'][$key]['#default_value'] = (in_array($value['#return_value'], $request_data['files'])) ?
-            TRUE : FALSE;
-        }
-      }
-      // Set a message telling who requested the deletions.
-      drupal_set_message(t('%name requested that the checked files be deleted. Select %delete from the Operations menu and click %execute.',
-        array('%name' => $request_user->name, '%delete' => 'Delete items', '%execute' => 'Execute')));
+    $sub_query = db_select('bulk_delete_files', 'b')
+      ->fields('b', ['fid'])
+      ->condition('b.did', $did);
+    $view->query->add_where(1, 'field_data_media_gallery_file.media_gallery_file_fid', $sub_query, 'IN');
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function gn2_bulk_delete_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name === 'folder_bulk_delete' && $did = filter_input(INPUT_GET, 'did')) {
+    $request_data = _gn2_bulk_delete_get_request_data($did);
+    if ($request_data) {
+      $name = (isset($request_data['first_name']) && $request_data['last_name'])
+        ? $request_data['first_name'] . ' ' . $request_data['last_name']
+        : $request_data['username'];
+      $user_link = l($name, 'user/' . $request_data['uid']);
+      $date = format_date($request_data['date'], 'custom', 'd F, Y');
+      $message = t('!name requested that the following files be deleted on !date. Check the checkbox next to the file, or the checkbox at the top of the list to select all files, then choose <b>Delete items</b> from the Operations menu and click <b>Execute</b>.',
+        [
+          '!name' => $user_link,
+          '!date' => $date,
+        ]);
+
+      // Add the message to the View header.
+      $item = array(
+        'id' => 'area',
+        'table' => 'views',
+        'field' => 'area',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'ui_name' => '',
+        'label' => '',
+        'empty' => 0,
+        'content' => $message,
+        'format' => 'filtered_html',
+        'tokenize' => 0,
+      );
+      // Render the header.
+      $view->set_item($display_id, 'header', 'area', $item);
     }
   }
 }

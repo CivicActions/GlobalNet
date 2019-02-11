@@ -3,7 +3,6 @@
   .view-news-announcements-posts .view-empty {
     display: none;
   }
-
   .node-header-links {
     .print,
     .share,
@@ -11,5 +10,12 @@
       display: none !important;
     }
   }
+}
 
+.view-news-announcements-posts {
+  &.view-display-id-panel_pane_1 {
+    .view-footer {
+      display: none;
+    }
+  }
 }

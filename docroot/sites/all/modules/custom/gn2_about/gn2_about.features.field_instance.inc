@@ -101,7 +101,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-body */       'allowed_formats' => array(
   /* node-about_page-body */         'filtered_html' => 'filtered_html',
   /* node-about_page-body */         'full_html' => 'full_html',
-  /* node-about_page-body */         'php_code' => 'php_code',
   /* node-about_page-body */         'plain_text' => 'plain_text',
   /* node-about_page-body */       ),
   /* node-about_page-body */       'allowed_formats_toggle' => 0,
@@ -113,9 +112,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-body */           ),
   /* node-about_page-body */           'full_html' => array(
   /* node-about_page-body */             'weight' => -8,
-  /* node-about_page-body */           ),
-  /* node-about_page-body */           'php_code' => array(
-  /* node-about_page-body */             'weight' => -7,
   /* node-about_page-body */           ),
   /* node-about_page-body */           'plain_text' => array(
   /* node-about_page-body */             'weight' => -9,
@@ -228,7 +224,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_administration */       'allowed_formats' => array(
   /* node-about_page-field_administration */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_administration */         'full_html' => 'full_html',
-  /* node-about_page-field_administration */         'php_code' => 'php_code',
   /* node-about_page-field_administration */         'plain_text' => 'plain_text',
   /* node-about_page-field_administration */       ),
   /* node-about_page-field_administration */       'allowed_formats_toggle' => 0,
@@ -240,9 +235,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_administration */           ),
   /* node-about_page-field_administration */           'full_html' => array(
   /* node-about_page-field_administration */             'weight' => -8,
-  /* node-about_page-field_administration */           ),
-  /* node-about_page-field_administration */           'php_code' => array(
-  /* node-about_page-field_administration */             'weight' => -7,
   /* node-about_page-field_administration */           ),
   /* node-about_page-field_administration */           'plain_text' => array(
   /* node-about_page-field_administration */             'weight' => -9,
@@ -353,7 +345,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_call_to_action */       'allowed_formats' => array(
   /* node-about_page-field_call_to_action */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_call_to_action */         'full_html' => 'full_html',
-  /* node-about_page-field_call_to_action */         'php_code' => 'php_code',
   /* node-about_page-field_call_to_action */         'plain_text' => 'plain_text',
   /* node-about_page-field_call_to_action */       ),
   /* node-about_page-field_call_to_action */       'allowed_formats_toggle' => 0,
@@ -365,9 +356,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_call_to_action */           ),
   /* node-about_page-field_call_to_action */           'full_html' => array(
   /* node-about_page-field_call_to_action */             'weight' => -8,
-  /* node-about_page-field_call_to_action */           ),
-  /* node-about_page-field_call_to_action */           'php_code' => array(
-  /* node-about_page-field_call_to_action */             'weight' => -7,
   /* node-about_page-field_call_to_action */           ),
   /* node-about_page-field_call_to_action */           'plain_text' => array(
   /* node-about_page-field_call_to_action */             'weight' => -9,
@@ -478,7 +466,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_contact_information */       'allowed_formats' => array(
   /* node-about_page-field_contact_information */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_contact_information */         'full_html' => 'full_html',
-  /* node-about_page-field_contact_information */         'php_code' => 'php_code',
   /* node-about_page-field_contact_information */         'plain_text' => 'plain_text',
   /* node-about_page-field_contact_information */       ),
   /* node-about_page-field_contact_information */       'allowed_formats_toggle' => 0,
@@ -490,9 +477,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_contact_information */           ),
   /* node-about_page-field_contact_information */           'full_html' => array(
   /* node-about_page-field_contact_information */             'weight' => -8,
-  /* node-about_page-field_contact_information */           ),
-  /* node-about_page-field_contact_information */           'php_code' => array(
-  /* node-about_page-field_contact_information */             'weight' => -7,
   /* node-about_page-field_contact_information */           ),
   /* node-about_page-field_contact_information */           'plain_text' => array(
   /* node-about_page-field_contact_information */             'weight' => -9,
@@ -603,7 +587,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_employment */       'allowed_formats' => array(
   /* node-about_page-field_employment */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_employment */         'full_html' => 'full_html',
-  /* node-about_page-field_employment */         'php_code' => 'php_code',
   /* node-about_page-field_employment */         'plain_text' => 'plain_text',
   /* node-about_page-field_employment */       ),
   /* node-about_page-field_employment */       'allowed_formats_toggle' => 0,
@@ -615,9 +598,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_employment */           ),
   /* node-about_page-field_employment */           'full_html' => array(
   /* node-about_page-field_employment */             'weight' => -8,
-  /* node-about_page-field_employment */           ),
-  /* node-about_page-field_employment */           'php_code' => array(
-  /* node-about_page-field_employment */             'weight' => -7,
   /* node-about_page-field_employment */           ),
   /* node-about_page-field_employment */           'plain_text' => array(
   /* node-about_page-field_employment */             'weight' => -9,
@@ -728,7 +708,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_facebook */       'allowed_formats' => array(
   /* node-about_page-field_facebook */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_facebook */         'full_html' => 'full_html',
-  /* node-about_page-field_facebook */         'php_code' => 'php_code',
   /* node-about_page-field_facebook */         'plain_text' => 'plain_text',
   /* node-about_page-field_facebook */       ),
   /* node-about_page-field_facebook */       'allowed_formats_toggle' => 0,
@@ -740,9 +719,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_facebook */           ),
   /* node-about_page-field_facebook */           'full_html' => array(
   /* node-about_page-field_facebook */             'weight' => -8,
-  /* node-about_page-field_facebook */           ),
-  /* node-about_page-field_facebook */           'php_code' => array(
-  /* node-about_page-field_facebook */             'weight' => -7,
   /* node-about_page-field_facebook */           ),
   /* node-about_page-field_facebook */           'plain_text' => array(
   /* node-about_page-field_facebook */             'weight' => -9,
@@ -951,7 +927,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_google_plus */       'allowed_formats' => array(
   /* node-about_page-field_google_plus */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_google_plus */         'full_html' => 'full_html',
-  /* node-about_page-field_google_plus */         'php_code' => 'php_code',
   /* node-about_page-field_google_plus */         'plain_text' => 'plain_text',
   /* node-about_page-field_google_plus */       ),
   /* node-about_page-field_google_plus */       'allowed_formats_toggle' => 0,
@@ -963,9 +938,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_google_plus */           ),
   /* node-about_page-field_google_plus */           'full_html' => array(
   /* node-about_page-field_google_plus */             'weight' => -8,
-  /* node-about_page-field_google_plus */           ),
-  /* node-about_page-field_google_plus */           'php_code' => array(
-  /* node-about_page-field_google_plus */             'weight' => -7,
   /* node-about_page-field_google_plus */           ),
   /* node-about_page-field_google_plus */           'plain_text' => array(
   /* node-about_page-field_google_plus */             'weight' => -9,
@@ -988,6 +960,129 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_google_plus */     'weight' => 19,
   /* node-about_page-field_google_plus */   ),
   /* node-about_page-field_google_plus */ );
+
+  // Exported field_instance: 'node-about_page-field_instagram'.
+  $field_instances['node-about_page-field_instagram'] = array(
+  /* node-about_page-field_instagram */   'bundle' => 'about_page',
+  /* node-about_page-field_instagram */   'default_value' => NULL,
+  /* node-about_page-field_instagram */   'deleted' => 0,
+  /* node-about_page-field_instagram */   'description' => '',
+  /* node-about_page-field_instagram */   'display' => array(
+  /* node-about_page-field_instagram */     'default' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'module' => 'text',
+  /* node-about_page-field_instagram */       'settings' => array(
+  /* node-about_page-field_instagram */         'field_formatter_class' => '',
+  /* node-about_page-field_instagram */       ),
+  /* node-about_page-field_instagram */       'type' => 'text_default',
+  /* node-about_page-field_instagram */       'weight' => 19,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'events_list' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'one_column_teaser' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'post_teaser_group_landing_page' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'search_teaser' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'sidebar_' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'sidebar_teaser_v2' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'teaser' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'teaserthumb' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'time_and_location' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'title_and_time' => array(
+  /* node-about_page-field_instagram */       'label' => 'above',
+  /* node-about_page-field_instagram */       'settings' => array(),
+  /* node-about_page-field_instagram */       'type' => 'hidden',
+  /* node-about_page-field_instagram */       'weight' => 0,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */   ),
+  /* node-about_page-field_instagram */   'entity_type' => 'node',
+  /* node-about_page-field_instagram */   'fences_wrapper' => 'div',
+  /* node-about_page-field_instagram */   'field_name' => 'field_instagram',
+  /* node-about_page-field_instagram */   'label' => 'Instagram',
+  /* node-about_page-field_instagram */   'required' => 0,
+  /* node-about_page-field_instagram */   'settings' => array(
+  /* node-about_page-field_instagram */     'better_formats' => array(
+  /* node-about_page-field_instagram */       'allowed_formats' => array(
+  /* node-about_page-field_instagram */         'filtered_html' => 'filtered_html',
+  /* node-about_page-field_instagram */         'full_html' => 'full_html',
+  /* node-about_page-field_instagram */         'plain_text' => 'plain_text',
+  /* node-about_page-field_instagram */         'sessions_wysiwyg' => 'sessions_wysiwyg',
+  /* node-about_page-field_instagram */       ),
+  /* node-about_page-field_instagram */       'allowed_formats_toggle' => 0,
+  /* node-about_page-field_instagram */       'default_order_toggle' => 0,
+  /* node-about_page-field_instagram */       'default_order_wrapper' => array(
+  /* node-about_page-field_instagram */         'formats' => array(
+  /* node-about_page-field_instagram */           'filtered_html' => array(
+  /* node-about_page-field_instagram */             'weight' => -10,
+  /* node-about_page-field_instagram */           ),
+  /* node-about_page-field_instagram */           'full_html' => array(
+  /* node-about_page-field_instagram */             'weight' => -8,
+  /* node-about_page-field_instagram */           ),
+  /* node-about_page-field_instagram */           'plain_text' => array(
+  /* node-about_page-field_instagram */             'weight' => -9,
+  /* node-about_page-field_instagram */           ),
+  /* node-about_page-field_instagram */           'sessions_wysiwyg' => array(
+  /* node-about_page-field_instagram */             'weight' => 0,
+  /* node-about_page-field_instagram */           ),
+  /* node-about_page-field_instagram */         ),
+  /* node-about_page-field_instagram */       ),
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'text_processing' => 0,
+  /* node-about_page-field_instagram */     'user_register_form' => FALSE,
+  /* node-about_page-field_instagram */   ),
+  /* node-about_page-field_instagram */   'widget' => array(
+  /* node-about_page-field_instagram */     'active' => 1,
+  /* node-about_page-field_instagram */     'module' => 'text',
+  /* node-about_page-field_instagram */     'settings' => array(
+  /* node-about_page-field_instagram */       'size' => 60,
+  /* node-about_page-field_instagram */     ),
+  /* node-about_page-field_instagram */     'type' => 'text_textfield',
+  /* node-about_page-field_instagram */     'weight' => 21,
+  /* node-about_page-field_instagram */   ),
+  /* node-about_page-field_instagram */ );
 
   // Exported field_instance: 'node-about_page-field_leadership'.
   $field_instances['node-about_page-field_leadership'] = array(
@@ -1076,7 +1171,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_leadership */       'allowed_formats' => array(
   /* node-about_page-field_leadership */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_leadership */         'full_html' => 'full_html',
-  /* node-about_page-field_leadership */         'php_code' => 'php_code',
   /* node-about_page-field_leadership */         'plain_text' => 'plain_text',
   /* node-about_page-field_leadership */       ),
   /* node-about_page-field_leadership */       'allowed_formats_toggle' => 0,
@@ -1088,9 +1182,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_leadership */           ),
   /* node-about_page-field_leadership */           'full_html' => array(
   /* node-about_page-field_leadership */             'weight' => -8,
-  /* node-about_page-field_leadership */           ),
-  /* node-about_page-field_leadership */           'php_code' => array(
-  /* node-about_page-field_leadership */             'weight' => -7,
   /* node-about_page-field_leadership */           ),
   /* node-about_page-field_leadership */           'plain_text' => array(
   /* node-about_page-field_leadership */             'weight' => -9,
@@ -1201,7 +1292,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_linkedin */       'allowed_formats' => array(
   /* node-about_page-field_linkedin */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_linkedin */         'full_html' => 'full_html',
-  /* node-about_page-field_linkedin */         'php_code' => 'php_code',
   /* node-about_page-field_linkedin */         'plain_text' => 'plain_text',
   /* node-about_page-field_linkedin */       ),
   /* node-about_page-field_linkedin */       'allowed_formats_toggle' => 0,
@@ -1213,9 +1303,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_linkedin */           ),
   /* node-about_page-field_linkedin */           'full_html' => array(
   /* node-about_page-field_linkedin */             'weight' => -8,
-  /* node-about_page-field_linkedin */           ),
-  /* node-about_page-field_linkedin */           'php_code' => array(
-  /* node-about_page-field_linkedin */             'weight' => -7,
   /* node-about_page-field_linkedin */           ),
   /* node-about_page-field_linkedin */           'plain_text' => array(
   /* node-about_page-field_linkedin */             'weight' => -9,
@@ -1243,7 +1330,7 @@ function gn2_about_field_default_field_instances() {
   $field_instances['node-about_page-field_main_image'] = array(
   /* node-about_page-field_main_image */   'bundle' => 'about_page',
   /* node-about_page-field_main_image */   'deleted' => 0,
-  /* node-about_page-field_main_image */   'description' => '',
+  /* node-about_page-field_main_image */   'description' => 'The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.',
   /* node-about_page-field_main_image */   'display' => array(
   /* node-about_page-field_main_image */     'default' => array(
   /* node-about_page-field_main_image */       'label' => 'above',
@@ -1449,7 +1536,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_mission */       'allowed_formats' => array(
   /* node-about_page-field_mission */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_mission */         'full_html' => 'full_html',
-  /* node-about_page-field_mission */         'php_code' => 'php_code',
   /* node-about_page-field_mission */         'plain_text' => 'plain_text',
   /* node-about_page-field_mission */       ),
   /* node-about_page-field_mission */       'allowed_formats_toggle' => 0,
@@ -1461,9 +1547,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_mission */           ),
   /* node-about_page-field_mission */           'full_html' => array(
   /* node-about_page-field_mission */             'weight' => -8,
-  /* node-about_page-field_mission */           ),
-  /* node-about_page-field_mission */           'php_code' => array(
-  /* node-about_page-field_mission */             'weight' => -7,
   /* node-about_page-field_mission */           ),
   /* node-about_page-field_mission */           'plain_text' => array(
   /* node-about_page-field_mission */             'weight' => -9,
@@ -1574,7 +1657,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_org_short_title */       'allowed_formats' => array(
   /* node-about_page-field_org_short_title */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_org_short_title */         'full_html' => 'full_html',
-  /* node-about_page-field_org_short_title */         'php_code' => 'php_code',
   /* node-about_page-field_org_short_title */         'plain_text' => 'plain_text',
   /* node-about_page-field_org_short_title */       ),
   /* node-about_page-field_org_short_title */       'allowed_formats_toggle' => 0,
@@ -1586,9 +1668,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_org_short_title */           ),
   /* node-about_page-field_org_short_title */           'full_html' => array(
   /* node-about_page-field_org_short_title */             'weight' => -8,
-  /* node-about_page-field_org_short_title */           ),
-  /* node-about_page-field_org_short_title */           'php_code' => array(
-  /* node-about_page-field_org_short_title */             'weight' => -7,
   /* node-about_page-field_org_short_title */           ),
   /* node-about_page-field_org_short_title */           'plain_text' => array(
   /* node-about_page-field_org_short_title */             'weight' => -9,
@@ -1699,7 +1778,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_twitter */       'allowed_formats' => array(
   /* node-about_page-field_twitter */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_twitter */         'full_html' => 'full_html',
-  /* node-about_page-field_twitter */         'php_code' => 'php_code',
   /* node-about_page-field_twitter */         'plain_text' => 'plain_text',
   /* node-about_page-field_twitter */       ),
   /* node-about_page-field_twitter */       'allowed_formats_toggle' => 0,
@@ -1711,9 +1789,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_twitter */           ),
   /* node-about_page-field_twitter */           'full_html' => array(
   /* node-about_page-field_twitter */             'weight' => -8,
-  /* node-about_page-field_twitter */           ),
-  /* node-about_page-field_twitter */           'php_code' => array(
-  /* node-about_page-field_twitter */             'weight' => -7,
   /* node-about_page-field_twitter */           ),
   /* node-about_page-field_twitter */           'plain_text' => array(
   /* node-about_page-field_twitter */             'weight' => -9,
@@ -1824,7 +1899,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_visitor_information */       'allowed_formats' => array(
   /* node-about_page-field_visitor_information */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_visitor_information */         'full_html' => 'full_html',
-  /* node-about_page-field_visitor_information */         'php_code' => 'php_code',
   /* node-about_page-field_visitor_information */         'plain_text' => 'plain_text',
   /* node-about_page-field_visitor_information */       ),
   /* node-about_page-field_visitor_information */       'allowed_formats_toggle' => 0,
@@ -1836,9 +1910,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_visitor_information */           ),
   /* node-about_page-field_visitor_information */           'full_html' => array(
   /* node-about_page-field_visitor_information */             'weight' => -8,
-  /* node-about_page-field_visitor_information */           ),
-  /* node-about_page-field_visitor_information */           'php_code' => array(
-  /* node-about_page-field_visitor_information */             'weight' => -7,
   /* node-about_page-field_visitor_information */           ),
   /* node-about_page-field_visitor_information */           'plain_text' => array(
   /* node-about_page-field_visitor_information */             'weight' => -9,
@@ -1949,7 +2020,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_youtube */       'allowed_formats' => array(
   /* node-about_page-field_youtube */         'filtered_html' => 'filtered_html',
   /* node-about_page-field_youtube */         'full_html' => 'full_html',
-  /* node-about_page-field_youtube */         'php_code' => 'php_code',
   /* node-about_page-field_youtube */         'plain_text' => 'plain_text',
   /* node-about_page-field_youtube */       ),
   /* node-about_page-field_youtube */       'allowed_formats_toggle' => 0,
@@ -1961,9 +2031,6 @@ function gn2_about_field_default_field_instances() {
   /* node-about_page-field_youtube */           ),
   /* node-about_page-field_youtube */           'full_html' => array(
   /* node-about_page-field_youtube */             'weight' => -8,
-  /* node-about_page-field_youtube */           ),
-  /* node-about_page-field_youtube */           'php_code' => array(
-  /* node-about_page-field_youtube */             'weight' => -7,
   /* node-about_page-field_youtube */           ),
   /* node-about_page-field_youtube */           'plain_text' => array(
   /* node-about_page-field_youtube */             'weight' => -9,
@@ -2210,11 +2277,13 @@ function gn2_about_field_default_field_instances() {
   t('Google Plus');
   t('Group content visibility');
   t('Groups audience');
+  t('Instagram');
   t('Leadership');
   t('LinkedIn');
   t('Main Image');
   t('Mission');
   t('Org Short Title');
+  t('The "Main Image" appears before the text of your news item, between the title and author information. If you do not also upload a thumbnail image, this image will accompany any teasers for this news item. Files must not exceed 8 MB and be 800 x 500 in dimension. Allowed file types: png gif jpg jpeg. Images should be rectangular such that the horizontal dimensions are largest.');
   t('Twitter');
   t('Visitor Information');
   t('Who can see this content?');

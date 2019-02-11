@@ -9,12 +9,13 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
    * Implements EntityReferenceHandler::getInstance().
    */
   public static function getInstance($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
-    return new EntityReference_SelectionHandler_Views($field, $instance);
+    return new EntityReference_SelectionHandler_Views($field, $instance, $entity);
   }
 
-  protected function __construct($field, $instance) {
+  protected function __construct($field, $instance, $entity) {
     $this->field = $field;
     $this->instance = $instance;
+    $this->entity = $entity;
   }
 
   /**
@@ -52,14 +53,8 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
       );
 
       $default = !empty($view_settings['args']) ? implode(', ', $view_settings['args']) : '';
-      $form['view']['args'] = array(
-        '#type' => 'textfield',
-        '#title' => t('View arguments'),
-        '#default_value' => $default,
-        '#required' => FALSE,
-        '#description' => t('Provide a comma separated list of arguments to pass to the view.'),
-      );
-    
+      $description = t('Provide a comma separated list of arguments to pass to the view.') . '<br />' . t('This field supports tokens.');
+
       $dropdown_array = array(
         '0' => 'No',
         '1' => 'Yes',
@@ -73,7 +68,31 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
         '#default_value' => variable_get('er-22-' . $field['field_name']),
         '#description' => t('Choosing yes will automaitcally look for parent group if no arg is passed via field.'),
       );
-     
+
+      if (!module_exists('token')) {
+        $description .= '<br>' . t('Install the <a href="@url">token module</a> to get more tokens and display available once.', array('@url' => 'http://drupal.org/project/token'));
+      }
+
+      $form['view']['args'] = array(
+        '#type' => 'textfield',
+        '#title' => t('View arguments'),
+        '#default_value' => $default,
+        '#required' => FALSE,
+        '#description' => $description,
+        '#maxlength' => '512',
+      );
+      if (module_exists('token')) {
+        // Get the token type for the entity type our field is in (a type 'taxonomy_term' has a 'term' type token).
+        $info = entity_get_info($instance['entity_type']);
+
+        $form['view']['tokens'] = array(
+          '#theme' => 'token_tree',
+          '#token_types' => array($info['token type']),
+          '#global_types' => TRUE,
+          '#click_insert' => TRUE,
+          '#dialog' => TRUE,
+        );
+      }
     }
     else {
       $form['view']['no_view_help'] = array(
@@ -99,6 +118,7 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
       return FALSE;
     }
     $this->view->set_display($display_name);
+    $this->view->pre_execute();
 
     // Make sure the query is not cached.
     $this->view->is_cacheable = FALSE;
@@ -119,9 +139,9 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
    */
   public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $display_name = $this->field['settings']['handler_settings']['view']['display_name'];
-    
+
     // If pass group parent ID as argument is selected.
-    if (variable_get('er-22-' . $this->field['field_name']) == 1 && !empty($_SESSION['og_context']['gid'])) {      
+    if (variable_get('er-22-' . $this->field['field_name']) == 1 && !empty($_SESSION['og_context']['gid'])) {
       $arg_array = og_get_entity_groups('node', $_SESSION['og_context']['gid']);
       foreach ($arg_array['node'] as $key => $a_array) {
         $args[0] = $a_array;
@@ -134,7 +154,7 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
         $args[0] = $_SESSION['og_context']['gid'];
       }
     }
-    
+
     // If pass group parent ID as argument is not selected.
     else {
       $args = $this->field['settings']['handler_settings']['view']['args'];
@@ -155,8 +175,7 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
         $return[$bundle][$id] = $result[$id];
       }
     }
-    
-    return $return;    
+    return $return;
   }
 
   /**
@@ -169,8 +188,8 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
 
   function validateReferencableEntities(array $ids) {
     $display_name = $this->field['settings']['handler_settings']['view']['display_name'];
-    
-    if (variable_get('er-22-' . $this->field['field_name']) == 1 && !empty($_SESSION['og_context']['gid'])) {      
+
+    if (variable_get('er-22-' . $this->field['field_name']) == 1 && !empty($_SESSION['og_context']['gid'])) {
       $arg_array = og_get_entity_groups('node', $_SESSION['og_context']['gid']);
       foreach ($arg_array['node'] as $key => $a_array) {
         $args[0] = $a_array;
@@ -182,17 +201,19 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
         $args[0] = $_SESSION['og_context']['gid'];
       }
     }
-        
+
     // If pass group parent ID as argument is not selected.
     else {
       $args = $this->field['settings']['handler_settings']['view']['args'];
     }
-    
+
     $result = array();
     if ($this->initializeView(NULL, 'CONTAINS', 0, $ids)) {
       // Get the results.
       $entities = $this->view->execute_display($display_name, $args);
-      $result = array_keys($entities);
+      if (!empty($entities)) {
+        $result = array_keys($entities);
+      }
     }
     return $result;
   }
@@ -218,11 +239,53 @@ class EntityReference_SelectionHandler_Views implements EntityReference_Selectio
 
   }
 
+  /**
+   * Handles arguments for views.
+   *
+   * Replaces tokens using token_replace().
+   *
+   * @param array $args
+   *   Usually $this->field['settings']['handler_settings']['view']['args'].
+   *
+   * @return array
+   *   The arguments to be send to the View.
+   */
+  protected function handleArgs($args) {
+    if (!module_exists('token')) {
+      return $args;
+    }
+
+    // Parameters for token_replace().
+    $data = array();
+    $options = array('clear' => TRUE);
+
+    if ($entity = $this->entity) {
+      // D7 HACK: For new entities, entity and revision id are not set. This leads to
+      // * token replacement emitting PHP warnings
+      // * views choking on empty arguments
+      // We workaround this by filling in '0' for these IDs
+      // and use a clone to leave no traces of our unholy doings.
+      $info = entity_get_info($this->instance['entity_type']);
+      if (!isset($entity->{$info['entity keys']['id']})) {
+        $entity = clone $entity;
+        $entity->{$info['entity keys']['id']} = '0';
+        if (!empty($info['entity keys']['revision'])) {
+          $entity->{$info['entity keys']['revision']} = '0';
+        }
+      }
+
+      $data[$info['token type']] = $entity;
+    }
+    // Replace tokens for each argument.
+    foreach ($args as $key => $arg) {
+      $args[$key] = token_replace($arg, $data, $options);
+    }
+    return $args;
+  }
 }
 
 function entityreference_view_settings_validate($element, &$form_state, $form) {
   // Split view name and display name from the 'view_and_display' value.
-
   if (!empty($element['view_and_display']['#value'])) {
     list($view, $display) = explode(':', $element['view_and_display']['#value']);
   }
@@ -248,5 +311,4 @@ function entityreference_view_settings_validate($element, &$form_state, $form) {
 
   // Set our value for group parent Id select.
   variable_set('er-22-' . $form['#instance']['field_name'], $element['entity_ref_selection_override']['#value']);
-  
 }

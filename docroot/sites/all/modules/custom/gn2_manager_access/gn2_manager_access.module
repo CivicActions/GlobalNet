@@ -242,6 +242,8 @@ function gn2_manager_access_menu_alter(&$items) {
   $items['node/add/news']['access arguments'][] = 'create news content';
   $items['node/add/program']['access callback'] = 'gn2_manager_access_group_menu_by_role';
   $items['node/add/program']['access arguments'][] = 'create program content';
+  $items['node/add/resource-item']['access callback'] = 'gn2_manager_access_group_menu_by_role';
+  $items['node/add/resource-item']['access arguments'][] = 'create resource_item content';
   $items['node/%node/votes']['access callback'] = 'gn2_manager_access_is_org_manager';
   $items['node/add/publication']['access callback'] = 'gn2_manager_access_group_menu_by_role';
   $items['node/add/publication']['access arguments'][] = 'create publication content';
@@ -375,6 +377,7 @@ function gn2_manager_access_node_grants($account, $op) {
   $org_mgr = array();
   $faculty = array();
   $group_mgr = array();
+  $content_spec = array();
 
   if ($account->uid > 0) {
     $groups = og_get_groups_by_user($account);
@@ -383,9 +386,10 @@ function gn2_manager_access_node_grants($account, $op) {
   if (!empty($groups) && array_key_exists('node', $groups)) {
     foreach ($groups['node'] as $gid) {
       $roles = og_get_user_roles('node', $gid);
-      if (in_array('org_manager', $roles) || in_array('faculty', $roles)) {
+      if (in_array('org_manager', $roles) || in_array('faculty', $roles) || in_array('Content Specialist', $roles)) {
         $org_mgr[] = $gid;
       }
+
       if (in_array('faculty', $roles)) {
         $faculty[] = $gid;
 
@@ -397,6 +401,19 @@ function gn2_manager_access_node_grants($account, $op) {
           }
         }
       }
+
+      if (in_array('Content Specialist', $roles)) {
+        $content_spec[] = $gid;
+
+        // Allow access to VIEW the Course. RD-4064.
+        if (arg(0) == 'node' && is_numeric(arg(1))) {
+          $loaded_node = node_load(arg(1));
+          if ($loaded_node->type == 'course') {
+            $content_spec[] = $loaded_node->nid;
+          }
+        }
+      }
+
       if (in_array('group_manager', $roles)) {
         $group_mgr[] = $gid;
       }
@@ -422,6 +439,14 @@ function gn2_manager_access_node_grants($account, $op) {
 
       // Add the nodes to the realm.
       $grants[$realm][] = $instructor;
+    }
+  }
+
+  // Grants for content specialists.
+  if (!empty($content_spec)) {
+    foreach ($content_spec as $specialist) {
+      // Add the nodes to the realm.
+      $grants['GN2ACCESS_CONTENT_SPECIALIST'][] = $specialist;
     }
   }
 
@@ -527,7 +552,6 @@ function gn2_manager_access_node_access_records($node) {
 
   $grants = array();
 
-
   $orgs = gn2_manager_access_get_org_ids(array($node->nid));
 
   if (!empty($orgs) && $node->type !== 'organization') {
@@ -548,6 +572,19 @@ function gn2_manager_access_node_access_records($node) {
 
   if ($node->type == 'course' || $node->type == 'course_group') {
     $realm = 'GN2ACCESS_FACULTY';
+    $grants[] = array(
+      'realm' => $realm,
+      'gid' => $node->nid,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    );
+  }
+
+  // Access grants for content specialists.
+  if ($node->type == 'course') {
+    $realm = 'GN2ACCESS_CONTENT_SPECIALIST';
     $grants[] = array(
       'realm' => $realm,
       'gid' => $node->nid,
@@ -805,21 +842,57 @@ function gn2_manager_access_group_org_only() {
  * Course only links.
  */
 function gn2_manager_access_course_only($node) {
-  return ($node->type == 'course') ? TRUE : FALSE;
+  if ($node->type == 'course') {
+    global $user;
+    // Apply access check from target view to menu item
+    if (og_user_access('node', $node->nid, 'view og entityform submissions', $user)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
 }
 
 /**
  * Event only links.
  */
 function gn2_manager_access_event_only($node) {
-  return ($node->type == 'event') ? TRUE : FALSE;
+  if ($node->type == 'event') {
+    global $user;
+    // Apply access check from target view to menu item
+    if (og_user_access('node', $node->nid, 'view og entityform submissions', $user)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
 }
 
 /**
  * Group only links.
  */
 function gn2_manager_access_group_only($node) {
-  return ($node->type == 'group') ? TRUE : FALSE;
+  if ($node->type == 'group') {
+    global $user;
+    // Apply access check from target view to menu item
+    if (og_user_access('node', $node->nid, 'view og entityform submissions', $user)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
 }
 
 /**
@@ -879,9 +952,10 @@ function gn2_manager_access_manage_block() {
     $manager_roles = array(
       'group_manager',
       'org_manager',
+      'Content Specialist',
     );
 
-    // If the user is already a manager, don't show the block.
+    // If the user is already a manager or content specialist, don't show the block.
     if (array_intersect($manager_roles, $group_roles)) {
       return;
     }
@@ -891,6 +965,9 @@ function gn2_manager_access_manage_block() {
       NULL;
     $org_role = ($org) ? og_get_user_roles('node', $org[0]['target_id'], $user->uid) : array();
     $org_manager = (in_array('org_manager', $org_role)) ? TRUE : FALSE;
+
+    // Check to see if the user is a Content Specialist for the parent Organization.
+    $content_spec = (in_array('Content Specialist', $org_role)) ? TRUE : FALSE;
 
     // Check to see if the user is a Group Manager for a parent Group.
     $manager = FALSE;
@@ -905,7 +982,7 @@ function gn2_manager_access_manage_block() {
       $parent_node = $group;
     }
 
-    return ($org_manager || $manager) ? gn2_manager_access_manage_button($gid, $user->uid, $node->type, $is_group) :
+    return ($org_manager || $manager || $content_spec) ? gn2_manager_access_manage_button($gid, $user->uid, $node->type, $is_group, $org_role) :
       NULL;
   }
 }
@@ -922,8 +999,8 @@ function gn2_manager_access_manage_block() {
  * @param bool $is_group
  *   1 if the current node is an Organic Group, else 0.
  */
-function gn2_manager_access_manage_button($gid, $uid, $type, $is_group) {
-  $form = drupal_get_form('gn2_manager_access_manage_form', $gid, $uid, $type, $is_group);
+function gn2_manager_access_manage_button($gid, $uid, $type, $is_group, $org_role) {
+  $form = drupal_get_form('gn2_manager_access_manage_form', $gid, $uid, $type, $is_group, $org_role);
   return ($form) ? drupal_render($form) : NULL;
 }
 
@@ -942,7 +1019,7 @@ function gn2_manager_access_manage_button($gid, $uid, $type, $is_group) {
  * @see gn2_manager_access_manage_form_validate().
  * @see gn2_manager_access_manage_form_submit().
  */
-function gn2_manager_access_manage_form($form, &$form_state, $gid, $uid, $type, $is_group) {
+function gn2_manager_access_manage_form($form, &$form_state, $gid, $uid, $type, $is_group, $org_role) {
   global $user;
   // Since we are allowing users to become managers, we are going to be careful.
   if ($user->uid != $uid) {
@@ -959,6 +1036,10 @@ function gn2_manager_access_manage_form($form, &$form_state, $gid, $uid, $type, 
   $form['is_group'] = array(
     '#type' => 'hidden',
     '#value' => $is_group,
+  );
+  $form['org_role'] = array(
+    '#type' => 'hidden',
+    '#value' => $org_role,
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -997,7 +1078,8 @@ function gn2_manager_access_manage_form_validate($form, &$form_state) {
 function gn2_manager_access_manage_form_submit($form, &$form_state) {
   global $user;
   $node = node_load($form_state['values']['gid']);
-  gn2_manager_access_add_manager($node, $user);
+  $org_role = $form_state['values']['org_role'];
+  gn2_manager_access_add_manager($node, $user, $org_role);
 }
 
 /**
@@ -1012,15 +1094,18 @@ function gn2_manager_access_manage_form_submit($form, &$form_state) {
  * @param object $account
  *   The user account.
  */
-function gn2_manager_access_add_manager($node, $account) {
+function gn2_manager_access_add_manager($node, $account, $org_role) {
   $values = array(
     'entity_type' => 'user',
     'entity' => $account,
     'state' => OG_STATE_ACTIVE,
   );
+
   // Check if the user is already a member of the group.
   $is_member = (og_is_member('node', $node->nid)) ? 1 : 0;
   $manager = FALSE;
+  $content_spec = FALSE;
+
   // Add user to Group.
   if (!$is_member) {
     og_group('node', $node->nid, $values);
@@ -1031,23 +1116,45 @@ function gn2_manager_access_add_manager($node, $account) {
       'group_manager',
       'org_manager',
     );
+
+    $specialist_roles = array(
+      'Content Specialist',
+    );
+
     $group_roles = og_get_user_roles('node', $node->nid);
     $manager = array_intersect($manager_roles, $group_roles);
+    $content_spec = array_intersect($specialist_roles, $group_roles);
+
   }
 
-  // If the user is not a manager, add the role.
-  if (!$manager) {
-    // Get all of the Roles for this Group.
-    $roles = og_roles('node', $node->type, $node->nid);
+  // Get all of the Roles for this Group.
+  $roles = og_roles('node', $node->type, $node->nid);
+
+  // If the user is not a manager, but they are at the org level add the role.
+  if (!$manager && (in_array('org_manager', $org_role) || in_array('hr_manager', $org_role))) {
     // Find the Role ID for org_manager.
     $rid = array_search('org_manager', $roles);
     // Make the user an org_manager.
     og_role_grant('node', $node->nid, $account->uid, $rid);
     $updated = gn2_manager_access_log_manager_event($account->uid, $node->nid, $rid, $is_member);
     if ($updated) {
-      drupal_set_message(t('You have been granted temporary manager access for this group.'));
+      drupal_set_message(t('You have been granted manager access for this group.'));
     }
   }
+
+  // If the user is not a content specialist, but they are at the org level add the role.
+  if (!$content_spec && in_array('Content Specialist', $org_role)) {
+    // Find the Role ID for content specialist.
+    $rid = array_search('Content Specialist', $roles);
+    // Make the user a content specialist.
+    og_role_grant('node', $node->nid, $account->uid, $rid);
+    $updated = gn2_manager_access_log_manager_event($account->uid, $node->nid, $rid, $is_member);
+    if ($updated) {
+      drupal_set_message(t('You have been granted content specialist access for this group.'));
+    }
+  }
+
+
 }
 
 /**
@@ -1299,8 +1406,15 @@ function _gn2_manager_access_clone_node() {
     global $user;
     $gid = arg(1);
     $node = node_load($gid);
-    if (og_is_group_type('node', $node->type) && $node->type == "organization") {
-      return FALSE;
+    if (og_is_group_type('node', $node->type)) {
+      // Do not allow organizations to be cloned.
+      if ($node->type == "organization") {
+        return FALSE;
+      }
+      elseif (!og_user_access('node', $gid, 'administer group', $user)) {
+        // For other group types, allow if user has administer group perms.
+        return FALSE;
+      }
     }
   }
   return TRUE;
@@ -1385,7 +1499,7 @@ function gn2_manager_access_entityform_insert($entityform) {
       }
     }
     global $base_url;
-    $params['body'] .= 'For further details, view the full request: ' . $base_url . '/entityform/' . $entityform->entityform_id;
+    $params['body'] .= 'For further details, view the full request: ' . $base_url . '/admin/manage/users/regforms/' . $entityform->entityform_id;
 
     drupal_mail('gn2_manager_access', 'gn2_manager_access_send', $to, language_default(), $params, 'admin@globalnet.org', TRUE);
   }
@@ -1420,8 +1534,8 @@ function gn2_manager_access_is_organization_manager($manager_roles) {
   // If Path Alias XT gets in the way, try to find a match for the short title.
   else {
     $gid = db_query('SELECT nid FROM {node} n '
-      . 'JOIN {field_data_field_org_short_title} s ON s.revision_id = n.vid '
-      . 'WHERE s.field_org_short_title_value = :title', array(':title' => arg(0)))->fetchField();
+                    . 'JOIN {field_data_field_org_short_title} s ON s.revision_id = n.vid '
+                    . 'WHERE s.field_org_short_title_value = :title', array(':title' => arg(0)))->fetchField();
   }
   $roles = ($gid) ? og_get_user_roles('node', $gid) : array();
   $access = array_intersect($manager_roles, $roles);
@@ -1442,9 +1556,12 @@ function gn2_manager_access_views_api($module = NULL, $api = NULL) {
 }
 
 /**
- * RD-3571 - Helper funtion to alter Access Callback for Track tab.
+ * RD-3571 - Helper function to alter Access Callback for Track tab.
  */
 function _gn2_manager_access_track_tab() {
+  if (user_is_anonymous()) {
+    return FALSE;
+  }
   if (arg(0) == 'node' && is_numeric(arg(1))) {
     $nid = arg(1);
     $node = node_load($nid);
@@ -1455,11 +1572,37 @@ function _gn2_manager_access_track_tab() {
       $parent_org = field_get_items('node', $node, 'field_parent_organization');
       $gid = ($parent_org) ? $parent_org[0]['target_id'] : NULL;
     }
+
     $org_roles = ($gid) ? og_get_user_roles('node', $gid) : array();
+
     // Check if the current user is an Org_manager.
     if (in_array('org_manager', $org_roles)) {
       return TRUE;
     }
+
+    // Check if the content is a Course or associated with a Course; @see RD-4171.
+    $course_roles = [];
+    // If this nod is a Course, check the user's roles for this node.
+    if ($node->type === 'course') {
+      $course_roles = og_get_user_roles('node', $nid);
+    }
+    elseif (isset($node->og_group_ref)) {
+
+      // Get the parent node so that we can check the user's roles for that node.
+      $parent = field_get_items('node', $node, 'og_group_ref');
+      $pid = $parent[0]['target_id'];
+      $type = ($pid) ? db_query('SELECT type FROM {node} WHERE nid = :nid',
+        [':nid' => $pid])->fetchField() : NULL;
+      // If the parent node is a Course, check the user's roles.
+      if ($type === 'course') {
+        $course_roles = og_get_user_roles('node', $pid);
+      }
+    }
+
+    if (in_array('group_manager', $course_roles)) {
+      return TRUE;
+    }
+
     // Execute default access verification.
     return _og_role_watchdog_node_grants_access($node);
   }

@@ -678,7 +678,8 @@ class Base extends RawDrupalContext implements SnippetAcceptingContext {
       }
 
       // Replace the token with the first result found.
-      $id = array_shift(array_keys($result[$entity_type]));
+      $result_keys = array_keys($result[$entity_type]);
+      $id = array_shift($result_keys);
       $string = str_replace('{' . $entity_type .':' . $property.':' . $value . '}', $id, $string);
     }
     return $string;

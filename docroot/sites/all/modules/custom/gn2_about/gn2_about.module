@@ -14,3 +14,34 @@ function gn2_about_ctools_plugin_directory($owner, $plugin_type) {
     return 'plugins/' . $plugin_type;
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gn2_about_form_about_page_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'gn2_about_check_social_links';
+}
+
+/**
+ * Validate handler to check that social media URLs are valid.
+ */
+function gn2_about_check_social_links($form, &$form_state) {
+  $social_fields = [
+    'field_facebook',
+    'field_twitter',
+    'field_linkedin',
+    'field_google_plus',
+    'field_youtube',
+    'field_instagram',
+  ];
+  foreach ($social_fields as $field) {
+    $value = $form_state['values'][$field][LANGUAGE_NONE][0]['value'];
+    if ($value && !valid_url($value, TRUE)) {
+      $info = field_info_instance('node', $field, 'about_page');
+      form_set_error($field, t('The %name URL %url is not a valid URL. URLs must start with http or https and contain a top level domain such as .com or .org. For example, https://www.facebook.com/DKIAPCSS/', [
+        '%name' => $info['label'],
+        '%url' => $value,
+      ]));
+    }
+  }
+}

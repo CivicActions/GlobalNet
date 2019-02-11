@@ -654,9 +654,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_content */  /* Manage Content */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* admin_content */  /* Manage Content */ $handler->display->display_options['filters']['type']['value'] = array(
   /* admin_content */  /* Manage Content */   'about_page' => 'about_page',
-  /* admin_content */  /* Manage Content */   'alumni_group' => 'alumni_group',
   /* admin_content */  /* Manage Content */   'announcement' => 'announcement',
-  /* admin_content */  /* Manage Content */   'coi' => 'coi',
   /* admin_content */  /* Manage Content */   'course' => 'course',
   /* admin_content */  /* Manage Content */   'course_group' => 'course_group',
   /* admin_content */  /* Manage Content */   'program' => 'program',
@@ -1137,7 +1135,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['title'] = 'Manage Content';
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['defaults']['pager'] = FALSE;
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['type'] = 'full';
-  /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['options']['items_per_page'] = '100';
+  /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['options']['items_per_page'] = '20';
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['options']['offset'] = '0';
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['options']['id'] = '0';
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['pager']['options']['quantity'] = '9';
@@ -1507,9 +1505,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* admin_content */  /* Dashboard | Manage Content */ $handler->display->display_options['filters']['type']['value'] = array(
   /* admin_content */  /* Dashboard | Manage Content */   'about_page' => 'about_page',
-  /* admin_content */  /* Dashboard | Manage Content */   'alumni_group' => 'alumni_group',
   /* admin_content */  /* Dashboard | Manage Content */   'announcement' => 'announcement',
-  /* admin_content */  /* Dashboard | Manage Content */   'coi' => 'coi',
   /* admin_content */  /* Dashboard | Manage Content */   'course' => 'course',
   /* admin_content */  /* Dashboard | Manage Content */   'course_group' => 'course_group',
   /* admin_content */  /* Dashboard | Manage Content */   'program' => 'program',
@@ -1641,7 +1637,6 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['access']['type'] = 'gn2_manager_access';
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['access']['gn2_roles'] = array(
   /* admin_content */  /* Dashboard | Content Analytics */   'org_manager' => 'org_manager',
-  /* admin_content */  /* Dashboard | Content Analytics */   'faculty' => 'faculty',
   /* admin_content */  /* Dashboard | Content Analytics */ );
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['defaults']['pager'] = FALSE;
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['pager']['type'] = 'full';
@@ -1907,9 +1902,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* admin_content */  /* Dashboard | Content Analytics */ $handler->display->display_options['filters']['type']['value'] = array(
   /* admin_content */  /* Dashboard | Content Analytics */   'about_page' => 'about_page',
-  /* admin_content */  /* Dashboard | Content Analytics */   'alumni_group' => 'alumni_group',
   /* admin_content */  /* Dashboard | Content Analytics */   'announcement' => 'announcement',
-  /* admin_content */  /* Dashboard | Content Analytics */   'coi' => 'coi',
   /* admin_content */  /* Dashboard | Content Analytics */   'course' => 'course',
   /* admin_content */  /* Dashboard | Content Analytics */   'course_group' => 'course_group',
   /* admin_content */  /* Dashboard | Content Analytics */   'program' => 'program',
@@ -2088,7 +2081,6 @@ function gn2_admin_dashboard_views_default_views() {
   /* admin_files */  /* Master */ $handler->display->display_options['access']['type'] = 'gn2_manager_access';
   /* admin_files */  /* Master */ $handler->display->display_options['access']['gn2_roles'] = array(
   /* admin_files */  /* Master */   'org_manager' => 'org_manager',
-  /* admin_files */  /* Master */   'faculty' => 'faculty',
   /* admin_files */  /* Master */ );
   /* admin_files */  /* Master */ $handler->display->display_options['cache']['type'] = 'none';
   /* admin_files */  /* Master */ $handler->display->display_options['query']['type'] = 'views_query';
@@ -2595,7 +2587,11 @@ function gn2_admin_dashboard_views_default_views() {
   /* folder_bulk_delete */  /* Master */ $handler->display->display_options['cache']['type'] = 'none';
   /* folder_bulk_delete */  /* Master */ $handler->display->display_options['query']['type'] = 'views_query';
   /* folder_bulk_delete */  /* Master */ $handler->display->display_options['exposed_form']['type'] = 'basic';
-  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['type'] = 'none';
+  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['type'] = 'full';
+  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['options']['offset'] = '0';
+  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['options']['id'] = '0';
+  /* folder_bulk_delete */  /* Master */ $handler->display->display_options['pager']['options']['quantity'] = '9';
   /* folder_bulk_delete */  /* Master */ $handler->display->display_options['style_plugin'] = 'table';
   /* folder_bulk_delete */  /* Master */ $handler->display->display_options['style_options']['columns'] = array(
   /* folder_bulk_delete */  /* Master */   'views_bulk_operations' => 'views_bulk_operations',
@@ -2714,6 +2710,13 @@ function gn2_admin_dashboard_views_default_views() {
   /* folder_bulk_delete */   t('Sort by'),
   /* folder_bulk_delete */   t('Asc'),
   /* folder_bulk_delete */   t('Desc'),
+  /* folder_bulk_delete */   t('Items per page'),
+  /* folder_bulk_delete */   t('- All -'),
+  /* folder_bulk_delete */   t('Offset'),
+  /* folder_bulk_delete */   t('« first'),
+  /* folder_bulk_delete */   t('‹ previous'),
+  /* folder_bulk_delete */   t('next ›'),
+  /* folder_bulk_delete */   t('last »'),
   /* folder_bulk_delete */   t('file from media_gallery_file'),
   /* folder_bulk_delete */   t('- Choose an operation -'),
   /* folder_bulk_delete */   t('File'),
@@ -3305,7 +3308,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['created']['field'] = 'created';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['created']['date_format'] = 'short';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['created']['second_date_format'] = 'date_format_globalnet_date';
-  /* manage_orphaned_content */  /* Master */ /* Field: Content: Author */
+  /* manage_orphaned_content */  /* Master */ /* Field: Field: Author */
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['field_publication_author']['id'] = 'field_publication_author';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['field_publication_author']['table'] = 'field_data_field_publication_author';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['fields']['field_publication_author']['field'] = 'field_publication_author';
@@ -3338,9 +3341,7 @@ function gn2_admin_dashboard_views_default_views() {
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['filters']['type']['table'] = 'node';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['filters']['type']['field'] = 'type';
   /* manage_orphaned_content */  /* Master */ $handler->display->display_options['filters']['type']['value'] = array(
-  /* manage_orphaned_content */  /* Master */   'alumni_group' => 'alumni_group',
   /* manage_orphaned_content */  /* Master */   'announcement' => 'announcement',
-  /* manage_orphaned_content */  /* Master */   'coi' => 'coi',
   /* manage_orphaned_content */  /* Master */   'course' => 'course',
   /* manage_orphaned_content */  /* Master */   'course_group' => 'course_group',
   /* manage_orphaned_content */  /* Master */   'program' => 'program',
@@ -5713,6 +5714,18 @@ To search for <b>Blocked user accounts</b>, select <b>NO</b>, type in the user i
   /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
   /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['nothing']['alter']['path'] = 'user/[uid]/edit';
   /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* user_bulk_block */  /* Page */ /* Field: User: crm_id */
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['id'] = 'field_crm_id';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['table'] = 'field_data_field_crm_id';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['field'] = 'field_crm_id';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['label'] = 'CRM ID';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['element_type'] = '0';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['element_label_colon'] = FALSE;
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['element_wrapper_type'] = '0';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['element_default_classes'] = FALSE;
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['fields']['field_crm_id']['settings'] = array(
+  /* user_bulk_block */  /* Page */   'field_formatter_class' => '',
+  /* user_bulk_block */  /* Page */ );
   /* user_bulk_block */  /* Page */ $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   /* user_bulk_block */  /* Page */ $handler->display->display_options['defaults']['filters'] = FALSE;
   /* user_bulk_block */  /* Page */ /* Filter criterion: User: Active */
@@ -5760,6 +5773,29 @@ To search for <b>Blocked user accounts</b>, select <b>NO</b>, type in the user i
   /* user_bulk_block */  /* Page */   'name' => 'name',
   /* user_bulk_block */  /* Page */   'mail' => 'mail',
   /* user_bulk_block */  /* Page */ );
+  /* user_bulk_block */  /* Page */ /* Filter criterion: User: crm_id (field_crm_id) */
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['id'] = 'field_crm_id_value';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['table'] = 'field_data_field_crm_id';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['field'] = 'field_crm_id_value';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['operator'] = 'contains';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['exposed'] = TRUE;
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['operator_id'] = 'field_crm_id_value_op';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['label'] = 'CRM ID';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['operator'] = 'field_crm_id_value_op';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['identifier'] = 'field_crm_id_value';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['remember_roles'] = array(
+  /* user_bulk_block */  /* Page */   2 => '2',
+  /* user_bulk_block */  /* Page */   1 => 0,
+  /* user_bulk_block */  /* Page */   9 => 0,
+  /* user_bulk_block */  /* Page */   10 => 0,
+  /* user_bulk_block */  /* Page */   11 => 0,
+  /* user_bulk_block */  /* Page */ );
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_items'] = '10';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_min_chars'] = '0';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_field'] = 'field_crm_id';
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  /* user_bulk_block */  /* Page */ $handler->display->display_options['filters']['field_crm_id_value']['expose']['autocomplete_dependent'] = 0;
   /* user_bulk_block */  /* Page */ $handler->display->display_options['path'] = 'node/%/dashboard/bulk-users';
   /* user_bulk_block */  /* Page */ $handler->display->display_options['menu']['type'] = 'tab';
   /* user_bulk_block */  /* Page */ $handler->display->display_options['menu']['title'] = 'Manage Members';
@@ -5799,6 +5835,7 @@ To search for <b>Active users only</b>, first select<b> YES</b> in the Active dr
 To search for <b>Blocked user accounts</b>, select <b>NO</b>, type in the user information, and click the GO button.'),
   /* user_bulk_block */   t('E-mail'),
   /* user_bulk_block */   t('edit'),
+  /* user_bulk_block */   t('CRM ID'),
   /* user_bulk_block */   t('Combined User Search'),
   /* user_bulk_block */ );
   $export['user_bulk_block'] = $view;

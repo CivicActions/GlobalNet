@@ -11,24 +11,24 @@ function gn2_unblock_user_login(&$edit, $account) {
   // On successful login remove any temporary protection for the IP address
   // and the username.
   $uid = $account->uid;
-  $host = ip_address();
-  $identifier = $uid . '-' . $host;
+  $ip_address = ip_address();
+  $identifier = $uid . '-' . $ip_address;
   if (isset($_SESSION['messages'])) {
     unset($_SESSION['messages']);
   }
-  _gn2_unblock_remove_events($account, $host, $identifier);
+  _gn2_unblock_remove_events($account, $ip_address, $identifier);
 }
 
 /**
  * Implements hook_user_update().
  */
-function gn2_unblock_user_update(&$edit, $account, $category) {
+function gn2_unblock_user_update(&$edit, $account) {
   // The update case can be launched by the user or by any administrator.
   // On update, remove only the user information tracked.
   if (isset($edit['status']) && $edit['status'] != 0) {
-    $host = ip_address();
+    $ip_address = $edit['ip'];
     // Don't remove tracking events if account is blocked.
-    _gn2_unblock_remove_events($account, $host);
+    _gn2_unblock_remove_events($account, $ip_address);
   }
 }
 
@@ -39,7 +39,11 @@ function gn2_unblock_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
     case 'user_login':
     case 'user_login_block':
-      $validate = array('gn2_unblock_set_login_timestamp', 'gn2_unblock_count_attemps');
+      // Add validation functions for user login forms.
+      $validate = [
+        'gn2_unblock_set_login_timestamp',
+        'gn2_unblock_count_attempts',
+      ];
       if (isset($form['#validate']) && is_array($form['#validate'])) {
         $form['#validate'] = array_merge($form['#validate'], $validate);
       }
@@ -54,61 +58,87 @@ function gn2_unblock_form_alter(&$form, $form_state, $form_id) {
  * Form validation handler where we save the login event information.
  */
 function gn2_unblock_set_login_timestamp($form, $form_state) {
-  $pass = trim($form_state['values']['pass']);
   // Don't record a login attempt with no password or username.
-  if (strlen($pass) == 0 || empty($form_state['values']['name'])) {
+  if (!_gn2_unblock_is_password_set($form_state)) {
     return;
   }
 
   // Create the unique id from the User ID and IP or just from the IP.
-  $host = ip_address();
-  $uname = $form_state['values']['name'];
-  $uid = gn2_unlock_get_user_id($uname);
-  $unblock_id = (isset($uid)) ? $uid . '-' . $host : $host;
+  $ip_address = ip_address();
+  $username = $form_state['values']['name'];
+  $identifier = _gn2_unblock_get_identifier($form_state, $ip_address);
 
-  $identifier = (isset($form_state['flood_control_user_identifier'])) ?
-    $form_state['flood_control_user_identifier'] : $unblock_id;
   // Save entry in security log, Username, IP Address and Flood identifier.
-  _gn2_unblock_add_event(check_plain($uname), check_plain($host), check_plain($identifier));
+  _gn2_unblock_add_event(check_plain($username), $ip_address, check_plain($identifier));
 }
 
 /**
  * Form validation handler where we count the login attempts.
  */
-function gn2_unblock_count_attemps($form, $form_state) {
-  $pass = trim($form_state['values']['pass']);
+function gn2_unblock_count_attempts($form, $form_state) {
   // Don't record a login attempt with no password or username.
-  if (strlen($pass) == 0 || empty($form_state['values']['name'])) {
+  if (!_gn2_unblock_is_password_set($form_state)) {
     return;
   }
-  $host = ip_address();
-  $uname = $form_state['values']['name'];
-  $uid = gn2_unlock_get_user_id($uname);
-  $unblock_id = (isset($uid)) ? $uid . '-' . $host : $host;
-  $identifier = (isset($form_state['flood_control_user_identifier'])) ?
-    $form_state['flood_control_user_identifier'] : $unblock_id;
-  
-  $count = gn2_unlock_get_count($identifier);
-  $counter = ($count) ? $count : 1;
+
+  $ip_address = ip_address();
+  $identifier = _gn2_unblock_get_identifier($form_state, $ip_address);
+  $counter = _gn2_unblock_get_attempt_count($identifier);
   $limit = variable_get('user_failed_login_user_limit', 3);
   if ($counter < $limit) {
-    $remaining = $limit - $counter;
-    $tries = format_plural($remaining, 'attempt', 'attempts');
-    drupal_set_message(t('You have @remaining @tries remaining before your account is temporarily blocked.',
-        array(
-          '@remaining' => $remaining,
-          '@tries' => $tries,
-        )), 'error', FALSE);
+    _gn2_unblock_more_attempts($counter, $limit);
   }
   else {
-    $link = l(t('Try again later or request a new password'), 'user/password');
-    $support_link = l(t('Help page'), 'guide/Access-denied/678');
-    if (isset($_SESSION['messages'])) {
-      unset($_SESSION['messages']);
-    }
-    drupal_set_message(t('Sorry, there have been more than !limit failed login attempts for this account. It is temporarily blocked for 15 minutes. !link or check the !support for information pertaining to Access Denied messages.',
-        array('!limit' => $limit, '!link' => $link, '!support' => $support_link)), 'error', FALSE);
+    _gn2_unblock_no_more_attempts($limit);
   }
+}
+
+/**
+ * Alert the user to how many more failed log in attempt that they have.
+ *
+ * @param int $counter
+ *   The number of failed attempts.
+ * @param $limit
+ *   The total allowed failed attempts.
+ */
+function _gn2_unblock_more_attempts($counter, $limit) {
+  $remaining = $limit - $counter;
+  $tries = format_plural($remaining, 'attempt', 'attempts');
+  drupal_set_message(t('You have @remaining @tries remaining before your account is temporarily blocked.',
+    array(
+      '@remaining' => $remaining,
+      '@tries' => $tries,
+    )), 'error', FALSE);
+}
+
+/**
+ * Alert the user that they have matched or exceed the failed attempts limit.
+ *
+ * @param int $limit
+ *   The number of allowed failed log in attempts.
+ */
+function _gn2_unblock_no_more_attempts($limit) {
+  $link = l(t('Try again later or request a new password'), 'user/password');
+  $support_link = l(t('Help page'), 'guide/Access-denied/678');
+  if (isset($_SESSION['messages'])) {
+    unset($_SESSION['messages']);
+  }
+  drupal_set_message(t('Sorry, there have been more than !limit failed login attempts for this account. It is temporarily blocked for 15 minutes. !link or check the !support for information pertaining to Access Denied messages.',
+    array('!limit' => $limit, '!link' => $link, '!support' => $support_link)), 'error', FALSE);
+}
+
+/**
+ * Get the failed login attempt count for given identifier.
+ *
+ * @param string $identifier
+ *   The identifier for login, either the IP address or [User ID]-[IP address].
+ *
+ * @return int
+ *   Return then number of failed attempts.
+ */
+function _gn2_unblock_get_attempt_count($identifier) {
+  $count = _gn2_unblock_get_count($identifier);
+  return ($count) ? $count : 1;
 }
 
 /**
@@ -138,37 +168,57 @@ function _gn2_unblock_add_event($name, $host, $identifier) {
  *
  * @param string $account
  *   The user object which to clear.
- * @param string $host
- *   if specified, IP Address of the name-ip pair to be removed.
+ * @param string $ip_address
+ *   IP Address of the name-ip pair to be removed.
  * @param string $identifier
- *   if specified, the Flood identifier.
+ *   If specified, the Flood identifier.
  */
-function _gn2_unblock_remove_events($account = NULL, $host = NULL, $identifier = NULL) {
+function _gn2_unblock_remove_events($account, $ip_address, $identifier = NULL) {
+  if (!$identifier) {
+    $identifier = $account->uid . '-' . $ip_address;
+  }
+
   // Remove selected events.
   if (!empty($account)) {
-    if (empty($identifier)) {
-      $identifier = db_query('SELECT identifier FROM {gn2_unblock_track} WHERE name = :name',
-              array(':name' => $account->name))->fetchField();
+    $flood_count = _gn2_unblock_remove_unblock_event('flood', $identifier, $ip_address);
+    $gn2_unblock_count = _gn2_unblock_remove_unblock_event('gn2_unblock_track', $identifier, $ip_address);
+    $user_link = l(t('View'), 'user/' . $account->uid);
+    if ($flood_count || $gn2_unblock_count) {
+      watchdog('GN2 Unblock',
+        '%username removed from blocking tables.', [
+          '%username' => $account->name,
+        ], WATCHDOG_NOTICE, $user_link);
     }
-    if ($identifier) {
-      db_query('DELETE FROM {gn2_unblock_track} WHERE name = :name AND identifier = :identifier',
-              array(
-                ':name' => $account->name,
-                ':identifier' => $identifier,
-              ));
-      db_query('DELETE FROM {flood} WHERE event = :event AND identifier = :identifier',
-              array(':event' => 'failed_login_attempt_user', ':identifier' => $identifier));
-    }
-    db_query('DELETE FROM {flood} WHERE identifier = :id'
-        . ' OR identifier = :ip', array(':id' => $account->uid . '-' . $host, ':ip' => $host));
-    db_query('DELETE FROM {gn2_unblock_track} WHERE identifier = :id'
-        . ' OR identifier = :ip', array(':id' => $account->uid . '-' . $host, ':ip' => $host));
   }
   else {
     // Calculate protection time window and remove expired events.
     $time = time() - (variable_get('user_failed_login_ip_window', 3600));
-    _gn2_unlock_remove_all_events($time);
+    _gn2_unblock_remove_all_events($time);
+    watchdog('GN2 Unblock',
+      'Removing all blocking records older than %time minutes',
+      ['%time' => $time / 60], WATCHDOG_NOTICE);
   }
+}
+
+/**
+ * Remove records from the gn2_unblock_track table.
+ *
+ * @param string $table
+ *   The table to remove the event from; either flood or gn2_unblock_track.
+ * @param string $identifier
+ *   A unique identifier for the user, usually [User ID]-[IP address].
+ * @param $ip_address
+ *   The IP address for the user.
+ */
+function _gn2_unblock_remove_unblock_event($table, $identifier, $ip_address) {
+  $query = db_delete($table)
+    ->condition(
+      db_or()
+        ->condition('identifier', $identifier)
+        ->condition('identifier', $ip_address)
+    );
+  $delete_count = $query->execute();
+  return $delete_count;
 }
 
 /**
@@ -178,12 +228,13 @@ function _gn2_unblock_remove_events($account = NULL, $host = NULL, $identifier =
  *   If specified, events up to this timestamp will be deleted.
  *   If not specified, all elements up to current timestamp will be deleted.
  */
-function _gn2_unlock_remove_all_events($time = NULL) {
+function _gn2_unblock_remove_all_events($time = NULL) {
   // Remove selected events.
   if (empty($time)) {
     $time = time();
   }
-  db_query("DELETE FROM {gn2_unblock_track} WHERE timestamp < :time", array(':time' => $time));
+  db_query("DELETE FROM {gn2_unblock_track} WHERE timestamp < :time",
+    [':time' => $time]);
 }
 
 /**
@@ -193,11 +244,11 @@ function _gn2_unlock_remove_all_events($time = NULL) {
  *   The Flood identifier that is attempting to log in.
  *
  * @return int
- *   Returns the number of attemps.
+ *   Returns the number of attempts.
  */
-function gn2_unlock_get_count($identifier) {
-  $count = db_query('SELECT COUNT(id) FROM {gn2_unblock_track} WHERE identifier = :identifier', array(':identifier' => $identifier))->fetchField();
-  return $count;
+function _gn2_unblock_get_count($identifier) {
+  return db_query('SELECT COUNT(id) FROM {gn2_unblock_track} WHERE identifier = :identifier',
+    [':identifier' => $identifier])->fetchField();
 }
 
 /**
@@ -209,7 +260,57 @@ function gn2_unlock_get_count($identifier) {
  * @return int
  *   Return the User ID or NULL.
  */
-function gn2_unlock_get_user_id($name) {
-  $uid = db_query('SELECT uid FROM {users} WHERE name = :name', array(':name' => $name))->fetchField();
-  return $uid;
+function _gn2_unblock_get_user_id($name) {
+  return db_query('SELECT uid FROM {users} WHERE name = :name',
+    [':name' => $name])->fetchField();
+}
+
+/**
+ * Create a unique identifier for log in attempts.
+ *
+ * @param array $form_state
+ *   The login form submission values.
+ * @param $ip_address
+ *   The IP address for the log in attempt.
+ *
+ * @return string
+ *   Returns either the IP address or [User ID]-[IP Address]
+ */
+function _gn2_unblock_get_identifier($form_state, $ip_address) {
+  $username = $form_state['values']['name'];
+  if (isset($form_state['flood_control_user_identifier'])) {
+    $identifier = $form_state['flood_control_user_identifier'];
+  }
+  else {
+    $uid = _gn2_unblock_get_user_id($username);
+    $identifier = ($uid && is_numeric($uid)) ? $uid . '-' . $ip_address : $ip_address;
+  }
+  return $identifier;
+}
+
+/**
+ * Check to see if the password field is set or is empty.
+ *
+ * @param array $form_state
+ *   The form array for the user login form.
+ *
+ * @return bool
+ *   Returns TRUE if the use has entered a password, else returns FALSE.
+ */
+function _gn2_unblock_is_password_set($form_state) {
+  return  (strlen(trim($form_state['values']['pass'])) == 0
+    || empty($form_state['values']['name'])) ? FALSE : TRUE;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function gn2_unblock_cron() {
+  // Clean up abandoned login attempts.
+  $one_hour_ago = time() - 3600;
+  $abandoned_attempts = db_delete('gn2_unblock_track')
+    ->condition('timestamp', $one_hour_ago, '<')
+    ->execute();
+  watchdog('GN2 Unblock cron', '%count abandoned logins removed',
+    ['%count' => $abandoned_attempts], WATCHDOG_NOTICE);
 }

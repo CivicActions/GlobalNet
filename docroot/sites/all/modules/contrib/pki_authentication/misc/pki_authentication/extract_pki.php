@@ -36,7 +36,7 @@ $data = array(
 // This entry will expire in $ttl seconds.
 $ts = time() + $ttl;
 
-$nonce = drupal_random_key();
+$nonce = pki_authentication_str_rand();
 
 $foo = db_insert('pki_authentication_temp')
   ->fields(array(
@@ -57,3 +57,17 @@ if (isset($_GET['form'])) {
   }
 }
 die("<meta http-equiv='refresh' content='0;url=" . $my_url . "'>");
+/**
+ * Lightweight nonce generator.
+ *
+ * @todo: consider using drupal_get_token. - we do not have a full Drupal stack,
+ *                                           function not available
+ */
+function pki_authentication_str_rand($length=32, $seeds='AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789') {
+  $str = '';
+  $seeds_count = strlen($seeds);
+  for ($i = 0; $length > $i; $i++) {
+    $str .= $seeds{mt_rand(0, $seeds_count - 1)};
+  }
+  return $str;
+}

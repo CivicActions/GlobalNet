@@ -11,22 +11,6 @@ Feature: report.tab-access.feature
     And I should see "Edit" in the "drupal tabs" region
     And I should not see "Forms" in the "drupal tabs" region
     And I should not see "Group" in the "drupal tabs" region
-    And I should not see "Metrics" in the "drupal tabs" region
-    And I should not see "Track" in the "drupal tabs" region
-    And I should not see "Panelizer" in the "drupal tabs" region
-    And I should not see "Log" in the "drupal tabs" region
-
-
-  @RD-2817 @assignee:bob.schmitt @version:3/22_Launch_Release @COMPLETED @ugroupmanager1
-  Scenario: Group Manager: Course
-
-    Given I am logged in as "ugroupmanager1" with password "civicactions"
-    And I visit the node with title "Or1 Co1PU"
-    Then I should see "View" in the "drupal tabs" region
-    And I should see "Edit" in the "drupal tabs" region
-    And I should not see "Forms" in the "drupal tabs" region
-    And I should not see "Group" in the "drupal tabs" region
-    And I should not see "Metrics" in the "drupal tabs" region
     And I should not see "Track" in the "drupal tabs" region
     And I should not see "Panelizer" in the "drupal tabs" region
     And I should not see "Log" in the "drupal tabs" region
@@ -38,36 +22,6 @@ Feature: report.tab-access.feature
     Given I am logged in as "ugroupmanager1" with password "civicactions"
     And I visit the node with title "Or1"
     Then I should not see the "drupal tabs" region
-
-
-  @RD-2817 @assignee:bob.schmitt @version:3/22_Launch_Release @COMPLETED @ugroupmanager1
-  Scenario: Group Manager: Event
-
-    Given I am logged in as "ugroupmanager1" with password "civicactions"
-    And I visit the node with title "Or1 Co1PU Ev22PU"
-    Then I should see "View" in the "drupal tabs" region
-    And I should see "Edit" in the "drupal tabs" region
-    And I should not see "Forms" in the "drupal tabs" region
-    And I should not see "Group" in the "drupal tabs" region
-    And I should not see "Metrics" in the "drupal tabs" region
-    And I should not see "Track" in the "drupal tabs" region
-    And I should not see "Panelizer" in the "drupal tabs" region
-    And I should not see "Log" in the "drupal tabs" region
-
-
-  @RD-2817 @assignee:bob.schmitt @version:3/22_Launch_Release @COMPLETED @ugroupmanager1
-  Scenario: Group Manager: Course Group
-
-    Given I am logged in as "ugroupmanager1" with password "civicactions"
-    And I visit the node with title "Or1 Co1PU Cg4GR"
-    Then I should see "View" in the "drupal tabs" region
-    And I should see "Edit" in the "drupal tabs" region
-    And I should not see "Forms" in the "drupal tabs" region
-    And I should not see "Group" in the "drupal tabs" region
-    And I should not see "Metrics" in the "drupal tabs" region
-    And I should not see "Track" in the "drupal tabs" region
-    And I should not see "Panelizer" in the "drupal tabs" region
-    And I should not see "Log" in the "drupal tabs" region
 
 
   @RD-2817 @assignee:bob.schmitt @version:3/22_Launch_Release @COMPLETED @uorgmanager1 @wip

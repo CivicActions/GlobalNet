@@ -63,6 +63,14 @@ function gn2_og_views_plugins() {
     'handler' => 'gn2_og_access_plugin_org_manager_user_access',
   );
 
+  // Configurable access for managers.
+  $plugins['access']['gn2_og_manager_has_access'] = [
+    'title' => t('OG: Manager access'),
+    'help' => t('Choose the Manager role that should access this View.'),
+    'handler' => 'gn2_og_access_plugin_manager_access',
+    'uses options' => TRUE,
+  ];
+
   $plugins['argument default'] = array(
     'gn2_og_hr_manged_orgs' => array(
       'title' => t('The organizations the user is HR manager of'),

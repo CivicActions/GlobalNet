@@ -10,20 +10,7 @@ class OgSelectionHandler extends EntityReference_SelectionHandler_Generic {
    * Implements EntityReferenceHandler::getInstance().
    */
   public static function getInstance($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
-    $target_entity_type = $field['settings']['target_type'];
-
-    // Check if the entity type does exist and has a base table.
-    $entity_info = entity_get_info($target_entity_type);
-    if (empty($entity_info['base table'])) {
-      return EntityReference_SelectionHandler_Broken::getInstance($field, $instance);
-    }
-
-    if (class_exists($class_name = 'OgSelectionHandler_' . $target_entity_type)) {
-      return new $class_name($field, $instance, $entity_type, $entity);
-    }
-    else {
-      return new OgSelectionHandler($field, $instance, $entity_type, $entity);
-    }
+    return new OgSelectionHandler($field, $instance, $entity_type, $entity);
   }
 
   /**
@@ -190,7 +177,7 @@ class OgSelectionHandler extends EntityReference_SelectionHandler_Generic {
    *   Array with group IDs a user (member or non-member) is allowed to
    * create, or empty array.
    */
-  public function getGidsForCreate() {
+  private function getGidsForCreate() {
     if ($this->instance['entity_type'] != 'node') {
       return array();
     }
@@ -215,95 +202,5 @@ class OgSelectionHandler extends EntityReference_SelectionHandler_Generic {
       }
     }
     return $ids;
-  }
-}
-
-/**
- * Provide entity type class instance, but retain OgSelectionHandler behaviour.
- */
-class OgSelectionHandler_node extends EntityReference_SelectionHandler_Generic_node {
-  public static function settingsForm($field, $instance) {
-    return OgSelectionHandler::settingsForm($field, $instance);
-  }
-  public function buildEntityFieldQuery($match = NULL, $match_operator = 'CONTAINS') {
-    return OgSelectionHandler::buildEntityFieldQuery($match, $match_operator);
-  }
-  public function getGidsForCreate() {
-    return OgSelectionHandler::getGidsForCreate();
-  }
-  public function entityFieldQueryAlter(SelectQueryInterface $query) {
-    OgSelectionHandler::entityFieldQueryAlter($query);
-  }
-}
-
-/**
- * Provide entity type class instance, but retain OgSelectionHandler behaviour.
- */
-class OgSelectionHandler_user extends EntityReference_SelectionHandler_Generic_user {
-  public static function settingsForm($field, $instance) {
-    return OgSelectionHandler::settingsForm($field, $instance);
-  }
-  public function buildEntityFieldQuery($match = NULL, $match_operator = 'CONTAINS') {
-    return OgSelectionHandler::buildEntityFieldQuery($match, $match_operator);
-  }
-  public function getGidsForCreate() {
-    return OgSelectionHandler::getGidsForCreate();
-  }
-  public function entityFieldQueryAlter(SelectQueryInterface $query) {
-    OgSelectionHandler::entityFieldQueryAlter($query);
-  }
-}
-
-/**
- * Provide entity type class instance, but retain OgSelectionHandler behaviour.
- */
-class OgSelectionHandler_file extends EntityReference_SelectionHandler_Generic_file {
-  public static function settingsForm($field, $instance) {
-    return OgSelectionHandler::settingsForm($field, $instance);
-  }
-  public function buildEntityFieldQuery($match = NULL, $match_operator = 'CONTAINS') {
-    return OgSelectionHandler::buildEntityFieldQuery($match, $match_operator);
-  }
-  public function getGidsForCreate() {
-    return OgSelectionHandler::getGidsForCreate();
-  }
-  public function entityFieldQueryAlter(SelectQueryInterface $query) {
-    OgSelectionHandler::entityFieldQueryAlter($query);
-  }
-}
-
-/**
- * Provide entity type class instance, but retain OgSelectionHandler behaviour.
- */
-class OgSelectionHandler_ extends EntityReference_SelectionHandler_Generic_comment {
-  public static function settingsForm($field, $instance) {
-    return OgSelectionHandler::settingsForm($field, $instance);
-  }
-  public function buildEntityFieldQuery($match = NULL, $match_operator = 'CONTAINS') {
-    return OgSelectionHandler::buildEntityFieldQuery($match, $match_operator);
-  }
-  public function getGidsForCreate() {
-    return OgSelectionHandler::getGidsForCreate();
-  }
-  public function entityFieldQueryAlter(SelectQueryInterface $query) {
-    OgSelectionHandler::entityFieldQueryAlter($query);
-  }
-}
-
-/**
- * Provide entity type class instance, but retain OgSelectionHandler behaviour.
- */
-class OgSelectionHandler_taxonomy_term extends EntityReference_SelectionHandler_Generic_taxonomy_term {
-  public static function settingsForm($field, $instance) {
-    return OgSelectionHandler::settingsForm($field, $instance);
-  }
-  public function buildEntityFieldQuery($match = NULL, $match_operator = 'CONTAINS') {
-    return OgSelectionHandler::buildEntityFieldQuery($match, $match_operator);
-  }
-  public function getGidsForCreate() {
-    return OgSelectionHandler::getGidsForCreate();
-  }
-  public function entityFieldQueryAlter(SelectQueryInterface $query) {
-    OgSelectionHandler::entityFieldQueryAlter($query);
   }
 }

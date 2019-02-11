@@ -19,7 +19,7 @@ function gn2_cac_strongarm() {
 <ol>
   <li>Ensure you are using Internet Explorer</li>
   <li>Login to GlobalNET with your username and password.</li>
-  <li>Place your CAC card in the reader.</li> 
+  <li>Place your CAC card in the reader.</li>
   <li>Click on the My GlobalNET</li>
   <li>Click Edit My Profile & Settings</li>
   <li>Scroll down to External Accounts, click arrow to open</li>
@@ -44,14 +44,14 @@ function gn2_cac_strongarm() {
   /* gn2_cac_url */  /* gn2_cac_url */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* gn2_cac_url */  /* gn2_cac_url */ $strongarm->api_version = 1;
   /* gn2_cac_url */  /* gn2_cac_url */ $strongarm->name = 'gn2_cac_url';
-  /* gn2_cac_url */  /* gn2_cac_url */ $strongarm->value = 'https://stage-cac.globalnetplatform.org';
+  /* gn2_cac_url */  /* gn2_cac_url */ $strongarm->value = '';
   $export['gn2_cac_url'] = $strongarm;
 
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm = new stdClass();
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->api_version = 1;
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->name = 'pki_authentication_base_root';
-  /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->value = 'https://stage.globalnetplatform.org';
+  /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->value = '';
   $export['pki_authentication_base_root'] = $strongarm;
 
   /* pki_authentication_enable_pki_login */  /* pki_authentication_enable_pki_login */ $strongarm = new stdClass();
