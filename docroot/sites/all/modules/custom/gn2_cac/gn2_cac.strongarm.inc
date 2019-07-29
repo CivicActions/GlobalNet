@@ -51,7 +51,7 @@ function gn2_cac_strongarm() {
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->api_version = 1;
   /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->name = 'pki_authentication_base_root';
-  /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->value = '';
+  /* pki_authentication_base_root */  /* pki_authentication_base_root */ $strongarm->value = 'https://stage.globalnetplatform.org';
   $export['pki_authentication_base_root'] = $strongarm;
 
   /* pki_authentication_enable_pki_login */  /* pki_authentication_enable_pki_login */ $strongarm = new stdClass();

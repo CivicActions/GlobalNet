@@ -37,7 +37,7 @@ function gn2_og_field_group_info() {
    /* group_external_accounts|user|user|form */     'formatter' => 'collapsed',
    /* group_external_accounts|user|user|form */   ),
    /* group_external_accounts|user|user|form */ );
-  $field_groups['group_external_accounts|user|user|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

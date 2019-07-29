@@ -137,7 +137,8 @@ function gn2_sessions_fc_entity_view_alter(&$build, $type) {
     $build['field_media']['#prefix'] = $downloads;
   }
   if ($type == 'field_collection_item' && ($build['#bundle'] == 'field_unit')) {
-    $downloads_temp = drupal_render(drupal_get_form('gn2_file_download_form', $build['#entity_view_mode']['id']));
+    $render_form = drupal_get_form('gn2_file_download_form', $build['#entity_view_mode']['id']);
+    $downloads_temp = drupal_render($render_form);
     $downloads = gn2_sessions_fc_downloads_wrapper($downloads_temp);
     $build['field_media'] = '';
     $build['field_description']['#weight'] = -10;
@@ -283,20 +284,20 @@ function gn2_sessions_fc_spinner() {
       <animateTransform  attributeType="xml"
         attributeName="transform" type="scale"
         values="1,1; 1,3; 1,1"
-        begin="0s" dur="0.6s" repeatCount="indefinite" />       
+        begin="0s" dur="0.6s" repeatCount="indefinite" />
     </rect>
 
     <rect x="10" y="0" width="4" height="7" fill="#333">
       <animateTransform  attributeType="xml"
         attributeName="transform" type="scale"
         values="1,1; 1,3; 1,1"
-        begin="0.2s" dur="0.6s" repeatCount="indefinite" />       
+        begin="0.2s" dur="0.6s" repeatCount="indefinite" />
     </rect>
     <rect x="20" y="0" width="4" height="7" fill="#333">
       <animateTransform  attributeType="xml"
         attributeName="transform" type="scale"
         values="1,1; 1,3; 1,1"
-        begin="0.4s" dur="0.6s" repeatCount="indefinite" />       
+        begin="0.4s" dur="0.6s" repeatCount="indefinite" />
     </rect>
   </svg>
 </div>';
