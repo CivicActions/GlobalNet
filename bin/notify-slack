@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ -z "$SLACK_WEBHOOK_URL" ]; then
+  echo Please set SLACK_WEBHOOK_URL in your env.
+  exit 1
+fi
+
 SLACK_CHANNEL=${SLACK_CHANNEL-'globalnet-int'};
 SLACK_BOTNAME=${SLACK_BOTNAME-$USER};
 SLACK_BOTEMOJI=${SLACK_BOTEMOJI-':whale:'}
@@ -8,7 +13,7 @@ SLACK_ATTACHMENTS=${SLACK_ATTACHMENTS-'[]'}
 MESSAGE=$@;
 
 PAYLOAD="payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"text\": \"${MESSAGE}\", \"icon_emoji\": \"${SLACK_BOTEMOJI}\", \"attachments\": ${SLACK_ATTACHMENTS}}";
-CURL_RESULT=$(curl -s -S -X POST --data-urlencode "$PAYLOAD" https://hooks.slack.com/services/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);
+CURL_RESULT=$(curl -s -S -X POST --data-urlencode "${PAYLOAD}" ${SLACK_WEBHOOK_URL});
 
 if [ -z "$CURL_RESULT" ] || [ "$CURL_RESULT" = "ok" ]; then
   exit 0;

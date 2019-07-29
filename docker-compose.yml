@@ -40,7 +40,7 @@ services:
     expose:
       - "80"
     volumes:
-      - .:/var/www
+            - .:/var/www/:delegated
     links:
       - db:dbhost
       - solr:solr
