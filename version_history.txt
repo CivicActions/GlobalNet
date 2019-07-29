@@ -1,8 +1,44 @@
 This file should record the version history of the globalNET builds. Use tag-ids to mark build milestones.
 
+v2.63.0  7/142019
+------------------------
+RD-4912: Modify default search view
+RD-4781: Add organizational members report
+RD-4224: Add function to generate export list of org members
+Hotfix: Modify docker config files to speed sandbox & remove docker-sync references
+RD-4876: Remove Org_Events block from default layout
+RD-4796: Update value lists for North Macedonia
+
+v2.62.0 5/9/2019
+----------
+RD-4893: Drupal core update 7.67
+
+v2.61.1 4/23/2019
+----------------------
+RD-4882: Drupal core update 7.66
+
+v2.61.0 4/16/2019
+-----------------------
+ RD-4870: Remove exception to adobe connect meetings that was generating a sql…
+
+v2.60.0 4/5/2019
+----------------------
+RD-4854: Update drupal core
+RD-4861: Update module filters module
+RD-4845: Security update: focal_point module 1.2
+
+v2.59.2 3/14/2019
+-------------------
+RD-4786: Refactoring code to quiet sessions notices.
+RD-4443: Update panel for custom landing page to only display main image
+
+v2.59.1 2/20/2019
+------------------
+Upgrade Link module for SA-CONTRIB-2019-020
+
 v2.58.1 1/18/2019
 ------------------
-RD-RD-4753: Drupal core security update
+RD-4753: Drupal core security update
 
 v2.58.0 1/15/2019
 ------------------

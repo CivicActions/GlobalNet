@@ -157,6 +157,8 @@ projects[flexslider_views_slideshow][version] = "2.x-dev"
 
 projects[flood_control][version] = "1.0"
 
+projects[focal_point][version] = "1.2"
+
 projects[google_analytics_reports][version] = "3.1"
 projects[google_analytics_reports][patch][] = https://www.drupal.org/files/issues/ga_reports.update.patch
 
@@ -184,7 +186,7 @@ projects[jquery_update][version] = "2.7"
 
 projects[legal][version] = "1.10"
 
-projects[link][version] = "1.3"
+projects[link][version] = "1.6"
 
 projects[login_tracker][version] = "1.0"
 projects[login_tracker][patch][] = https://www.drupal.org/files/issues/login_tracker-fix_permission-2680599-2.patch
@@ -211,7 +213,7 @@ projects[migrate][version] = "2.8"
 projects[migrate_d2d][version] = "2.1"
 projects[migrate_d2d][patch][] = https://www.drupal.org/files/issues/migrate_d2d-user_query_modification-2680739-3.patch
 
-projects[module_filter][version] = "2.0"
+projects[module_filter][version] = "3.1"
 
 projects[multiform][version] = "1.1"
 
@@ -366,7 +368,7 @@ projects[user_revision][download][revision] = "cce42174aec453e6652da8738e397df20
 
 projects[usfedgov_google_analytics][version] = "1.1"
 
-projects[views][version] = "3.18"
+projects[views][version] = "3.21"
 projects[views][patch][] = "https://www.drupal.org/files/issues/2018-05-11/allow-datetime-format-2178287-11.patch"
 projects[views][patch][] = ../patches/merge-assist/view.inc.patch
 

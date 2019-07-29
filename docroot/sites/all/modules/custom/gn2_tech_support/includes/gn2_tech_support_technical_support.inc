@@ -20,7 +20,7 @@ function _gn2_tech_support_notify_org_admin($entityform, $site) {
   global $language;
   $options = list_allowed_values(field_info_field('field_how_can_we_help_you_'));
   $option = $options[$entityform->field_how_can_we_help_you_[LANGUAGE_NONE][0]['value']];
-  
+
   $params['subject'] = t('Technical Support') . ' - ' . $node->title;
   $params['body']    = array(
     t('Details'),
@@ -63,7 +63,7 @@ function gn2_tech_support_get_users_by_roles($gid, $rids = array(), $group_type 
  */
 function _gn2_tech_support_get_org_members_email_address($gid) {
   global $user;
-  $response = variable_get('site_mail', 'admin@globalnetplatform.org') . ', ';
+  $response = variable_get('site_mail', '') . ', ';
 
   // Get all of the Roles for this Group.
   $node = node_load($gid);

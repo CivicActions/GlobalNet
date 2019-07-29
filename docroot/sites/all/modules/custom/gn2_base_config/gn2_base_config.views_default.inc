@@ -16821,6 +16821,14 @@ Search tips:
     7 => 0,
     8 => 0,
   );
+  /* Filter criterion: Indexed Node: Content type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['operator'] = '<>';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'support' => 'support',
+  );
 
   /* Display: Search-Default-Pane */
   $handler = $view->new_display('panel_pane', 'Search-Default-Pane', 'panel_pane_1');

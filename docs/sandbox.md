@@ -25,49 +25,37 @@ The GlobalNET developer sandbox runs on your workstation as a set of docker-base
 Read these instructions carefully. These instructions describe how to download, install, and configure software and/or virtual machines on your workstation and run a set of scripts to build the containers and GlobalNET code base.
 
 * Linux users can install and run Docker and containers directly on workstation
-* OSX users are recommended to run Docker for Mac
+* OSX users are recommended to run _Docker for Mac_ and _Docker sync_
 
 ### Step 1. Requirements
 
 - [Git 2.0+](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - Docker 1.10.0+
-  - OSX users [install Docker for Mac](https://docs.docker.com/engine/installation/mac/#/docker-for-mac)
+  - OSX users [install Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+    - OSX users should also install [Docker Sync](http://docker-sync.io/) for better performance. This one command should install it properly: `gem install docker-sync`
   - Linux users [install Docker](https://docs.docker.com/engine/installation/#/on-linux)
     - [Docker Compose 1.7.0+](https://docs.docker.com/compose/install/) Linux users additionally need to install Docker Compose (OSX users get Docker Composed installed automatically with _Docker for Mac_)
 - Make sure you can successfully run docker commands without sudo.
   See [Ubuntu example](https://docs.docker.com/engine/installation/linux/ubuntulinux/#/manage-docker-as-a-non-root-user).
 - For the docker proxy to work you must stop anything using port 80 and 8080
 
-### Step 2. Cloning GlobalNET D7 (Platform Version 2)
+### Step 2. Cloning GlobalNET 
 
 Note: Many of these commands run from the `~/workspace/gn2` directory.
 
 #### 2.1. Provide Your Public SSH Key to CivicActions Infrastructure Support
 
-CivicActions needs your public SSH Key to grant you access to the GlobalNET repository. Use Slack to contact the CivicActions Infrastructure Support team and provide them with your public SSHkey (e.g., `~/.ssh/id_rsa.pub`). Never share your private key.
-
-#### 2.2. Configure CivicActions SSH Port
-All civicactions.net sites use a nonstandard port (940) for SSH traffic, so if the `git clone` command below fails with something like:
-
-`port 22: Connection refused`
-
-then add this to your `~/.ssh/config` file (creating it if necessary):
-
-```bash
-Host *.civicactions.net
-Port 940
-```
+Contact the CivicActions Infrastructure Support team and provide them with your public SSHkey (e.g., `~/.ssh/id_rsa.pub`). Never share your private key.
 
 #### 2.2. Get the latest "develop" branch code for gn2
 
-See also the [Git Workflow document](workflow.md) for setting up your remotes correctly.
+#### 2.3. If OSX / Non-linux user, configure bowline to use docker-sync
+
+Assuming Docker Sync was installed in Step 1, all that is required to enable it is to set an environment variable:
 
 ```bash
-cd ~/workspace
-git clone git@git.civicactions.net:dsca/globalnet2.git gn2
-cd gn2
+echo "BOWLINE_FILESYNC=docker-sync" >> env.local
 ```
-
 
 ### Step 3. Activate Bowline
 
@@ -113,24 +101,10 @@ import
 
 #### Synchronizing files
 
-Unlike other docker based projects that mount the project files directly into the container, this project syncs the files from the project into the container. Thus, there are two copies of the project files: one on the host (your machine) and one in the docker volume.
+Linux users have the container files bind mounted so synchronizing isn't necessary, but can be used for testing docker-sync.
 
-Files are copied to the container on the initial `build` step. The _sync_ container periodically monitors changes using _unison_ and copies files to and from the container automatically. Unfortunately, the sync container can be very slow so the project includes an additional file-watching utility to speed updates for development: modd.
-
-In a new terminal, [activate bowline](#step-3-activate-bowline) then run the following:
-
-Linux users:
-```bash
-modd.linux
-```
-
-Mac users:
-```bash
-modd.osx
-```
-
-This will start the golang modd utility to watch for file changes. As you edit files you should see output as it copies files and corrects file permissions. Hit `ctrl`+`c` to stop modd.
-
+OSX users should have the docker-sync program running, which should just work automatically. You can check the status of this with `docker-sync list`.
+For more information on the docker-sync commands, see: https://github.com/EugenMayer/docker-sync/wiki/2.1-sync-commands
 
 #### Using drush
 
@@ -140,7 +114,6 @@ If you would like to use `drush` on the newly built containers, activate your ba
 ```bash
 . bin/activate
 ```
-
 
 - This will add a special drush script which overrides your installed drush
 - If you want to use your normal drush, simply open another terminal or run `deactivate`
@@ -199,11 +172,3 @@ build
 ## Docker for Mac
 
 You may be able to boost your performance by adjusting the CPU and memory allocation for docker engine. Click the whale icon and increase the CPU and memory to about 1/2 of what is available or more to see if it helps. Note that docker engine will have to restart for the change to take effect. If your contains don't restart automatically, simply run `build' again.
-
-## Bypassing the QA build for special fixes (documentation, quick css fixes, etc.)
-
-There are times when we need to push code and bypass building a QA pipeline. (Example: If a ticket can only be QA'd on Learn or Stage).
-
-If you are pushing code that does not need a test or QA build, such as project documentation changes, you can save server resources and skip the builds on the CI server. To achieve this, simply include either `[ci skip]` or `[skip ci]` at the end of the last commit message of the branch you are pushing.
-
-This is also useful if you are working on a large ticket and want to push your changes but your branch is not yet ready for a merge request. Remember you can always edit a commit message with `git commit --amend` if you need to remove the ci skip of your last commit when you are ready to request a merge.

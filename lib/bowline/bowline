@@ -218,12 +218,3 @@ assert_selenium_finish () {
   fi
 }
 
-docker_sync_init() {
-  # Create the docker-sync.yml file based on the slug
-  if [ ! -d docker-sync.yml ];then
-    sed "s/%%syncname%%/${SLUG}_filesync/" docker-sync.template.yml > docker-sync.yml
-  fi
-}
-  if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
-    DCOMPOSE="$DCOMPOSE -f docker-compose.docker-sync.yml"
-  fi

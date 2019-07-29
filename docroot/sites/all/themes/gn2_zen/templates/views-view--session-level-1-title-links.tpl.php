@@ -1,8 +1,3 @@
-
-
-
-
-
 <?php
 
 /**
@@ -27,71 +22,73 @@
  * - $pager: The pager next/prev links to display, if any
  * - $exposed: Exposed widget form/info to display
  * - $feed_icon: Feed icon to display, if any
- * - $more: A link to view more, if any
+ * - $more: A link to view more, if any.
  *
  * @ingroup views_templates
  */
 ?>
 <div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
-  <?php if ($title): ?>
+  <?php if ($title) : ?>
     <?php print $title; ?>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
-  <?php print drupal_render(drupal_get_form('gn2_sessions_fc_update_form')); ?>
+  <?php
+  $form = drupal_get_form('gn2_sessions_fc_update_form');
+  print drupal_render($form); ?>
   <?php print gn2_sessions_fc_spinner(); ?>
-  <?php if ($header): ?>
+  <?php if ($header) : ?>
     <div class="view-header">
       <?php print $header; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($exposed): ?>
+  <?php if ($exposed) : ?>
     <div class="view-filters">
       <?php print $exposed; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($attachment_before): ?>
+  <?php if ($attachment_before) : ?>
     <div class="attachment attachment-before">
       <?php print $attachment_before; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($rows): ?>
+  <?php if ($rows) : ?>
     <div class="view-content">
       <?php print $rows; ?>
     </div>
-  <?php elseif ($empty): ?>
+  <?php elseif ($empty) : ?>
     <div class="view-empty">
       <?php print $empty; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($pager): ?>
+  <?php if ($pager) : ?>
     <?php print $pager; ?>
   <?php endif; ?>
 
-  <?php if ($attachment_after): ?>
+  <?php if ($attachment_after) : ?>
     <div class="attachment attachment-after">
       <?php print $attachment_after; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($more): ?>
+  <?php if ($more) : ?>
     <?php print $more; ?>
   <?php endif; ?>
 
-  <?php if ($footer): ?>
+  <?php if ($footer) : ?>
     <div class="view-footer">
       <?php print $footer; ?>
     </div>
   <?php endif; ?>
 
-  <?php if ($feed_icon): ?>
+  <?php if ($feed_icon) : ?>
     <div class="feed-icon">
       <?php print $feed_icon; ?>
     </div>
   <?php endif; ?>
 
-</div><?php /* class view */ ?>
+</div><?php /* class view */

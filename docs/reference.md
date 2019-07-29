@@ -29,9 +29,6 @@ Table of Contents
 - **migrate**: Runs migration steps
 - **phpcbf**: PHP code beautifier and fixer inside container
 - **phpcs**: PHP code sniffer inside container
-- **pull db**: Pulls a copy of the current db from devtest
-- **pull full**: Pulls a copy of the sanitized db from v2.dev
-- **pull files**: Pulls a copy of the files from v2.dev
 - **quick-reload-config**: Quick Reload of Features and modules, does not rebuild search indexes. Used after git pull.
 - **reload-config**: Reload Features and modules, rebuilds search indexes. Used after git pull.
 - **run**: behat smoke tests
