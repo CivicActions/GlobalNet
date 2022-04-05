@@ -88,7 +88,7 @@ GEM
     thor (0.19.1)
     toolkit (2.10.0)
       sass (~> 3.3)
-    yajl-ruby (1.2.1)
+    yajl-ruby (1.4.1)
     zen-grids (1.4)
       sass (>= 3.1)
 
